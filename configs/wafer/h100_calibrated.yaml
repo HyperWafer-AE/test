@@ -1,0 +1,14 @@
+rows: 2
+cols: 1
+tile_sram_mb: 81920
+tile_prefill_tflops: 500
+tile_decode_tflops: 250
+link_bandwidth_GBps: 900
+link_latency_us: 2.0
+multicast_supported: false
+energy_per_flop_pJ: 2.0
+energy_per_byte_pJ: 5.0
+h100_prefill_to_wafer_scale: 1.0
+h100_decode_to_wafer_scale: 1.0
+prefill_tile_fraction: 0.50
+decode_tile_fraction: 0.50

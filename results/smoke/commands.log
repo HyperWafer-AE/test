@@ -1,0 +1,1 @@
+scripts/run_smoke_test.py --engine synthetic --wafer-config configs/wafer/toy_smoke.yaml --out results/smoke

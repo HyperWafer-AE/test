@@ -1,0 +1,24 @@
+Metadata-Version: 2.4
+Name: waferagent
+Version: 0.1.0
+Summary: Trace-driven evaluation framework for WaferAgent
+Requires-Python: >=3.11
+Requires-Dist: numpy>=1.26
+Requires-Dist: pandas>=2.2
+Requires-Dist: pydantic>=2.7
+Requires-Dist: pyyaml>=6.0
+Requires-Dist: networkx>=3.2
+Requires-Dist: matplotlib>=3.8
+Requires-Dist: rich>=13.7
+Requires-Dist: tqdm>=4.66
+Requires-Dist: pytest>=8.0
+Provides-Extra: hf
+Requires-Dist: torch; extra == "hf"
+Requires-Dist: transformers>=4.40; extra == "hf"
+Requires-Dist: accelerate>=0.29; extra == "hf"
+Requires-Dist: safetensors>=0.4; extra == "hf"
+Provides-Extra: serving
+Requires-Dist: vllm; extra == "serving"
+Provides-Extra: dev
+Requires-Dist: pytest>=8.0; extra == "dev"
+Requires-Dist: ruff>=0.4; extra == "dev"

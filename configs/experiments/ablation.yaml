@@ -1,0 +1,10 @@
+seed: 17
+variants:
+  - waferagent_full
+  - no_kv_sharing
+  - no_affinity_placement
+  - no_critical_path_scheduling
+  - no_tool_ttl
+  - no_dynamic_pd_partition
+  - no_aggregator_placement
+  - no_mesh_congestion_penalty

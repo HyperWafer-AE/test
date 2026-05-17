@@ -1,0 +1,8 @@
+{
+  "command": "scripts/run_ablation.py --traces results/characterization_synthetic/traces/*.jsonl --wafer-config configs/wafer/wse_like.yaml --out results/ablation_synthetic",
+  "created_unix": 1779027848.6956072,
+  "git_commit": "unavailable: Command '['git', 'rev-parse', 'HEAD']' returned non-zero exit status 128.",
+  "run_type": "ablation",
+  "traces": "results/characterization_synthetic/traces/*.jsonl",
+  "wafer_config": "configs/wafer/wse_like.yaml"
+}

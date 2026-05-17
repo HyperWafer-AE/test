@@ -1,0 +1,4 @@
+seed: 11
+engine: synthetic
+workloads: [debate, moa, planner_worker_tool, swe_like, rag_like]
+num_jobs: 200

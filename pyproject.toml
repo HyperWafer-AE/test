@@ -1,0 +1,40 @@
+[project]
+name = "waferagent"
+version = "0.1.0"
+description = "Trace-driven evaluation framework for WaferAgent"
+requires-python = ">=3.11"
+dependencies = [
+  "numpy>=1.26",
+  "pandas>=2.2",
+  "pydantic>=2.7",
+  "pyyaml>=6.0",
+  "networkx>=3.2",
+  "matplotlib>=3.8",
+  "rich>=13.7",
+  "tqdm>=4.66",
+  "pytest>=8.0",
+]
+
+[project.optional-dependencies]
+hf = [
+  "torch",
+  "transformers>=4.40",
+  "accelerate>=0.29",
+  "safetensors>=0.4",
+]
+serving = [
+  "vllm",
+]
+dev = [
+  "pytest>=8.0",
+  "ruff>=0.4",
+]
+
+[tool.ruff]
+line-length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.setuptools.packages.find]
+include = ["waferagent*"]

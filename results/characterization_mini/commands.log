@@ -1,0 +1,1 @@
+scripts/collect_h100_traces.py --model auto --engine hf --workloads debate,moa --num-jobs 5 --gpus 0,1 --out results/characterization_mini

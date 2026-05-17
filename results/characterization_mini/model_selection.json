@@ -1,0 +1,5 @@
+{
+  "engine_used": "synthetic",
+  "model_name": "Qwen2.5-14B-Instruct-1M-local",
+  "model_path": "/data2/model_zoo/Qwen2.5-14B-Instruct-1M"
+}

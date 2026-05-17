@@ -1,0 +1,1 @@
+scripts/run_ablation.py --traces results/characterization_synthetic/traces/*.jsonl --wafer-config configs/wafer/wse_like.yaml --out results/ablation_synthetic

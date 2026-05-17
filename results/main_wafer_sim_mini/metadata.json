@@ -1,0 +1,8 @@
+{
+  "command": "scripts/run_simulation_sweep.py --traces results/characterization_mini/traces/*.jsonl --wafer-config configs/wafer/wse_like.yaml --baselines wafer_naive,kvflow_like,continuum_like,waferagent_full --out results/main_wafer_sim_mini",
+  "created_unix": 1779027974.9547482,
+  "git_commit": "unavailable: Command '['git', 'rev-parse', 'HEAD']' returned non-zero exit status 128.",
+  "run_type": "simulation_sweep",
+  "traces": "results/characterization_mini/traces/*.jsonl",
+  "wafer_config": "configs/wafer/wse_like.yaml"
+}

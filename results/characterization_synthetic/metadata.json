@@ -1,0 +1,11 @@
+{
+  "command": "scripts/collect_h100_traces.py --engine synthetic --workloads debate,moa,planner_worker_tool,swe_like,rag_like --num-jobs 200 --out results/characterization_synthetic",
+  "concurrency": "1",
+  "created_unix": 1779027776.6965609,
+  "engine": "synthetic",
+  "git_commit": "unavailable: Command '['git', 'rev-parse', 'HEAD']' returned non-zero exit status 128.",
+  "gpus": "",
+  "model": "auto",
+  "run_type": "trace_collection",
+  "seed": 11
+}

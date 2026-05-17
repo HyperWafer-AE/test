@@ -1,0 +1,8 @@
+{
+  "command": "scripts/calibrate_h100.py --model auto --engine hf --gpus 0,1 --out results/h100_calibration",
+  "created_unix": 1779027951.7869813,
+  "engine": "hf",
+  "git_commit": "unavailable: Command '['git', 'rev-parse', 'HEAD']' returned non-zero exit status 128.",
+  "model": "auto",
+  "run_type": "h100_calibration"
+}

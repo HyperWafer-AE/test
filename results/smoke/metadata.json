@@ -1,0 +1,8 @@
+{
+  "command": "scripts/run_smoke_test.py --engine synthetic --wafer-config configs/wafer/toy_smoke.yaml --out results/smoke",
+  "created_unix": 1779028234.7483444,
+  "engine": "synthetic",
+  "git_commit": "unavailable: Command '['git', 'rev-parse', 'HEAD']' returned non-zero exit status 128.",
+  "run_type": "smoke",
+  "seed": 7
+}

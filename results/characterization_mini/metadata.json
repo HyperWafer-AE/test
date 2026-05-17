@@ -1,0 +1,11 @@
+{
+  "command": "scripts/collect_h100_traces.py --model auto --engine hf --workloads debate,moa --num-jobs 5 --gpus 0,1 --out results/characterization_mini",
+  "concurrency": "1",
+  "created_unix": 1779027964.41805,
+  "engine": "hf",
+  "git_commit": "unavailable: Command '['git', 'rev-parse', 'HEAD']' returned non-zero exit status 128.",
+  "gpus": "0,1",
+  "model": "auto",
+  "run_type": "trace_collection",
+  "seed": 11
+}

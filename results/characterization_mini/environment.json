@@ -1,0 +1,20 @@
+{
+  "command": "scripts/collect_h100_traces.py --model auto --engine hf --workloads debate,moa --num-jobs 5 --gpus 0,1 --out results/characterization_mini",
+  "env": {
+    "HF_HOME": "/home/duzc/data/agent_wafer/.cache/huggingface",
+    "MODEL_ZOO": "/data2/model_zoo",
+    "PROJECT_ROOT": "/home/duzc/data/agent_wafer",
+    "TOKENIZERS_PARALLELISM": "false",
+    "TRANSFORMERS_CACHE": "/home/duzc/data/agent_wafer/.cache/huggingface",
+    "UV_CACHE_DIR": "/home/duzc/data/agent_wafer/.cache/uv",
+    "XDG_CACHE_HOME": "/home/duzc/data/agent_wafer/.cache"
+  },
+  "git_commit": "unavailable: Command '['git', 'rev-parse', 'HEAD']' returned non-zero exit status 128.",
+  "model_zoo": "/data2/model_zoo",
+  "nvidia_smi": "NVIDIA H100 PCIe, 81559 MiB, 570.211.01\nNVIDIA H100 PCIe, 81559 MiB, 570.211.01",
+  "platform": "Linux-6.17.0-19-generic-x86_64-with-glibc2.39",
+  "project_root": "/home/duzc/data/agent_wafer",
+  "python": "3.11.14 (main, Oct 28 2025, 12:11:26) [Clang 20.1.4 ]",
+  "python_executable": "/home/duzc/data/agent_wafer/.venv/bin/python",
+  "torch": "unavailable: No module named 'torch'"
+}
