@@ -8,6 +8,20 @@ from waferagent.llm_runner import RunnerConfig, make_runner
 from waferagent.trace_schema import TraceRecord, write_traces
 
 
+def _topological_layers(graph: AgentGraph) -> list[list[str]]:
+    remaining = set(graph.nodes)
+    done: set[str] = set()
+    layers: list[list[str]] = []
+    while remaining:
+        ready = sorted(n for n in remaining if all(dep in done for dep in graph.nodes[n].deps))
+        if not ready:
+            raise ValueError(f"Graph has unsatisfied dependencies or a cycle: {graph.graph_id}")
+        layers.append(ready)
+        done.update(ready)
+        remaining.difference_update(ready)
+    return layers
+
+
 def collect_graph_traces(
     graphs: Iterable[AgentGraph],
     run_id: str,
@@ -17,8 +31,12 @@ def collect_graph_traces(
     runner = make_runner(runner_config)
     traces: list[TraceRecord] = []
     for graph in graphs:
-        for node_id in graph.topological_order():
-            traces.append(runner.run_node(run_id, graph.workload, graph.nodes[node_id]))
+        if runner_config.engine == "vllm" and hasattr(runner, "run_nodes"):
+            for layer in _topological_layers(graph):
+                traces.extend(runner.run_nodes(run_id, graph.workload, [graph.nodes[n] for n in layer]))
+        else:
+            for node_id in graph.topological_order():
+                traces.append(runner.run_node(run_id, graph.workload, graph.nodes[node_id]))
     if out_jsonl is not None:
         write_traces(out_jsonl, traces)
     return traces

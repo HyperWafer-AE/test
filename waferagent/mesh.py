@@ -23,6 +23,8 @@ class MeshConfig:
     h100_decode_to_wafer_scale: float = 0.50
     prefill_tile_fraction: float = 0.50
     decode_tile_fraction: float = 0.50
+    sram_region_rows: int = 8
+    sram_region_cols: int = 8
 
     @classmethod
     def from_yaml(cls, path: str | Path) -> "MeshConfig":

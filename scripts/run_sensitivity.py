@@ -11,11 +11,11 @@ from waferagent.plotting import plot_sensitivity
 from waferagent.simulator import simulate
 from waferagent.trace_collector import collect_graph_traces
 from waferagent.llm_runner import RunnerConfig
-from waferagent.utils import init_run_dir
+from waferagent.utils import enforce_clean_git_tree, finalize_run_dir, init_run_dir
 from waferagent.workloads import WorkloadParams, generate_workload
 
 
-def _run_case(out, mesh_cfg, param_name: str, value, seed: int, neutral: bool) -> pd.DataFrame:
+def _run_case(out, mesh_cfg, param_name: str, value, seed: int, neutral: bool, duration_source: str, calibration: str) -> pd.DataFrame:
     workload = "debate"
     if param_name == "tool_latency_mean_ms":
         workload = "tool_pause_resume_loop"
@@ -55,6 +55,8 @@ def _run_case(out, mesh_cfg, param_name: str, value, seed: int, neutral: bool) -
         ["wafer_naive", "waferagent_full"],
         seed=seed,
         neutral_multipliers=neutral,
+        duration_source=duration_source,
+        calibration=calibration or None,
     )
     metrics[param_name] = value
     return metrics
@@ -68,10 +70,17 @@ def main() -> None:
     parser.add_argument("--wafer-config", default="configs/wafer/wse_like.yaml")
     parser.add_argument("--out", default="results/sensitivity")
     parser.add_argument("--seed", type=int, default=19)
-    parser.add_argument("--neutral-mechanism-multipliers", action="store_true")
+    parser.add_argument("--calibration", default="")
+    parser.add_argument("--duration-source", default="synthetic", choices=["trace", "calibrated", "synthetic"])
+    parser.add_argument("--legacy-heuristic-multipliers", action="store_true")
+    parser.add_argument("--neutral-mechanism-multipliers", action="store_true", help="Deprecated no-op; neutral is the default.")
+    parser.add_argument("--clean-required", action="store_true")
+    parser.add_argument("--allow-dirty", action="store_true")
     args = parser.parse_args()
 
-    out = init_run_dir(args.out, {"run_type": "sensitivity", "engine": args.engine, "wafer_config": args.wafer_config})
+    enforce_clean_git_tree(args.clean_required, args.allow_dirty)
+    neutral = not bool(args.legacy_heuristic_multipliers)
+    out = init_run_dir(args.out, {"run_type": "sensitivity", "engine": args.engine, "wafer_config": args.wafer_config, "neutral_mechanism_multipliers": neutral, "legacy_heuristic_multipliers": bool(args.legacy_heuristic_multipliers), "duration_source": args.duration_source, "calibration": args.calibration, "clean_required": bool(args.clean_required)})
     base_cfg = MeshConfig.from_yaml(args.wafer_config)
     sweeps = {
         "num_agents": [2, 4, 8, 16, 32],
@@ -98,13 +107,14 @@ def main() -> None:
                 cfg = MeshConfig(**{**base_cfg.__dict__, "link_bandwidth_GBps": float(value)})
             elif param == "sram_per_tile_mb":
                 cfg = MeshConfig(**{**base_cfg.__dict__, "tile_sram_mb": float(value)})
-            metrics = _run_case(out, cfg, param, value, args.seed, args.neutral_mechanism_multipliers)
+            metrics = _run_case(out, cfg, param, value, args.seed, neutral, args.duration_source, args.calibration)
             rows.append(metrics)
         df = pd.concat(rows, ignore_index=True)
         df.to_csv(out / "simulation" / f"sensitivity_{param}.csv", index=False)
         plot_sensitivity(out / "simulation" / f"sensitivity_{param}.csv", param, out / "figures" / fig_names[param])
         all_rows.append(df)
     pd.concat(all_rows, ignore_index=True).to_csv(out / "simulation" / "sensitivity_all.csv", index=False)
+    finalize_run_dir(out)
     print(f"Sensitivity complete: {Path(out).resolve()}")
 
 

@@ -88,6 +88,7 @@ def build_stages(graph: AgentGraph, traces: list[TraceRecord]) -> dict[str, Stag
             job_id=node.job_id,
             stage_type="decode",
             deps=[prefill],
+            input_tokens=tr.input_tokens,
             output_tokens=tr.output_tokens,
             duration_ms=max(0.0, tr.decode_ms),
             tile_pool="decode",

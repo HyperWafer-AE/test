@@ -247,7 +247,7 @@ def planner_worker_tool(params: WorkloadParams) -> AgentGraph:
 def swe_like(params: WorkloadParams) -> AgentGraph:
     graph = AgentGraph(params.job_id, "swe_like", params.seed)
     shared = sha256_text(f"swe|{params.job_id}|repo-context")
-    p = WorkloadParams(**{**params.__dict__, "shared_prefix_ratio": max(params.shared_prefix_ratio, 0.75)})
+    p = WorkloadParams(**{**params.__dict__, "shared_prefix_ratio": params.shared_prefix_ratio})
     planner = f"{p.job_id}_planner"
     _node(p, graph, planner, "planner", 0, NodeType.LLM_CALL, "planner", shared, input_len=p.input_len)
     readers = []
@@ -341,7 +341,7 @@ def long_context_swe_stress(params: WorkloadParams) -> AgentGraph:
             **params.__dict__,
             "workload": "long_context_swe_stress",
             "input_len": max(params.input_len, 8192),
-            "shared_prefix_ratio": max(params.shared_prefix_ratio, 0.75),
+            "shared_prefix_ratio": params.shared_prefix_ratio,
             "num_workers": max(params.num_workers, params.num_agents),
         }
     )

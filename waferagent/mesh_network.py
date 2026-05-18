@@ -17,6 +17,7 @@ class MeshLinkEvent:
     transfer_ms: float
     start_ms: float
     end_ms: float
+    traffic_source: str = "unknown"
 
     def to_dict(self) -> dict[str, str | int | float]:
         return self.__dict__.copy()
@@ -39,6 +40,7 @@ class MeshNetwork:
         dst: tuple[int, int],
         bytes_moved: int,
         ready_ms: float,
+        traffic_source: str = "unknown",
     ) -> tuple[float, float, int]:
         bytes_moved = int(max(0, bytes_moved))
         if src == dst or bytes_moved == 0:
@@ -68,6 +70,7 @@ class MeshNetwork:
                     transfer_ms=per_link_transfer,
                     start_ms=start,
                     end_ms=end,
+                    traffic_source=traffic_source,
                 )
             )
             total_wait += wait
@@ -82,13 +85,14 @@ class MeshNetwork:
         dsts: list[tuple[int, int]],
         bytes_moved: int,
         ready_ms: float,
+        traffic_source: str = "kv_multicast",
     ) -> tuple[float, float, int]:
         if not dsts:
             return 0.0, 0.0, 0
         if not self.cfg.multicast_supported:
             waits = times = traffic = 0.0
             for dst in dsts:
-                w, t, b = self.route(job_id, stage_id, src, dst, bytes_moved, ready_ms)
+                w, t, b = self.route(job_id, stage_id, src, dst, bytes_moved, ready_ms, traffic_source)
                 waits += w
                 times = max(times, t)
                 traffic += b
@@ -98,7 +102,7 @@ class MeshNetwork:
         end_delta = 0.0
         traffic = 0
         for dst in sorted(set(dsts)):
-            w, t, b = self.route(job_id, stage_id, src, dst, bytes_moved, ready_ms)
+            w, t, b = self.route(job_id, stage_id, src, dst, bytes_moved, ready_ms, traffic_source)
             waits += w
             end_delta = max(end_delta, t)
             traffic += b

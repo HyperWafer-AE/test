@@ -109,8 +109,61 @@ def git_metadata() -> dict[str, Any]:
         "git_status_short": status,
         "branch": branch,
         "remote_url": remote,
+        "git_dirty": bool(status.strip()),
         "dirty_files": dirty_files,
     }
+
+
+def enforce_clean_git_tree(clean_required: bool = False, allow_dirty: bool = False) -> None:
+    """Exit early for paper-grade runs when the repository is dirty."""
+
+    if not clean_required or allow_dirty:
+        return
+    meta = git_metadata()
+    if meta.get("git_dirty"):
+        dirty = "\n".join(str(x) for x in meta.get("dirty_files", []))
+        raise SystemExit(
+            "Refusing to start clean-required experiment because git tree is dirty.\n"
+            f"Dirty files:\n{dirty}\n"
+            "Commit changes first or pass --allow-dirty for an explicitly non-paper-grade run."
+        )
+
+
+def artifact_hashes(root: str | Path) -> dict[str, str]:
+    root_path = require_project_path(root)
+    hashes: dict[str, str] = {}
+    skip_names = {"metadata.json", "metadata.yaml", "run_manifest.json"}
+    for path in sorted(p for p in root_path.rglob("*") if p.is_file()):
+        if path.name in skip_names:
+            continue
+        rel = path.relative_to(root_path).as_posix()
+        hashes[rel] = file_sha256(path)
+    return hashes
+
+
+def finalize_run_dir(out: str | Path) -> None:
+    """Refresh git metadata and record artifact hashes after an experiment finishes."""
+
+    out_path = require_project_path(out)
+    hashes = artifact_hashes(out_path)
+    meta_path = out_path / "metadata.json"
+    metadata = read_json(meta_path) if meta_path.exists() else {}
+    metadata.update(git_metadata())
+    metadata["artifact_sha256"] = hashes
+    write_json(meta_path, metadata)
+    try:
+        import yaml
+
+        (out_path / "metadata.yaml").write_text(
+            yaml.safe_dump(metadata, sort_keys=True), encoding="utf-8"
+        )
+    except Exception:
+        (out_path / "metadata.yaml").write_text(json.dumps(metadata, indent=2), encoding="utf-8")
+    manifest_path = out_path / "run_manifest.json"
+    manifest = read_json(manifest_path) if manifest_path.exists() else {}
+    manifest["metadata"] = metadata
+    manifest["artifact_sha256"] = hashes
+    write_json(manifest_path, manifest)
 
 
 def nvidia_smi_text() -> str:
@@ -204,6 +257,7 @@ def init_run_dir(out: str | Path, metadata: dict[str, Any] | None = None) -> Pat
     metadata.setdefault("created_unix", time.time())
     metadata.setdefault("command", " ".join(sys.argv))
     metadata.update({k: v for k, v in git_metadata().items() if k not in metadata})
+    metadata.setdefault("artifact_sha256", {})
     write_json(out_path / "metadata.json", metadata)
     try:
         import yaml

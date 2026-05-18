@@ -17,7 +17,7 @@ from waferagent.plotting import (
 )
 from waferagent.trace_collector import collect_graph_traces
 from waferagent.trace_schema import write_traces
-from waferagent.utils import append_text, init_run_dir, write_json
+from waferagent.utils import append_text, enforce_clean_git_tree, finalize_run_dir, init_run_dir, write_json
 from waferagent.workloads import generate_workload_set
 
 
@@ -45,8 +45,11 @@ def main() -> None:
     parser.add_argument("--out", default="results/characterization")
     parser.add_argument("--seed", type=int, default=11)
     parser.add_argument("--allow-synthetic-fallback", action="store_true")
+    parser.add_argument("--clean-required", action="store_true")
+    parser.add_argument("--allow-dirty", action="store_true")
     args = parser.parse_args()
 
+    enforce_clean_git_tree(args.clean_required, args.allow_dirty)
     out = init_run_dir(
         args.out,
         {
@@ -56,6 +59,7 @@ def main() -> None:
             "gpus": args.gpus,
             "concurrency": args.concurrency,
             "seed": args.seed,
+            "clean_required": bool(args.clean_required),
         },
     )
     workloads = [w.strip() for w in args.workloads.split(",") if w.strip()]
@@ -67,6 +71,7 @@ def main() -> None:
         if args.allow_synthetic_fallback:
             engine = "synthetic"
         else:
+            finalize_run_dir(out)
             raise SystemExit(2)
     runner_cfg = RunnerConfig(engine=engine, model_name=model_name, model_path=model_path)
     try:
@@ -75,6 +80,7 @@ def main() -> None:
         append_text(out / "environment.txt", f"\n{engine} trace collection failed: {exc}\n")
         if not args.allow_synthetic_fallback:
             write_json(out / "model_selection.json", {"model_name": model_name, "model_path": model_path, "engine_used": engine, "failure": str(exc), "fallback_used": False})
+            finalize_run_dir(out)
             raise SystemExit(2)
         append_text(out / "environment.txt", "Falling back to synthetic because --allow-synthetic-fallback was set.\n")
         runner_cfg = RunnerConfig(engine="synthetic", model_name="synthetic", model_path="")
@@ -82,7 +88,7 @@ def main() -> None:
         for tr in traces:
             tr.fallback_used = True
     write_traces(out / "traces" / "traces.jsonl", traces)
-    write_json(out / "model_selection.json", {"model_name": model_name, "model_path": model_path, "engine_used": runner_cfg.engine})
+    write_json(out / "model_selection.json", {"model_name": model_name, "model_path": model_path, "engine_used": runner_cfg.engine, "fallback_count": sum(1 for tr in traces if tr.fallback_used)})
     tables = write_characterization_tables(graphs, traces, out / "simulation", model_cfg)
     fig = out / "figures"
     plot_dag_examples(graphs, fig / "fig_workload_dag_examples")
@@ -90,6 +96,7 @@ def main() -> None:
     plot_kv_duplication(tables["characterization_kv_stats.csv"], fig / "fig_kv_duplication_ratio")
     plot_latency_breakdown(tables["characterization_latency_breakdown.csv"], fig / "fig_latency_breakdown")
     plot_critical_path(tables["characterization_critical_path.csv"], fig / "fig_critical_path_vs_total_work")
+    finalize_run_dir(out)
     print(f"Trace collection complete: {Path(out).resolve()}")
 
 

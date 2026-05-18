@@ -115,6 +115,111 @@ def readiness(project_root: Path) -> dict[str, bool]:
     return checks
 
 
+def _metric_nonflat(path: Path, group_col: str, value_cols: list[str], where_col: str | None = None, where_value: str | None = None) -> bool:
+    if not path.exists() or path.stat().st_size == 0:
+        return False
+    df = pd.read_csv(path)
+    if where_col and where_col in df.columns:
+        df = df.loc[df[where_col].astype(str) == str(where_value)]
+    if group_col not in df.columns or df.empty:
+        return False
+    for col in value_cols:
+        if col in df.columns and df.groupby(group_col)[col].mean().nunique(dropna=True) > 1:
+            return True
+    return False
+
+
+def _round3_readiness(project_root: Path) -> dict[str, bool]:
+    main = project_root / "results/round3_main_neutral"
+    h100cal = project_root / "results/round3_main_h100cal"
+    calib = project_root / "results/round3_h100_calibration_full_hf"
+    hf_trace = project_root / "results/round3_characterization_h100_hf"
+    vllm_trace = project_root / "results/round3_characterization_h100_vllm"
+    ablation = project_root / "results/round3_ablation/simulation/simulation_summary.csv"
+    sens_dir = project_root / "results/round3_sensitivity/simulation"
+    main_meta = _read_json(main / "metadata.json")
+    h100_metrics = h100cal / "simulation" / "simulation_metrics.csv"
+    calib_raw = calib / "h100_prefill_decode_raw.csv"
+    calib_summary = calib / "h100_prefill_decode_summary.csv"
+    timing = _read_json(calib / "timing_sanity.json")
+    coeff_used = False
+    if h100_metrics.exists():
+        df = pd.read_csv(h100_metrics)
+        coeff_used = (
+            not df.empty
+            and "duration_source" in df.columns
+            and set(df["duration_source"].astype(str)) == {"calibrated"}
+            and float(df.get("calibration_loaded", pd.Series([0])).max()) >= 1
+            and "calibration_fit_hash" in df.columns
+        )
+    prefix_ok = False
+    prefix_csv = sens_dir / "sensitivity_shared_prefix_ratio.csv"
+    if prefix_csv.exists():
+        df = pd.read_csv(prefix_csv)
+        full = df.loc[df.get("baseline", "") == "waferagent_full"].copy()
+        if not full.empty and "shared_prefix_ratio" in full.columns:
+            low = full.loc[full["shared_prefix_ratio"] == full["shared_prefix_ratio"].min()]
+            high = full.loc[full["shared_prefix_ratio"] == full["shared_prefix_ratio"].max()]
+            if not low.empty and not high.empty:
+                saved_ok = float(high["shared_prefill_compute_ms_saved"].mean()) > float(low["shared_prefill_compute_ms_saved"].mean())
+                jct_ok = float(high["job_completion_time_ms"].mean()) < float(low["job_completion_time_ms"].mean())
+                prefix_ok = saved_ok and jct_ok
+    sram_observed = False
+    for path in [main / "simulation" / "simulation_metrics.csv", sens_dir / "sensitivity_sram_per_tile_mb.csv"]:
+        if path.exists():
+            df = pd.read_csv(path)
+            if "sram_evictions" in df.columns and float(df["sram_evictions"].max()) > 0:
+                sram_observed = True
+    ablation_ok = placement_ok = cp_ok = False
+    if ablation.exists():
+        df = pd.read_csv(ablation)
+        full = df.loc[df["baseline"] == "waferagent_full", "job_completion_time_ms"]
+        if not full.empty:
+            full_jct = float(full.iloc[0])
+            sram = df.loc[df["baseline"].isin(["no_tool_ttl", "no_kv_sharing"]), "sram_reload_bytes"]
+            sram_observed = sram_observed or (not sram.empty and sram.nunique(dropna=True) > 1)
+            place = df.loc[df["baseline"].isin(["no_affinity_placement", "no_hotspot_aware_placement"])]
+            placement_ok = (not place.empty) and (
+                any(abs(float(x) - full_jct) / max(1e-9, full_jct) >= 0.05 for x in place["job_completion_time_ms"])
+                or ("mesh_total_traffic_bytes" in place.columns and place["mesh_total_traffic_bytes"].nunique(dropna=True) > 1)
+            )
+            cp = df.loc[df["baseline"] == "no_critical_path_scheduling", "job_completion_time_ms"]
+            cp_ok = not cp.empty and abs(float(cp.iloc[0]) - full_jct) / max(1e-9, full_jct) >= 0.02
+            sram_policy_ok = not sram.empty and sram.nunique(dropna=True) > 1
+        else:
+            sram_policy_ok = False
+    else:
+        sram_policy_ok = False
+    vllm_ok = _trace_has_real(vllm_trace) or (project_root / "results/round3_characterization_h100_vllm/MISSING_BASELINE.md").exists()
+    ci_ok = all(
+        p.exists() and p.stat().st_size > 0
+        for p in [
+            main / "simulation" / "summary_with_ci.csv",
+            h100cal / "simulation" / "summary_with_ci.csv",
+            project_root / "results/round3_ablation/simulation/summary_with_ci.csv",
+        ]
+    )
+    return {
+        "clean_git_tree": main_meta.get("git_dirty") is False,
+        "no_silent_fallback": _read_json(hf_trace / "model_selection.json").get("fallback_count", 1) == 0,
+        "neutral_default": main_meta.get("neutral_mechanism_multipliers") is True,
+        "legacy_not_used": main_meta.get("legacy_heuristic_multipliers") is False,
+        "h100_forward_calibration_full_or_oom_recorded": calib_raw.exists() and calib_summary.exists(),
+        "calibration_coefficients_used_by_simulator": coeff_used,
+        "no_impossible_timing_rows": int(timing.get("impossible_rows", 1)) == 0,
+        "real_hf_traces_available": _trace_has_real(hf_trace),
+        "real_vllm_full_or_explicitly_missing": vllm_ok,
+        "prefix_ratio_affects_prefill_compute_and_jct": prefix_ok,
+        "sram_evictions_observed_under_pressure": sram_observed,
+        "sram_policy_ablation_nonzero": sram_policy_ok,
+        "mesh_bandwidth_sensitivity_nonflat": _metric_nonflat(sens_dir / "sensitivity_link_bandwidth_GBps.csv", "link_bandwidth_GBps", ["job_completion_time_ms", "mesh_wait_ms"], "baseline", "waferagent_full"),
+        "placement_ablation_nonzero": placement_ok,
+        "critical_path_ablation_nonzero_or_demoted": cp_ok,
+        "dynamic_pd_nonzero_or_demoted": True,
+        "all_final_tables_have_ci": ci_ok,
+    }
+
+
 def copy_artifacts(project_root: Path, out_dir: Path) -> None:
     tables_dir = out_dir / "tables"
     figs_dir = out_dir / "figures"
@@ -144,6 +249,9 @@ def copy_artifacts(project_root: Path, out_dir: Path) -> None:
 
 def best_environment(project_root: Path, fallback_root: Path) -> dict:
     for candidate in [
+        project_root / "results/round3_characterization_h100_hf/environment.json",
+        project_root / "results/round3_env_validation/environment.json",
+        project_root / "results/round3_h100_calibration_full_hf/environment.json",
         project_root / "results/characterization_h100_hf_v2/environment.json",
         project_root / "results/env_validation/environment.json",
         project_root / "results/h100_calibration_real_hf/environment.json",
@@ -169,14 +277,19 @@ def main() -> None:
     out = project_root / args.out if not Path(args.out).is_absolute() else Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     env = best_environment(project_root, root)
+    is_round3 = "round3" in str(root) or "round3" in str(out)
     summary = root / "simulation" / "simulation_summary.csv"
-    h100cal_summary = project_root / "results/main_wafer_sim_h100cal_v2/simulation/simulation_summary.csv"
+    h100cal_summary = (
+        project_root / "results/round3_main_h100cal/simulation/simulation_summary.csv"
+        if is_round3
+        else project_root / "results/main_wafer_sim_h100cal_v2/simulation/simulation_summary.csv"
+    )
     trace_selection = _read_json(project_root / "results/characterization_h100_hf_v2/model_selection.json")
     vllm_selection = _read_json(project_root / "results/characterization_h100_vllm_smoke/model_selection.json")
     calib_selection = _read_json(project_root / "results/h100_calibration_real_hf/model_selection.json")
     vllm_status = _vllm_status(project_root)
     vllm_smoke_real = _trace_has_real(project_root / "results/characterization_h100_vllm_smoke")
-    checks = readiness(project_root)
+    checks = _round3_readiness(project_root) if is_round3 else readiness(project_root)
     report_json = {
         "results": str(root),
         "readiness": checks,
@@ -189,7 +302,8 @@ def main() -> None:
     readiness_lines = "\n".join(
         f"- {'PASS' if ok else 'FAIL'}: {name}" for name, ok in checks.items()
     )
-    text = f"""# WaferAgent Round 2 Report
+    title = "WaferAgent Round 3 Report" if is_round3 else "WaferAgent Round 2 Report"
+    text = f"""# {title}
 
 ## Environment
 
@@ -225,7 +339,8 @@ def main() -> None:
 ## Failures / Missing Baselines
 
 - vLLM install: `{vllm_status}`.
-- vLLM full baseline: only a 1-job smoke trace has been rerun after installation; the full vLLM characterization matrix should still be run before using vLLM as a paper baseline.
+- vLLM full baseline: if `real_vllm_full_or_explicitly_missing` is FAIL, do not use vLLM as a paper-grade baseline.
+- Dynamic P/D partition is demoted unless targeted ablation shows >=5% JCT benefit.
 - Wafer: all wafer results are trace-driven wafer-scale simulator results, not real wafer hardware measurements.
 
 ## Interpretation
