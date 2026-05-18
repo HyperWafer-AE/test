@@ -6,7 +6,13 @@ import subprocess
 import sys
 from pathlib import Path
 
-from waferagent.utils import configure_project_env, init_run_dir, write_json
+from waferagent.utils import (
+    configure_project_env,
+    enforce_clean_git_tree,
+    finalize_run_dir,
+    init_run_dir,
+    write_json,
+)
 
 
 TORCH_CHECK = r"""
@@ -56,8 +62,21 @@ def main() -> None:
     parser.add_argument("--model", default="auto")
     parser.add_argument("--gpus", default="0,1")
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--clean-required", action="store_true")
+    parser.add_argument("--allow-dirty", action="store_true")
     args = parser.parse_args()
-    out = init_run_dir(args.out, {"run_type": "env_validation", "engine": args.engine, "model": args.model, "gpus": args.gpus, "seed": args.seed})
+    enforce_clean_git_tree(args.clean_required, args.allow_dirty)
+    out = init_run_dir(
+        args.out,
+        {
+            "run_type": "env_validation",
+            "engine": args.engine,
+            "model": args.model,
+            "gpus": args.gpus,
+            "seed": args.seed,
+            "clean_required": bool(args.clean_required),
+        },
+    )
     try:
         proc = subprocess.run(
             [sys.executable, "-c", TORCH_CHECK],
@@ -101,6 +120,7 @@ def main() -> None:
     )
     print(text)
     print(package_text)
+    finalize_run_dir(out)
     raise SystemExit(code or package_code)
 
 
