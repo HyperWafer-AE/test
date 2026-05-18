@@ -1,0 +1,25 @@
+{
+  "pass": true,
+  "readiness": {
+    "all_final_tables_have_ci": true,
+    "calibration_coefficients_used_by_simulator": true,
+    "clean_git_tree": true,
+    "critical_path_ablation_nonzero_or_demoted": true,
+    "dynamic_pd_nonzero_or_demoted": true,
+    "h100_forward_calibration_full_or_oom_recorded": true,
+    "legacy_not_used": true,
+    "mesh_bandwidth_sensitivity_nonflat": true,
+    "neutral_default": true,
+    "no_impossible_timing_rows": true,
+    "no_silent_fallback": true,
+    "placement_ablation_nonzero": true,
+    "prefix_ratio_affects_prefill_compute_and_jct": true,
+    "real_hf_traces_available": true,
+    "real_vllm_full_or_explicitly_missing": true,
+    "sram_evictions_observed_under_pressure": true,
+    "sram_policy_ablation_nonzero": true
+  },
+  "results": "/home/duzc/data/agent_wafer/results/round3_main_neutral",
+  "vllm_install_status": "vLLM 0.6.4.post1 install retry exit_code=0 finished: 2026-05-18T20:20:07+08:00",
+  "vllm_smoke_real_trace": true
+}

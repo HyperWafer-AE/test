@@ -237,7 +237,10 @@ def copy_artifacts(project_root: Path, out_dir: Path) -> None:
         "sram_events.csv",
         "prefix_blocks.csv",
     }
+    round3_only = out_dir.name.startswith("round3_") or "round3" in out_dir.as_posix()
     for csv in project_root.glob("results/*/simulation/*.csv"):
+        if round3_only and not csv.parent.parent.name.startswith("round3_"):
+            continue
         if csv.parent.parent == out_dir:
             continue
         if csv.name in skip_names:
@@ -246,6 +249,8 @@ def copy_artifacts(project_root: Path, out_dir: Path) -> None:
             continue
         shutil.copy2(csv, tables_dir / f"{csv.parent.parent.name}_{csv.name}")
     for fig in project_root.glob("results/*/figures/*"):
+        if round3_only and not fig.parent.parent.name.startswith("round3_"):
+            continue
         if fig.parent.parent == out_dir:
             continue
         if fig.suffix in {".png", ".pdf"}:
