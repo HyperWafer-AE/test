@@ -19,6 +19,35 @@ for i in range(torch.cuda.device_count()):
 """
 
 
+PACKAGE_CHECK = r"""
+import importlib
+import importlib.metadata as metadata
+
+packages = [
+    "torch",
+    "transformers",
+    "vllm",
+    "xformers",
+    "numpy",
+    "pandas",
+    "pytest",
+]
+for package in packages:
+    try:
+        print(f"{package}={metadata.version(package)}")
+    except Exception as exc:
+        print(f"{package}=MISSING:{exc}")
+
+for module in ["torch", "transformers", "vllm"]:
+    try:
+        importlib.import_module(module)
+        print(f"import:{module}=ok")
+    except Exception as exc:
+        print(f"import:{module}=failed:{exc!r}")
+        raise
+"""
+
+
 def main() -> None:
     configure_project_env()
     parser = argparse.ArgumentParser()
@@ -45,9 +74,34 @@ def main() -> None:
         text = f"torch check failed: {exc}\n"
         code = 1
     (out / "torch_cuda_check.txt").write_text(text, encoding="utf-8")
-    write_json(out / "validation.json", {"torch_cuda_check_exit_code": code, "torch_cuda_check": text})
+    try:
+        pkg_proc = subprocess.run(
+            [sys.executable, "-c", PACKAGE_CHECK],
+            cwd=str(Path.cwd()),
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            check=False,
+            timeout=120,
+        )
+        package_text = pkg_proc.stdout
+        package_code = pkg_proc.returncode
+    except Exception as exc:
+        package_text = f"package check failed: {exc}\n"
+        package_code = 1
+    (out / "package_check.txt").write_text(package_text, encoding="utf-8")
+    write_json(
+        out / "validation.json",
+        {
+            "torch_cuda_check_exit_code": code,
+            "torch_cuda_check": text,
+            "package_check_exit_code": package_code,
+            "package_check": package_text,
+        },
+    )
     print(text)
-    raise SystemExit(code)
+    print(package_text)
+    raise SystemExit(code or package_code)
 
 
 if __name__ == "__main__":

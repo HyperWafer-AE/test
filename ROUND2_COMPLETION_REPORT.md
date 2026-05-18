@@ -51,17 +51,22 @@
   - `results/final_report_v2/report.md`
   - `results/final_report_v2/report.json`
   - `report.json` 中 readiness 全 PASS。
+- vLLM 安装和 smoke 成功：
+  - 安装版本：`vllm==0.6.4.post1`
+  - 兼容版本调整：`transformers==4.46.3`、`numpy==1.26.4`
+  - 安装日志：`results/env_validation/vllm_install_064post1_aliyun_retry.log`
+  - smoke trace：`results/characterization_h100_vllm_smoke`
+  - 规模：`debate` 1 job，共 9 条 vLLM real trace，`fallback_count=0`
 - 测试成功：
   - 命令：`pytest tests -q`
   - 结果：`17 passed`。
 
 ## 3. 哪些实验失败及原因
 
-- vLLM baseline 未完成：
-  - 尝试命令使用阿里云 PyPI 源安装 `vllm`。
-  - 日志：`results/env_validation/vllm_install_aliyun.log`
-  - 结果：600 秒 timeout，exit code `124`。
-  - 当前 `import vllm` 仍为 `ModuleNotFoundError`，因此不能声明 vLLM baseline 完成。
+- 完整 vLLM baseline 未完成：
+  - `vllm==0.6.4.post1` 已安装并通过 1-job real smoke。
+  - 还没有跑完整 `characterization_h100_vllm_v2` 或 vLLM calibration matrix。
+  - 因此只能声明 vLLM 环境与 smoke trace 可用，不能把 vLLM 全量 baseline 写进论文主结果。
 - 完整 H100 calibration matrix 未完成：
   - 当前完成 20-case subset，用于 sanity 和 H100-calibrated simulation。
   - 还没有完成 `[128..32768] x [1,16,32,128,256] x [1,2,4,8,16]` 全矩阵。
@@ -79,7 +84,7 @@
 
 ## 5. 当前还不能写进论文的结论
 
-- 不能声明 vLLM baseline 已完成；它当前不可用且必须在论文/报告中透明说明。
+- 不能声明完整 vLLM baseline 已完成；当前只有 vLLM 安装验证和 1-job real smoke trace。
 - 不能声明真实 wafer 硬件结果；所有 wafer 结果仍是 trace-driven wafer-scale simulator。
 - 不能把 dynamic P/D partition 写成有强收益的机制；当前 targeted ablation 是 flat。
 - 不能把 H100-calibrated simulation 的 JCT 结论写得过强；它当前更支持 KV/mesh 指标 sanity，而不是强 JCT speedup。
@@ -90,5 +95,5 @@
 - 完整跑完 H100 calibration matrix，并加入更多 seeds。
 - 优先修 dynamic P/D partition，使队列压力和 tile pool conflict 能在 targeted workload 中产生可测差异。
 - 继续加强 H100-calibrated cost model，让真实 trace 的 prefill/decode 拟合更稳定。
-- 如果要保留 vLLM baseline，建议单独开较长安装窗口或固定 vLLM/torch/CUDA 兼容版本，避免无限解析/下载。
+- 如果要保留 vLLM baseline，建议基于当前已验证组合 `torch==2.5.1+cu124`、`transformers==4.46.3`、`vllm==0.6.4.post1` 跑完整 vLLM characterization/calibration。
 - 对 final paper 主结果，建议暂时使用 synthetic neutral stress tests 做机制证据，用真实 H100 trace + H100-calibrated simulation 做 sanity check，而不是把后者过度包装成主 JCT 结论。

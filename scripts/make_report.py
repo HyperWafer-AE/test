@@ -67,6 +67,23 @@ def _last_matching_line(path: Path, pattern: str) -> str:
     return last
 
 
+def _vllm_status(project_root: Path) -> str:
+    candidates = [
+        project_root / "results/env_validation/vllm_install_064post1_aliyun_retry.log",
+        project_root / "results/env_validation/vllm_install_064post1_aliyun.log",
+        project_root / "results/env_validation/vllm_install_aliyun.log",
+    ]
+    for candidate in candidates:
+        line = _last_matching_line(candidate, "exit_code=")
+        if "exit_code=0" in line:
+            return line
+    for candidate in candidates:
+        line = _last_matching_line(candidate, "exit_code=")
+        if line != "not recorded":
+            return line
+    return "not recorded"
+
+
 def readiness(project_root: Path) -> dict[str, bool]:
     main = project_root / "results/main_wafer_sim_neutral_v2"
     ablation = project_root / "results/ablation_neutral_v2/simulation/simulation_summary.csv"
@@ -155,12 +172,16 @@ def main() -> None:
     summary = root / "simulation" / "simulation_summary.csv"
     h100cal_summary = project_root / "results/main_wafer_sim_h100cal_v2/simulation/simulation_summary.csv"
     trace_selection = _read_json(project_root / "results/characterization_h100_hf_v2/model_selection.json")
+    vllm_selection = _read_json(project_root / "results/characterization_h100_vllm_smoke/model_selection.json")
     calib_selection = _read_json(project_root / "results/h100_calibration_real_hf/model_selection.json")
-    vllm_status = _last_matching_line(project_root / "results/env_validation/vllm_install_aliyun.log", "exit_code=")
+    vllm_status = _vllm_status(project_root)
+    vllm_smoke_real = _trace_has_real(project_root / "results/characterization_h100_vllm_smoke")
     checks = readiness(project_root)
     report_json = {
         "results": str(root),
         "readiness": checks,
+        "vllm_install_status": vllm_status,
+        "vllm_smoke_real_trace": vllm_smoke_real,
         "pass": all(checks.values()),
     }
     (out.parent / "report.json").write_text(json.dumps(report_json, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -193,6 +214,9 @@ def main() -> None:
 - HF trace engine: `{trace_selection.get('engine_used', 'unavailable')}`
 - HF calibration model: `{calib_selection.get('model_path', 'unavailable')}`
 - HF calibration engine: `{calib_selection.get('engine_used', 'unavailable')}`
+- vLLM smoke model: `{vllm_selection.get('model_path', 'unavailable')}`
+- vLLM smoke engine: `{vllm_selection.get('engine_used', 'unavailable')}`
+- vLLM smoke real trace: `{vllm_smoke_real}`
 
 ## H100-Calibrated Wafer Simulation
 
@@ -200,7 +224,8 @@ def main() -> None:
 
 ## Failures / Missing Baselines
 
-- vLLM: `{vllm_status}`. The vLLM baseline is not claimed as completed unless import and real vLLM traces succeed.
+- vLLM install: `{vllm_status}`.
+- vLLM full baseline: only a 1-job smoke trace has been rerun after installation; the full vLLM characterization matrix should still be run before using vLLM as a paper baseline.
 - Wafer: all wafer results are trace-driven wafer-scale simulator results, not real wafer hardware measurements.
 
 ## Interpretation

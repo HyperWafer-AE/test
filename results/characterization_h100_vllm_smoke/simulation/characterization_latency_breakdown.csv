@@ -1,0 +1,10 @@
+job_id,workload,node_id,ttft_ms,decode_ms,tool_latency_ms,total_ms
+debate_job_0,debate,debate_job_0_r0_proposer_0,1368.6461448669434,0.0,0.0,1368.6461448669434
+debate_job_0,debate,debate_job_0_r0_proposer_1,1353.111743927002,0.0,0.0,1353.111743927002
+debate_job_0,debate,debate_job_0_r0_proposer_2,1343.8186645507812,0.0,0.0,1343.8186645507812
+debate_job_0,debate,debate_job_0_r0_proposer_3,1347.1601009368896,0.0,0.0,1347.1601009368896
+debate_job_0,debate,debate_job_0_r0_critic_0,1356.8143844604492,0.0,0.0,1356.8143844604492
+debate_job_0,debate,debate_job_0_r0_critic_1,1357.1805953979492,0.0,0.0,1357.1805953979492
+debate_job_0,debate,debate_job_0_r0_critic_2,1358.7048053741455,0.0,0.0,1358.7048053741455
+debate_job_0,debate,debate_job_0_r0_critic_3,1359.1625690460205,0.0,0.0,1359.1625690460205
+debate_job_0,debate,debate_job_0_r0_judge,735.3456020355225,0.0,0.0,735.3456020355225

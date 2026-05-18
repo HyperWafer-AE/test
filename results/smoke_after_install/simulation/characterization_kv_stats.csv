@@ -1,0 +1,3 @@
+naive_kv_bytes,shared_kv_bytes,unique_shared_tokens,logical_shared_tokens,kv_saving_ratio,kv_duplication_ratio,job_id,workload
+184549376.0,113246208.0,160.0,704.0,0.38636363636363635,1.6296296296296295,smoke_debate_0,debate
+184549376.0,113246208.0,160.0,704.0,0.38636363636363635,1.6296296296296295,smoke_debate_1,debate

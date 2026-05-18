@@ -1,0 +1,2 @@
+job_id,workload,critical_path_weight,total_work_weight,critical_path_fraction
+debate_job_0,debate,7104.0,20544.0,0.34579439252336447

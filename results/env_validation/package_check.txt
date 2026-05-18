@@ -1,0 +1,12 @@
+/home/duzc/data/agent_wafer/.venv/lib/python3.11/site-packages/transformers/utils/hub.py:128: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+torch=2.5.1
+transformers=4.46.3
+vllm=0.6.4.post1
+xformers=0.0.28.post3
+numpy=1.26.4
+pandas=3.0.3
+pytest=9.0.3
+import:torch=ok
+import:transformers=ok
+import:vllm=ok

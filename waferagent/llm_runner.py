@@ -9,7 +9,7 @@ from waferagent.graph_ir import AgentNode, NodeType
 from waferagent.kv_model import ModelKVConfig, estimate_kv_bytes
 from waferagent.prompts import prompt_for_node
 from waferagent.trace_schema import TraceRecord
-from waferagent.utils import sha256_text
+from waferagent.utils import PROJECT_ROOT, configure_project_env, sha256_text
 
 
 @dataclass
@@ -226,6 +226,7 @@ class HFRunner:
 
 class VLLMRunner:
     def __init__(self, config: RunnerConfig, model_cfg: ModelKVConfig | None = None):
+        configure_project_env()
         self.config = config
         self.model_cfg = model_cfg or ModelKVConfig()
         try:
@@ -233,7 +234,10 @@ class VLLMRunner:
 
             self.LLM = LLM
             self.SamplingParams = SamplingParams
-            self.llm = LLM(model=config.model_path or config.model_name)
+            self.llm = LLM(
+                model=config.model_path or config.model_name,
+                download_dir=str(PROJECT_ROOT / ".cache" / "vllm"),
+            )
         except Exception as exc:
             raise RuntimeError(f"vLLM unavailable: {exc}") from exc
 

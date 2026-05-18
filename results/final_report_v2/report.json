@@ -10,5 +10,7 @@
     "placement ablation affects mesh metrics and targeted JCT": true,
     "real H100 traces available": true
   },
-  "results": "/home/duzc/data/agent_wafer/results/main_wafer_sim_neutral_v2"
+  "results": "/home/duzc/data/agent_wafer/results/main_wafer_sim_neutral_v2",
+  "vllm_install_status": "vLLM 0.6.4.post1 install retry exit_code=0 finished: 2026-05-18T20:20:07+08:00",
+  "vllm_smoke_real_trace": true
 }

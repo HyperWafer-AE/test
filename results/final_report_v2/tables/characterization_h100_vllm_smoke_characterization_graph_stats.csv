@@ -1,0 +1,2 @@
+nodes,edges,max_fan_in,max_fan_out,avg_fan_in,avg_fan_out,unique_shared_prefixes,shared_prefix_reuse_events,unique_shared_tokens,logical_shared_tokens,shared_prefix_ratio,job_id,workload,critical_path_weight,total_work_weight
+9,8,4,1,0.8888888888888888,0.8888888888888888,1,8,1280,9728,0.5,debate_job_0,debate,7104.0,20544.0

@@ -38,6 +38,9 @@ NVIDIA H100 PCIe, 81559 MiB, 570.211.01`
 - HF trace engine: `hf`
 - HF calibration model: `/data2/model_zoo/Qwen2.5-7B-Instruct`
 - HF calibration engine: `hf`
+- vLLM smoke model: `/data2/model_zoo/Qwen2.5-7B-Instruct`
+- vLLM smoke engine: `vllm`
+- vLLM smoke real trace: `True`
 
 ## H100-Calibrated Wafer Simulation
 
@@ -52,7 +55,8 @@ NVIDIA H100 PCIe, 81559 MiB, 570.211.01`
 
 ## Failures / Missing Baselines
 
-- vLLM: `vLLM install attempt exit_code=124 finished: 2026-05-18T17:14:01+08:00`. The vLLM baseline is not claimed as completed unless import and real vLLM traces succeed.
+- vLLM install: `vLLM 0.6.4.post1 install retry exit_code=0 finished: 2026-05-18T20:20:07+08:00`.
+- vLLM full baseline: only a 1-job smoke trace has been rerun after installation; the full vLLM characterization matrix should still be run before using vLLM as a paper baseline.
 - Wafer: all wafer results are trace-driven wafer-scale simulator results, not real wafer hardware measurements.
 
 ## Interpretation

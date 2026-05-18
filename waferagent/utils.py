@@ -23,9 +23,18 @@ def configure_project_env() -> None:
     os.environ.setdefault("UV_CACHE_DIR", str(PROJECT_ROOT / ".cache" / "uv"))
     os.environ.setdefault("UV_PYTHON_INSTALL_DIR", str(PROJECT_ROOT / ".cache" / "uv" / "python"))
     os.environ.setdefault("TMPDIR", str(PROJECT_ROOT / "tmp"))
+    os.environ.setdefault("CUDA_CACHE_PATH", str(PROJECT_ROOT / ".cache" / "cuda"))
+    os.environ.setdefault("TRITON_CACHE_DIR", str(PROJECT_ROOT / ".cache" / "triton"))
+    os.environ.setdefault("RAY_TMPDIR", str(PROJECT_ROOT / "tmp" / "ray"))
+    os.environ.setdefault("VLLM_CACHE_ROOT", str(PROJECT_ROOT / ".cache" / "vllm"))
+    os.environ.setdefault("VLLM_WORKER_MULTIPROC_METHOD", "spawn")
     os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
     os.environ.setdefault("MODEL_ZOO", str(MODEL_ZOO))
     (PROJECT_ROOT / "tmp").mkdir(parents=True, exist_ok=True)
+    (PROJECT_ROOT / ".cache" / "cuda").mkdir(parents=True, exist_ok=True)
+    (PROJECT_ROOT / ".cache" / "triton").mkdir(parents=True, exist_ok=True)
+    (PROJECT_ROOT / ".cache" / "vllm").mkdir(parents=True, exist_ok=True)
+    (PROJECT_ROOT / "tmp" / "ray").mkdir(parents=True, exist_ok=True)
 
 
 def require_project_path(path: str | Path) -> Path:
@@ -145,6 +154,11 @@ def environment_dict(command: str | None = None) -> dict[str, Any]:
                 "UV_CACHE_DIR",
                 "UV_PYTHON_INSTALL_DIR",
                 "TMPDIR",
+                "CUDA_CACHE_PATH",
+                "TRITON_CACHE_DIR",
+                "RAY_TMPDIR",
+                "VLLM_CACHE_ROOT",
+                "VLLM_WORKER_MULTIPROC_METHOD",
                 "TOKENIZERS_PARALLELISM",
                 "MODEL_ZOO",
             ]

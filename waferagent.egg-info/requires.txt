@@ -14,9 +14,10 @@ ruff>=0.4
 
 [hf]
 torch
-transformers>=4.40
+transformers<5,>=4.40
 accelerate>=0.29
 safetensors>=0.4
 
 [serving]
-vllm
+setuptools>=70
+vllm==0.6.4.post1

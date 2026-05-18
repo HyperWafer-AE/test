@@ -1,0 +1,16 @@
+transformers 4.46.3 install started: 2026-05-18T20:21:46+08:00
+Resolved 18 packages in 1.18s
+Downloading tokenizers (2.9MiB)
+Downloading transformers (9.6MiB)
+ Downloading tokenizers
+ Downloading transformers
+Prepared 3 packages in 4.57s
+Uninstalled 3 packages in 54ms
+Installed 3 packages in 33ms
+ - huggingface-hub==1.15.0
+ + huggingface-hub==0.36.2
+ - tokenizers==0.22.2
+ + tokenizers==0.20.3
+ - transformers==5.8.1
+ + transformers==4.46.3
+transformers 4.46.3 install exit_code=0 finished: 2026-05-18T20:21:52+08:00

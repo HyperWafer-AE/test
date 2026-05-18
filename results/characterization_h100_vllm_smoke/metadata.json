@@ -1,0 +1,29 @@
+{
+  "branch": "main",
+  "command": "scripts/collect_h100_traces.py --model auto --engine vllm --workloads debate --num-jobs 1 --gpus 0,1 --out results/characterization_h100_vllm_smoke --seed 31",
+  "concurrency": "1",
+  "created_unix": 1779107139.4354188,
+  "dirty_files": [
+    "results/env_validation/metadata.json",
+    "results/env_validation/validation.json",
+    "scripts/make_report.py",
+    "scripts/setup_env.sh",
+    "scripts/validate_environment.py",
+    "waferagent/llm_runner.py",
+    "waferagent/utils.py",
+    "results/env_validation/package_check.txt",
+    "results/env_validation/setuptools_install_aliyun.log",
+    "results/env_validation/transformers_4463_install_aliyun.log",
+    "results/env_validation/vllm_install_064post1_aliyun.log",
+    "results/env_validation/vllm_install_064post1_aliyun_retry.log",
+    "results/h100_calibration_real_hf_smoke_after_install/"
+  ],
+  "engine": "vllm",
+  "git_commit": "0b149a136b7862d4c288dd63918bbbe182699d0c",
+  "git_status_short": "M results/env_validation/metadata.json\n M results/env_validation/validation.json\n M scripts/make_report.py\n M scripts/setup_env.sh\n M scripts/validate_environment.py\n M waferagent/llm_runner.py\n M waferagent/utils.py\n?? results/env_validation/package_check.txt\n?? results/env_validation/setuptools_install_aliyun.log\n?? results/env_validation/transformers_4463_install_aliyun.log\n?? results/env_validation/vllm_install_064post1_aliyun.log\n?? results/env_validation/vllm_install_064post1_aliyun_retry.log\n?? results/h100_calibration_real_hf_smoke_after_install/",
+  "gpus": "0,1",
+  "model": "auto",
+  "remote_url": "git@github-hwae:HyperWafer-AE/test.git",
+  "run_type": "trace_collection",
+  "seed": 31
+}
