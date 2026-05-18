@@ -21,9 +21,12 @@ def main() -> None:
     parser.add_argument("--wafer-config", default="configs/wafer/toy_smoke.yaml")
     parser.add_argument("--out", default="results/smoke")
     parser.add_argument("--seed", type=int, default=7)
+    parser.add_argument("--model", default="auto")
+    parser.add_argument("--gpus", default="")
+    parser.add_argument("--neutral-mechanism-multipliers", action="store_true")
     args = parser.parse_args()
 
-    out = init_run_dir(args.out, {"run_type": "smoke", "engine": args.engine, "seed": args.seed})
+    out = init_run_dir(args.out, {"run_type": "smoke", "engine": args.engine, "model": args.model, "gpus": args.gpus, "seed": args.seed, "neutral_mechanism_multipliers": bool(args.neutral_mechanism_multipliers)})
     graphs = [
         generate_workload(
             WorkloadParams(

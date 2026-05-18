@@ -39,10 +39,7 @@ def _duration(
     prefix_seen: set[str],
 ) -> tuple[float, float, str]:
     if tr.node_type == NodeType.TOOL_CALL.value:
-        tool = tr.tool_latency_ms
-        if baseline.tool_ttl:
-            tool *= 0.92
-        return tool, 0.0, "not_applicable"
+        return tr.tool_latency_ms, 0.0, "not_applicable"
     prefill = max(0.0, tr.ttft_ms)
     decode = max(0.0, tr.decode_ms)
     cache_hit = "not_applicable"

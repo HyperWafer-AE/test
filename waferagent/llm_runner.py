@@ -7,6 +7,7 @@ from typing import Any
 
 from waferagent.graph_ir import AgentNode, NodeType
 from waferagent.kv_model import ModelKVConfig, estimate_kv_bytes
+from waferagent.prompts import prompt_for_node
 from waferagent.trace_schema import TraceRecord
 from waferagent.utils import sha256_text
 
@@ -78,6 +79,17 @@ class SyntheticRunner:
             quality_proxy=None,
             shared_prefix_token_len=node.shared_prefix_token_len,
             private_prefix_token_len=node.private_prefix_token_len,
+            actual_prompt_tokens=node.input_token_len,
+            actual_completion_tokens=node.actual_output_token_len,
+            measured_ttft_ms=ttft,
+            measured_tpot_ms=(max(0.0, total - ttft) / max(1, node.actual_output_token_len - 1)),
+            measured_total_ms=total,
+            peak_gpu_mem_bytes=None,
+            real_trace=False,
+            fallback_used=False,
+            actual_shared_prefix_tokens=node.shared_prefix_token_len,
+            actual_private_tokens=node.private_prefix_token_len,
+            shared_prefix_hash=node.shared_prefix_ids[0] if node.shared_prefix_ids else "",
             metadata={},
         )
 
@@ -113,18 +125,20 @@ class HFRunner:
         except Exception as exc:
             raise RuntimeError(f"HF model load failed: {exc}") from exc
 
-    def _prompt(self, node: AgentNode) -> str:
-        # Compact deterministic prompt; token length is controlled by repeated filler.
-        body = " ".join(["context"] * max(1, node.input_token_len))
-        return f"Role: {node.role}\nNode: {node.node_id}\n{body}\nAnswer briefly."
-
-    def _generate_once(self, prompt: str, max_new_tokens: int) -> tuple[str, float]:
+    def _generate_once(self, prompt: str, max_new_tokens: int) -> tuple[str, float, int, int]:
         assert self.tokenizer is not None and self.model is not None
         torch = self.torch
         inputs = self.tokenizer(prompt, return_tensors="pt")
+        prompt_tokens = int(inputs["input_ids"].shape[-1])
         if torch.cuda.is_available():
             inputs = {k: v.to(self.model.device) for k, v in inputs.items()}
+            torch.cuda.reset_peak_memory_stats()
             torch.cuda.synchronize()
+            starter = torch.cuda.Event(enable_timing=True)
+            ender = torch.cuda.Event(enable_timing=True)
+            starter.record()
+        else:
+            starter = ender = None
         start = time.time()
         with torch.no_grad():
             out = self.model.generate(
@@ -134,23 +148,34 @@ class HFRunner:
                 pad_token_id=self.tokenizer.eos_token_id,
             )
         if torch.cuda.is_available():
+            ender.record()
             torch.cuda.synchronize()
-        elapsed_ms = (time.time() - start) * 1000.0
+            elapsed_ms = float(starter.elapsed_time(ender))
+            peak_mem = int(torch.cuda.max_memory_allocated())
+        else:
+            elapsed_ms = (time.time() - start) * 1000.0
+            peak_mem = 0
+        completion_tokens = max(0, int(out.shape[-1]) - prompt_tokens)
         text = self.tokenizer.decode(out[0], skip_special_tokens=True)
-        return text, elapsed_ms
+        return text, elapsed_ms, completion_tokens, peak_mem
 
     def run_node(self, run_id: str, workload: str, node: AgentNode) -> TraceRecord:
         if node.node_type == NodeType.TOOL_CALL:
-            return SyntheticRunner(
+            rec = SyntheticRunner(
                 RunnerConfig(engine="synthetic", model_name=self.config.model_name, model_path=self.config.model_path),
                 self.model_cfg,
             ).run_node(run_id, workload, node)
-        prompt = self._prompt(node)
+            rec.engine = "hf"
+            rec.real_trace = False
+            return rec
+        bundle = prompt_for_node(self.tokenizer, node)
         # Warmup is intentionally tiny per node; calibration script does explicit warmup.
         start = time.time()
-        _, ttft = self._generate_once(prompt, 1)
-        text, total = self._generate_once(prompt, max(1, node.actual_output_token_len))
+        _, ttft, _, mem1 = self._generate_once(bundle.prompt, 1)
+        text, total, completion_tokens, mem2 = self._generate_once(bundle.prompt, max(1, node.actual_output_token_len))
         end = time.time()
+        decode_ms = max(0.0, total - ttft)
+        tpot = decode_ms / max(1, completion_tokens - 1)
         return TraceRecord(
             schema_version="1.0",
             run_id=run_id,
@@ -166,24 +191,35 @@ class HFRunner:
             model_path=self.config.model_path,
             engine="hf",
             gpu_id=self.config.gpu_id,
-            input_tokens=node.input_token_len,
-            output_tokens=node.actual_output_token_len,
+            input_tokens=bundle.actual_prompt_tokens,
+            output_tokens=completion_tokens,
             shared_prefix_ids=list(node.shared_prefix_ids),
             private_prefix_ids=list(node.private_prefix_ids),
-            prompt_hash=node.prompt_hash or sha256_text(prompt),
+            prompt_hash=bundle.prompt_hash,
             start_time_unix=start,
             end_time_unix=end,
             ttft_ms=ttft,
-            decode_ms=max(0.0, total - ttft),
+            decode_ms=decode_ms,
             total_ms=total,
             tool_latency_ms=node.tool_latency_ms,
-            kv_bytes_estimated=estimate_kv_bytes(node.input_token_len, self.model_cfg),
+            kv_bytes_estimated=estimate_kv_bytes(bundle.actual_prompt_tokens, self.model_cfg),
             cache_hit_tag="unknown",
             scheduler_tag="hf_naive",
             output_hash=sha256_text(text),
             quality_proxy=None,
-            shared_prefix_token_len=node.shared_prefix_token_len,
-            private_prefix_token_len=node.private_prefix_token_len,
+            shared_prefix_token_len=bundle.actual_shared_prefix_tokens,
+            private_prefix_token_len=bundle.actual_private_tokens,
+            actual_prompt_tokens=bundle.actual_prompt_tokens,
+            actual_completion_tokens=completion_tokens,
+            measured_ttft_ms=ttft,
+            measured_tpot_ms=tpot,
+            measured_total_ms=total,
+            peak_gpu_mem_bytes=max(mem1, mem2),
+            real_trace=True,
+            fallback_used=False,
+            actual_shared_prefix_tokens=bundle.actual_shared_prefix_tokens,
+            actual_private_tokens=bundle.actual_private_tokens,
+            shared_prefix_hash=bundle.shared_prefix_hash,
             metadata={},
         )
 
@@ -241,6 +277,17 @@ class VLLMRunner:
             quality_proxy=None,
             shared_prefix_token_len=node.shared_prefix_token_len,
             private_prefix_token_len=node.private_prefix_token_len,
+            actual_prompt_tokens=node.input_token_len,
+            actual_completion_tokens=node.actual_output_token_len,
+            measured_ttft_ms=total,
+            measured_tpot_ms=total / max(1, node.actual_output_token_len),
+            measured_total_ms=total,
+            peak_gpu_mem_bytes=None,
+            real_trace=True,
+            fallback_used=False,
+            actual_shared_prefix_tokens=node.shared_prefix_token_len,
+            actual_private_tokens=node.private_prefix_token_len,
+            shared_prefix_hash=node.shared_prefix_ids[0] if node.shared_prefix_ids else "",
             metadata={},
         )
 

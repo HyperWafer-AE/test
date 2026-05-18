@@ -24,8 +24,8 @@ def test_simulator_deterministic_toy_graph():
         energy_per_flop_pJ=1,
         energy_per_byte_pJ=1,
     )
-    m1, s1 = simulate(traces, cfg, ["wafer_naive", "waferagent_full"], seed=1)
-    m2, s2 = simulate(traces, cfg, ["wafer_naive", "waferagent_full"], seed=1)
+    m1, s1, _, _, _ = simulate(traces, cfg, ["wafer_naive", "waferagent_full"], seed=1)
+    m2, s2, _, _, _ = simulate(traces, cfg, ["wafer_naive", "waferagent_full"], seed=1)
     assert m1["job_completion_time_ms"].tolist() == m2["job_completion_time_ms"].tolist()
     assert not s1.empty and not s2.empty
     assert set(m1["baseline"]) == {"wafer_naive", "waferagent_full"}

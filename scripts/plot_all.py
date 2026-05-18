@@ -16,6 +16,11 @@ from waferagent.plotting import (
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--results", required=True)
+    parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--out", default="")
+    parser.add_argument("--engine", default="synthetic")
+    parser.add_argument("--model", default="auto")
+    parser.add_argument("--gpus", default="")
     args = parser.parse_args()
     root = Path(args.results)
     summary = root / "simulation" / "simulation_summary.csv"

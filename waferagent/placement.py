@@ -115,7 +115,10 @@ def communication_affinity_placement(
                     off = offsets[placed_in_group % len(offsets)]
                     tile = (center[0] + off[0], center[1] + off[1])
                 else:
-                    tile = center
+                    # Hotspot-unaware still maps work onto the mesh, but concentrates it
+                    # along a short stripe instead of deliberately spreading load.
+                    stripe = max(1, min(4, cfg.cols))
+                    tile = (center[0], center[1] + (placed_in_group % stripe))
             placements[node_id] = _make_placement(graph, cfg, node_id, tile, "communication_affinity")
             placed_in_group += 1
     return placements

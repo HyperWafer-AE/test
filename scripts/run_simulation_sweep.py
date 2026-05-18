@@ -23,13 +23,27 @@ def main() -> None:
     parser.add_argument("--baselines", default="wafer_naive,kvflow_like,continuum_like,waferagent_full")
     parser.add_argument("--out", default="results/main_wafer_sim")
     parser.add_argument("--seed", type=int, default=13)
+    parser.add_argument("--engine", default="synthetic")
+    parser.add_argument("--model", default="auto")
+    parser.add_argument("--gpus", default="")
+    parser.add_argument("--calibration", default="")
+    parser.add_argument("--neutral-mechanism-multipliers", action="store_true")
     args = parser.parse_args()
 
-    out = init_run_dir(args.out, {"run_type": "simulation_sweep", "traces": args.traces, "wafer_config": args.wafer_config})
+    neutral = bool(args.neutral_mechanism_multipliers)
+    out = init_run_dir(args.out, {"run_type": "simulation_sweep", "traces": args.traces, "wafer_config": args.wafer_config, "neutral_mechanism_multipliers": neutral, "engine": args.engine, "model": args.model, "gpus": args.gpus, "calibration": args.calibration})
     traces = load_trace_glob(args.traces)
     mesh_cfg = MeshConfig.from_yaml(args.wafer_config)
     baselines = [b.strip() for b in args.baselines.split(",") if b.strip()]
-    write_simulation_outputs(traces, mesh_cfg, baselines, out / "simulation", seed=args.seed)
+    write_simulation_outputs(
+        traces,
+        mesh_cfg,
+        baselines,
+        out / "simulation",
+        seed=args.seed,
+        neutral_multipliers=neutral,
+        calibration=args.calibration or None,
+    )
     summary = out / "simulation" / "simulation_summary.csv"
     metrics = out / "simulation" / "simulation_metrics.csv"
     fig = out / "figures"

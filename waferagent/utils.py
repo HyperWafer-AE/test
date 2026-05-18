@@ -22,8 +22,10 @@ def configure_project_env() -> None:
     os.environ.setdefault("XDG_CACHE_HOME", str(PROJECT_ROOT / ".cache"))
     os.environ.setdefault("UV_CACHE_DIR", str(PROJECT_ROOT / ".cache" / "uv"))
     os.environ.setdefault("UV_PYTHON_INSTALL_DIR", str(PROJECT_ROOT / ".cache" / "uv" / "python"))
+    os.environ.setdefault("TMPDIR", str(PROJECT_ROOT / "tmp"))
     os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
     os.environ.setdefault("MODEL_ZOO", str(MODEL_ZOO))
+    (PROJECT_ROOT / "tmp").mkdir(parents=True, exist_ok=True)
 
 
 def require_project_path(path: str | Path) -> Path:
@@ -79,6 +81,29 @@ def git_commit() -> str:
     return run_command_capture(["git", "rev-parse", "HEAD"], timeout_s=5)
 
 
+def git_metadata() -> dict[str, Any]:
+    commit = git_commit()
+    status = run_command_capture(["git", "status", "--short"], timeout_s=5)
+    branch = run_command_capture(["git", "branch", "--show-current"], timeout_s=5)
+    remote = run_command_capture(["git", "remote", "get-url", "origin"], timeout_s=5)
+    dirty_files: list[str] = []
+    for line in status.splitlines():
+        if not line.strip():
+            continue
+        if len(line) > 3 and line[2] == " ":
+            dirty_files.append(line[3:])
+        else:
+            parts = line.split(maxsplit=1)
+            dirty_files.append(parts[-1])
+    return {
+        "git_commit": commit,
+        "git_status_short": status,
+        "branch": branch,
+        "remote_url": remote,
+        "dirty_files": dirty_files,
+    }
+
+
 def nvidia_smi_text() -> str:
     query = "name,memory.total,driver_version"
     return run_command_capture(
@@ -119,6 +144,7 @@ def environment_dict(command: str | None = None) -> dict[str, Any]:
                 "XDG_CACHE_HOME",
                 "UV_CACHE_DIR",
                 "UV_PYTHON_INSTALL_DIR",
+                "TMPDIR",
                 "TOKENIZERS_PARALLELISM",
                 "MODEL_ZOO",
             ]
@@ -163,13 +189,28 @@ def init_run_dir(out: str | Path, metadata: dict[str, Any] | None = None) -> Pat
     metadata = metadata or {}
     metadata.setdefault("created_unix", time.time())
     metadata.setdefault("command", " ".join(sys.argv))
-    metadata.setdefault("git_commit", git_commit())
+    metadata.update({k: v for k, v in git_metadata().items() if k not in metadata})
     write_json(out_path / "metadata.json", metadata)
-    (out_path / "commands.log").write_text(" ".join(sys.argv) + "\n", encoding="utf-8")
+    try:
+        import yaml
+
+        (out_path / "metadata.yaml").write_text(yaml.safe_dump(metadata, sort_keys=True), encoding="utf-8")
+    except Exception:
+        (out_path / "metadata.yaml").write_text(json.dumps(metadata, indent=2), encoding="utf-8")
+    command = metadata.get("command", " ".join(sys.argv))
+    (out_path / "command.txt").write_text(str(command) + "\n", encoding="utf-8")
+    (out_path / "commands.log").write_text(str(command) + "\n", encoding="utf-8")
     env = environment_dict(metadata.get("command"))
     write_json(out_path / "environment.json", env)
     env_text = "\n".join(f"{k}: {v}" for k, v in env.items())
     (out_path / "environment.txt").write_text(env_text + "\n", encoding="utf-8")
+    manifest = {
+        "metadata": metadata,
+        "environment": env,
+        "created_unix": metadata["created_unix"],
+        "schema_version": "2.0",
+    }
+    write_json(out_path / "run_manifest.json", manifest)
     return out_path
 
 

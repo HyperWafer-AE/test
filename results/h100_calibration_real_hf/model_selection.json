@@ -1,0 +1,5 @@
+{
+  "engine_used": "hf",
+  "model_name": "Qwen2.5-7B-Instruct-local",
+  "model_path": "/data2/model_zoo/Qwen2.5-7B-Instruct"
+}

@@ -40,6 +40,17 @@ class TraceRecord:
     quality_proxy: float | None = None
     shared_prefix_token_len: int = 0
     private_prefix_token_len: int = 0
+    actual_prompt_tokens: int | None = None
+    actual_completion_tokens: int | None = None
+    measured_ttft_ms: float | None = None
+    measured_tpot_ms: float | None = None
+    measured_total_ms: float | None = None
+    peak_gpu_mem_bytes: int | None = None
+    real_trace: bool = False
+    fallback_used: bool = False
+    actual_shared_prefix_tokens: int | None = None
+    actual_private_tokens: int | None = None
+    shared_prefix_hash: str | None = None
     metadata: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -47,6 +58,8 @@ class TraceRecord:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "TraceRecord":
+        allowed = set(cls.__dataclass_fields__.keys())
+        data = {k: v for k, v in data.items() if k in allowed}
         return cls(**data)
 
 

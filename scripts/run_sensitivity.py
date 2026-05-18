@@ -15,15 +15,22 @@ from waferagent.utils import init_run_dir
 from waferagent.workloads import WorkloadParams, generate_workload
 
 
-def _run_case(out, mesh_cfg, param_name: str, value, seed: int) -> pd.DataFrame:
+def _run_case(out, mesh_cfg, param_name: str, value, seed: int, neutral: bool) -> pd.DataFrame:
+    workload = "debate"
+    if param_name == "tool_latency_mean_ms":
+        workload = "tool_pause_resume_loop"
+    elif param_name == "link_bandwidth_GBps":
+        workload = "mesh_stress_moa"
+    elif param_name == "sram_per_tile_mb":
+        workload = "sram_pressure_debate"
     params = {
-        "workload": "planner_worker_tool" if param_name == "tool_latency_mean_ms" else "debate",
+        "workload": workload,
         "job_id": f"sensitivity_{param_name}_{value}",
         "seed": seed,
-        "num_agents": 4,
+        "num_agents": 16 if workload in {"mesh_stress_moa", "sram_pressure_debate"} else 4,
         "num_rounds": 2,
         "shared_prefix_ratio": 0.5,
-        "input_len": 2048,
+        "input_len": 8192 if workload == "sram_pressure_debate" else 2048,
         "output_len": 128,
         "mean_tool_latency_ms": 1000.0,
     }
@@ -35,14 +42,20 @@ def _run_case(out, mesh_cfg, param_name: str, value, seed: int) -> pd.DataFrame:
         params["shared_prefix_ratio"] = float(value)
     elif param_name == "tool_latency_mean_ms":
         params["mean_tool_latency_ms"] = float(value)
-        params["num_tools_per_worker"] = 1
+        params["num_tools_per_worker"] = 4
     elif param_name == "input_len":
         params["input_len"] = int(value)
     elif param_name == "output_len":
         params["output_len"] = int(value)
     graph = generate_workload(WorkloadParams(**params))
     traces = collect_graph_traces([graph], out.name, RunnerConfig(engine="synthetic"))
-    metrics, _ = simulate(traces, mesh_cfg, ["wafer_naive", "waferagent_full"], seed=seed)
+    metrics, _, _, _, _ = simulate(
+        traces,
+        mesh_cfg,
+        ["wafer_naive", "waferagent_full"],
+        seed=seed,
+        neutral_multipliers=neutral,
+    )
     metrics[param_name] = value
     return metrics
 
@@ -50,9 +63,12 @@ def _run_case(out, mesh_cfg, param_name: str, value, seed: int) -> pd.DataFrame:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--engine", default="synthetic")
+    parser.add_argument("--model", default="auto")
+    parser.add_argument("--gpus", default="")
     parser.add_argument("--wafer-config", default="configs/wafer/wse_like.yaml")
     parser.add_argument("--out", default="results/sensitivity")
     parser.add_argument("--seed", type=int, default=19)
+    parser.add_argument("--neutral-mechanism-multipliers", action="store_true")
     args = parser.parse_args()
 
     out = init_run_dir(args.out, {"run_type": "sensitivity", "engine": args.engine, "wafer_config": args.wafer_config})
@@ -82,7 +98,7 @@ def main() -> None:
                 cfg = MeshConfig(**{**base_cfg.__dict__, "link_bandwidth_GBps": float(value)})
             elif param == "sram_per_tile_mb":
                 cfg = MeshConfig(**{**base_cfg.__dict__, "tile_sram_mb": float(value)})
-            metrics = _run_case(out, cfg, param, value, args.seed)
+            metrics = _run_case(out, cfg, param, value, args.seed, args.neutral_mechanism_multipliers)
             rows.append(metrics)
         df = pd.concat(rows, ignore_index=True)
         df.to_csv(out / "simulation" / f"sensitivity_{param}.csv", index=False)

@@ -1,0 +1,23 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.cache/
+.venv/
+tmp/
+waferagent.egg-info/
+
+# Keep raw/generated experiment artifacts local by default. Lightweight reports and
+# summaries can be force-added intentionally when needed.
+results/**/mesh_link_events.csv
+results/**/stage_schedule.csv
+results/**/schedule.csv
+results/**/sram_events.csv
+results/**/prefix_blocks.csv
+results/**/traces/*.jsonl
+results/**/environment.json
+results/**/environment.txt
+results/**/commands.log
+results/**/command.txt
+results/**/run_manifest.json
+results/**/metadata.yaml

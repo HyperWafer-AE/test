@@ -26,6 +26,7 @@ class WorkloadParams:
     num_tools_per_worker: int = 1
     tool_latency_distribution: str = "fixed"
     mean_tool_latency_ms: float = 1000.0
+    message_token_len: int | None = None
 
 
 def _node(
@@ -334,12 +335,79 @@ def rag_like(params: WorkloadParams) -> AgentGraph:
     return graph
 
 
+def long_context_swe_stress(params: WorkloadParams) -> AgentGraph:
+    p = WorkloadParams(
+        **{
+            **params.__dict__,
+            "workload": "long_context_swe_stress",
+            "input_len": max(params.input_len, 8192),
+            "shared_prefix_ratio": max(params.shared_prefix_ratio, 0.75),
+            "num_workers": max(params.num_workers, params.num_agents),
+        }
+    )
+    graph = swe_like(p)
+    graph.workload = "long_context_swe_stress"
+    return graph
+
+
+def mesh_stress_moa(params: WorkloadParams) -> AgentGraph:
+    p = WorkloadParams(
+        **{
+            **params.__dict__,
+            "workload": "mesh_stress_moa",
+            "num_layers": max(params.num_layers, 4),
+            "width": max(params.width, params.num_agents, 16),
+            "fan_in_policy": "all_to_all",
+            "output_len": params.message_token_len or max(params.output_len, 512),
+        }
+    )
+    graph = moa(p)
+    graph.workload = "mesh_stress_moa"
+    for edge in graph.edges:
+        edge.message_token_len = p.message_token_len or p.output_len
+    return graph
+
+
+def sram_pressure_debate(params: WorkloadParams) -> AgentGraph:
+    p = WorkloadParams(
+        **{
+            **params.__dict__,
+            "workload": "sram_pressure_debate",
+            "num_agents": max(params.num_agents, 8),
+            "num_rounds": max(params.num_rounds, 2),
+            "input_len": max(params.input_len, 8192),
+            "shared_prefix_ratio": max(params.shared_prefix_ratio, 0.5),
+        }
+    )
+    graph = debate(p)
+    graph.workload = "sram_pressure_debate"
+    return graph
+
+
+def tool_pause_resume_loop(params: WorkloadParams) -> AgentGraph:
+    p = WorkloadParams(
+        **{
+            **params.__dict__,
+            "workload": "tool_pause_resume_loop",
+            "num_workers": max(params.num_workers, params.num_agents, 4),
+            "num_tools_per_worker": max(params.num_tools_per_worker, 4),
+        }
+    )
+    graph = planner_worker_tool(p)
+    graph.workload = "tool_pause_resume_loop"
+    return graph
+
+
 WORKLOAD_BUILDERS: dict[str, Callable[[WorkloadParams], AgentGraph]] = {
     "debate": debate,
     "moa": moa,
     "planner_worker_tool": planner_worker_tool,
     "swe_like": swe_like,
     "rag_like": rag_like,
+    "long_context_swe_stress": long_context_swe_stress,
+    "mesh_stress_moa": mesh_stress_moa,
+    "sram_pressure_debate": sram_pressure_debate,
+    "tool_pause_resume_loop": tool_pause_resume_loop,
 }
 
 

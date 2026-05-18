@@ -1,0 +1,4 @@
+{
+  "torch_cuda_check": "2.5.1+cu124\nTrue\n2\n0 NVIDIA H100 PCIe\n1 NVIDIA H100 PCIe\n",
+  "torch_cuda_check_exit_code": 0
+}

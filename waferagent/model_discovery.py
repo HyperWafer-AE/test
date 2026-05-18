@@ -100,10 +100,20 @@ def select_model(index: dict[str, Any]) -> dict[str, Any] | None:
     if not candidates:
         return None
 
-    def score(m: dict[str, Any]) -> tuple[int, int, str]:
-        name = (m.get("name") or m.get("path") or "").lower()
+    priority_paths = [
+        "/data2/model_zoo/qwen2.5-7b-instruct",
+        "/data2/model_zoo/qwen3-4b-instruct-2507",
+        "/data2/model_zoo/qwen3-small2",
+    ]
+
+    def score(m: dict[str, Any]) -> tuple[int, int, int, str]:
+        raw = (m.get("name") or m.get("path") or "")
+        name = raw.lower()
+        path = str(m.get("path") or "").lower()
+        explicit = next((i for i, p in enumerate(priority_paths) if path == p), 99)
         instruct = 0 if any(k in name for k in ["instruct", "chat", "it"]) else 1
-        return (instruct, _size_score(name), name)
+        causal = 0 if any("causallm" in str(a).lower() for a in m.get("architectures", [])) else 1
+        return (explicit, causal, instruct + _size_score(name), name)
 
     return sorted(candidates, key=score)[0]
 

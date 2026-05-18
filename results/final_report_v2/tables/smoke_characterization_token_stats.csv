@@ -1,0 +1,11 @@
+job_id,workload,node_id,input_tokens,output_tokens,shared_prefix_token_len,private_prefix_token_len,shared_prefix_ratio
+smoke_debate_0,debate,smoke_debate_0_r0_proposer_0,256,32,128,128,0.5
+smoke_debate_0,debate,smoke_debate_0_r0_proposer_1,256,32,128,128,0.5
+smoke_debate_0,debate,smoke_debate_0_r0_critic_0,288,32,144,144,0.5
+smoke_debate_0,debate,smoke_debate_0_r0_critic_1,288,32,144,144,0.5
+smoke_debate_0,debate,smoke_debate_0_r0_judge,320,32,160,160,0.5
+smoke_debate_1,debate,smoke_debate_1_r0_proposer_0,256,32,128,128,0.5
+smoke_debate_1,debate,smoke_debate_1_r0_proposer_1,256,32,128,128,0.5
+smoke_debate_1,debate,smoke_debate_1_r0_critic_0,288,32,144,144,0.5
+smoke_debate_1,debate,smoke_debate_1_r0_critic_1,288,32,144,144,0.5
+smoke_debate_1,debate,smoke_debate_1_r0_judge,320,32,160,160,0.5

@@ -44,6 +44,7 @@ def main() -> None:
     parser.add_argument("--concurrency", default="1")
     parser.add_argument("--out", default="results/characterization")
     parser.add_argument("--seed", type=int, default=11)
+    parser.add_argument("--allow-synthetic-fallback", action="store_true")
     args = parser.parse_args()
 
     out = init_run_dir(
@@ -63,14 +64,23 @@ def main() -> None:
     engine = args.engine
     if warning:
         append_text(out / "environment.txt", f"\n{warning}\n")
-        engine = "synthetic"
+        if args.allow_synthetic_fallback:
+            engine = "synthetic"
+        else:
+            raise SystemExit(2)
     runner_cfg = RunnerConfig(engine=engine, model_name=model_name, model_path=model_path)
     try:
         traces = collect_graph_traces(graphs, out.name, runner_cfg, out / "traces" / "traces.jsonl")
     except Exception as exc:
-        append_text(out / "environment.txt", f"\n{engine} trace collection failed: {exc}\nFalling back to synthetic.\n")
+        append_text(out / "environment.txt", f"\n{engine} trace collection failed: {exc}\n")
+        if not args.allow_synthetic_fallback:
+            write_json(out / "model_selection.json", {"model_name": model_name, "model_path": model_path, "engine_used": engine, "failure": str(exc), "fallback_used": False})
+            raise SystemExit(2)
+        append_text(out / "environment.txt", "Falling back to synthetic because --allow-synthetic-fallback was set.\n")
         runner_cfg = RunnerConfig(engine="synthetic", model_name="synthetic", model_path="")
         traces = collect_graph_traces(graphs, out.name, runner_cfg, out / "traces" / "traces.jsonl")
+        for tr in traces:
+            tr.fallback_used = True
     write_traces(out / "traces" / "traces.jsonl", traces)
     write_json(out / "model_selection.json", {"model_name": model_name, "model_path": model_path, "engine_used": runner_cfg.engine})
     tables = write_characterization_tables(graphs, traces, out / "simulation", model_cfg)

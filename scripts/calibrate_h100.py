@@ -21,6 +21,7 @@ def main() -> None:
     parser.add_argument("--gpus", default="")
     parser.add_argument("--out", default="results/h100_calibration")
     parser.add_argument("--seed", type=int, default=23)
+    parser.add_argument("--allow-synthetic-fallback", action="store_true")
     args = parser.parse_args()
 
     out = init_run_dir(args.out, {"run_type": "h100_calibration", "engine": args.engine, "model": args.model})
@@ -34,13 +35,18 @@ def main() -> None:
             model_name, model_path = chosen["name"], chosen["path"]
         else:
             append_text(out / "environment.txt", "\nNo local HF model found; falling back to synthetic calibration.\n")
+            if not args.allow_synthetic_fallback:
+                raise SystemExit(2)
             engine = "synthetic"
 
     runner_cfg = RunnerConfig(engine=engine, model_name=model_name, model_path=model_path)
     try:
         runner = make_runner(runner_cfg)
     except Exception as exc:
-        append_text(out / "environment.txt", f"\n{engine} runner failed: {exc}\nFalling back to synthetic calibration.\n")
+        append_text(out / "environment.txt", f"\n{engine} runner failed: {exc}\n")
+        if not args.allow_synthetic_fallback:
+            raise SystemExit(2)
+        append_text(out / "environment.txt", "Falling back to synthetic calibration because --allow-synthetic-fallback was set.\n")
         engine = "synthetic"
         runner = make_runner(RunnerConfig(engine="synthetic"))
 

@@ -1,0 +1,14 @@
+{
+  "pass": true,
+  "readiness": {
+    "SRAM sensitivity non-flat": true,
+    "bandwidth sensitivity non-flat on mesh_stress_moa": true,
+    "critical-path ablation non-zero on targeted workload": true,
+    "git commit available": true,
+    "neutral multipliers used": true,
+    "no silent fallback": true,
+    "placement ablation affects mesh metrics and targeted JCT": true,
+    "real H100 traces available": true
+  },
+  "results": "/home/duzc/data/agent_wafer/results/main_wafer_sim_neutral_v2"
+}
