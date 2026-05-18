@@ -195,8 +195,15 @@ def _hf_forward(args, out: Path, model_name: str, model_path: str) -> tuple[pd.D
                     }
                 )
                 raw_rows.append(row)
+                pd.DataFrame(raw_rows).to_csv(out / "h100_prefill_decode_raw.partial.csv", index=False)
                 if row["oom"]:
                     append_text(out / "environment.txt", f"OOM case recorded: {row}\n")
+                print(
+                    "case "
+                    f"input={input_len} output={output_len} batch={batch_size} rep={rep} "
+                    f"oom={row['oom']} prefill_ms={row['prefill_ms']:.3f} decode_ms={row['decode_ms']:.3f}",
+                    flush=True,
+                )
     finally:
         timer.close()
     raw = pd.DataFrame(raw_rows)
