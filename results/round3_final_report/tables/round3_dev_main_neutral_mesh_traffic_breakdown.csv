@@ -1,7 +1,0 @@
-baseline,traffic_source,mesh_bytes,mesh_wait_ms,transfer_ms
-continuum_like,message_tokens,77100544,0.0,3.38500544
-kvflow_like,message_tokens,85878272,0.0,3.84878272
-oracle,message_tokens,7537664,2.8043116799468635,0.5093766399999999
-wafer_naive,kv_reload,24360517632,0.0,243.69317632
-wafer_naive,message_tokens,85878272,0.0,3.84878272
-waferagent_full,message_tokens,7537664,2.80632191994971,0.5093766399999999

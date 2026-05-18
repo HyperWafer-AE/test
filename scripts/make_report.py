@@ -241,6 +241,8 @@ def copy_artifacts(project_root: Path, out_dir: Path) -> None:
     for csv in project_root.glob("results/*/simulation/*.csv"):
         if round3_only and not csv.parent.parent.name.startswith("round3_"):
             continue
+        if round3_only and csv.parent.parent.name.startswith("round3_dev_"):
+            continue
         if csv.parent.parent == out_dir:
             continue
         if csv.name in skip_names:
@@ -250,6 +252,8 @@ def copy_artifacts(project_root: Path, out_dir: Path) -> None:
         shutil.copy2(csv, tables_dir / f"{csv.parent.parent.name}_{csv.name}")
     for fig in project_root.glob("results/*/figures/*"):
         if round3_only and not fig.parent.parent.name.startswith("round3_"):
+            continue
+        if round3_only and fig.parent.parent.name.startswith("round3_dev_"):
             continue
         if fig.parent.parent == out_dir:
             continue

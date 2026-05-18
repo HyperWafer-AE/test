@@ -1,9 +1,0 @@
-job_id,workload,critical_path_weight,total_work_weight,critical_path_fraction
-long_context_swe_stress_job_0,long_context_swe_stress,42112.0,67072.0,0.6278625954198473
-long_context_swe_stress_job_1,long_context_swe_stress,42112.0,67072.0,0.6278625954198473
-mesh_stress_moa_job_0,mesh_stress_moa,34560.0,395520.0,0.08737864077669903
-mesh_stress_moa_job_1,mesh_stress_moa,34560.0,395520.0,0.08737864077669903
-sram_pressure_debate_job_0,sram_pressure_debate,52096.0,286848.0,0.18161535029004908
-sram_pressure_debate_job_1,sram_pressure_debate,52096.0,286848.0,0.18161535029004908
-tool_pause_resume_loop_job_0,tool_pause_resume_loop,18704.0,53888.0,0.34709026128266035
-tool_pause_resume_loop_job_1,tool_pause_resume_loop,18704.0,53888.0,0.34709026128266035
