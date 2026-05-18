@@ -139,6 +139,48 @@ def _plot(summary: pd.DataFrame, out: Path) -> None:
         fig.savefig(fig_dir / f"{name}.pdf")
     plt.close(fig)
 
+
+def _write_coverage_reports(summary: pd.DataFrame, out: Path, args: argparse.Namespace) -> None:
+    default_inputs = [128, 512, 1024, 2048, 4096, 8192, 16384, 32768]
+    default_outputs = [1, 16, 32, 128, 256]
+    default_batches = [1, 2, 4, 8, 16]
+    inputs = _parse_ints(args.input_lens, default_inputs)
+    outputs = _parse_ints(args.output_lens, default_outputs)
+    batches = _parse_ints(args.batch_sizes, default_batches)
+    num_cases = len(inputs) * len(outputs) * len(batches)
+    if args.max_cases:
+        num_cases = min(num_cases, args.max_cases)
+    oom_rows = summary.loc[summary["oom"].astype(bool)] if not summary.empty else pd.DataFrame()
+    coverage = {
+        "input_lens_covered": sorted(int(x) for x in summary.get("input_len", pd.Series(dtype=int)).dropna().unique()),
+        "output_lens_covered": sorted(int(x) for x in summary.get("output_len", pd.Series(dtype=int)).dropna().unique()),
+        "batch_sizes_covered": sorted(int(x) for x in summary.get("batch_size", pd.Series(dtype=int)).dropna().unique()),
+        "num_cases": int(num_cases),
+        "num_raw_rows": int(len(summary) * max(1, args.reps)),
+        "num_summary_rows": int(len(summary)),
+        "num_oom_cases": int(len(oom_rows)),
+        "is_full_matrix": inputs == default_inputs
+        and outputs == default_outputs
+        and batches == default_batches
+        and not args.max_cases,
+        "is_stratified_matrix": not (
+            inputs == default_inputs
+            and outputs == default_outputs
+            and batches == default_batches
+            and not args.max_cases
+        ),
+    }
+    write_json(out / "coverage_report.json", coverage)
+    write_json(out / "calibration" / "coverage_report.json", coverage)
+    oom_report = {
+        "num_oom_cases": int(len(oom_rows)),
+        "oom_cases": oom_rows[["input_len", "output_len", "batch_size"]].to_dict("records")
+        if not oom_rows.empty
+        else [],
+    }
+    write_json(out / "oom_report.json", oom_report)
+    write_json(out / "calibration" / "oom_report.json", oom_report)
+
     fig, ax = plt.subplots(figsize=(6, 4))
     for batch, sub in valid.groupby("batch_size"):
         sub.groupby("input_len")["tpot_ms_median"].mean().plot(ax=ax, marker="o", label=f"b={batch}")
@@ -328,6 +370,7 @@ def main() -> None:
 
     _fit_and_write(summary, out, model_name, model_path, args.engine)
     _plot(summary, out)
+    _write_coverage_reports(summary, out, args)
     impossible = summary.loc[
         (~summary["oom"].astype(bool))
         & (

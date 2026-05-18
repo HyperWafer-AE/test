@@ -96,7 +96,7 @@ def _tool_latency(params: WorkloadParams, rng: random.Random) -> float:
 def debate(params: WorkloadParams) -> AgentGraph:
     rng = random.Random(stable_rng_seed(params.seed, params.job_id, "debate"))
     graph = AgentGraph(params.job_id, "debate", params.seed)
-    shared = sha256_text(f"debate|{params.job_id}|shared-task")
+    shared = sha256_text("debate|shared-task")
     previous_layer: list[str] = []
     for rnd in range(params.num_rounds):
         proposers: list[str] = []
@@ -144,7 +144,7 @@ def debate(params: WorkloadParams) -> AgentGraph:
 
 def moa(params: WorkloadParams) -> AgentGraph:
     graph = AgentGraph(params.job_id, "moa", params.seed)
-    shared = sha256_text(f"moa|{params.job_id}|shared-task")
+    shared = sha256_text("moa|shared-task")
     previous: list[str] = []
     width = params.width or params.num_agents
     for layer in range(params.num_layers):
@@ -182,7 +182,7 @@ def moa(params: WorkloadParams) -> AgentGraph:
 def planner_worker_tool(params: WorkloadParams) -> AgentGraph:
     rng = random.Random(stable_rng_seed(params.seed, params.job_id, "planner_worker_tool"))
     graph = AgentGraph(params.job_id, "planner_worker_tool", params.seed)
-    shared = sha256_text(f"planner|{params.job_id}|shared-task")
+    shared = sha256_text("planner|shared-task")
     planner = f"{params.job_id}_planner"
     _node(params, graph, planner, "planner", 0, NodeType.LLM_CALL, "planner", shared)
     workers_done: list[str] = []
@@ -246,7 +246,7 @@ def planner_worker_tool(params: WorkloadParams) -> AgentGraph:
 
 def swe_like(params: WorkloadParams) -> AgentGraph:
     graph = AgentGraph(params.job_id, "swe_like", params.seed)
-    shared = sha256_text(f"swe|{params.job_id}|repo-context")
+    shared = sha256_text("swe|repo-context")
     p = WorkloadParams(**{**params.__dict__, "shared_prefix_ratio": params.shared_prefix_ratio})
     planner = f"{p.job_id}_planner"
     _node(p, graph, planner, "planner", 0, NodeType.LLM_CALL, "planner", shared, input_len=p.input_len)
@@ -283,7 +283,7 @@ def swe_like(params: WorkloadParams) -> AgentGraph:
 
 def rag_like(params: WorkloadParams) -> AgentGraph:
     graph = AgentGraph(params.job_id, "rag_like", params.seed)
-    shared = sha256_text(f"rag|{params.job_id}|evidence")
+    shared = sha256_text("rag|evidence")
     retriever = f"{params.job_id}_retriever"
     _node(
         params,
@@ -398,6 +398,31 @@ def tool_pause_resume_loop(params: WorkloadParams) -> AgentGraph:
     return graph
 
 
+def tool_ttl_eviction_stress(params: WorkloadParams) -> AgentGraph:
+    p = WorkloadParams(
+        **{
+            **params.__dict__,
+            "workload": "tool_ttl_eviction_stress",
+            "num_workers": max(params.num_workers, params.num_agents, 8),
+            "num_tools_per_worker": max(params.num_tools_per_worker, 4),
+            "input_len": max(params.input_len, 8192),
+            "shared_prefix_ratio": max(params.shared_prefix_ratio, 0.75),
+            "tool_latency_distribution": "pareto"
+            if params.tool_latency_distribution == "fixed"
+            else params.tool_latency_distribution,
+            "mean_tool_latency_ms": max(params.mean_tool_latency_ms, 5000.0),
+        }
+    )
+    graph = planner_worker_tool(p)
+    graph.workload = "tool_ttl_eviction_stress"
+    for node in graph.nodes.values():
+        if node.node_type == NodeType.TOOL_CALL:
+            node.scheduler_tag = "tool_ttl_stress"
+        elif node.role == "worker_continue":
+            node.scheduler_tag = "resume_requires_prior_kv"
+    return graph
+
+
 WORKLOAD_BUILDERS: dict[str, Callable[[WorkloadParams], AgentGraph]] = {
     "debate": debate,
     "moa": moa,
@@ -408,6 +433,7 @@ WORKLOAD_BUILDERS: dict[str, Callable[[WorkloadParams], AgentGraph]] = {
     "mesh_stress_moa": mesh_stress_moa,
     "sram_pressure_debate": sram_pressure_debate,
     "tool_pause_resume_loop": tool_pause_resume_loop,
+    "tool_ttl_eviction_stress": tool_ttl_eviction_stress,
 }
 
 

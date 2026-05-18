@@ -16,6 +16,7 @@ from waferagent.mesh import MeshConfig
 from waferagent.mesh_network import MeshNetwork
 from waferagent.placement import Placement, make_placement
 from waferagent.prefix_tree import PrefixComputeTracker
+from waferagent.prefix_extension_cost_model import PrefixExtensionCostModel
 from waferagent.resource_model import ResourceModel
 from waferagent.sram_manager import DistributedSRAMManager
 from waferagent.stage_ir import Stage, StageSchedule, build_stages
@@ -126,6 +127,8 @@ def _scaled_stage_duration(
     duration_source: str = "trace",
     cost_model: CalibratedCostModel | None = None,
     computed_input_tokens: int | None = None,
+    prefix_decision: Any | None = None,
+    prefix_extension_model: PrefixExtensionCostModel | None = None,
 ) -> tuple[float, float]:
     """Return (duration_for_computed_tokens, full_duration_without_prefix_reuse)."""
 
@@ -133,7 +136,16 @@ def _scaled_stage_duration(
     full_tokens = max(0, int(stage.input_tokens))
     if stage.stage_type == "prefill":
         scale = mesh_cfg.h100_prefill_to_wafer_scale
-        if duration_source == "calibrated" and cost_model is not None:
+        if prefix_extension_model is not None:
+            full = prefix_extension_model.full_prefill_ms(full_tokens) * scale
+            if prefix_decision is not None and getattr(prefix_decision, "hit", False):
+                computed = prefix_extension_model.extend_prefill_ms(
+                    int(getattr(prefix_decision, "logical_shared_tokens", 0)),
+                    int(getattr(prefix_decision, "private_tokens_computed", tokens)),
+                ) * scale
+            else:
+                computed = full
+        elif duration_source == "calibrated" and cost_model is not None:
             computed = cost_model.prefill_ms(tokens) * scale
             full = cost_model.prefill_ms(full_tokens) * scale
         elif duration_source == "synthetic":
@@ -182,6 +194,7 @@ def _simulate_job(
     seed: int,
     duration_source: str = "trace",
     cost_model: CalibratedCostModel | None = None,
+    prefix_extension_model: PrefixExtensionCostModel | None = None,
     allow_mesh_compute_overlap: bool = False,
 ) -> tuple[dict[str, float | str | int], list[dict], list[dict], list[dict], list[dict], list[dict]]:
     stages = build_stages(graph, traces)
@@ -221,6 +234,11 @@ def _simulate_job(
     resume_reload_bytes = 0
     shared_prefill_compute_ms_saved = 0.0
     cross_region_sram_bytes_total = 0
+    computed_prefill_tokens = 0
+    computed_decode_tokens = 0
+    avoided_prefill_tokens = 0
+    prefix_extension_ms = 0.0
+    prefix_full_prefill_ms = 0.0
 
     while ready:
         _, sid = heapq.heappop(ready)
@@ -297,9 +315,17 @@ def _simulate_job(
             duration_source=duration_source,
             cost_model=cost_model,
             computed_input_tokens=computed_input_tokens,
+            prefix_decision=decision,
+            prefix_extension_model=prefix_extension_model,
         )
         if stage.stage_type == "prefill":
             shared_prefill_compute_ms_saved += max(0.0, full_duration - base_duration)
+            computed_prefill_tokens += int(computed_input_tokens)
+            avoided_prefill_tokens += max(0, int(stage.input_tokens) - int(computed_input_tokens))
+            prefix_extension_ms += base_duration
+            prefix_full_prefill_ms += full_duration
+        elif stage.stage_type == "decode":
+            computed_decode_tokens += int(stage.output_tokens)
         if stage.stage_type == "prefill" and reload_bytes:
             reload_penalty_ms = reload_bytes / max(1.0, mesh_cfg.link_bandwidth_GBps * 1e9 / 1000.0)
             if baseline.tool_ttl or baseline.oracle:
@@ -377,11 +403,14 @@ def _simulate_job(
     sram_stats = sram.stats()
     prefill = float(sched_df.loc[sched_df["stage_type"] == "prefill", "end_ms"].sub(sched_df.loc[sched_df["stage_type"] == "prefill", "start_ms"]).sum())
     decode = float(sched_df.loc[sched_df["stage_type"] == "decode", "end_ms"].sub(sched_df.loc[sched_df["stage_type"] == "decode", "start_ms"]).sum())
-    flops = sum(
-        (n.input_token_len + n.actual_output_token_len) * model_cfg.hidden_size * model_cfg.num_hidden_layers * 6
-        for n in graph.nodes.values()
-    )
-    energy = flops * mesh_cfg.energy_per_flop_pJ * 1e-12 + mesh_stats["mesh_total_traffic_bytes"] * mesh_cfg.energy_per_byte_pJ * 1e-12
+    prefill_flops = computed_prefill_tokens * model_cfg.hidden_size * model_cfg.num_hidden_layers * 6
+    decode_flops = computed_decode_tokens * model_cfg.hidden_size * model_cfg.num_hidden_layers * 6
+    avoided_flops = avoided_prefill_tokens * model_cfg.hidden_size * model_cfg.num_hidden_layers * 6
+    compute_energy = (prefill_flops + decode_flops) * mesh_cfg.energy_per_flop_pJ * 1e-12
+    mesh_energy = mesh_stats["mesh_total_traffic_bytes"] * mesh_cfg.energy_per_byte_pJ * 1e-12
+    sram_energy = (sram_stats.get("sram_reload_bytes", 0.0) + sram_stats.get("sram_spill_bytes", 0.0)) * mesh_cfg.energy_per_byte_pJ * 0.25e-12
+    offwafer_energy = sram_stats.get("sram_reload_bytes", 0.0) * mesh_cfg.energy_per_byte_pJ * 1e-12
+    energy = compute_energy + mesh_energy + sram_energy + offwafer_energy
     metrics = {
         "baseline": baseline.name,
         "mechanism_profile": baseline.mechanism_profile,
@@ -405,6 +434,21 @@ def _simulate_job(
         "queue_wait_ms_total": float(sched_df["queue_wait_ms"].sum()) if len(sched_df) else 0.0,
         "energy_estimated_j": energy,
         "energy_per_job_j": energy,
+        "computed_prefill_tokens": float(computed_prefill_tokens),
+        "computed_decode_tokens": float(computed_decode_tokens),
+        "avoided_prefill_tokens": float(avoided_prefill_tokens),
+        "prefill_flops_estimated": float(prefill_flops),
+        "decode_flops_estimated": float(decode_flops),
+        "avoided_flops_estimated": float(avoided_flops),
+        "compute_energy_j": float(compute_energy),
+        "mesh_energy_j": float(mesh_energy),
+        "sram_energy_j": float(sram_energy),
+        "offwafer_energy_j": float(offwafer_energy),
+        "energy_per_successful_job_j": float(energy),
+        "prefix_extension_ms": float(prefix_extension_ms),
+        "prefix_full_prefill_ms": float(prefix_full_prefill_ms),
+        "prefix_compute_ms_saved": float(max(0.0, prefix_full_prefill_ms - prefix_extension_ms)),
+        "prefix_extension_model_used": bool(prefix_extension_model is not None),
         "tool_pause_ms": tool_pause_ms,
         "resume_prefill_ms": resume_prefill_ms,
         "resume_reload_bytes": float(resume_reload_bytes),
@@ -461,6 +505,7 @@ def simulate(
     calibration: str | Path | None = None,
     duration_source: str = "trace",
     allow_mesh_compute_overlap: bool = False,
+    prefix_extension_calibration: str | Path | None = None,
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     model_cfg = model_cfg or ModelKVConfig()
     jobs = _group_jobs(traces)
@@ -476,6 +521,9 @@ def simulate(
         if not calibration:
             raise ValueError("--duration-source calibrated requires --calibration")
         cost_model = CalibratedCostModel.from_json(calibration)
+    prefix_extension_model = None
+    if prefix_extension_calibration:
+        prefix_extension_model = PrefixExtensionCostModel.from_json(prefix_extension_calibration)
     for baseline_name in baseline_names:
         baseline = get_baseline(baseline_name, neutral=neutral_multipliers)
         for job_id, rows in jobs.items():
@@ -489,10 +537,13 @@ def simulate(
                 seed,
                 duration_source=duration_source,
                 cost_model=cost_model,
+                prefix_extension_model=prefix_extension_model,
                 allow_mesh_compute_overlap=allow_mesh_compute_overlap,
             )
             metrics.update(calib_meta)
             metrics["duration_source"] = duration_source
+            if prefix_extension_model is not None:
+                metrics["prefix_extension_fit_hash"] = prefix_extension_model.fit_hash
             metric_rows.append(metrics)
             schedule_rows.extend(sched)
             sram_rows.extend(sram_events)
@@ -519,6 +570,7 @@ def write_simulation_outputs(
     calibration: str | Path | None = None,
     duration_source: str = "trace",
     allow_mesh_compute_overlap: bool = False,
+    prefix_extension_calibration: str | Path | None = None,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     out = Path(out_dir)
     metrics, stages, sram_events, mesh_events, prefix_blocks = simulate(
@@ -531,6 +583,7 @@ def write_simulation_outputs(
         calibration,
         duration_source,
         allow_mesh_compute_overlap,
+        prefix_extension_calibration,
     )
     out.mkdir(parents=True, exist_ok=True)
     metrics.to_csv(out / "simulation_metrics.csv", index=False)
@@ -568,6 +621,10 @@ def write_simulation_outputs(
         prefill_tile_utilization=("prefill_tile_utilization", "mean"),
         decode_tile_utilization=("decode_tile_utilization", "mean"),
         energy_per_job_j=("energy_per_job_j", "mean"),
+        computed_prefill_tokens=("computed_prefill_tokens", "mean"),
+        avoided_prefill_tokens=("avoided_prefill_tokens", "mean"),
+        compute_energy_j=("compute_energy_j", "mean"),
+        prefix_compute_ms_saved=("prefix_compute_ms_saved", "mean"),
     )
     summary.to_csv(out / "simulation_summary.csv", index=False)
     write_summary_with_ci(metrics, out / "summary_with_ci.csv")

@@ -90,6 +90,9 @@ class SyntheticRunner:
             actual_shared_prefix_tokens=node.shared_prefix_token_len,
             actual_private_tokens=node.private_prefix_token_len,
             shared_prefix_hash=node.shared_prefix_ids[0] if node.shared_prefix_ids else "",
+            timing_source="synthetic_model",
+            timing_scope="node",
+            timing_quality="exact_forward",
             metadata={},
         )
 
@@ -167,6 +170,8 @@ class HFRunner:
             ).run_node(run_id, workload, node)
             rec.engine = "hf"
             rec.real_trace = False
+            rec.timing_source = "synthetic_model"
+            rec.timing_quality = "walltime_approx"
             return rec
         bundle = prompt_for_node(self.tokenizer, node)
         # Warmup is intentionally tiny per node; calibration script does explicit warmup.
@@ -220,6 +225,9 @@ class HFRunner:
             actual_shared_prefix_tokens=bundle.actual_shared_prefix_tokens,
             actual_private_tokens=bundle.actual_private_tokens,
             shared_prefix_hash=bundle.shared_prefix_hash,
+            timing_source="hf_generate_walltime",
+            timing_scope="node",
+            timing_quality="walltime_approx",
             metadata={},
         )
 
@@ -258,6 +266,9 @@ class VLLMRunner:
                 ).run_node(run_id, workload, node)
                 rec.engine = "vllm"
                 rec.real_trace = False
+                rec.timing_source = "synthetic_model"
+                rec.timing_scope = "node"
+                rec.timing_quality = "walltime_approx"
                 tool_records.append((idx, rec))
             else:
                 llm_items.append((idx, node, prompt_for_node(self.tokenizer, node)))
@@ -271,6 +282,14 @@ class VLLMRunner:
         outputs = self.llm.generate(prompts, params)
         total = (time.time() - start) * 1000.0
         batch_records: list[tuple[int, TraceRecord]] = []
+        batch_layer_id = sha256_text("|".join(node.node_id for _, node, _ in llm_items))[:24]
+        prompt_tokens_total = sum(bundle.actual_prompt_tokens for _, _, bundle in llm_items)
+        completion_counts = []
+        for output in outputs:
+            choice = output.outputs[0] if output.outputs else None
+            token_ids = getattr(choice, "token_ids", None) if choice else None
+            completion_counts.append(len(token_ids) if token_ids is not None else 0)
+        completion_tokens_total = sum(completion_counts)
         for (idx, node, bundle), output in zip(llm_items, outputs):
             choice = output.outputs[0] if output.outputs else None
             text = choice.text if choice else ""
@@ -340,11 +359,20 @@ class VLLMRunner:
                         actual_shared_prefix_tokens=bundle.actual_shared_prefix_tokens,
                         actual_private_tokens=bundle.actual_private_tokens,
                         shared_prefix_hash=bundle.shared_prefix_hash,
+                        timing_source="vllm_engine_metrics",
+                        timing_scope="batch_layer",
+                        timing_quality="engine_reported" if not timing_unavailable else "walltime_approx",
                         metadata={
                             "timing_unavailable": timing_unavailable,
                             "scheduler_time": scheduler_time,
                             "queue_time": queue_time,
                             "batch_size": len(llm_items),
+                            "batch_layer_id": batch_layer_id,
+                            "batch_layer_walltime_ms": total,
+                            "num_prompts": len(llm_items),
+                            "prompt_tokens_total": prompt_tokens_total,
+                            "completion_tokens_total": completion_tokens_total,
+                            "tokens_per_second": (prompt_tokens_total + completion_tokens_total) / max(1e-9, total / 1000.0),
                         },
                     ),
                 )

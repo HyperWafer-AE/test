@@ -20,12 +20,15 @@ class PrefixComputeDecision:
 @dataclass
 class PrefixComputeTracker:
     computed_prefixes: set[str] = field(default_factory=set)
+    prefix_owner_job: dict[str, str] = field(default_factory=dict)
     logical_shared_prefix_tokens: int = 0
     unique_shared_prefix_tokens_computed: int = 0
     shared_prefill_tokens_saved: int = 0
     private_prefill_tokens_computed: int = 0
     prefix_compute_hits: int = 0
     prefix_compute_accesses: int = 0
+    cross_job_prefix_compute_hits: int = 0
+    cross_job_prefix_compute_accesses: int = 0
 
     def decide(self, stage: Stage, baseline: BaselineConfig) -> PrefixComputeDecision:
         shared = max(0, int(stage.shared_prefix_token_len))
@@ -40,11 +43,17 @@ class PrefixComputeTracker:
         self.logical_shared_prefix_tokens += shared
         if prefix_id in self.computed_prefixes:
             self.prefix_compute_hits += 1
+            owner = self.prefix_owner_job.get(prefix_id)
+            if owner and owner != stage.job_id:
+                self.cross_job_prefix_compute_hits += 1
+            if owner:
+                self.cross_job_prefix_compute_accesses += 1
             self.shared_prefill_tokens_saved += shared
             self.private_prefill_tokens_computed += private
             return PrefixComputeDecision(shared, 0, shared, private, full, private, True)
 
         self.computed_prefixes.add(prefix_id)
+        self.prefix_owner_job[prefix_id] = stage.job_id
         self.unique_shared_prefix_tokens_computed += shared
         self.private_prefill_tokens_computed += private
         return PrefixComputeDecision(shared, shared, 0, private, full, shared + private, False)
@@ -58,5 +67,10 @@ class PrefixComputeTracker:
             "logical_shared_prefix_tokens": float(self.logical_shared_prefix_tokens),
             "prefix_compute_hit_rate": self.prefix_compute_hits / self.prefix_compute_accesses
             if self.prefix_compute_accesses
+            else 0.0,
+            "cross_job_prefix_compute_hits": float(self.cross_job_prefix_compute_hits),
+            "cross_job_prefix_hit_rate": self.cross_job_prefix_compute_hits
+            / self.cross_job_prefix_compute_accesses
+            if self.cross_job_prefix_compute_accesses
             else 0.0,
         }

@@ -5,6 +5,8 @@ import argparse
 import os
 from pathlib import Path
 
+import pandas as pd
+
 from waferagent.kv_model import ModelKVConfig
 from waferagent.llm_runner import RunnerConfig
 from waferagent.metrics import write_characterization_tables
@@ -91,6 +93,47 @@ def main() -> None:
         for tr in traces:
             tr.fallback_used = True
     write_traces(out / "traces" / "traces.jsonl", traces)
+    vllm_rows = []
+    for tr in traces:
+        meta = tr.metadata or {}
+        if tr.engine == "vllm" and meta.get("batch_layer_id"):
+            vllm_rows.append(
+                {
+                    "job_id": tr.job_id,
+                    "node_id": tr.node_id,
+                    "batch_layer_id": meta.get("batch_layer_id"),
+                    "batch_layer_walltime_ms": meta.get("batch_layer_walltime_ms"),
+                    "batch_size": meta.get("batch_size"),
+                    "num_prompts": meta.get("num_prompts"),
+                    "prompt_tokens_total": meta.get("prompt_tokens_total"),
+                    "completion_tokens_total": meta.get("completion_tokens_total"),
+                    "tokens_per_second": meta.get("tokens_per_second"),
+                    "timing_source": tr.timing_source,
+                    "timing_scope": tr.timing_scope,
+                    "timing_quality": tr.timing_quality,
+                }
+            )
+    if vllm_rows:
+        pd.DataFrame(vllm_rows).drop_duplicates(subset=["batch_layer_id"]).to_csv(
+            out / "simulation" / "vllm_batch_layer_metrics.csv", index=False
+        )
+    else:
+        pd.DataFrame(
+            columns=[
+                "job_id",
+                "node_id",
+                "batch_layer_id",
+                "batch_layer_walltime_ms",
+                "batch_size",
+                "num_prompts",
+                "prompt_tokens_total",
+                "completion_tokens_total",
+                "tokens_per_second",
+                "timing_source",
+                "timing_scope",
+                "timing_quality",
+            ]
+        ).to_csv(out / "simulation" / "vllm_batch_layer_metrics.csv", index=False)
     write_json(out / "model_selection.json", {"model_name": model_name, "model_path": model_path, "engine_used": runner_cfg.engine, "fallback_count": sum(1 for tr in traces if tr.fallback_used)})
     tables = write_characterization_tables(graphs, traces, out / "simulation", model_cfg)
     fig = out / "figures"

@@ -57,6 +57,14 @@ def _trace_has_real(path: Path) -> bool:
     return False
 
 
+def _trace_record_count(path: Path) -> int:
+    total = 0
+    for trace_file in path.glob("traces/*.jsonl"):
+        with trace_file.open("r", encoding="utf-8") as f:
+            total += sum(1 for _ in f)
+    return total
+
+
 def _last_matching_line(path: Path, pattern: str) -> str:
     if not path.exists():
         return "not recorded"
@@ -225,6 +233,91 @@ def _round3_readiness(project_root: Path) -> dict[str, bool]:
     }
 
 
+def _round4_readiness(project_root: Path) -> dict:
+    neutral = project_root / "results/round4_global_main_neutral"
+    h100cal = project_root / "results/round4_global_main_h100cal"
+    calib = project_root / "results/round4_h100_calibration_stratified_hf"
+    prefix = project_root / "results/round4_prefix_extension_calibration"
+    hf_trace = project_root / "results/round4_characterization_h100_hf_20jobs"
+    vllm_trace = project_root / "results/round4_characterization_h100_vllm_20jobs"
+    neutral_meta = _read_json(neutral / "metadata.json")
+    calib_coverage = _read_json(calib / "coverage_report.json")
+    calib_quality = _read_json(calib / "h100_fit_quality.json")
+    timing = _read_json(calib / "timing_sanity.json")
+    prefix_fit = _read_json(prefix / "prefix_extension_fit.json")
+    h100_metrics = h100cal / "simulation" / "simulation_metrics.csv"
+    h100_summary = h100cal / "simulation" / "simulation_summary.csv"
+    neutral_summary = neutral / "simulation" / "simulation_summary.csv"
+    coeff_used = False
+    prefix_used = False
+    energy_uses_computed = False
+    if h100_metrics.exists():
+        df = pd.read_csv(h100_metrics)
+        coeff_used = (
+            not df.empty
+            and "duration_source" in df.columns
+            and set(df["duration_source"].astype(str)) == {"calibrated"}
+            and float(df.get("calibration_loaded", pd.Series([0])).max()) >= 1
+        )
+        prefix_used = "prefix_extension_model_used" in df.columns and bool(df["prefix_extension_model_used"].astype(bool).any())
+        energy_uses_computed = all(
+            c in df.columns
+            for c in ["computed_prefill_tokens", "avoided_prefill_tokens", "compute_energy_j"]
+        )
+    global_ok = neutral_summary.exists() and (neutral / "simulation" / "global_stage_schedule.csv").exists()
+    real_hf_20 = _trace_has_real(hf_trace) and _trace_record_count(hf_trace) >= 900
+    vllm_model = _read_json(vllm_trace / "model_selection.json")
+    vllm_removed = (vllm_trace / "MISSING_BASELINE.md").exists()
+    vllm_20_or_removed = (
+        (_trace_has_real(vllm_trace) and _trace_record_count(vllm_trace) >= 900 and vllm_model.get("fallback_count", 1) == 0)
+        or vllm_removed
+    )
+    main_claim_ablation_nonzero = False
+    if neutral_summary.exists():
+        df = pd.read_csv(neutral_summary)
+        full = df.loc[df["baseline"] == "waferagent_full"]
+        naive = df.loc[df["baseline"] == "wafer_naive"]
+        if not full.empty and not naive.empty:
+            main_claim_ablation_nonzero = (
+                abs(float(naive["jct_p90_ms"].mean()) - float(full["jct_p90_ms"].mean()))
+                / max(1e-9, float(naive["jct_p90_ms"].mean()))
+                >= 0.02
+                or float(full.get("avoided_prefill_tokens", pd.Series([0])).mean()) > 0
+            )
+    paper_ready = {
+        "global_serving_simulator": global_ok,
+        "stratified_or_full_h100_calibration": bool(calib_coverage.get("is_full_matrix") or calib_coverage.get("is_stratified_matrix")),
+        "calibration_fit_quality_recorded": bool(calib_quality),
+        "prefix_extension_model_used": bool(prefix_fit) and prefix_used,
+        "real_hf_20jobs": real_hf_20,
+        "vllm_20jobs_or_explicitly_removed": vllm_20_or_removed,
+        "energy_uses_computed_tokens": energy_uses_computed,
+        "main_claim_ablation_nonzero": main_claim_ablation_nonzero,
+        "calibration_coefficients_used_by_simulator": coeff_used,
+    }
+    sanity = {
+        "clean_git_tree": neutral_meta.get("git_dirty") is False,
+        "no_silent_fallback": _read_json(hf_trace / "model_selection.json").get("fallback_count", 1) == 0,
+        "neutral_default": neutral_meta.get("neutral_mechanism_multipliers") is True,
+        "no_impossible_timing_rows": int(timing.get("impossible_rows", 1)) == 0,
+    }
+    demoted = {
+        "critical_path_scheduling": True,
+        "dynamic_pd_partition": True,
+        "tool_ttl": True,
+    }
+    return {
+        "paper_ready": paper_ready,
+        "sanity": sanity,
+        "demoted": demoted,
+        "pass": {
+            "paper_ready": all(paper_ready.values()),
+            "sanity": all(sanity.values()),
+            "overall": all(paper_ready.values()) and all(sanity.values()),
+        },
+    }
+
+
 def copy_artifacts(project_root: Path, out_dir: Path) -> None:
     tables_dir = out_dir / "tables"
     figs_dir = out_dir / "figures"
@@ -292,8 +385,12 @@ def main() -> None:
     out.parent.mkdir(parents=True, exist_ok=True)
     env = best_environment(project_root, root)
     is_round3 = "round3" in str(root) or "round3" in str(out)
+    is_round4 = "round4" in str(root) or "round4" in str(out)
     summary = root / "simulation" / "simulation_summary.csv"
     h100cal_summary = (
+        project_root / "results/round4_global_main_h100cal/simulation/simulation_summary.csv"
+        if is_round4
+        else
         project_root / "results/round3_main_h100cal/simulation/simulation_summary.csv"
         if is_round3
         else project_root / "results/main_wafer_sim_h100cal_v2/simulation/simulation_summary.csv"
@@ -303,20 +400,40 @@ def main() -> None:
     calib_selection = _read_json(project_root / "results/h100_calibration_real_hf/model_selection.json")
     vllm_status = _vllm_status(project_root)
     vllm_smoke_real = _trace_has_real(project_root / "results/characterization_h100_vllm_smoke")
-    checks = _round3_readiness(project_root) if is_round3 else readiness(project_root)
-    report_json = {
-        "results": str(root),
-        "readiness": checks,
-        "vllm_install_status": vllm_status,
-        "vllm_smoke_real_trace": vllm_smoke_real,
-        "pass": all(checks.values()),
-    }
+    if is_round4:
+        checks = _round4_readiness(project_root)
+        report_json = {
+            "results": str(root),
+            **checks,
+            "vllm_install_status": vllm_status,
+            "vllm_smoke_real_trace": vllm_smoke_real,
+        }
+    else:
+        checks = _round3_readiness(project_root) if is_round3 else readiness(project_root)
+        report_json = {
+            "results": str(root),
+            "readiness": checks,
+            "vllm_install_status": vllm_status,
+            "vllm_smoke_real_trace": vllm_smoke_real,
+            "pass": all(checks.values()),
+        }
     (out.parent / "report.json").write_text(json.dumps(report_json, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     copy_artifacts(project_root, out.parent)
-    readiness_lines = "\n".join(
-        f"- {'PASS' if ok else 'FAIL'}: {name}" for name, ok in checks.items()
-    )
-    title = "WaferAgent Round 3 Report" if is_round3 else "WaferAgent Round 2 Report"
+    if is_round4:
+        readiness_lines = []
+        for section in ["paper_ready", "sanity", "demoted"]:
+            readiness_lines.append(f"### {section}")
+            for name, ok in checks[section].items():
+                readiness_lines.append(f"- {'PASS' if ok else 'FAIL'}: {name}")
+        readiness_lines.append("### pass")
+        for name, ok in checks["pass"].items():
+            readiness_lines.append(f"- {'PASS' if ok else 'FAIL'}: {name}")
+        readiness_text = "\n".join(readiness_lines)
+    else:
+        readiness_text = "\n".join(
+            f"- {'PASS' if ok else 'FAIL'}: {name}" for name, ok in checks.items()
+        )
+    title = "WaferAgent Round 4 Report" if is_round4 else ("WaferAgent Round 3 Report" if is_round3 else "WaferAgent Round 2 Report")
     text = f"""# {title}
 
 ## Environment
@@ -330,7 +447,7 @@ def main() -> None:
 
 ## Readiness Check
 
-{readiness_lines}
+{readiness_text}
 
 ## Main Neutral Results
 

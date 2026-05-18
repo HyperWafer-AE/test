@@ -51,6 +51,9 @@ class TraceRecord:
     actual_shared_prefix_tokens: int | None = None
     actual_private_tokens: int | None = None
     shared_prefix_hash: str | None = None
+    timing_source: str = "unknown"
+    timing_scope: str = "node"
+    timing_quality: str = "unavailable"
     metadata: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:

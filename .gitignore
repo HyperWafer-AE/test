@@ -23,3 +23,5 @@ results/**/run_manifest.json
 results/**/metadata.yaml
 results/round3_*/
 results/round3_dev_*/
+results/round4_*/
+results/round4_dev_*/
