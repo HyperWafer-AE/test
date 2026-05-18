@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 from pathlib import Path
 
 from waferagent.kv_model import ModelKVConfig
@@ -50,6 +51,8 @@ def main() -> None:
     args = parser.parse_args()
 
     enforce_clean_git_tree(args.clean_required, args.allow_dirty)
+    if args.gpus:
+        os.environ["CUDA_VISIBLE_DEVICES"] = args.gpus
     out = init_run_dir(
         args.out,
         {
