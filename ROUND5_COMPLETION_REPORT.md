@@ -80,5 +80,5 @@ Supported by current Round5 outputs:
 
 ## Git
 
-- Final code commit for this report: `315ac31`
+- Final code commit is recorded in `results/round5_final_report/metadata.json`.
 - The result directories are ignored by git and recorded via per-run metadata/artifact hashes.
