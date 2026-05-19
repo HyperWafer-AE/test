@@ -9,6 +9,7 @@ import pandas as pd
 from waferagent.arrival import ArrivalConfig, generate_arrivals
 from waferagent.baselines import get_baseline
 from waferagent.calibrated_cost_model import CalibratedCostModel
+from waferagent.cohort_scheduler import CohortConfig, form_decode_cohorts
 from waferagent.kv_model import ModelKVConfig, sharing_metrics
 from waferagent.mesh import MeshConfig
 from waferagent.mesh_network import MeshNetwork
@@ -16,6 +17,13 @@ from waferagent.placement import make_placement
 from waferagent.prefix_extension_cost_model import PrefixExtensionCostModel
 from waferagent.prefix_tree import PrefixComputeTracker
 from waferagent.resource_model import ResourceModel
+from waferagent.shared_attention_cost import estimate_shared_attention_cost
+from waferagent.shared_kv import (
+    SharedKVObject,
+    extract_shared_kv_objects,
+    plan_shared_kv_replication,
+    region_id_for_tile,
+)
 from waferagent.simulator import (
     _dependency_mesh_bytes,
     _group_jobs,
@@ -106,6 +114,8 @@ def simulate_global(
     util_rows: list[dict] = []
     slo_rows: list[dict] = []
     wait_rows: list[dict] = []
+    shared_kv_rows: list[dict] = []
+    cohort_rows: list[dict] = []
     baseline_summaries: dict[str, dict[str, float]] = {}
 
     for baseline_name in baseline_names:
@@ -124,6 +134,54 @@ def simulate_global(
         sram = DistributedSRAMManager(mesh_cfg, baseline.ttl_policy, baseline.name)
         mesh = MeshNetwork(mesh_cfg, baseline.name, congestion_enabled=baseline.mesh_congestion_penalty or baseline.oracle)
         prefix_compute = PrefixComputeTracker()
+        object_by_prefix: dict[str, SharedKVObject] = {}
+        node_regions: dict[str, str] = {}
+        for job_id, graph in graphs.items():
+            node_regions.update(
+                {
+                    node_id: region_id_for_tile(mesh_cfg, placement.tile)
+                    for node_id, placement in placements[job_id].items()
+                }
+            )
+            objects, _stats = extract_shared_kv_objects(graph, model_cfg, placements[job_id], mesh_cfg)
+            for obj in objects:
+                existing = object_by_prefix.get(obj.prefix_id)
+                if existing is None:
+                    object_by_prefix[obj.prefix_id] = obj
+                    continue
+                existing.logical_users.extend(obj.logical_users)
+                existing.decode_users.extend(obj.decode_users)
+                existing.expected_decode_tokens.update(obj.expected_decode_tokens)
+                existing.expected_decode_steps = max(existing.expected_decode_steps, obj.expected_decode_steps)
+                existing.candidate_regions = sorted(set(existing.candidate_regions) | set(obj.candidate_regions))
+                existing.first_use_step = min(existing.first_use_step, obj.first_use_step)
+                existing.last_use_step = max(existing.last_use_step, obj.last_use_step)
+                existing.reuse_distance = max(existing.reuse_distance, obj.reuse_distance)
+                existing.criticality_score = max(existing.criticality_score, obj.criticality_score)
+        shared_objects, replication_stats = plan_shared_kv_replication(
+            list(object_by_prefix.values()),
+            baseline.shared_kv_replication_policy if baseline.shared_kv_replication_policy != "none" else "no_replication",
+            mesh_cfg,
+        )
+        cohorts, cohort_stats = form_decode_cohorts(
+            stages,
+            shared_objects,
+            node_regions=node_regions,
+            cfg=CohortConfig(enabled=baseline.shared_kv_decode_cohort or baseline.oracle),
+        )
+        attention_stats = estimate_shared_attention_cost(
+            shared_objects,
+            cohorts if (baseline.shared_kv_decode_cohort or baseline.oracle) else [],
+            bytes_per_ms=max(1.0, mesh_cfg.link_bandwidth_GBps * 1e9 / 1000.0),
+        )
+        for obj in shared_objects:
+            shared_kv_rows.append({**obj.to_dict(), "baseline": baseline.name})
+        for cohort in cohorts:
+            cohort_rows.append({**cohort.to_dict(), "baseline": baseline.name})
+        prefix_decode_users = {
+            obj.prefix_id: max(1, len(obj.decode_users))
+            for obj in shared_objects
+        }
         ready: list[tuple[float, float, str]] = []
         for sid, deg in indegree.items():
             if deg == 0:
@@ -142,6 +200,11 @@ def simulate_global(
             "avoided_prefill_tokens": 0,
             "prefix_extension_ms": 0.0,
             "prefix_full_prefill_ms": 0.0,
+            "decode_shared_kv_read_bytes": 0.0,
+            "decode_shared_kv_read_bytes_without_cohort": 0.0,
+            "decode_query_transfer_bytes": 0.0,
+            "decode_merge_bytes": 0.0,
+            "decode_attention_latency_ms": 0.0,
         }
         while ready:
             _ready_time, _prio, sid = heapq.heappop(ready)
@@ -212,6 +275,27 @@ def simulate_global(
                 accum["prefix_full_prefill_ms"] += full_duration
             elif stage.stage_type == "decode":
                 accum["computed_decode_tokens"] += int(stage.output_tokens)
+                if stage.shared_prefix_ids and stage.shared_prefix_token_len > 0:
+                    shared_bytes_no = (
+                        int(stage.output_tokens)
+                        * int(stage.shared_prefix_token_len)
+                        * int(model_cfg.kv_bytes_per_token)
+                    )
+                    prefix = stage.shared_prefix_ids[0]
+                    if baseline.shared_kv_decode_cohort or baseline.oracle:
+                        users = prefix_decode_users.get(prefix, 1)
+                        waves = (users + 4 - 1) // 4
+                        factor = min(1.0, (waves * 1.15) / max(1, users))
+                    else:
+                        factor = 1.0
+                    shared_bytes_actual = shared_bytes_no * factor
+                    decode_kv_latency = shared_bytes_actual / max(
+                        1.0, mesh_cfg.link_bandwidth_GBps * 1e9 / 1000.0
+                    )
+                    duration += decode_kv_latency
+                    accum["decode_shared_kv_read_bytes_without_cohort"] += shared_bytes_no
+                    accum["decode_shared_kv_read_bytes"] += shared_bytes_actual
+                    accum["decode_attention_latency_ms"] += decode_kv_latency
             if stage.stage_type == "prefill" and reload_bytes:
                 duration += reload_bytes / max(1.0, mesh_cfg.link_bandwidth_GBps * 1e9 / 1000.0)
             mesh_wait = mesh_time = 0.0
@@ -233,6 +317,21 @@ def simulate_global(
                     mesh_wait += w
                     mesh_time = max(mesh_time, t)
                     mesh_bytes += b
+            elif stage.stage_type == "decode" and stage.shared_prefix_ids and stage.shared_prefix_token_len > 0:
+                shared_bytes = int(
+                    int(stage.output_tokens)
+                    * int(stage.shared_prefix_token_len)
+                    * int(model_cfg.kv_bytes_per_token)
+                )
+                if baseline.shared_kv_decode_cohort or baseline.oracle:
+                    users = prefix_decode_users.get(stage.shared_prefix_ids[0], 1)
+                    waves = (users + 4 - 1) // 4
+                    shared_bytes = int(shared_bytes * min(1.0, (waves * 1.15) / max(1, users)))
+                src_tile = (0, 0)
+                w, t, b = mesh.route(job_id, sid, src_tile, placement.tile, shared_bytes, dep_ready, "decode_shared_kv")
+                mesh_wait += w
+                mesh_time = max(mesh_time, t)
+                mesh_bytes += b
             resource_ready = dep_ready + mesh_time
             start, end, tiles = resource.reserve_stage(stage.tile_pool, resource_ready, duration, _requested_tiles(stage, mesh_cfg, baseline))
             end_times[sid] = end
@@ -304,6 +403,16 @@ def simulate_global(
                 "mesh_energy_j": mesh_energy / max(1, len(jobs)),
                 "energy_per_job_j": energy_per_job,
                 "energy_per_completed_job_under_slo_j": energy_per_job,
+                "decode_shared_kv_read_bytes": accum["decode_shared_kv_read_bytes"] / max(1, len(jobs)),
+                "decode_shared_kv_read_bytes_without_cohort": accum["decode_shared_kv_read_bytes_without_cohort"] / max(1, len(jobs)),
+                "decode_kv_read_reduction_ratio": 1.0
+                - accum["decode_shared_kv_read_bytes"]
+                / max(1.0, accum["decode_shared_kv_read_bytes_without_cohort"]),
+                "cross_region_kv_transfer_bytes": accum["decode_shared_kv_read_bytes"] / max(1, len(jobs)),
+                "decode_query_transfer_bytes": attention_stats.get("decode_query_transfer_bytes", 0.0) / max(1, len(jobs)),
+                "decode_merge_bytes": attention_stats.get("decode_merge_bytes", 0.0) / max(1, len(jobs)),
+                "num_decode_cohorts": cohort_stats.get("num_decode_cohorts", 0.0),
+                "avg_cohort_size": cohort_stats.get("avg_cohort_size", 0.0),
                 "duration_source": duration_source,
                 "prefix_extension_model_used": bool(prefix_model is not None),
                 "prefix_extension_fit_hash": prefix_model.fit_hash if prefix_model is not None else "",
@@ -325,6 +434,13 @@ def simulate_global(
             "compute_energy_j": compute_energy,
             "mesh_energy_j": mesh_energy,
             "energy_per_job_j": energy_per_job,
+            **replication_stats,
+            **cohort_stats,
+            **attention_stats,
+            "decode_shared_kv_read_bytes": float(accum["decode_shared_kv_read_bytes"]),
+            "decode_shared_kv_read_bytes_without_cohort": float(accum["decode_shared_kv_read_bytes_without_cohort"]),
+            "cross_region_kv_transfer_bytes": float(accum["decode_shared_kv_read_bytes"]),
+            "decode_attention_latency_ms": float(accum["decode_attention_latency_ms"]),
             "computed_prefill_tokens": float(accum["computed_prefill_tokens"]),
             "computed_decode_tokens": float(accum["computed_decode_tokens"]),
             "avoided_prefill_tokens": float(accum["avoided_prefill_tokens"]),
@@ -347,6 +463,8 @@ def simulate_global(
     sram_df = pd.DataFrame(sram_rows)
     mesh_df = pd.DataFrame(mesh_rows)
     prefix_df = pd.DataFrame(prefix_rows)
+    shared_kv_df = pd.DataFrame(shared_kv_rows)
+    cohorts_df = pd.DataFrame(cohort_rows)
     util_df = pd.DataFrame(util_rows)
     wait_df = pd.DataFrame(wait_rows)
     slo_df = pd.DataFrame(slo_rows)
@@ -383,6 +501,15 @@ def simulate_global(
             "compute_energy_j": float(extra.get("compute_energy_j", 0.0)),
             "mesh_energy_j": float(extra.get("mesh_energy_j", 0.0)),
             "energy_per_job_j": float(extra.get("energy_per_job_j", 0.0)),
+            "decode_shared_kv_read_bytes": float(extra.get("decode_shared_kv_read_bytes", 0.0)),
+            "decode_shared_kv_read_bytes_without_cohort": float(extra.get("decode_shared_kv_read_bytes_without_cohort", 0.0)),
+            "decode_kv_read_reduction_ratio": float(extra.get("decode_kv_read_reduction_ratio", extra.get("shared_kv_read_reduction_ratio", 0.0))),
+            "cross_region_kv_transfer_bytes": float(extra.get("cross_region_kv_transfer_bytes", 0.0)),
+            "num_decode_cohorts": float(extra.get("num_decode_cohorts", 0.0)),
+            "avg_cohort_size": float(extra.get("avg_cohort_size", 0.0)),
+            "replica_bytes_total": float(extra.get("replica_bytes_total", 0.0)),
+            "saved_mesh_traffic_bytes": float(extra.get("saved_mesh_traffic_bytes", 0.0)),
+            "replication_transfer_bytes": float(extra.get("replication_transfer_bytes", 0.0)),
         })
     return {
         "global_stage_schedule": stages,
@@ -394,6 +521,8 @@ def simulate_global(
         "sram_events": sram_df,
         "mesh_link_events": mesh_df,
         "prefix_blocks": prefix_df,
+        "shared_kv_objects": shared_kv_df,
+        "decode_cohorts": cohorts_df,
     }
 
 

@@ -423,6 +423,40 @@ def tool_ttl_eviction_stress(params: WorkloadParams) -> AgentGraph:
     return graph
 
 
+def decode_heavy_shared_prefix(params: WorkloadParams) -> AgentGraph:
+    p = WorkloadParams(
+        **{
+            **params.__dict__,
+            "workload": "decode_heavy_shared_prefix",
+            "num_agents": max(params.num_agents, 8),
+            "input_len": max(params.input_len, 8192),
+            "output_len": max(params.output_len, 512),
+            "shared_prefix_ratio": max(params.shared_prefix_ratio, 0.75),
+        }
+    )
+    graph = debate(p)
+    graph.workload = "decode_heavy_shared_prefix"
+    return graph
+
+
+def moa_decode_cohort_stress(params: WorkloadParams) -> AgentGraph:
+    p = WorkloadParams(
+        **{
+            **params.__dict__,
+            "workload": "moa_decode_cohort_stress",
+            "num_layers": max(params.num_layers, 4),
+            "width": max(params.width, params.num_agents, 16),
+            "input_len": max(params.input_len, 8192),
+            "output_len": max(params.output_len, 256),
+            "shared_prefix_ratio": max(params.shared_prefix_ratio, 0.75),
+            "fan_in_policy": "all_to_all",
+        }
+    )
+    graph = moa(p)
+    graph.workload = "moa_decode_cohort_stress"
+    return graph
+
+
 WORKLOAD_BUILDERS: dict[str, Callable[[WorkloadParams], AgentGraph]] = {
     "debate": debate,
     "moa": moa,
@@ -434,6 +468,8 @@ WORKLOAD_BUILDERS: dict[str, Callable[[WorkloadParams], AgentGraph]] = {
     "sram_pressure_debate": sram_pressure_debate,
     "tool_pause_resume_loop": tool_pause_resume_loop,
     "tool_ttl_eviction_stress": tool_ttl_eviction_stress,
+    "decode_heavy_shared_prefix": decode_heavy_shared_prefix,
+    "moa_decode_cohort_stress": moa_decode_cohort_stress,
 }
 
 

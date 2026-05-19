@@ -22,6 +22,9 @@ from waferagent.trace_collector import collect_graph_traces
 from waferagent.trace_schema import write_traces
 from waferagent.utils import append_text, enforce_clean_git_tree, finalize_run_dir, init_run_dir, write_json
 from waferagent.workloads import generate_workload_set
+from waferagent.cohort_scheduler import CohortConfig, form_decode_cohorts
+from waferagent.shared_kv import extract_shared_kv_objects
+from waferagent.stage_ir import build_stages
 
 
 def _resolve_model(engine: str, model: str) -> tuple[str, str, ModelKVConfig, str | None]:
@@ -136,6 +139,50 @@ def main() -> None:
         ).to_csv(out / "simulation" / "vllm_batch_layer_metrics.csv", index=False)
     write_json(out / "model_selection.json", {"model_name": model_name, "model_path": model_path, "engine_used": runner_cfg.engine, "fallback_count": sum(1 for tr in traces if tr.fallback_used)})
     tables = write_characterization_tables(graphs, traces, out / "simulation", model_cfg)
+    shared_rows = []
+    cohort_rows = []
+    safety_rows = []
+    graph_rows = []
+    trace_by_job = {}
+    for tr in traces:
+        trace_by_job.setdefault(tr.job_id, []).append(tr)
+    for graph in graphs:
+        objects, stats = extract_shared_kv_objects(graph, model_cfg)
+        stages = build_stages(graph, trace_by_job[graph.graph_id])
+        cohorts, cstats = form_decode_cohorts(
+            stages,
+            objects,
+            cfg=CohortConfig(min_expected_saved_kv_bytes=1),
+        )
+        graph_rows.append(
+            {
+                "workload": graph.workload,
+                "job_id": graph.graph_id,
+                "num_nodes": len(graph.nodes),
+                "num_edges": len(graph.edges),
+                "fan_in_max": max((n.fan_in for n in graph.nodes.values()), default=0),
+                "fan_out_max": max((n.fan_out for n in graph.nodes.values()), default=0),
+                "critical_path_fraction": max((n.criticality for n in graph.nodes.values()), default=0.0)
+                / max(1e-9, sum(n.criticality for n in graph.nodes.values())),
+            }
+        )
+        shared_rows.append({"workload": graph.workload, "job_id": graph.graph_id, **stats.to_dict()})
+        cohort_rows.append({"workload": graph.workload, "job_id": graph.graph_id, **cstats})
+        safety_rows.append(
+            {
+                "workload": graph.workload,
+                "job_id": graph.graph_id,
+                "safe_shared_prefix_tokens": stats.safe_shared_prefix_tokens,
+                "unsafe_shared_text_tokens": stats.unsafe_shared_text_tokens,
+                "shared_text_not_prefix_tokens": stats.shared_text_not_prefix_tokens,
+                "unsafe_reuse_skipped_tokens": stats.unsafe_reuse_skipped_tokens,
+            }
+        )
+    pd.DataFrame(graph_rows).to_csv(out / "simulation" / "workload_graph_stats.csv", index=False)
+    pd.DataFrame(shared_rows).to_csv(out / "simulation" / "shared_kv_opportunity.csv", index=False)
+    pd.DataFrame(cohort_rows).to_csv(out / "simulation" / "decode_cohort_opportunity.csv", index=False)
+    pd.DataFrame(safety_rows).to_csv(out / "simulation" / "prefix_safety_stats.csv", index=False)
+    pd.DataFrame(graph_rows).to_csv(out / "simulation" / "fan_in_out_stats.csv", index=False)
     fig = out / "figures"
     plot_dag_examples(graphs, fig / "fig_workload_dag_examples")
     plot_shared_prefix_ratio(tables["characterization_token_stats.csv"], fig / "fig_shared_prefix_ratio")

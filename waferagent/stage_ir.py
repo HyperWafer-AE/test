@@ -92,6 +92,8 @@ def build_stages(graph: AgentGraph, traces: list[TraceRecord]) -> dict[str, Stag
             output_tokens=tr.output_tokens,
             duration_ms=max(0.0, tr.decode_ms),
             tile_pool="decode",
+            shared_prefix_ids=list(tr.shared_prefix_ids),
+            shared_prefix_token_len=tr.shared_prefix_token_len,
             kv_bytes_estimated=tr.kv_bytes_estimated,
         )
         producer_stage[node_id] = decode

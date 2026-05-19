@@ -16,6 +16,11 @@ class BaselineConfig:
     aggregator_placement: bool = False
     mesh_congestion_penalty: bool = False
     hotspot_aware_placement: bool = False
+    shared_kv_decode_cohort: bool = False
+    shared_kv_placement: bool = False
+    shared_kv_replication_policy: str = "none"
+    future_reuse_policy: bool = False
+    distributed_sram_policy: bool = True
     oracle: bool = False
     prefill_time_multiplier: float = 1.0
     decode_time_multiplier: float = 1.0
@@ -25,6 +30,14 @@ class BaselineConfig:
 
 
 NEUTRAL_BASELINES: dict[str, BaselineConfig] = {
+    "no_cache": BaselineConfig(
+        name="no_cache",
+        placement_policy="round_robin",
+        scheduling_policy="fifo_topological",
+        kv_sharing=False,
+        ttl_policy="lru",
+        distributed_sram_policy=False,
+    ),
     "wafer_naive": BaselineConfig(
         name="wafer_naive",
         placement_policy="round_robin",
@@ -32,12 +45,31 @@ NEUTRAL_BASELINES: dict[str, BaselineConfig] = {
         kv_sharing=False,
         ttl_policy="lru",
     ),
+    "apc_like": BaselineConfig(
+        name="apc_like",
+        placement_policy="round_robin",
+        scheduling_policy="fifo_topological",
+        kv_sharing=True,
+        ttl_policy="lru",
+        shared_kv_replication_policy="no_replication",
+    ),
     "kvflow_like": BaselineConfig(
         name="kvflow_like",
         placement_policy="round_robin",
         scheduling_policy="kvflow_like_steps_to_execution",
         kv_sharing=True,
         ttl_policy="steps_to_execution",
+        future_reuse_policy=True,
+        shared_kv_replication_policy="no_replication",
+    ),
+    "pat_like": BaselineConfig(
+        name="pat_like",
+        placement_policy="round_robin",
+        scheduling_policy="fifo_topological",
+        kv_sharing=True,
+        ttl_policy="lru",
+        shared_kv_decode_cohort=True,
+        shared_kv_replication_policy="no_replication",
     ),
     "continuum_like": BaselineConfig(
         name="continuum_like",
@@ -59,6 +91,10 @@ NEUTRAL_BASELINES: dict[str, BaselineConfig] = {
         aggregator_placement=True,
         mesh_congestion_penalty=True,
         hotspot_aware_placement=True,
+        shared_kv_decode_cohort=True,
+        shared_kv_placement=True,
+        shared_kv_replication_policy="benefit_cost",
+        future_reuse_policy=True,
     ),
     "oracle": BaselineConfig(
         name="oracle",
@@ -72,6 +108,10 @@ NEUTRAL_BASELINES: dict[str, BaselineConfig] = {
         aggregator_placement=True,
         mesh_congestion_penalty=True,
         hotspot_aware_placement=True,
+        shared_kv_decode_cohort=True,
+        shared_kv_placement=True,
+        shared_kv_replication_policy="oracle",
+        future_reuse_policy=True,
         oracle=True,
     ),
 }
@@ -83,6 +123,8 @@ def _legacy(cfg: BaselineConfig, **kwargs) -> BaselineConfig:
 
 LEGACY_BASELINES: dict[str, BaselineConfig] = {
     "wafer_naive": _legacy(NEUTRAL_BASELINES["wafer_naive"]),
+    "no_cache": _legacy(NEUTRAL_BASELINES["no_cache"]),
+    "apc_like": _legacy(NEUTRAL_BASELINES["apc_like"]),
     "kvflow_like": _legacy(
         NEUTRAL_BASELINES["kvflow_like"],
         prefill_time_multiplier=0.82,
@@ -93,6 +135,7 @@ LEGACY_BASELINES: dict[str, BaselineConfig] = {
         prefill_time_multiplier=0.95,
         decode_time_multiplier=0.95,
     ),
+    "pat_like": _legacy(NEUTRAL_BASELINES["pat_like"]),
     "waferagent_full": _legacy(
         NEUTRAL_BASELINES["waferagent_full"],
         prefill_time_multiplier=0.62,
@@ -124,6 +167,10 @@ def ablations(neutral: bool = True) -> dict[str, BaselineConfig]:
         "no_dynamic_pd_partition": _ablation(base, "no_dynamic_pd_partition", dynamic_pd_partition=False),
         "no_aggregator_placement": _ablation(base, "no_aggregator_placement", aggregator_placement=False),
         "no_mesh_congestion_penalty": _ablation(base, "no_mesh_congestion_penalty", mesh_congestion_penalty=False),
+        "no_shared_kv_decode_cohort": _ablation(base, "no_shared_kv_decode_cohort", shared_kv_decode_cohort=False),
+        "no_shared_kv_replication": _ablation(base, "no_shared_kv_replication", shared_kv_replication_policy="no_replication"),
+        "no_distributed_sram_policy": _ablation(base, "no_distributed_sram_policy", distributed_sram_policy=False, ttl_policy="lru"),
+        "no_future_reuse_policy": _ablation(base, "no_future_reuse_policy", future_reuse_policy=False, ttl_policy="lru"),
     }
 
 
