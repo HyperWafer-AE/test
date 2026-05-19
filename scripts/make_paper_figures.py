@@ -31,7 +31,7 @@ def main() -> None:
     fig = out / "figures"
     _maybe(bar_from_csv, "results/round5_workload_opportunity/simulation/workload_graph_stats.csv", "workload", "num_nodes", fig / "fig1_agentgraph_examples", None)
     _maybe(bar_from_csv, "results/round5_workload_opportunity/simulation/shared_kv_opportunity.csv", "workload", "expected_decode_shared_kv_read_bytes", fig / "fig2_shared_kv_opportunity_by_workload", None)
-    _maybe(bar_from_csv, "results/round5_workload_opportunity/simulation/shared_kv_opportunity.csv", "workload", "expected_prefill_saved_bytes", fig / "fig3_decode_vs_prefill_reuse_opportunity", None)
+    _maybe(bar_from_csv, "results/round5_workload_opportunity/simulation/shared_kv_opportunity.csv", "workload", "safe_shared_prefix_tokens", fig / "fig3_decode_vs_prefill_reuse_opportunity", None)
     _maybe(stacked_cache_gap, "results/round5_existing_cache_gap/simulation/existing_cache_gap_summary.csv", fig / "fig4_prefix_cache_gap_stacked_bars")
     _maybe(bar_from_csv, "results/round5_existing_cache_gap/simulation/existing_cache_gap_summary.csv", "baseline", "decode_shared_kv_read_bytes", fig / "fig5_decode_shared_kv_bytes_by_baseline")
     _maybe(bar_from_csv, "results/round5_existing_cache_gap/simulation/existing_cache_gap_summary.csv", "baseline", "mesh_traffic_bytes", fig / "fig6_mesh_traffic_after_prefix_cache")
