@@ -29,6 +29,8 @@ def run_shared_attention_case(case: SharedAttentionCase, reps: int = 5, seed: in
     import torch
 
     device = torch.device(case.device if torch.cuda.is_available() and str(case.device).startswith("cuda") else "cpu")
+    if device.type == "cuda":
+        torch.cuda.set_device(device)
     dtype = _dtype(torch, case.dtype)
     torch.manual_seed(seed)
     rows: list[dict[str, Any]] = []
