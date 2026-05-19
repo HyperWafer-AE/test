@@ -152,10 +152,6 @@ def _replication_headline_supported(replication: pd.DataFrame, ablation_delta: p
         means = replication.groupby("replication_policy")["mesh_traffic_bytes"].mean()
         if {"benefit_cost", "no_replication"} <= set(means.index):
             benefit = abs(float(means["benefit_cost"]) - float(means["no_replication"])) / max(1.0, abs(float(means["no_replication"]))) >= 0.05
-    if not benefit and not ablation_delta.empty:
-        sub = ablation_delta.loc[ablation_delta["variant"] == "no_shared_kv_replication"]
-        if not sub.empty:
-            benefit = bool(sub["supported"].astype(bool).any())
     return benefit
 
 
@@ -269,7 +265,6 @@ def _report_json(out: Path, missing: list[dict[str, str]]) -> dict[str, Any]:
         "event_driven_cohort_artifact_exported": bool(event_exported),
         "cost_aware_cohort_admission_recorded": bool(admission_ok),
         "cohort_latency_safe_or_traffic_only": bool(admission_ok),
-        "cohort_latency_improvement_claim_allowed": bool(cohort_latency_safe),
         "analytical_cohort_not_used_as_main_evidence": bool((out / "decode_cohort_analytical_sweep.csv").exists() and event_exported),
         "oracle_monotonic_upper_bound_or_renamed": True,
         "oracle_renamed_not_upper_bound": True,
@@ -300,6 +295,7 @@ def _report_json(out: Path, missing: list[dict[str, str]]) -> dict[str, Any]:
         "hf_trace_status": "missing",
         "vllm_trace_status": "explicitly_missing",
         "replication_headline_claim": benefit_replication,
+        "cohort_latency_improvement_claim_allowed": bool(cohort_latency_safe),
         "oracle_semantics_valid": False,
         "oracle_renamed_not_upper_bound": True,
         "pass": {
