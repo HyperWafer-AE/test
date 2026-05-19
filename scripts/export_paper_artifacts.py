@@ -53,7 +53,7 @@ def _kind_from_path(path: Path) -> str:
         return "cache_gap"
     if "decode_cohort_sweep" in s and "targeted" not in s:
         return "cohort_sweep"
-    if "decode_cohort" in s or "cohort_targeted" in s:
+    if "decode_cohort" in s or "cohort_targeted" in s or "cohort_admission" in s:
         return "cohort"
     if "replication" in s:
         return "replication"
