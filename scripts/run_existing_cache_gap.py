@@ -22,6 +22,7 @@ def main() -> None:
     parser.add_argument("--out", default="results/round5_existing_cache_gap")
     parser.add_argument("--duration-source", default="synthetic", choices=["synthetic", "trace", "calibrated"])
     parser.add_argument("--seed", type=int, default=17)
+    parser.add_argument("--max-jobs", type=int, default=0)
     parser.add_argument("--engine", default="synthetic")
     parser.add_argument("--model", default="auto")
     parser.add_argument("--gpus", default="")
@@ -39,9 +40,13 @@ def main() -> None:
             "baselines": args.baselines,
             "duration_source": args.duration_source,
             "seed": args.seed,
+            "max_jobs": args.max_jobs,
         },
     )
     traces = load_trace_glob(args.traces)
+    if args.max_jobs:
+        keep = set(sorted({tr.job_id for tr in traces})[: args.max_jobs])
+        traces = [tr for tr in traces if tr.job_id in keep]
     mesh = MeshConfig.from_yaml(args.wafer_config)
     baselines = [b.strip() for b in args.baselines.split(",") if b.strip()]
     result = simulate_global(
