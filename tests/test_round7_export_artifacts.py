@@ -90,6 +90,28 @@ def _make_sources(root: Path) -> list[Path]:
             }
         ]
     ).to_csv(cohort / "simulation/decode_cohorts.csv", index=False)
+    pd.DataFrame(
+        [
+            {
+                "baseline": "waferagent_full",
+                "candidate_cohorts": 1,
+                "accepted_cohorts": 1,
+                "decode_kv_bytes_saved": 30,
+                "jct_p99_delta_vs_no_cohort": -2,
+                "jct_p99_delta_pct_vs_no_cohort": -0.1,
+            }
+        ]
+    ).to_csv(cohort / "simulation/cohort_admission_summary.csv", index=False)
+    pd.DataFrame(
+        [
+            {
+                "baseline": "waferagent_full",
+                "accepted": True,
+                "reason": "accepted",
+                "predicted_shared_kv_bytes_saved": 30,
+            }
+        ]
+    ).to_csv(cohort / "simulation/cohort_admission_decisions.csv", index=False)
 
     sweep = _write_source(root, "round7_decode_cohort_sweep")
     pd.DataFrame([{"cohort_size": 2, "shared_kv_read_reduction_ratio": 0.5}]).to_csv(sweep / "simulation/decode_cohort_sweep.csv", index=False)
@@ -106,11 +128,11 @@ def _make_sources(root: Path) -> list[Path]:
     pd.DataFrame([{"unique_task_ratio": 0, "cross_job_prefix_hit_rate_observed": 0.9}]).to_csv(prefix / "simulation/prefix_realism_sensitivity.csv", index=False)
     pd.DataFrame([{"unique_task_ratio": 0, "cross_job_prefix_hit_rate_observed": 0.9}]).to_csv(prefix / "simulation/prefix_realism_prefix_stats.csv", index=False)
 
-    micro = _write_source(root, "round7_shared_kv_microbench_h100")
+    micro = _write_source(root, "round8_shared_attention_microbench_h100")
     pd.DataFrame(
-        [{"shared_prefix_tokens": 512, "num_queries": 4, "naive_latency_ms": 2, "cohort_latency_ms": 1, "speedup": 2, "naive_read_bytes": 4, "cohort_read_bytes": 1, "read_byte_reduction_ratio": 0.75}]
-    ).to_csv(micro / "simulation/shared_kv_microbench_summary.csv", index=False)
-    pd.DataFrame([{"mode": "cohort", "latency_ms": 1}]).to_csv(micro / "simulation/shared_kv_microbench_raw.csv", index=False)
+        [{"mode": "cohort_attention", "shared_prefix_tokens": 512, "num_agents": 4, "latency_ms": 1, "memory_bytes_estimated": 1, "read_byte_reduction_ratio": 0.75}]
+    ).to_csv(micro / "simulation/shared_attention_microbench_summary.csv", index=False)
+    pd.DataFrame([{"mode": "cohort_attention", "latency_ms": 1}]).to_csv(micro / "simulation/shared_attention_microbench_raw.csv", index=False)
     return [main, gap, ablation, cohort, sweep, repl, prefix, micro]
 
 
@@ -137,14 +159,15 @@ def test_export_ablation_not_same_as_main_and_no_semantic_fallback():
     assert file_sha256(out / "ablation_global_summary.csv") != file_sha256(out / "global_simulation_summary.csv")
 
 
-def test_export_event_driven_cohorts_present_and_prefix_microbench_exported():
+def test_export_event_driven_cohorts_present_and_attention_microbench_exported():
     root = PROJECT_ROOT / "tmp" / "round7_export_test_event"
     out = _run_export(root, _make_sources(root))
     cohorts = pd.read_csv(out / "decode_cohorts_event_driven.csv")
     assert cohorts["event_driven"].astype(bool).any()
     assert (out / "decode_cohort_analytical_sweep.csv").exists()
     assert (out / "prefix_realism_sensitivity.csv").exists()
-    assert (out / "shared_kv_microbench_summary.csv").exists()
+    assert (out / "cohort_admission_summary.csv").exists()
+    assert (out / "shared_attention_microbench_summary.csv").exists()
 
 
 def test_export_missing_required_artifact_fails_in_report():
@@ -161,8 +184,8 @@ def test_paper_claims_matrix_has_numeric_evidence_and_oracle_renamed():
     root = PROJECT_ROOT / "tmp" / "round7_export_test_claims"
     out = _run_export(root, _make_sources(root))
     claims = pd.read_csv(out / "paper_claims_matrix.csv")
-    assert {"claim", "status", "primary_metric", "waferagent_value", "comparison_value", "delta", "threshold"} <= set(claims.columns)
-    assert claims["status"].isin(["supported", "partially_supported", "demoted", "missing"]).all()
+    assert {"claim", "status", "primary_metric", "waferagent_value", "comparison_value", "delta_pct", "threshold", "figure_id"} <= set(claims.columns)
+    assert claims["status"].isin(["supported", "partial", "demoted", "failed"]).all()
     report = json.loads((out / "report.json").read_text(encoding="utf-8"))
     assert bool(report["paper_ready"]["oracle_renamed_not_upper_bound"])
     assert get_baseline("ideal_next_use_cache").name == "ideal_next_use_cache"

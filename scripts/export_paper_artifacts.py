@@ -28,14 +28,16 @@ REQUIRED = {
     "existing_cache_gap_summary.csv": ("cache_gap", "simulation/existing_cache_gap_summary.csv"),
     "ablation_global_summary.csv": ("ablation", "simulation/global_simulation_summary.csv"),
     "ablation_delta_summary.csv": ("ablation", "simulation/ablation_delta_summary.csv"),
+    "cohort_admission_summary.csv": ("cohort", "simulation/cohort_admission_summary.csv"),
+    "cohort_admission_decisions.csv": ("cohort", "simulation/cohort_admission_decisions.csv"),
     "decode_cohorts_event_driven.csv": ("cohort", "simulation/decode_cohorts.csv"),
     "decode_cohort_analytical_sweep.csv": ("cohort_sweep", "simulation/decode_cohort_sweep.csv"),
     "replication_tradeoff_summary.csv": ("replication", "simulation/replication_tradeoff_summary.csv"),
     "prefix_realism_sensitivity.csv": ("prefix_realism", "simulation/prefix_realism_sensitivity.csv"),
     "prefix_realism_prefix_stats.csv": ("prefix_realism", "simulation/prefix_realism_prefix_stats.csv"),
     "planning_overhead_summary.csv": ("main", "simulation/planning_overhead_summary.csv"),
-    "shared_kv_microbench_summary.csv": ("microbench", "simulation/shared_kv_microbench_summary.csv"),
-    "shared_kv_microbench_raw_sample.csv": ("microbench", "simulation/shared_kv_microbench_raw.csv"),
+    "shared_attention_microbench_summary.csv": ("attention_microbench", "simulation/shared_attention_microbench_summary.csv"),
+    "shared_attention_microbench_raw_sample.csv": ("attention_microbench", "simulation/shared_attention_microbench_raw.csv"),
 }
 
 
@@ -57,6 +59,8 @@ def _kind_from_path(path: Path) -> str:
         return "replication"
     if "prefix_realism" in s:
         return "prefix_realism"
+    if "shared_attention_microbench" in s:
+        return "attention_microbench"
     if "microbench" in s:
         return "microbench"
     if "final_report" in s:
@@ -160,10 +164,12 @@ def _claim_matrix(out: Path, report: dict[str, Any]) -> pd.DataFrame:
     gap = _read_csv(out / "existing_cache_gap_summary.csv")
     ablation = _read_csv(out / "ablation_delta_summary.csv")
     repl = _read_csv(out / "replication_tradeoff_summary.csv")
+    admission = _read_csv(out / "cohort_admission_summary.csv")
     rows: list[dict[str, Any]] = []
 
-    def add(claim: str, status: str, metric: str, baseline: str, waf: float, comp: float, threshold: float, evidence: str, section: str, notes: str = "") -> None:
+    def add(claim: str, status: str, metric: str, baseline: str, waf: float, comp: float, threshold: float, evidence: str, figure_id: str, notes: str = "") -> None:
         delta = waf - comp
+        delta_pct = delta / max(1.0, abs(comp))
         rows.append(
             {
                 "claim": claim,
@@ -173,9 +179,10 @@ def _claim_matrix(out: Path, report: dict[str, Any]) -> pd.DataFrame:
                 "waferagent_value": waf,
                 "comparison_value": comp,
                 "delta": delta,
+                "delta_pct": delta_pct,
                 "threshold": threshold,
                 "evidence_file": evidence,
-                "paper_section": section,
+                "figure_id": figure_id,
                 "notes": notes,
             }
         )
@@ -186,18 +193,27 @@ def _claim_matrix(out: Path, report: dict[str, Any]) -> pd.DataFrame:
         if not apc.empty and not waf.empty:
             apc_decode = float(apc["decode_shared_kv_read_bytes"].mean())
             waf_decode = float(waf["decode_shared_kv_read_bytes"].mean())
-            status = "supported" if waf_decode < 0.95 * apc_decode else "partially_supported"
-            add("Existing prefix cache gap", status, "decode_shared_kv_read_bytes", "apc_like", waf_decode, apc_decode, -0.05, "existing_cache_gap_summary.csv", "Existing prefix-cache gap")
+            status = "supported" if waf_decode < 0.95 * apc_decode else "partial"
+            add("Existing prefix cache gap", status, "decode_shared_kv_read_bytes", "apc_like", waf_decode, apc_decode, -0.05, "existing_cache_gap_summary.csv", "Fig2")
     if not main.empty and {"baseline", "jct_p99_ms"} <= set(main.columns):
         apc = main.loc[main["baseline"] == "apc_like"]
         waf = main.loc[main["baseline"] == "waferagent_full"]
         if not apc.empty and not waf.empty:
-            add("Global serving tail latency", "supported", "jct_p99_ms", "apc_like", float(waf["jct_p99_ms"].mean()), float(apc["jct_p99_ms"].mean()), -0.05, "global_simulation_summary.csv", "Global serving results")
+            waf_jct = float(waf["jct_p99_ms"].mean())
+            apc_jct = float(apc["jct_p99_ms"].mean())
+            add("Global serving tail latency", "supported" if waf_jct < 0.95 * apc_jct else "partial", "jct_p99_ms", "apc_like", waf_jct, apc_jct, -0.05, "global_simulation_summary.csv", "Fig4")
     if not ablation.empty:
         sub = ablation.loc[(ablation["variant"] == "no_shared_kv_decode_cohort") & (ablation["metric"] == "decode_shared_kv_read_bytes")]
         if not sub.empty:
             row = sub.iloc[0]
-            add("Decode cohort event-driven benefit", "supported" if bool(row["supported"]) else "partially_supported", "decode_shared_kv_read_bytes", "no_shared_kv_decode_cohort", float(row["full_value"]), float(row["variant_value"]), float(row["threshold"]), "ablation_delta_summary.csv", "Ablation")
+            add("Decode cohort traffic reduction", "supported" if bool(row["supported"]) else "partial", "decode_shared_kv_read_bytes", "no_shared_kv_decode_cohort", float(row["full_value"]), float(row["variant_value"]), float(row["threshold"]), "ablation_delta_summary.csv", "Fig7")
+    if not admission.empty and {"jct_p99_delta_pct_vs_no_cohort", "decode_kv_bytes_saved"} <= set(admission.columns):
+        waf = admission.loc[admission["baseline"] == "waferagent_full"]
+        if not waf.empty:
+            jct_delta = float(waf["jct_p99_delta_pct_vs_no_cohort"].mean())
+            saved = float(waf["decode_kv_bytes_saved"].mean())
+            status = "supported" if saved > 0 and jct_delta <= 0.05 else ("partial" if saved > 0 else "failed")
+            add("Cost-aware cohort latency safety", status, "jct_p99_delta_pct_vs_no_cohort", "no_shared_kv_decode_cohort", jct_delta, 0.0, 0.05, "cohort_admission_summary.csv", "Fig7", "Supported only when byte savings do not regress p99 JCT by more than 5%.")
     replication_ok = bool(report["paper_ready"].get("benefit_cost_replication_nonzero_or_demoted", False)) and bool(report.get("replication_headline_claim", False))
     if not repl.empty and "replication_policy" in repl.columns:
         means = repl.groupby("replication_policy")["mesh_traffic_bytes"].mean() if "mesh_traffic_bytes" in repl.columns else pd.Series(dtype=float)
@@ -212,7 +228,7 @@ def _claim_matrix(out: Path, report: dict[str, Any]) -> pd.DataFrame:
             comp_value,
             -0.05,
             "replication_tradeoff_summary.csv",
-            "Replication design-space",
+            "Appendix",
             "Benefit-cost replication is not a headline claim unless it beats no_replication.",
         )
     add("Oracle semantics", "demoted", "n/a", "oracle", 0.0, 0.0, 0.0, "report.json", "Limitations", "Renamed to ideal_next_use_cache; not claimed as full-system upper bound.")
@@ -222,10 +238,11 @@ def _claim_matrix(out: Path, report: dict[str, Any]) -> pd.DataFrame:
 def _report_json(out: Path, missing: list[dict[str, str]]) -> dict[str, Any]:
     main = _read_csv(out / "global_simulation_summary.csv")
     ablation = _read_csv(out / "ablation_delta_summary.csv")
+    admission = _read_csv(out / "cohort_admission_summary.csv")
     cohorts = _read_csv(out / "decode_cohorts_event_driven.csv")
     repl = _read_csv(out / "replication_tradeoff_summary.csv")
     prefix = _read_csv(out / "prefix_realism_sensitivity.csv")
-    micro = _read_csv(out / "shared_kv_microbench_summary.csv")
+    micro = _read_csv(out / "shared_attention_microbench_summary.csv")
     benefit_replication = _replication_headline_supported(repl, ablation)
     ablation_not_main = False
     if (out / "ablation_global_summary.csv").exists() and (out / "global_simulation_summary.csv").exists():
@@ -236,17 +253,29 @@ def _report_json(out: Path, missing: list[dict[str, str]]) -> dict[str, Any]:
         and cohorts["event_driven"].astype(str).str.lower().isin(["true", "1"]).any()
     )
     prefix_ok = not prefix.empty and {"unique_task_ratio", "cross_job_prefix_hit_rate_observed"} <= set(prefix.columns)
-    micro_ok = not micro.empty and {"naive_latency_ms", "cohort_latency_ms", "read_byte_reduction_ratio"} <= set(micro.columns)
+    micro_ok = not micro.empty and {"mode", "latency_ms", "memory_bytes_estimated", "read_byte_reduction_ratio"} <= set(micro.columns)
+    admission_ok = not admission.empty and {"decode_kv_bytes_saved", "jct_p99_delta_pct_vs_no_cohort"} <= set(admission.columns)
+    cohort_latency_safe = False
+    if admission_ok:
+        waf_adm = admission.loc[admission["baseline"] == "waferagent_full"] if "baseline" in admission.columns else admission
+        if not waf_adm.empty:
+            cohort_latency_safe = bool(
+                (waf_adm["decode_kv_bytes_saved"].astype(float).mean() > 0)
+                and (waf_adm["jct_p99_delta_pct_vs_no_cohort"].astype(float).mean() <= 0.05)
+            )
     paper_ready = {
         "artifact_tables_exported": bool(len(missing) == 0),
         "ablation_artifact_not_identical_to_main": bool(ablation_not_main),
         "event_driven_cohort_artifact_exported": bool(event_exported),
+        "cost_aware_cohort_admission_recorded": bool(admission_ok),
+        "cohort_latency_safe_or_traffic_only": bool(admission_ok),
+        "cohort_latency_improvement_claim_allowed": bool(cohort_latency_safe),
         "analytical_cohort_not_used_as_main_evidence": bool((out / "decode_cohort_analytical_sweep.csv").exists() and event_exported),
         "oracle_monotonic_upper_bound_or_renamed": True,
         "oracle_renamed_not_upper_bound": True,
         "existing_cache_gap_units_correct": bool((out / "existing_cache_gap_summary.csv").exists()),
         "prefix_realism_exported": bool(prefix_ok),
-        "shared_kv_microbench_exported": bool(micro_ok),
+        "shared_attention_microbench_exported": bool(micro_ok),
         "planning_overhead_recorded": bool((out / "planning_overhead_summary.csv").exists()),
         "benefit_cost_replication_nonzero_or_demoted": True,
         "global_serving_results_present": bool(not main.empty),
@@ -266,7 +295,10 @@ def _report_json(out: Path, missing: list[dict[str, str]]) -> dict[str, Any]:
             "tool_ttl": True,
             "critical_path_scheduling": True,
             "replication_headline_claim": not benefit_replication,
+            "aggregator_placement_headline_claim": True,
         },
+        "hf_trace_status": "missing",
+        "vllm_trace_status": "explicitly_missing",
         "replication_headline_claim": benefit_replication,
         "oracle_semantics_valid": False,
         "oracle_renamed_not_upper_bound": True,
@@ -314,7 +346,7 @@ def _write_report(out: Path, report: dict[str, Any], source_manifest: pd.DataFra
             "## Readiness",
             "",
             "```json",
-            json.dumps({k: report[k] for k in ["paper_ready", "sanity", "demoted", "pass", "replication_headline_claim", "oracle_renamed_not_upper_bound"]}, indent=2, sort_keys=True),
+            json.dumps({k: report[k] for k in ["paper_ready", "sanity", "demoted", "pass", "replication_headline_claim", "oracle_renamed_not_upper_bound", "hf_trace_status", "vllm_trace_status"]}, indent=2, sort_keys=True),
             "```",
             "",
             "## Paper-Ready Claim Matrix",
@@ -331,7 +363,7 @@ def _write_report(out: Path, report: dict[str, Any], source_manifest: pd.DataFra
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--source-results", required=True)
-    parser.add_argument("--out", default="results/round7_paper_artifacts")
+    parser.add_argument("--out", default="results/round8_paper_artifacts")
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--clean-required", action="store_true")
     parser.add_argument("--allow-dirty", action="store_true")
@@ -341,7 +373,7 @@ def main() -> None:
     enforce_clean_git_tree(args.clean_required, args.allow_dirty)
     out = init_run_dir(
         args.out,
-        {"run_type": "round7_paper_artifact_export", "source_results": args.source_results, "seed": args.seed},
+        {"run_type": "round8_paper_artifact_export", "source_results": args.source_results, "seed": args.seed},
     )
     sources = _split_paths(args.source_results)
     mapping = _source_map(sources)

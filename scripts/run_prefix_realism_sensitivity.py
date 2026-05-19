@@ -24,23 +24,24 @@ def _floats(text: str) -> list[float]:
 
 
 def _prefix_hit_rate(traces) -> float:
-    seen: set[str] = set()
+    seen_jobs: dict[str, set[str]] = {}
     hits = 0
     total = 0
     for tr in traces:
         for prefix in tr.shared_prefix_ids:
             total += 1
-            if prefix in seen:
+            jobs = seen_jobs.setdefault(prefix, set())
+            if jobs and tr.job_id not in jobs:
                 hits += 1
-            seen.add(prefix)
+            jobs.add(tr.job_id)
     return hits / total if total else 0.0
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--wafer-config", default="configs/wafer/wse_like.yaml")
-    parser.add_argument("--cross-job-task-group-size", default="1,2,5,10,50")
-    parser.add_argument("--unique-task-ratio", default="0,0.25,0.5,0.75,1.0")
+    parser.add_argument("--cross-job-task-group-size", default="1,2,5,10,20,50")
+    parser.add_argument("--unique-task-ratio", default="0,0.1,0.25,0.5,0.75,1.0")
     parser.add_argument("--workloads", default="debate,moa,long_context_swe_stress")
     parser.add_argument("--num-jobs", type=int, default=20)
     parser.add_argument("--baselines", default="apc_like,waferagent_full")
@@ -121,6 +122,34 @@ def main() -> None:
     pd.DataFrame(rows).to_csv(sim / "prefix_realism_prefix_stats.csv", index=False)
     combined = pd.concat(all_summaries, ignore_index=True) if all_summaries else pd.DataFrame()
     combined.to_csv(sim / "prefix_realism_sensitivity.csv", index=False)
+    stats = pd.DataFrame(rows)
+    monotonic = {
+        "overall_declines_with_unique_task_ratio": False,
+        "by_group_size": {},
+    }
+    for group_size, sub in stats.groupby("cross_job_task_group_size"):
+        ordered = sub.sort_values("unique_task_ratio")
+        first = float(ordered["cross_job_prefix_hit_rate_observed"].iloc[0]) if not ordered.empty else 0.0
+        last = float(ordered["cross_job_prefix_hit_rate_observed"].iloc[-1]) if not ordered.empty else 0.0
+        nonincreasing_steps = int(
+            sum(
+                b <= a + 1e-9
+                for a, b in zip(
+                    ordered["cross_job_prefix_hit_rate_observed"].tolist(),
+                    ordered["cross_job_prefix_hit_rate_observed"].tolist()[1:],
+                )
+            )
+        )
+        monotonic["by_group_size"][str(group_size)] = {
+            "first_hit_rate": first,
+            "last_hit_rate": last,
+            "declines": last <= first,
+            "nonincreasing_steps": nonincreasing_steps,
+            "num_steps": max(0, len(ordered) - 1),
+        }
+    if monotonic["by_group_size"]:
+        monotonic["overall_declines_with_unique_task_ratio"] = all(v["declines"] for v in monotonic["by_group_size"].values())
+    write_json(sim / "prefix_realism_monotonicity.json", monotonic)
     write_json(out / "model_selection.json", {"engine_used": args.engine, "model": args.model, "fallback_count": 0})
     finalize_run_dir(out)
     print(f"Prefix realism sensitivity complete: {Path(out).resolve()}")
@@ -128,4 +157,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

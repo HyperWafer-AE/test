@@ -33,3 +33,6 @@ results/round6_*/
 results/round7_*/
 !results/round7_paper_artifacts/
 !results/round7_paper_artifacts/**
+results/round8_*/
+!results/round8_paper_artifacts/
+!results/round8_paper_artifacts/**

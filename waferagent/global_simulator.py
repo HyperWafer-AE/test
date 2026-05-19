@@ -10,6 +10,7 @@ import pandas as pd
 from waferagent.arrival import ArrivalConfig, generate_arrivals
 from waferagent.baselines import get_baseline
 from waferagent.calibrated_cost_model import CalibratedCostModel
+from waferagent.cohort_admission import CohortAdmissionConfig, evaluate_cohort_candidate
 from waferagent.cohort_scheduler import CohortConfig, DecodeCohort, build_decode_cohort, form_decode_cohorts
 from waferagent.kv_model import ModelKVConfig, sharing_metrics
 from waferagent.mesh import MeshConfig
@@ -99,7 +100,9 @@ def _try_form_event_cohort(
     cfg: CohortConfig,
     cohort_index: int,
     current_ready_time: float | None = None,
-) -> tuple[list[str], DecodeCohort | None]:
+    bytes_per_ms: float = 1.0,
+    cost_aware: bool = False,
+) -> tuple[list[str], DecodeCohort | None, dict[str, Any] | None]:
     stage = stages[sid]
     if (
         not cfg.enabled
@@ -107,17 +110,18 @@ def _try_form_event_cohort(
         or not stage.shared_prefix_ids
         or stage.shared_prefix_token_len < cfg.min_shared_prefix_tokens
     ):
-        return [sid], None
+        return [sid], None, None
     prefix = stage.shared_prefix_ids[0]
     obj = shared_by_prefix.get(prefix)
     if obj is None:
-        return [sid], None
+        return [sid], None, None
     base_ready = max(_stage_dep_ready(stage, arrivals, end_times), float(current_ready_time or 0.0))
     graph = graphs[stage.job_id]
     critical = float(graph.nodes[stage.parent_node_id].criticality)
     max_wait = cfg.max_critical_wait_ms if critical > 0.9 else cfg.max_wait_ms
     selected = [sid]
     selected_ready = [base_ready]
+    selected_critical = [critical]
     keep: list[tuple[float, float, str]] = []
     for item in ready:
         _rt, _prio, other_sid = item
@@ -135,18 +139,61 @@ def _try_form_event_cohort(
         if other_ready <= base_ready + min(max_wait, other_wait) or _rt <= base_ready + min(max_wait, other_wait):
             selected.append(other_sid)
             selected_ready.append(other_ready)
+            selected_critical.append(other_critical)
         else:
             keep.append(item)
     if len(selected) == 1:
-        return [sid], None
+        return [sid], None, None
     cohort_start = max(selected_ready)
     batch = [stages[x] for x in selected]
     cohort = build_decode_cohort(obj, batch, cohort_start, cfg, node_regions, f"event_cohort_{cohort_index}")
     if cohort is None:
-        return [sid], None
+        return [sid], None, {
+            "candidate_size": len(batch),
+            "accepted": False,
+            "reason": "build_failed",
+            "shared_kv_id": prefix,
+            "planned_start_ms": cohort_start,
+        }
+    decision_row: dict[str, Any] | None = None
+    if cost_aware:
+        decision = evaluate_cohort_candidate(
+            obj,
+            batch,
+            selected_ready,
+            selected_critical,
+            bytes_per_ms,
+            CohortAdmissionConfig(max_critical_wait_ms=cfg.max_critical_wait_ms),
+        )
+        decision_row = {
+            **decision.to_dict(),
+            "candidate_size": len(batch),
+            "shared_kv_id": prefix,
+            "planned_start_ms": cohort_start,
+            "node_ids": ",".join(s.parent_node_id for s in batch),
+        }
+        if not decision.accepted:
+            return [sid], None, decision_row
     ready[:] = keep
     heapq.heapify(ready)
-    return selected, cohort
+    if decision_row is None:
+        no_cohort = sum(max(1, s.output_tokens) * obj.kv_bytes for s in batch)
+        saved = max(0.0, float(no_cohort - cohort.expected_shared_kv_bytes_read))
+        decision_row = {
+            "accepted": True,
+            "reason": "legacy_accept",
+            "predicted_shared_kv_bytes_saved": saved,
+            "predicted_wait_cost_ms": max(0.0, cohort_start - min(selected_ready)),
+            "predicted_mesh_cost_ms": 0.0,
+            "predicted_resource_delay_ms": 0.0,
+            "predicted_jct_delta_ms": 0.0,
+            "predicted_slo_risk": 0.0,
+            "candidate_size": len(batch),
+            "shared_kv_id": prefix,
+            "planned_start_ms": cohort_start,
+            "node_ids": ",".join(s.parent_node_id for s in batch),
+        }
+    return selected, cohort, decision_row
 
 
 def _nearest_region(
@@ -198,6 +245,7 @@ def simulate_global(
     wait_rows: list[dict] = []
     shared_kv_rows: list[dict] = []
     cohort_rows: list[dict] = []
+    cohort_admission_rows: list[dict] = []
     baseline_summaries: dict[str, dict[str, float]] = {}
 
     for baseline_name in baseline_names:
@@ -278,7 +326,13 @@ def simulate_global(
                             0.0,
                             "kv_replication",
                         )
-        cohort_cfg = CohortConfig(enabled=baseline.shared_kv_decode_cohort or baseline.oracle)
+        cost_aware_cohort = baseline.name in {"waferagent_full", "ideal_next_use_cache"} or baseline.oracle
+        cohort_cfg = CohortConfig(
+            enabled=baseline.shared_kv_decode_cohort or baseline.oracle,
+            max_group_size=4 if cost_aware_cohort else 16,
+            max_wait_ms=0.25 if cost_aware_cohort else 2.0,
+            max_critical_wait_ms=0.0 if cost_aware_cohort else 0.2,
+        )
         cohorts: list[DecodeCohort] = []
         cohort_stats: dict[str, float] = {}
         attention_stats = estimate_shared_attention_cost(
@@ -343,7 +397,7 @@ def simulate_global(
             if sid in end_times:
                 continue
             cohort_timer = time.perf_counter()
-            batch_sids, cohort = _try_form_event_cohort(
+            batch_sids, cohort, admission = _try_form_event_cohort(
                 ready,
                 sid,
                 stages,
@@ -355,8 +409,19 @@ def simulate_global(
                 cohort_cfg,
                 event_cohort_index,
                 _ready_time,
+                bytes_per_ms,
+                cost_aware_cohort,
             )
             decode_cohort_planning_overhead_ms += (time.perf_counter() - cohort_timer) * 1000.0
+            if admission is not None:
+                cohort_admission_rows.append(
+                    {
+                        **admission,
+                        "baseline": baseline.name,
+                        "arrival_rate_jobs_per_s": arrival_cfg.rate_jobs_per_s,
+                        "event_driven": True,
+                    }
+                )
             first_stage = stages[sid]
             if (
                 cohort is None
@@ -364,6 +429,7 @@ def simulate_global(
                 and cohort_cfg.enabled
                 and first_stage.shared_prefix_ids
                 and sid not in held_for_cohort
+                and not cost_aware_cohort
             ):
                 obj = shared_by_prefix.get(first_stage.shared_prefix_ids[0])
                 if obj is not None and len(obj.decode_users) >= cohort_cfg.min_group_size:
@@ -748,6 +814,23 @@ def simulate_global(
             "scheduling_loop_overhead_ms": float(scheduling_loop_overhead_ms),
             "total_runtime_overhead_ms": float((time.perf_counter() - baseline_wall_start) * 1000.0),
         }
+        decision_df_b = pd.DataFrame([r for r in cohort_admission_rows if r.get("baseline") == baseline.name])
+        if not decision_df_b.empty:
+            baseline_summaries[baseline.name].update(
+                {
+                    "candidate_cohorts": float(len(decision_df_b)),
+                    "accepted_cohorts": float(decision_df_b["accepted"].astype(bool).sum()),
+                    "rejected_wait_cost": float((decision_df_b["reason"] == "critical_path_wait").sum()),
+                    "rejected_slo_risk": float(decision_df_b["reason"].isin(["slo_risk", "jct_regression"]).sum()),
+                    "rejected_low_saving": float((decision_df_b["reason"] == "low_saving").sum()),
+                    "accepted_avg_size": float(decision_df_b.loc[decision_df_b["accepted"].astype(bool), "candidate_size"].mean())
+                    if decision_df_b["accepted"].astype(bool).any()
+                    else 0.0,
+                    "accepted_avg_wait_ms": float(decision_df_b.loc[decision_df_b["accepted"].astype(bool), "predicted_wait_cost_ms"].mean())
+                    if decision_df_b["accepted"].astype(bool).any()
+                    else 0.0,
+                }
+            )
         metric_df_b = pd.DataFrame([r for r in metric_rows if r["baseline"] == baseline.name])
         for slo in slo_jct_ms or [1000.0, 5000.0, 10000.0]:
             met = metric_df_b[metric_df_b["job_completion_time_ms"] <= slo]
@@ -809,9 +892,20 @@ def simulate_global(
             "decode_shared_kv_read_bytes": float(extra.get("decode_shared_kv_read_bytes", 0.0)),
             "decode_shared_kv_read_bytes_without_cohort": float(extra.get("decode_shared_kv_read_bytes_without_cohort", 0.0)),
             "decode_kv_read_reduction_ratio": float(extra.get("decode_kv_read_reduction_ratio", extra.get("shared_kv_read_reduction_ratio", 0.0))),
+            "shared_attention_cost_model_source": str(extra.get("shared_attention_cost_model_source", "analytical")),
+            "shared_attention_fit_hash": str(extra.get("shared_attention_fit_hash", "")),
+            "cohort_latency_predicted_ms": float(extra.get("cohort_latency_predicted_ms", 0.0)),
+            "cohort_latency_observed_or_fitted_ms": float(extra.get("cohort_latency_observed_or_fitted_ms", 0.0)),
             "cross_region_kv_transfer_bytes": float(extra.get("cross_region_kv_transfer_bytes", 0.0)),
             "num_decode_cohorts": float(extra.get("num_decode_cohorts", 0.0)),
             "avg_cohort_size": float(extra.get("avg_cohort_size", 0.0)),
+            "candidate_cohorts": float(extra.get("candidate_cohorts", 0.0)),
+            "accepted_cohorts": float(extra.get("accepted_cohorts", 0.0)),
+            "rejected_wait_cost": float(extra.get("rejected_wait_cost", 0.0)),
+            "rejected_slo_risk": float(extra.get("rejected_slo_risk", 0.0)),
+            "rejected_low_saving": float(extra.get("rejected_low_saving", 0.0)),
+            "accepted_avg_size": float(extra.get("accepted_avg_size", 0.0)),
+            "accepted_avg_wait_ms": float(extra.get("accepted_avg_wait_ms", 0.0)),
             "replica_bytes_total": float(extra.get("replica_bytes_total", 0.0)),
             "saved_mesh_traffic_bytes": float(extra.get("saved_mesh_traffic_bytes", 0.0)),
             "replication_transfer_bytes": float(extra.get("replication_transfer_bytes", 0.0)),
@@ -844,6 +938,28 @@ def simulate_global(
         "overhead_fraction_of_jct",
     ]
     planning_df = summary_df[[c for c in planning_cols if c in summary_df.columns]].copy() if not summary_df.empty else pd.DataFrame(columns=planning_cols)
+    admission_df = pd.DataFrame(cohort_admission_rows)
+    rejection_df = (
+        admission_df.loc[~admission_df["accepted"].astype(bool)].groupby(["baseline", "reason"], as_index=False).size().rename(columns={"size": "count"})
+        if not admission_df.empty and "accepted" in admission_df.columns
+        else pd.DataFrame(columns=["baseline", "reason", "count"])
+    )
+    admission_cols = [
+        "baseline",
+        "arrival_rate_jobs_per_s",
+        "candidate_cohorts",
+        "accepted_cohorts",
+        "rejected_wait_cost",
+        "rejected_slo_risk",
+        "rejected_low_saving",
+        "accepted_avg_size",
+        "accepted_avg_wait_ms",
+        "decode_shared_kv_read_bytes",
+        "decode_shared_kv_read_bytes_without_cohort",
+        "decode_kv_read_reduction_ratio",
+        "jct_p99_ms",
+    ]
+    admission_summary = summary_df[[c for c in admission_cols if c in summary_df.columns]].copy() if not summary_df.empty else pd.DataFrame(columns=admission_cols)
     return {
         "global_stage_schedule": stages,
         "global_job_metrics": metrics,
@@ -856,6 +972,9 @@ def simulate_global(
         "prefix_blocks": prefix_df,
         "shared_kv_objects": shared_kv_df,
         "decode_cohorts": cohorts_df,
+        "cohort_admission_decisions": admission_df,
+        "cohort_rejection_reasons": rejection_df,
+        "cohort_admission_summary": admission_summary,
         "planning_overhead_summary": planning_df,
         "planning_overhead_by_baseline": planning_df,
     }

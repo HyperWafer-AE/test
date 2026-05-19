@@ -22,7 +22,7 @@ def estimate_shared_attention_cost(
     private_tokens_by_node: dict[str, int] | None = None,
     output_tokens_by_node: dict[str, int] | None = None,
     kv_bytes_per_token: int | None = None,
-) -> dict[str, float]:
+) -> dict[str, float | str]:
     params = params or SharedAttentionParams()
     cohorts = cohorts or []
     no_cohort_shared = float(sum(o.expected_decode_kv_read_bytes_without_cohort for o in objects))
@@ -64,4 +64,8 @@ def estimate_shared_attention_cost(
         "decode_kv_read_reduction_ratio": saved / no_cohort_shared if no_cohort_shared else 0.0,
         "shared_kv_read_reduction_ratio": saved / no_cohort_shared if no_cohort_shared else 0.0,
         "decode_attention_latency_ms": total_with / max(1.0, bytes_per_ms),
+        "shared_attention_cost_model_source": "analytical",
+        "shared_attention_fit_hash": "",
+        "cohort_latency_predicted_ms": total_with / max(1.0, bytes_per_ms),
+        "cohort_latency_observed_or_fitted_ms": 0.0,
     }
