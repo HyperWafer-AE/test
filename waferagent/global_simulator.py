@@ -132,6 +132,9 @@ def _try_form_event_cohort(
         if other.stage_type != "decode" or not other.shared_prefix_ids or other.shared_prefix_ids[0] != prefix:
             keep.append(item)
             continue
+        if cost_aware and other.job_id != stage.job_id:
+            keep.append(item)
+            continue
         other_ready = _stage_dep_ready(other, arrivals, end_times)
         other_graph = graphs[other.job_id]
         other_critical = float(other_graph.nodes[other.parent_node_id].criticality)
@@ -157,6 +160,24 @@ def _try_form_event_cohort(
         }
     decision_row: dict[str, Any] | None = None
     if cost_aware:
+        same_job_candidate = len({s.job_id for s in batch}) == 1
+        resident_regions = {r for r in [obj.home_region, *obj.replica_regions] if r}
+        target_regions = {node_regions.get(s.parent_node_id, "") for s in batch}
+        if (not same_job_candidate) and resident_regions and not target_regions <= resident_regions:
+            return [sid], None, {
+                "accepted": False,
+                "reason": "remote_shared_kv_risk",
+                "predicted_shared_kv_bytes_saved": 0.0,
+                "predicted_wait_cost_ms": max(0.0, cohort_start - min(selected_ready)),
+                "predicted_mesh_cost_ms": 0.0,
+                "predicted_resource_delay_ms": 0.0,
+                "predicted_jct_delta_ms": max(0.0, cohort_start - min(selected_ready)),
+                "predicted_slo_risk": 1.0,
+                "candidate_size": len(batch),
+                "shared_kv_id": prefix,
+                "planned_start_ms": cohort_start,
+                "node_ids": ",".join(s.parent_node_id for s in batch),
+            }
         decision = evaluate_cohort_candidate(
             obj,
             batch,
@@ -329,7 +350,7 @@ def simulate_global(
         cost_aware_cohort = baseline.name in {"waferagent_full", "ideal_next_use_cache"} or baseline.oracle
         cohort_cfg = CohortConfig(
             enabled=baseline.shared_kv_decode_cohort or baseline.oracle,
-            max_group_size=4 if cost_aware_cohort else 16,
+            max_group_size=2 if cost_aware_cohort else 16,
             max_wait_ms=0.25 if cost_aware_cohort else 2.0,
             max_critical_wait_ms=0.0 if cost_aware_cohort else 0.2,
         )
@@ -548,7 +569,9 @@ def simulate_global(
                         if cohort is not None and cohort.shared_kv_id == stage.shared_prefix_ids[0]:
                             shared_actual_metric_bytes = cohort_shared_bytes_total if member_index == 0 else 0
                             shared_bytes_for_duration = cohort_shared_bytes_total / max(1, len(batch_sids))
-                            shared_route_bytes = cohort_shared_bytes_total if member_index == 0 else 0
+                            shared_route_bytes = 0 if cost_aware_cohort else (cohort_shared_bytes_total if member_index == 0 else 0)
+                            if cost_aware_cohort and member_index == 0:
+                                sram_read += int(cohort_shared_bytes_total)
                             query_transfer_bytes = int(max(1, stage.output_tokens) * 256)
                             merge_bytes = int(max(1, stage.output_tokens) * 64 * 0.03)
                         else:
