@@ -26,7 +26,7 @@ def _annotate_admission(summary: pd.DataFrame, admission: pd.DataFrame, slo: pd.
     if summary.empty:
         return admission
     out = admission.copy()
-    full = summary.loc[summary["baseline"] == "waferagent_full"]
+    full = summary.loc[summary["baseline"].isin(["waferagent_latency_safe", "waferagent_full"])]
     no = summary.loc[summary["baseline"] == "no_shared_kv_decode_cohort"]
     if not full.empty and not no.empty:
         full_row = full.iloc[0]
@@ -55,6 +55,7 @@ def main() -> None:
     parser.add_argument("--arrival-rate-jobs-per-s", default="16")
     parser.add_argument("--baselines", default="waferagent_full,no_shared_kv_decode_cohort")
     parser.add_argument("--duration-source", default="synthetic", choices=["trace", "calibrated", "synthetic"])
+    parser.add_argument("--shared-attention-cost-fit", default="")
     parser.add_argument("--out", default="results/round8_cohort_admission")
     parser.add_argument("--seed", type=int, default=17)
     parser.add_argument("--max-jobs", type=int, default=0)
@@ -94,6 +95,7 @@ def main() -> None:
             ArrivalConfig(mode=args.arrival_mode, rate_jobs_per_s=rate, seed=args.seed, max_jobs=args.max_jobs or 0),
             seed=args.seed,
             duration_source=args.duration_source,
+            shared_attention_cost_fit=args.shared_attention_cost_fit or None,
         )
         for name, df in result.items():
             tmp = df.copy()

@@ -19,6 +19,7 @@ class BaselineConfig:
     shared_kv_decode_cohort: bool = False
     shared_kv_placement: bool = False
     shared_kv_replication_policy: str = "none"
+    cohort_admission_policy: str = "none"
     future_reuse_policy: bool = False
     distributed_sram_policy: bool = True
     oracle: bool = False
@@ -70,6 +71,17 @@ NEUTRAL_BASELINES: dict[str, BaselineConfig] = {
         ttl_policy="lru",
         shared_kv_decode_cohort=True,
         shared_kv_replication_policy="no_replication",
+        cohort_admission_policy="traffic_only",
+    ),
+    "pat_like_traffic_only": BaselineConfig(
+        name="pat_like_traffic_only",
+        placement_policy="round_robin",
+        scheduling_policy="fifo_topological",
+        kv_sharing=True,
+        ttl_policy="lru",
+        shared_kv_decode_cohort=True,
+        shared_kv_replication_policy="no_replication",
+        cohort_admission_policy="traffic_only",
     ),
     "continuum_like": BaselineConfig(
         name="continuum_like",
@@ -94,6 +106,43 @@ NEUTRAL_BASELINES: dict[str, BaselineConfig] = {
         shared_kv_decode_cohort=True,
         shared_kv_placement=True,
         shared_kv_replication_policy="benefit_cost",
+        cohort_admission_policy="latency_safe",
+        future_reuse_policy=True,
+    ),
+    "waferagent_traffic_only": BaselineConfig(
+        name="waferagent_traffic_only",
+        placement_policy="communication_affinity",
+        scheduling_policy="critical_path",
+        kv_sharing=True,
+        ttl_policy="graph_ttl_criticality",
+        tool_ttl=True,
+        critical_path=True,
+        dynamic_pd_partition=True,
+        aggregator_placement=True,
+        mesh_congestion_penalty=True,
+        hotspot_aware_placement=True,
+        shared_kv_decode_cohort=True,
+        shared_kv_placement=True,
+        shared_kv_replication_policy="benefit_cost",
+        cohort_admission_policy="traffic_only",
+        future_reuse_policy=True,
+    ),
+    "waferagent_latency_safe": BaselineConfig(
+        name="waferagent_latency_safe",
+        placement_policy="communication_affinity",
+        scheduling_policy="critical_path",
+        kv_sharing=True,
+        ttl_policy="graph_ttl_criticality",
+        tool_ttl=True,
+        critical_path=True,
+        dynamic_pd_partition=True,
+        aggregator_placement=True,
+        mesh_congestion_penalty=True,
+        hotspot_aware_placement=True,
+        shared_kv_decode_cohort=True,
+        shared_kv_placement=True,
+        shared_kv_replication_policy="benefit_cost",
+        cohort_admission_policy="latency_safe",
         future_reuse_policy=True,
     ),
     "oracle": BaselineConfig(
@@ -111,6 +160,7 @@ NEUTRAL_BASELINES: dict[str, BaselineConfig] = {
         shared_kv_decode_cohort=True,
         shared_kv_placement=True,
         shared_kv_replication_policy="oracle",
+        cohort_admission_policy="traffic_only",
         future_reuse_policy=True,
         oracle=True,
     ),
@@ -129,6 +179,7 @@ NEUTRAL_BASELINES: dict[str, BaselineConfig] = {
         shared_kv_decode_cohort=True,
         shared_kv_placement=True,
         shared_kv_replication_policy="no_replication",
+        cohort_admission_policy="traffic_only",
         future_reuse_policy=True,
     ),
 }
@@ -153,6 +204,7 @@ LEGACY_BASELINES: dict[str, BaselineConfig] = {
         decode_time_multiplier=0.95,
     ),
     "pat_like": _legacy(NEUTRAL_BASELINES["pat_like"]),
+    "pat_like_traffic_only": _legacy(NEUTRAL_BASELINES["pat_like_traffic_only"]),
     "waferagent_full": _legacy(
         NEUTRAL_BASELINES["waferagent_full"],
         prefill_time_multiplier=0.62,
@@ -160,6 +212,8 @@ LEGACY_BASELINES: dict[str, BaselineConfig] = {
         comm_time_multiplier=0.70,
         parallelism_multiplier=1.35,
     ),
+    "waferagent_traffic_only": _legacy(NEUTRAL_BASELINES["waferagent_traffic_only"]),
+    "waferagent_latency_safe": _legacy(NEUTRAL_BASELINES["waferagent_latency_safe"]),
     "oracle": _legacy(NEUTRAL_BASELINES["oracle"]),
     "ideal_next_use_cache": _legacy(NEUTRAL_BASELINES["ideal_next_use_cache"]),
 }

@@ -20,6 +20,7 @@ from waferagent.prefix_extension_cost_model import PrefixExtensionCostModel
 from waferagent.prefix_tree import PrefixComputeTracker
 from waferagent.resource_model import ResourceModel
 from waferagent.shared_attention_cost import estimate_shared_attention_cost
+from waferagent.shared_attention_cost_model import SharedAttentionCostModel
 from waferagent.shared_kv import (
     SharedKVObject,
     extract_shared_kv_objects,
@@ -102,6 +103,7 @@ def _try_form_event_cohort(
     current_ready_time: float | None = None,
     bytes_per_ms: float = 1.0,
     cost_aware: bool = False,
+    strict_latency_safe: bool = False,
 ) -> tuple[list[str], DecodeCohort | None, dict[str, Any] | None]:
     stage = stages[sid]
     if (
@@ -123,6 +125,7 @@ def _try_form_event_cohort(
     selected_ready = [base_ready]
     selected_critical = [critical]
     keep: list[tuple[float, float, str]] = []
+    cross_job_candidate_seen = False
     for item in ready:
         _rt, _prio, other_sid = item
         other = stages[other_sid]
@@ -133,6 +136,7 @@ def _try_form_event_cohort(
             keep.append(item)
             continue
         if cost_aware and other.job_id != stage.job_id:
+            cross_job_candidate_seen = True
             keep.append(item)
             continue
         other_ready = _stage_dep_ready(other, arrivals, end_times)
@@ -146,6 +150,21 @@ def _try_form_event_cohort(
         else:
             keep.append(item)
     if len(selected) == 1:
+        if cost_aware and strict_latency_safe and cross_job_candidate_seen:
+            return [sid], None, {
+                "accepted": False,
+                "reason": "queue_pressure",
+                "predicted_shared_kv_bytes_saved": 0.0,
+                "predicted_wait_cost_ms": 0.0,
+                "predicted_mesh_cost_ms": 0.0,
+                "predicted_resource_delay_ms": 0.0,
+                "predicted_jct_delta_ms": 0.0,
+                "predicted_slo_risk": 1.0,
+                "candidate_size": 1,
+                "shared_kv_id": prefix,
+                "planned_start_ms": base_ready,
+                "node_ids": stage.parent_node_id,
+            }
         return [sid], None, None
     cohort_start = max(selected_ready)
     batch = [stages[x] for x in selected]
@@ -160,6 +179,22 @@ def _try_form_event_cohort(
         }
     decision_row: dict[str, Any] | None = None
     if cost_aware:
+        strict_wait_ms = max(0.0, cohort_start - min(selected_ready))
+        if strict_latency_safe and strict_wait_ms > 1e-9:
+            return [sid], None, {
+                "accepted": False,
+                "reason": "queue_pressure",
+                "predicted_shared_kv_bytes_saved": 0.0,
+                "predicted_wait_cost_ms": strict_wait_ms,
+                "predicted_mesh_cost_ms": 0.0,
+                "predicted_resource_delay_ms": 0.0,
+                "predicted_jct_delta_ms": strict_wait_ms,
+                "predicted_slo_risk": 1.0,
+                "candidate_size": len(batch),
+                "shared_kv_id": prefix,
+                "planned_start_ms": cohort_start,
+                "node_ids": ",".join(s.parent_node_id for s in batch),
+            }
         same_job_candidate = len({s.job_id for s in batch}) == 1
         resident_regions = {r for r in [obj.home_region, *obj.replica_regions] if r}
         target_regions = {node_regions.get(s.parent_node_id, "") for s in batch}
@@ -242,6 +277,7 @@ def simulate_global(
     neutral_multipliers: bool = True,
     calibration: str | Path | None = None,
     prefix_extension_calibration: str | Path | None = None,
+    shared_attention_cost_fit: str | Path | None = None,
     duration_source: str = "synthetic",
     slo_jct_ms: list[float] | None = None,
     slo_ttft_ms: list[float] | None = None,
@@ -255,6 +291,7 @@ def simulate_global(
         if prefix_extension_calibration
         else None
     )
+    shared_attention_model = SharedAttentionCostModel.from_json(shared_attention_cost_fit) if shared_attention_cost_fit else None
     calib_meta = _load_calibration_scale(calibration)
     metric_rows: list[dict] = []
     stage_rows: list[dict] = []
@@ -347,11 +384,13 @@ def simulate_global(
                             0.0,
                             "kv_replication",
                         )
-        cost_aware_cohort = baseline.name in {"waferagent_full", "ideal_next_use_cache"} or baseline.oracle
+        policy = baseline.cohort_admission_policy
+        cost_aware_cohort = policy == "latency_safe"
+        traffic_only_cohort = policy == "traffic_only" or baseline.oracle
         cohort_cfg = CohortConfig(
             enabled=baseline.shared_kv_decode_cohort or baseline.oracle,
             max_group_size=2 if cost_aware_cohort else 16,
-            max_wait_ms=0.25 if cost_aware_cohort else 2.0,
+            max_wait_ms=0.0 if cost_aware_cohort else 2.0,
             max_critical_wait_ms=0.0 if cost_aware_cohort else 0.2,
         )
         cohorts: list[DecodeCohort] = []
@@ -431,6 +470,7 @@ def simulate_global(
                 event_cohort_index,
                 _ready_time,
                 bytes_per_ms,
+                cost_aware_cohort,
                 cost_aware_cohort,
             )
             decode_cohort_planning_overhead_ms += (time.perf_counter() - cohort_timer) * 1000.0
@@ -579,6 +619,20 @@ def simulate_global(
                             shared_bytes_for_duration = shared_no_cohort_bytes
                             shared_route_bytes = shared_no_cohort_bytes
                         decode_kv_latency = shared_bytes_for_duration / bytes_per_ms
+                        if shared_attention_model is not None and stage.shared_prefix_ids:
+                            mode = "cohort_attention" if cohort is not None and cohort.shared_kv_id == stage.shared_prefix_ids[0] else "independent_attention"
+                            agents = len(batch_sids) if cohort is not None else 1
+                            private_tokens = max(0, int(stage.input_tokens) - int(stage.shared_prefix_token_len))
+                            predicted = shared_attention_model.predict_ms(
+                                mode,
+                                int(stage.shared_prefix_token_len),
+                                private_tokens,
+                                max(1, agents),
+                                heads=model_cfg.num_attention_heads,
+                                head_dim=model_cfg.head_dim,
+                            )
+                            if predicted > 0:
+                                decode_kv_latency = predicted / max(1, agents)
                         duration += decode_kv_latency
                         accum["decode_shared_kv_read_bytes_without_cohort"] += shared_no_cohort_bytes
                         accum["decode_shared_kv_read_bytes"] += shared_actual_metric_bytes
@@ -731,6 +785,16 @@ def simulate_global(
         attention_stats["decode_query_transfer_bytes"] = float(accum["decode_query_transfer_bytes"])
         attention_stats["decode_merge_bytes"] = float(accum["decode_merge_bytes"])
         attention_stats["decode_attention_latency_ms"] = float(accum["decode_attention_latency_ms"])
+        if shared_attention_model is not None:
+            attention_stats["shared_attention_cost_model_source"] = "h100_microbench_fit"
+            attention_stats["shared_attention_fit_hash"] = shared_attention_model.fit_hash
+            if cohorts:
+                preds = []
+                for c in cohorts:
+                    obj = shared_by_prefix.get(c.shared_kv_id)
+                    if obj:
+                        preds.append(shared_attention_model.predict_ms("cohort_attention", obj.token_len, 256, len(c.node_ids), heads=model_cfg.num_attention_heads, head_dim=model_cfg.head_dim))
+                attention_stats["cohort_latency_predicted_ms"] = float(sum(preds))
         sched_df = pd.DataFrame([r for r in stage_rows if r["baseline"] == baseline.name])
         makespan = max(job_last_end.values()) - min(arrivals.values()) if job_last_end else 0.0
         mesh_stats = mesh.stats()
@@ -846,6 +910,9 @@ def simulate_global(
                     "rejected_wait_cost": float((decision_df_b["reason"] == "critical_path_wait").sum()),
                     "rejected_slo_risk": float(decision_df_b["reason"].isin(["slo_risk", "jct_regression"]).sum()),
                     "rejected_low_saving": float((decision_df_b["reason"] == "low_saving").sum()),
+                    "rejected_critical_path": float((decision_df_b["reason"] == "critical_path_wait").sum()),
+                    "rejected_queue_pressure": float((decision_df_b["reason"] == "queue_pressure").sum()),
+                    "rejected_remote_shared_kv": float((decision_df_b["reason"] == "remote_shared_kv").sum()),
                     "accepted_avg_size": float(decision_df_b.loc[decision_df_b["accepted"].astype(bool), "candidate_size"].mean())
                     if decision_df_b["accepted"].astype(bool).any()
                     else 0.0,
@@ -927,6 +994,9 @@ def simulate_global(
             "rejected_wait_cost": float(extra.get("rejected_wait_cost", 0.0)),
             "rejected_slo_risk": float(extra.get("rejected_slo_risk", 0.0)),
             "rejected_low_saving": float(extra.get("rejected_low_saving", 0.0)),
+            "rejected_critical_path": float(extra.get("rejected_critical_path", 0.0)),
+            "rejected_queue_pressure": float(extra.get("rejected_queue_pressure", 0.0)),
+            "rejected_remote_shared_kv": float(extra.get("rejected_remote_shared_kv", 0.0)),
             "accepted_avg_size": float(extra.get("accepted_avg_size", 0.0)),
             "accepted_avg_wait_ms": float(extra.get("accepted_avg_wait_ms", 0.0)),
             "replica_bytes_total": float(extra.get("replica_bytes_total", 0.0)),
@@ -975,6 +1045,9 @@ def simulate_global(
         "rejected_wait_cost",
         "rejected_slo_risk",
         "rejected_low_saving",
+        "rejected_critical_path",
+        "rejected_queue_pressure",
+        "rejected_remote_shared_kv",
         "accepted_avg_size",
         "accepted_avg_wait_ms",
         "decode_shared_kv_read_bytes",

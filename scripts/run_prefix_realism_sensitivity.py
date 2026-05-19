@@ -122,6 +122,37 @@ def main() -> None:
     pd.DataFrame(rows).to_csv(sim / "prefix_realism_prefix_stats.csv", index=False)
     combined = pd.concat(all_summaries, ignore_index=True) if all_summaries else pd.DataFrame()
     combined.to_csv(sim / "prefix_realism_sensitivity.csv", index=False)
+    regime_rows = []
+    if not combined.empty:
+        for (group_size, unique_ratio), sub in combined.groupby(["cross_job_task_group_size", "unique_task_ratio"]):
+            apc = sub.loc[sub["baseline"] == "apc_like"]
+            waf = sub.loc[sub["baseline"] == "waferagent_full"]
+            if apc.empty or waf.empty:
+                continue
+            apc_jct = float(apc["jct_p99_ms"].mean())
+            waf_jct = float(waf["jct_p99_ms"].mean())
+            hit = float(waf["cross_job_prefix_hit_rate_observed"].mean()) if "cross_job_prefix_hit_rate_observed" in waf.columns else 0.0
+            reduction = float(waf["decode_kv_read_reduction_ratio"].mean()) if "decode_kv_read_reduction_ratio" in waf.columns else 0.0
+            delta = (waf_jct - apc_jct) / max(1.0, apc_jct)
+            if hit >= 0.08 and reduction >= 0.20 and delta <= 0.0:
+                label = "high_reuse_high_decode_pressure"
+            elif delta > 0.0:
+                label = "low_reuse_apc_better"
+            else:
+                label = "medium_reuse"
+            regime_rows.append(
+                {
+                    "cross_job_task_group_size": group_size,
+                    "unique_task_ratio": unique_ratio,
+                    "cross_job_prefix_hit_rate_observed": hit,
+                    "shared_kv_read_reduction_ratio": reduction,
+                    "waferagent_vs_apc_jct_p99_delta_pct": delta,
+                    "waferagent_jct_p99_ms": waf_jct,
+                    "apc_like_jct_p99_ms": apc_jct,
+                    "regime_label": label,
+                }
+            )
+    pd.DataFrame(regime_rows).to_csv(sim / "regime_classification.csv", index=False)
     stats = pd.DataFrame(rows)
     monotonic = {
         "overall_declines_with_unique_task_ratio": False,

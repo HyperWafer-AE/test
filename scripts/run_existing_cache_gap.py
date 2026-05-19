@@ -21,6 +21,7 @@ def main() -> None:
     parser.add_argument("--baselines", default="no_cache,apc_like,kvflow_like,pat_like,waferagent_full")
     parser.add_argument("--out", default="results/round5_existing_cache_gap")
     parser.add_argument("--duration-source", default="synthetic", choices=["synthetic", "trace", "calibrated"])
+    parser.add_argument("--shared-attention-cost-fit", default="")
     parser.add_argument("--seed", type=int, default=17)
     parser.add_argument("--max-jobs", type=int, default=0)
     parser.add_argument("--engine", default="synthetic")
@@ -56,6 +57,7 @@ def main() -> None:
         ArrivalConfig(mode="closed_loop", seed=args.seed),
         seed=args.seed,
         duration_source=args.duration_source,
+        shared_attention_cost_fit=args.shared_attention_cost_fit or None,
     )
     summary = result["global_simulation_summary"].copy()
     metrics = result["global_job_metrics"].copy()

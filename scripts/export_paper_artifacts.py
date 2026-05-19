@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import shlex
 import shutil
 from datetime import datetime, timezone
 from pathlib import Path
@@ -30,14 +31,18 @@ REQUIRED = {
     "ablation_delta_summary.csv": ("ablation", "simulation/ablation_delta_summary.csv"),
     "cohort_admission_summary.csv": ("cohort", "simulation/cohort_admission_summary.csv"),
     "cohort_admission_decisions.csv": ("cohort", "simulation/cohort_admission_decisions.csv"),
+    "cohort_policy_comparison.csv": ("cohort_policy", "simulation/global_simulation_summary.csv"),
     "decode_cohorts_event_driven.csv": ("cohort", "simulation/decode_cohorts.csv"),
     "decode_cohort_analytical_sweep.csv": ("cohort_sweep", "simulation/decode_cohort_sweep.csv"),
     "replication_tradeoff_summary.csv": ("replication", "simulation/replication_tradeoff_summary.csv"),
     "prefix_realism_sensitivity.csv": ("prefix_realism", "simulation/prefix_realism_sensitivity.csv"),
     "prefix_realism_prefix_stats.csv": ("prefix_realism", "simulation/prefix_realism_prefix_stats.csv"),
+    "regime_classification.csv": ("prefix_realism", "simulation/regime_classification.csv"),
     "planning_overhead_summary.csv": ("main", "simulation/planning_overhead_summary.csv"),
     "shared_attention_microbench_summary.csv": ("attention_microbench", "simulation/shared_attention_microbench_summary.csv"),
     "shared_attention_microbench_raw_sample.csv": ("attention_microbench", "simulation/shared_attention_microbench_raw.csv"),
+    "shared_attention_cost_fit.json": ("attention_fit", "simulation/shared_attention_cost_fit.json"),
+    "shared_attention_fit_quality.json": ("attention_fit", "simulation/shared_attention_fit_quality.json"),
 }
 
 
@@ -53,6 +58,8 @@ def _kind_from_path(path: Path) -> str:
         return "cache_gap"
     if "decode_cohort_sweep" in s and "targeted" not in s:
         return "cohort_sweep"
+    if "cohort_policy" in s:
+        return "cohort_policy"
     if "decode_cohort" in s or "cohort_targeted" in s or "cohort_admission" in s:
         return "cohort"
     if "replication" in s:
@@ -61,6 +68,8 @@ def _kind_from_path(path: Path) -> str:
         return "prefix_realism"
     if "shared_attention_microbench" in s:
         return "attention_microbench"
+    if "shared_attention_fit" in s or "attention_fit" in s:
+        return "attention_fit"
     if "microbench" in s:
         return "microbench"
     if "final_report" in s:
@@ -101,9 +110,28 @@ def _copy_required(
             else:
                 shutil.copy2(src, dst)
             return src
-    pd.DataFrame().to_csv(dst, index=False)
+    if dst.suffix == ".json":
+        write_json(dst, {"missing": True, "artifact": label})
+    else:
+        pd.DataFrame().to_csv(dst, index=False)
     missing.append({"artifact": label, "kind": kind, "required_path": rel})
     return None
+
+
+def _arg_value(command: str, name: str) -> str:
+    if not command:
+        return ""
+    try:
+        parts = shlex.split(command)
+    except ValueError:
+        parts = command.split()
+    flag = f"--{name}"
+    for i, part in enumerate(parts):
+        if part == flag and i + 1 < len(parts):
+            return parts[i + 1]
+        if part.startswith(flag + "="):
+            return part.split("=", 1)[1]
+    return ""
 
 
 def _source_info(artifact: str, src: Path | None) -> dict[str, Any]:
@@ -124,6 +152,9 @@ def _source_info(artifact: str, src: Path | None) -> dict[str, Any]:
     manifest = read_json(root / "run_manifest.json") if (root / "run_manifest.json").exists() else {}
     command = (root / "command.txt").read_text(encoding="utf-8", errors="replace").strip() if (root / "command.txt").exists() else ""
     run_cfg = manifest.get("config", {}) if isinstance(manifest.get("config", {}), dict) else {}
+    duration_source = run_cfg.get("duration_source", metadata.get("duration_source", "")) or _arg_value(command, "duration-source")
+    arrival_mode = run_cfg.get("arrival_mode", "") or _arg_value(command, "arrival-mode")
+    arrival_rates = run_cfg.get("arrival_rate_jobs_per_s", "") or _arg_value(command, "arrival-rate-jobs-per-s")
     return {
         "artifact_file": artifact,
         "source_result_dir": root.as_posix(),
@@ -131,9 +162,9 @@ def _source_info(artifact: str, src: Path | None) -> dict[str, Any]:
         "source_git_commit": metadata.get("git_commit", ""),
         "source_git_dirty": metadata.get("git_dirty", ""),
         "source_created_unix": metadata.get("created_unix", ""),
-        "source_duration_source": run_cfg.get("duration_source", metadata.get("duration_source", "")),
-        "source_arrival_mode": run_cfg.get("arrival_mode", ""),
-        "source_arrival_rates": run_cfg.get("arrival_rate_jobs_per_s", ""),
+        "source_duration_source": duration_source,
+        "source_arrival_mode": arrival_mode,
+        "source_arrival_rates": arrival_rates,
     }
 
 
@@ -204,13 +235,13 @@ def _claim_matrix(out: Path, report: dict[str, Any]) -> pd.DataFrame:
             row = sub.iloc[0]
             add("Decode cohort traffic reduction", "supported" if bool(row["supported"]) else "partial", "decode_shared_kv_read_bytes", "no_shared_kv_decode_cohort", float(row["full_value"]), float(row["variant_value"]), float(row["threshold"]), "ablation_delta_summary.csv", "Fig7")
     if not admission.empty and {"jct_p99_delta_pct_vs_no_cohort", "decode_kv_bytes_saved"} <= set(admission.columns):
-        waf = admission.loc[admission["baseline"] == "waferagent_full"]
+        waf = admission.loc[admission["baseline"].isin(["waferagent_latency_safe", "waferagent_full"])]
         if not waf.empty:
             jct_delta = float(waf["jct_p99_delta_pct_vs_no_cohort"].mean())
             saved = float(waf["decode_kv_bytes_saved"].mean())
             status = "supported" if saved > 0 and jct_delta <= 0.05 else ("partial" if saved > 0 else "failed")
             add("Cost-aware cohort latency safety", status, "jct_p99_delta_pct_vs_no_cohort", "no_shared_kv_decode_cohort", jct_delta, 0.0, 0.05, "cohort_admission_summary.csv", "Fig7", "Supported only when byte savings do not regress p99 JCT by more than 5%.")
-    replication_ok = bool(report["paper_ready"].get("benefit_cost_replication_nonzero_or_demoted", False)) and bool(report.get("replication_headline_claim", False))
+    replication_ok = bool(report.get("claim_ready", {}).get("replication_headline_claim", False))
     if not repl.empty and "replication_policy" in repl.columns:
         means = repl.groupby("replication_policy")["mesh_traffic_bytes"].mean() if "mesh_traffic_bytes" in repl.columns else pd.Series(dtype=float)
         waf_value = float(means.get("benefit_cost", 0.0))
@@ -228,6 +259,23 @@ def _claim_matrix(out: Path, report: dict[str, Any]) -> pd.DataFrame:
             "Benefit-cost replication is not a headline claim unless it beats no_replication.",
         )
     add("Oracle semantics", "demoted", "n/a", "oracle", 0.0, 0.0, 0.0, "report.json", "Limitations", "Renamed to ideal_next_use_cache; not claimed as full-system upper bound.")
+    if not main.empty and {"shared_attention_cost_model_source", "shared_attention_fit_hash"} <= set(main.columns):
+        fit_used = bool(
+            (main["shared_attention_cost_model_source"].astype(str) == "h100_microbench_fit").any()
+            and main["shared_attention_fit_hash"].astype(str).str.len().gt(0).any()
+        )
+        add(
+            "H100 shared-attention cost fit drives simulator",
+            "supported" if fit_used else "failed",
+            "shared_attention_cost_model_source",
+            "global_main",
+            1.0 if fit_used else 0.0,
+            0.0,
+            1.0,
+            "global_simulation_summary.csv",
+            "Fig8",
+            "Supported only when the main global simulation reports h100_microbench_fit and a non-empty fit hash.",
+        )
     return pd.DataFrame(rows)
 
 
@@ -238,7 +286,9 @@ def _report_json(out: Path, missing: list[dict[str, str]]) -> dict[str, Any]:
     cohorts = _read_csv(out / "decode_cohorts_event_driven.csv")
     repl = _read_csv(out / "replication_tradeoff_summary.csv")
     prefix = _read_csv(out / "prefix_realism_sensitivity.csv")
+    regime = _read_csv(out / "regime_classification.csv")
     micro = _read_csv(out / "shared_attention_microbench_summary.csv")
+    source_manifest = _read_csv(out / "source_run_manifest.csv")
     benefit_replication = _replication_headline_supported(repl, ablation)
     ablation_not_main = False
     if (out / "ablation_global_summary.csv").exists() and (out / "global_simulation_summary.csv").exists():
@@ -251,26 +301,75 @@ def _report_json(out: Path, missing: list[dict[str, str]]) -> dict[str, Any]:
     prefix_ok = not prefix.empty and {"unique_task_ratio", "cross_job_prefix_hit_rate_observed"} <= set(prefix.columns)
     micro_ok = not micro.empty and {"mode", "latency_ms", "memory_bytes_estimated", "read_byte_reduction_ratio"} <= set(micro.columns)
     admission_ok = not admission.empty and {"decode_kv_bytes_saved", "jct_p99_delta_pct_vs_no_cohort"} <= set(admission.columns)
+    h100_fit_used = False
+    if not main.empty and {"shared_attention_cost_model_source", "shared_attention_fit_hash"} <= set(main.columns):
+        h100_fit_used = bool(
+            (main["shared_attention_cost_model_source"].astype(str) == "h100_microbench_fit").any()
+            and main["shared_attention_fit_hash"].astype(str).str.len().gt(0).any()
+        )
     cohort_latency_safe = False
+    cohort_traffic_saving = False
     if admission_ok:
-        waf_adm = admission.loc[admission["baseline"] == "waferagent_full"] if "baseline" in admission.columns else admission
+        waf_adm = admission.loc[admission["baseline"].isin(["waferagent_full", "waferagent_latency_safe"])] if "baseline" in admission.columns else admission
         if not waf_adm.empty:
+            cohort_traffic_saving = bool(waf_adm["decode_kv_bytes_saved"].astype(float).mean() > 0)
             cohort_latency_safe = bool(
-                (waf_adm["decode_kv_bytes_saved"].astype(float).mean() > 0)
+                cohort_traffic_saving
                 and (waf_adm["jct_p99_delta_pct_vs_no_cohort"].astype(float).mean() <= 0.05)
             )
-    paper_ready = {
+    arrival_fields = True
+    if not source_manifest.empty and {"source_result_dir", "source_arrival_mode", "source_arrival_rates"} <= set(source_manifest.columns):
+        global_rows = source_manifest[source_manifest["source_result_dir"].astype(str).str.contains("global|cohort|ablation", regex=True, na=False)]
+        if not global_rows.empty:
+            arrival_fields = bool(
+                global_rows["source_arrival_mode"].astype(str).str.len().gt(0).all()
+                and global_rows["source_arrival_rates"].astype(str).str.len().gt(0).all()
+            )
+    artifact_ready = {
         "artifact_tables_exported": bool(len(missing) == 0),
+        "source_manifest_arrival_fields": bool(arrival_fields),
+        "shared_attention_fit_exported": bool((out / "shared_attention_cost_fit.json").exists() and (out / "shared_attention_fit_quality.json").exists()),
+        "report_title_round9": True,
+    }
+    claim_ready = {
+        "existing_prefix_cache_gap": False,
+        "global_tail_latency_vs_apc": False,
+        "decode_cohort_traffic_reduction": bool(cohort_traffic_saving),
+        "cohort_latency_improvement": bool(cohort_latency_safe),
+        "h100_shared_attention_fit_used": bool(h100_fit_used),
+        "prefix_regime_classification_present": bool(not regime.empty),
+        "affinity_placement_supported": False,
+        "replication_headline_claim": bool(benefit_replication),
+    }
+    if not main.empty and {"baseline", "jct_p99_ms"} <= set(main.columns):
+        waf = main.loc[main["baseline"] == "waferagent_full"]
+        apc = main.loc[main["baseline"] == "apc_like"]
+        if not waf.empty and not apc.empty:
+            claim_ready["global_tail_latency_vs_apc"] = bool(float(waf["jct_p99_ms"].mean()) < 0.95 * float(apc["jct_p99_ms"].mean()))
+    gap = _read_csv(out / "existing_cache_gap_summary.csv")
+    if not gap.empty and {"baseline", "decode_shared_kv_read_bytes"} <= set(gap.columns):
+        waf = gap.loc[gap["baseline"] == "waferagent_full"]
+        apc = gap.loc[gap["baseline"] == "apc_like"]
+        if not waf.empty and not apc.empty:
+            claim_ready["existing_prefix_cache_gap"] = bool(float(waf["decode_shared_kv_read_bytes"].mean()) < 0.95 * float(apc["decode_shared_kv_read_bytes"].mean()))
+    if not ablation.empty and {"variant", "metric", "supported"} <= set(ablation.columns):
+        sub = ablation.loc[
+            (ablation["variant"] == "no_affinity_placement")
+            & (ablation["metric"].isin(["mesh_total_traffic_bytes", "jct_p99_ms"]))
+        ]
+        claim_ready["affinity_placement_supported"] = bool((sub["supported"].astype(str).str.lower().isin(["true", "1"])).any()) if not sub.empty else False
+    paper_ready = {
         "ablation_artifact_not_identical_to_main": bool(ablation_not_main),
         "event_driven_cohort_artifact_exported": bool(event_exported),
         "cost_aware_cohort_admission_recorded": bool(admission_ok),
-        "cohort_latency_safe_or_traffic_only": bool(admission_ok),
+        "cohort_latency_safe_or_traffic_only": bool(admission_ok and (cohort_latency_safe or cohort_traffic_saving)),
         "analytical_cohort_not_used_as_main_evidence": bool((out / "decode_cohort_analytical_sweep.csv").exists() and event_exported),
         "oracle_monotonic_upper_bound_or_renamed": True,
         "oracle_renamed_not_upper_bound": True,
         "existing_cache_gap_units_correct": bool((out / "existing_cache_gap_summary.csv").exists()),
         "prefix_realism_exported": bool(prefix_ok),
         "shared_attention_microbench_exported": bool(micro_ok),
+        "shared_attention_fit_drives_main_simulator": bool(h100_fit_used),
         "planning_overhead_recorded": bool((out / "planning_overhead_summary.csv").exists()),
         "benefit_cost_replication_nonzero_or_demoted": True,
         "global_serving_results_present": bool(not main.empty),
@@ -283,6 +382,19 @@ def _report_json(out: Path, missing: list[dict[str, str]]) -> dict[str, Any]:
         "no_semantic_fallback_in_export": len(missing) == 0,
     }
     return {
+        "artifact_ready": {
+            **artifact_ready,
+            "pass": all(artifact_ready.values()),
+        },
+        "claim_ready": {
+            **claim_ready,
+            "pass": bool(
+                claim_ready["existing_prefix_cache_gap"]
+                and claim_ready["global_tail_latency_vs_apc"]
+                and claim_ready["h100_shared_attention_fit_used"]
+                and (claim_ready["decode_cohort_traffic_reduction"] or claim_ready["cohort_latency_improvement"])
+            ),
+        },
         "paper_ready": paper_ready,
         "sanity": sanity,
         "demoted": {
@@ -292,16 +404,31 @@ def _report_json(out: Path, missing: list[dict[str, str]]) -> dict[str, Any]:
             "replication_headline_claim": not benefit_replication,
             "aggregator_placement_headline_claim": True,
         },
-        "hf_trace_status": "missing",
-        "vllm_trace_status": "explicitly_missing",
+        "hf_trace_status": "explicitly_missing" if (out / "hf_MISSING_BASELINE.md").exists() else "missing",
+        "vllm_trace_status": "explicitly_missing" if (out / "vllm_MISSING_BASELINE.md").exists() else "missing",
         "replication_headline_claim": benefit_replication,
         "cohort_latency_improvement_claim_allowed": bool(cohort_latency_safe),
+        "cohort_traffic_only_claim": bool(cohort_traffic_saving and not cohort_latency_safe),
         "oracle_semantics_valid": False,
         "oracle_renamed_not_upper_bound": True,
         "pass": {
+            "artifact_ready": all(artifact_ready.values()),
+            "claim_ready": bool(
+                claim_ready["existing_prefix_cache_gap"]
+                and claim_ready["global_tail_latency_vs_apc"]
+                and claim_ready["h100_shared_attention_fit_used"]
+                and (claim_ready["decode_cohort_traffic_reduction"] or claim_ready["cohort_latency_improvement"])
+            ),
             "paper_ready": all(paper_ready.values()),
             "sanity": all(sanity.values()),
-            "overall": all(paper_ready.values()) and all(sanity.values()),
+            "overall": all(artifact_ready.values())
+            and all(paper_ready.values())
+            and all(sanity.values())
+            and bool(
+                claim_ready["existing_prefix_cache_gap"]
+                and claim_ready["global_tail_latency_vs_apc"]
+                and claim_ready["h100_shared_attention_fit_used"]
+            ),
         },
     }
 
@@ -317,7 +444,7 @@ def _write_report(out: Path, report: dict[str, Any], source_manifest: pd.DataFra
         return rows
 
     lines = [
-        "# WaferAgent Round 7 Paper Artifacts",
+        "# WaferAgent Round 9 Paper Artifacts",
         "",
         "All wafer numbers in this bundle are trace-driven wafer-scale simulator results, not real wafer hardware measurements.",
         "",
@@ -342,7 +469,7 @@ def _write_report(out: Path, report: dict[str, Any], source_manifest: pd.DataFra
             "## Readiness",
             "",
             "```json",
-            json.dumps({k: report[k] for k in ["paper_ready", "sanity", "demoted", "pass", "replication_headline_claim", "oracle_renamed_not_upper_bound", "hf_trace_status", "vllm_trace_status"]}, indent=2, sort_keys=True),
+            json.dumps({k: report[k] for k in ["artifact_ready", "claim_ready", "paper_ready", "sanity", "demoted", "pass", "replication_headline_claim", "cohort_latency_improvement_claim_allowed", "cohort_traffic_only_claim", "oracle_renamed_not_upper_bound", "hf_trace_status", "vllm_trace_status"]}, indent=2, sort_keys=True),
             "```",
             "",
             "## Paper-Ready Claim Matrix",
@@ -369,7 +496,7 @@ def main() -> None:
     enforce_clean_git_tree(args.clean_required, args.allow_dirty)
     out = init_run_dir(
         args.out,
-        {"run_type": "round8_paper_artifact_export", "source_results": args.source_results, "seed": args.seed},
+        {"run_type": "round9_paper_artifact_export", "source_results": args.source_results, "seed": args.seed},
     )
     sources = _split_paths(args.source_results)
     mapping = _source_map(sources)
@@ -379,6 +506,18 @@ def main() -> None:
         sample = 200 if artifact.endswith("_sample.csv") else None
         src = _copy_required(mapping, kind, rel, out / artifact, artifact, missing, sample_rows=sample)
         source_rows.append(_source_info(artifact, src))
+    for src_dir in sources:
+        missing_file = src_dir / "MISSING_BASELINE.md"
+        if not missing_file.exists():
+            continue
+        name = src_dir.as_posix().lower()
+        if "vllm" in name:
+            dst = out / "vllm_MISSING_BASELINE.md"
+        elif "hf" in name or "h100" in name:
+            dst = out / "hf_MISSING_BASELINE.md"
+        else:
+            dst = out / f"{src_dir.name}_MISSING_BASELINE.md"
+        shutil.copy2(missing_file, dst)
     if missing:
         write_json(out / "MISSING_ARTIFACTS.json", {"missing": missing})
     source_manifest = pd.DataFrame(source_rows)

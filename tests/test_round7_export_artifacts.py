@@ -127,13 +127,25 @@ def _make_sources(root: Path) -> list[Path]:
     prefix = _write_source(root, "round7_prefix_realism_sensitivity")
     pd.DataFrame([{"unique_task_ratio": 0, "cross_job_prefix_hit_rate_observed": 0.9}]).to_csv(prefix / "simulation/prefix_realism_sensitivity.csv", index=False)
     pd.DataFrame([{"unique_task_ratio": 0, "cross_job_prefix_hit_rate_observed": 0.9}]).to_csv(prefix / "simulation/prefix_realism_prefix_stats.csv", index=False)
+    pd.DataFrame([{"unique_task_ratio": 0, "regime_label": "high_reuse_high_decode_pressure"}]).to_csv(prefix / "simulation/regime_classification.csv", index=False)
+
+    policy = _write_source(root, "round9_cohort_policy_comparison")
+    pd.DataFrame(
+        [
+            {"baseline": "waferagent_latency_safe", "jct_p99_ms": 9, "shared_attention_cost_model_source": "h100_microbench_fit", "shared_attention_fit_hash": "fit"},
+            {"baseline": "waferagent_traffic_only", "jct_p99_ms": 10, "shared_attention_cost_model_source": "h100_microbench_fit", "shared_attention_fit_hash": "fit"},
+        ]
+    ).to_csv(policy / "simulation/global_simulation_summary.csv", index=False)
 
     micro = _write_source(root, "round8_shared_attention_microbench_h100")
     pd.DataFrame(
         [{"mode": "cohort_attention", "shared_prefix_tokens": 512, "num_agents": 4, "latency_ms": 1, "memory_bytes_estimated": 1, "read_byte_reduction_ratio": 0.75}]
     ).to_csv(micro / "simulation/shared_attention_microbench_summary.csv", index=False)
     pd.DataFrame([{"mode": "cohort_attention", "latency_ms": 1}]).to_csv(micro / "simulation/shared_attention_microbench_raw.csv", index=False)
-    return [main, gap, ablation, cohort, sweep, repl, prefix, micro]
+    fit = _write_source(root, "round9_shared_attention_fit")
+    write_json(fit / "simulation/shared_attention_cost_fit.json", {"fit_hash": "fit", "rows": []})
+    write_json(fit / "simulation/shared_attention_fit_quality.json", {"fit_hash": "fit", "r2": 1.0})
+    return [main, gap, ablation, cohort, sweep, repl, prefix, policy, micro, fit]
 
 
 def _run_export(root: Path, sources: list[Path], name: str = "out") -> Path:
@@ -177,7 +189,7 @@ def test_export_missing_required_artifact_fails_in_report():
     out = _run_export(root, [s for s in sources if s.exists()])
     assert (out / "MISSING_ARTIFACTS.json").exists()
     report = json.loads((out / "report.json").read_text(encoding="utf-8"))
-    assert not bool(report["paper_ready"]["artifact_tables_exported"])
+    assert not bool(report["artifact_ready"]["artifact_tables_exported"])
 
 
 def test_paper_claims_matrix_has_numeric_evidence_and_oracle_renamed():
