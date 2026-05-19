@@ -56,6 +56,7 @@ def main() -> None:
     parser.add_argument("--baselines", default="waferagent_full,no_shared_kv_decode_cohort")
     parser.add_argument("--duration-source", default="synthetic", choices=["trace", "calibrated", "synthetic"])
     parser.add_argument("--shared-attention-cost-fit", default="")
+    parser.add_argument("--shared-attention-accounting", default="cohort_stage", choices=["stage_amortized", "cohort_stage", "per_member"])
     parser.add_argument("--out", default="results/round8_cohort_admission")
     parser.add_argument("--seed", type=int, default=17)
     parser.add_argument("--max-jobs", type=int, default=0)
@@ -77,6 +78,7 @@ def main() -> None:
             "arrival_rate_jobs_per_s": args.arrival_rate_jobs_per_s,
             "baselines": args.baselines,
             "duration_source": args.duration_source,
+            "shared_attention_accounting": args.shared_attention_accounting,
             "seed": args.seed,
             "max_jobs": args.max_jobs,
         },
@@ -96,6 +98,7 @@ def main() -> None:
             seed=args.seed,
             duration_source=args.duration_source,
             shared_attention_cost_fit=args.shared_attention_cost_fit or None,
+            shared_attention_accounting=args.shared_attention_accounting,
         )
         for name, df in result.items():
             tmp = df.copy()

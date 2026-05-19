@@ -48,6 +48,10 @@ def main() -> None:
     parser.add_argument("--num-jobs", type=int, default=20)
     parser.add_argument("--gpus", default="")
     parser.add_argument("--concurrency", default="1")
+    parser.add_argument("--max-new-tokens", type=int, default=0)
+    parser.add_argument("--max-input-tokens", type=int, default=0)
+    parser.add_argument("--resume", action="store_true")
+    parser.add_argument("--stop-after-minutes", type=float, default=0.0)
     parser.add_argument("--out", default="results/characterization")
     parser.add_argument("--seed", type=int, default=11)
     parser.add_argument("--allow-synthetic-fallback", action="store_true")
@@ -66,6 +70,10 @@ def main() -> None:
             "model": args.model,
             "gpus": args.gpus,
             "concurrency": args.concurrency,
+            "max_new_tokens": args.max_new_tokens,
+            "max_input_tokens": args.max_input_tokens,
+            "resume": bool(args.resume),
+            "stop_after_minutes": args.stop_after_minutes,
             "seed": args.seed,
             "clean_required": bool(args.clean_required),
         },
@@ -81,9 +89,22 @@ def main() -> None:
         else:
             finalize_run_dir(out)
             raise SystemExit(2)
-    runner_cfg = RunnerConfig(engine=engine, model_name=model_name, model_path=model_path)
+    runner_cfg = RunnerConfig(
+        engine=engine,
+        model_name=model_name,
+        model_path=model_path,
+        max_new_tokens=args.max_new_tokens or None,
+        max_input_tokens=args.max_input_tokens or None,
+    )
     try:
-        traces = collect_graph_traces(graphs, out.name, runner_cfg, out / "traces" / "traces.jsonl")
+        traces = collect_graph_traces(
+            graphs,
+            out.name,
+            runner_cfg,
+            out / "traces" / "traces.jsonl",
+            resume=args.resume,
+            stop_after_minutes=args.stop_after_minutes or None,
+        )
     except Exception as exc:
         append_text(out / "environment.txt", f"\n{engine} trace collection failed: {exc}\n")
         if not args.allow_synthetic_fallback:
@@ -96,6 +117,19 @@ def main() -> None:
         for tr in traces:
             tr.fallback_used = True
     write_traces(out / "traces" / "traces.jsonl", traces)
+    expected_jobs = len(graphs)
+    completed_jobs = len({tr.job_id for tr in traces})
+    write_json(
+        out / "trace_completion_status.json",
+        {
+            "expected_jobs": expected_jobs,
+            "completed_jobs": completed_jobs,
+            "complete": completed_jobs == expected_jobs,
+            "resume": bool(args.resume),
+            "stop_after_minutes": args.stop_after_minutes,
+            "fallback_used": any(tr.fallback_used for tr in traces),
+        },
+    )
     vllm_rows = []
     for tr in traces:
         meta = tr.metadata or {}

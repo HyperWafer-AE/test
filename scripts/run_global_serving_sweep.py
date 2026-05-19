@@ -35,6 +35,7 @@ def main() -> None:
     parser.add_argument("--calibration", default="")
     parser.add_argument("--prefix-extension-calibration", default="")
     parser.add_argument("--shared-attention-cost-fit", default="")
+    parser.add_argument("--shared-attention-accounting", default="cohort_stage", choices=["stage_amortized", "cohort_stage", "per_member"])
     parser.add_argument("--out", default="results/round4_global_main_neutral")
     parser.add_argument("--seed", type=int, default=17)
     parser.add_argument("--engine", default="synthetic")
@@ -60,6 +61,7 @@ def main() -> None:
             "calibration": args.calibration,
             "prefix_extension_calibration": args.prefix_extension_calibration,
             "shared_attention_cost_fit": args.shared_attention_cost_fit,
+            "shared_attention_accounting": args.shared_attention_accounting,
             "neutral_mechanism_multipliers": neutral,
             "legacy_heuristic_multipliers": bool(args.legacy_heuristic_multipliers),
             "seed": args.seed,
@@ -93,6 +95,7 @@ def main() -> None:
             calibration=args.calibration or None,
             prefix_extension_calibration=args.prefix_extension_calibration or None,
             shared_attention_cost_fit=args.shared_attention_cost_fit or None,
+            shared_attention_accounting=args.shared_attention_accounting,
             duration_source=args.duration_source,
         )
         for name, df in result.items():

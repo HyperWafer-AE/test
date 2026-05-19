@@ -7,7 +7,7 @@ from typing import Any
 
 from waferagent.graph_ir import AgentNode, NodeType
 from waferagent.kv_model import ModelKVConfig, estimate_kv_bytes
-from waferagent.prompts import prompt_for_node
+from waferagent.prompts import PromptBundle, prompt_for_node
 from waferagent.trace_schema import TraceRecord
 from waferagent.utils import PROJECT_ROOT, configure_project_env, sha256_text
 
@@ -22,6 +22,27 @@ class RunnerConfig:
     synthetic_prefill_ms_per_token: float = 0.012
     synthetic_decode_ms_per_token: float = 0.42
     synthetic_batch_penalty: float = 1.0
+    max_new_tokens: int | None = None
+    max_input_tokens: int | None = None
+
+
+def _cap_prompt_bundle(tokenizer, bundle: PromptBundle, max_input_tokens: int | None) -> PromptBundle:
+    if not max_input_tokens or bundle.actual_prompt_tokens <= max_input_tokens:
+        return bundle
+    ids = tokenizer.encode(bundle.prompt, add_special_tokens=False) if tokenizer is not None else bundle.prompt.split()
+    ids = ids[: max(1, int(max_input_tokens))]
+    prompt = tokenizer.decode(ids, skip_special_tokens=True) if tokenizer is not None else " ".join(ids)
+    actual_prompt = len(ids)
+    actual_shared = min(bundle.actual_shared_prefix_tokens, actual_prompt)
+    return PromptBundle(
+        prompt=prompt,
+        prompt_hash=sha256_text(prompt),
+        shared_prefix_text=bundle.shared_prefix_text,
+        shared_prefix_hash=bundle.shared_prefix_hash,
+        actual_prompt_tokens=actual_prompt,
+        actual_shared_prefix_tokens=actual_shared,
+        actual_private_tokens=max(0, actual_prompt - actual_shared),
+    )
 
 
 class SyntheticRunner:
@@ -173,11 +194,12 @@ class HFRunner:
             rec.timing_source = "synthetic_model"
             rec.timing_quality = "walltime_approx"
             return rec
-        bundle = prompt_for_node(self.tokenizer, node)
+        bundle = _cap_prompt_bundle(self.tokenizer, prompt_for_node(self.tokenizer, node), self.config.max_input_tokens)
         # Warmup is intentionally tiny per node; calibration script does explicit warmup.
         start = time.time()
         _, ttft, _, mem1 = self._generate_once(bundle.prompt, 1)
-        text, total, completion_tokens, mem2 = self._generate_once(bundle.prompt, max(1, node.actual_output_token_len))
+        max_new = min(max(1, node.actual_output_token_len), int(self.config.max_new_tokens or node.actual_output_token_len))
+        text, total, completion_tokens, mem2 = self._generate_once(bundle.prompt, max_new)
         end = time.time()
         decode_ms = max(0.0, total - ttft)
         tpot = decode_ms / max(1, completion_tokens - 1)
@@ -271,12 +293,12 @@ class VLLMRunner:
                 rec.timing_quality = "walltime_approx"
                 tool_records.append((idx, rec))
             else:
-                llm_items.append((idx, node, prompt_for_node(self.tokenizer, node)))
+                llm_items.append((idx, node, _cap_prompt_bundle(self.tokenizer, prompt_for_node(self.tokenizer, node), self.config.max_input_tokens)))
         if not llm_items:
             return [rec for _, rec in sorted(tool_records)]
 
         prompts = [bundle.prompt for _, _, bundle in llm_items]
-        max_tokens = max(1, max(node.actual_output_token_len for _, node, _ in llm_items))
+        max_tokens = max(1, max(min(node.actual_output_token_len, int(self.config.max_new_tokens or node.actual_output_token_len)) for _, node, _ in llm_items))
         start = time.time()
         params = self.SamplingParams(max_tokens=max_tokens, temperature=0.0)
         outputs = self.llm.generate(prompts, params)

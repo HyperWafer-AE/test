@@ -39,3 +39,6 @@ results/round8_*/
 results/round9_*/
 !results/round9_paper_artifacts/
 !results/round9_paper_artifacts/**
+results/round10_*/
+!results/round10_paper_artifacts/
+!results/round10_paper_artifacts/**

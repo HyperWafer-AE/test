@@ -22,6 +22,7 @@ def main() -> None:
     parser.add_argument("--out", default="results/round5_existing_cache_gap")
     parser.add_argument("--duration-source", default="synthetic", choices=["synthetic", "trace", "calibrated"])
     parser.add_argument("--shared-attention-cost-fit", default="")
+    parser.add_argument("--shared-attention-accounting", default="cohort_stage", choices=["stage_amortized", "cohort_stage", "per_member"])
     parser.add_argument("--seed", type=int, default=17)
     parser.add_argument("--max-jobs", type=int, default=0)
     parser.add_argument("--engine", default="synthetic")
@@ -40,6 +41,7 @@ def main() -> None:
             "wafer_config": args.wafer_config,
             "baselines": args.baselines,
             "duration_source": args.duration_source,
+            "shared_attention_accounting": args.shared_attention_accounting,
             "seed": args.seed,
             "max_jobs": args.max_jobs,
         },
@@ -58,6 +60,7 @@ def main() -> None:
         seed=args.seed,
         duration_source=args.duration_source,
         shared_attention_cost_fit=args.shared_attention_cost_fit or None,
+        shared_attention_accounting=args.shared_attention_accounting,
     )
     summary = result["global_simulation_summary"].copy()
     metrics = result["global_job_metrics"].copy()

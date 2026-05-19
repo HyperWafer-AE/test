@@ -20,6 +20,7 @@ from waferagent.prefix_extension_cost_model import PrefixExtensionCostModel
 from waferagent.prefix_tree import PrefixComputeTracker
 from waferagent.resource_model import ResourceModel
 from waferagent.shared_attention_cost import estimate_shared_attention_cost
+from waferagent.shared_attention_accounting import account_shared_attention_latency, normalize_accounting_mode
 from waferagent.shared_attention_cost_model import SharedAttentionCostModel
 from waferagent.shared_kv import (
     SharedKVObject,
@@ -278,6 +279,7 @@ def simulate_global(
     calibration: str | Path | None = None,
     prefix_extension_calibration: str | Path | None = None,
     shared_attention_cost_fit: str | Path | None = None,
+    shared_attention_accounting: str = "cohort_stage",
     duration_source: str = "synthetic",
     slo_jct_ms: list[float] | None = None,
     slo_ttft_ms: list[float] | None = None,
@@ -292,6 +294,7 @@ def simulate_global(
         else None
     )
     shared_attention_model = SharedAttentionCostModel.from_json(shared_attention_cost_fit) if shared_attention_cost_fit else None
+    accounting_mode = normalize_accounting_mode(shared_attention_accounting)
     calib_meta = _load_calibration_scale(calibration)
     metric_rows: list[dict] = []
     stage_rows: list[dict] = []
@@ -540,6 +543,7 @@ def simulate_global(
                 merge_bytes = 0
                 shared_source_region = ""
                 shared_target_region = sram.region_id_for_tile(placement.tile)
+                prediction_quality = ""
                 pending: list[tuple[tuple[int, int], int]] = []
                 if stage.stage_type == "prefill" and baseline.kv_sharing:
                     for pid in stage.shared_prefix_ids:
@@ -631,8 +635,20 @@ def simulate_global(
                                 heads=model_cfg.num_attention_heads,
                                 head_dim=model_cfg.head_dim,
                             )
+                            prediction_quality = shared_attention_model.prediction_quality(
+                                mode,
+                                int(stage.shared_prefix_token_len),
+                                private_tokens,
+                                max(1, agents),
+                            )
                             if predicted > 0:
-                                decode_kv_latency = predicted / max(1, agents)
+                                accounted = account_shared_attention_latency(
+                                    predicted,
+                                    max(1, agents),
+                                    member_index,
+                                    accounting_mode,
+                                )
+                                decode_kv_latency = accounted.member_latency_ms
                         duration += decode_kv_latency
                         accum["decode_shared_kv_read_bytes_without_cohort"] += shared_no_cohort_bytes
                         accum["decode_shared_kv_read_bytes"] += shared_actual_metric_bytes
@@ -744,6 +760,8 @@ def simulate_global(
                 ).to_dict()
                 row["arrival_ms"] = arrivals[job_id]
                 row["global_stage_id"] = sid
+                row["shared_attention_accounting_mode"] = accounting_mode
+                row["shared_attention_prediction_quality"] = prediction_quality
                 stage_rows.append(row)
                 step += 1
                 for child in children.get(sid, []):
@@ -788,6 +806,8 @@ def simulate_global(
         if shared_attention_model is not None:
             attention_stats["shared_attention_cost_model_source"] = "h100_microbench_fit"
             attention_stats["shared_attention_fit_hash"] = shared_attention_model.fit_hash
+            attention_stats["shared_attention_accounting_mode"] = accounting_mode
+            attention_stats["shared_attention_prediction_stat"] = shared_attention_model.prediction_stat
             if cohorts:
                 preds = []
                 for c in cohorts:
@@ -986,6 +1006,8 @@ def simulate_global(
             "shared_attention_fit_hash": str(extra.get("shared_attention_fit_hash", "")),
             "cohort_latency_predicted_ms": float(extra.get("cohort_latency_predicted_ms", 0.0)),
             "cohort_latency_observed_or_fitted_ms": float(extra.get("cohort_latency_observed_or_fitted_ms", 0.0)),
+            "shared_attention_accounting_mode": str(extra.get("shared_attention_accounting_mode", accounting_mode)),
+            "shared_attention_prediction_stat": str(extra.get("shared_attention_prediction_stat", "")),
             "cross_region_kv_transfer_bytes": float(extra.get("cross_region_kv_transfer_bytes", 0.0)),
             "num_decode_cohorts": float(extra.get("num_decode_cohorts", 0.0)),
             "avg_cohort_size": float(extra.get("avg_cohort_size", 0.0)),

@@ -11,11 +11,16 @@ from waferagent.utils import read_json
 class SharedAttentionCostModel:
     fit_hash: str
     rows: list[dict[str, Any]]
+    prediction_stat: str = "latency_p50_ms"
 
     @classmethod
     def from_json(cls, path: str | Path) -> "SharedAttentionCostModel":
         data = read_json(path)
-        return cls(str(data.get("fit_hash", "")), list(data.get("rows", [])))
+        return cls(
+            str(data.get("fit_hash", "")),
+            list(data.get("rows", [])),
+            str(data.get("prediction_stat", "latency_p50_ms")),
+        )
 
     def predict_ms(
         self,
@@ -44,9 +49,29 @@ class SharedAttentionCostModel:
             )
 
         row = min(candidates, key=score)
+        preferred = row.get(self.prediction_stat)
         return float(
-            row.get("latency_p50_ms")
+            preferred
+            or row.get("latency_p50_ms")
+            or row.get("latency_p90_ms")
             or row.get("latency_ms")
             or row.get("cohort_latency_ms")
             or 0.0
         )
+
+    def prediction_quality(
+        self,
+        mode: str,
+        shared_prefix_tokens: int,
+        private_tokens: int,
+        num_agents: int,
+    ) -> str:
+        for row in self.rows:
+            if (
+                str(row.get("mode")) == mode
+                and int(float(row.get("shared_prefix_tokens", -1))) == int(shared_prefix_tokens)
+                and int(float(row.get("private_tokens", -1))) == int(private_tokens)
+                and int(float(row.get("num_agents", -1))) == int(num_agents)
+            ):
+                return "interpolated"
+        return "nearest_neighbor_or_extrapolated"
