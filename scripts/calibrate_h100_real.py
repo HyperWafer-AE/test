@@ -42,6 +42,10 @@ def _choose_model(model: str) -> tuple[str, str]:
     return str(chosen["name"]), str(chosen["path"])
 
 
+def _visible_gpu_id(gpus: str) -> int:
+    return 0 if gpus else 0
+
+
 def _fit_linear(df: pd.DataFrame, target: str, feature_fn) -> tuple[list[float], dict]:
     rows = df.loc[~df["oom"].astype(bool)].copy()
     rows = rows[np.isfinite(rows[target].astype(float))]
@@ -205,7 +209,7 @@ def _write_coverage_reports(summary: pd.DataFrame, out: Path, args: argparse.Nam
 
 
 def _hf_forward(args, out: Path, model_name: str, model_path: str) -> tuple[pd.DataFrame, pd.DataFrame]:
-    gpu_id = int(args.gpus.split(",")[0])
+    gpu_id = _visible_gpu_id(args.gpus)
     timer = H100ForwardTimer(model_path=model_path, gpu_id=gpu_id, dtype=args.dtype, seed=args.seed)
     raw_rows: list[dict] = []
     cases = [
@@ -279,6 +283,7 @@ def _fallback_runner_matrix(args, out: Path, model_name: str, model_path: str, e
                 "model_name": model_name,
                 "model_path": model_path,
                 "gpu_id": int(args.gpus.split(",")[0]) if args.gpus else 0,
+                "requested_gpus": args.gpus,
                 "input_len": case.input_len,
                 "output_len": case.output_len,
                 "batch_size": case.batch_size,

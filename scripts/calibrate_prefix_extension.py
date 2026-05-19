@@ -34,6 +34,10 @@ def _choose_model(model: str) -> tuple[str, str]:
     return str(chosen["name"]), str(chosen["path"])
 
 
+def _visible_gpu_id(gpus: str) -> int:
+    return 0 if gpus else 0
+
+
 def _fit_linear(df: pd.DataFrame, target: str, feature_fn) -> tuple[list[float], dict]:
     rows = df.loc[~df["oom"].astype(bool)].copy()
     rows = rows[np.isfinite(rows[target].astype(float))]
@@ -208,14 +212,15 @@ def main() -> None:
     cases = [(p, q, o, b) for p in prefix_lens for q in private_lens for o in output_lens for b in batch_sizes]
     if args.max_cases:
         cases = cases[: args.max_cases]
-    timer = PrefixExtensionTimer(model_path=model_path, gpu_id=int(args.gpus.split(",")[0]), dtype=args.dtype, seed=args.seed)
+    gpu_id = _visible_gpu_id(args.gpus)
+    timer = PrefixExtensionTimer(model_path=model_path, gpu_id=gpu_id, dtype=args.dtype, seed=args.seed)
     raw_rows: list[dict] = []
     try:
         for prefix_len, private_len, output_len, batch_size in cases:
             for rep in range(args.reps):
                 result = timer.run_extension_case(prefix_len, private_len, output_len, batch_size, rep, warmup=args.warmup)
                 row = result.to_dict()
-                row.update({"model_name": model_name, "model_path": model_path, "gpu_id": int(args.gpus.split(",")[0]), "seed": args.seed})
+                row.update({"model_name": model_name, "model_path": model_path, "gpu_id": gpu_id, "requested_gpus": args.gpus, "seed": args.seed})
                 raw_rows.append(row)
                 pd.DataFrame(raw_rows).to_csv(out / "prefix_extension_raw.partial.csv", index=False)
                 print(
