@@ -1,0 +1,7 @@
+{
+  "fit_hash": "sha256:e0bd01b332d2a7055773ea81c2ecab7f74693714cb31161831701e32d9888d7d",
+  "fit_note": "nearest-neighbor lookup over measured microbench medians; no extrapolation quality claim",
+  "heldout_mae_ms": 0.0,
+  "num_rows": 180,
+  "r2": 1.0
+}

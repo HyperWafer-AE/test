@@ -1,0 +1,127 @@
+arrival_rate_jobs_per_s,variant,metric,full_value,variant_value,delta_abs,delta_pct,paper_claim,threshold,supported
+4.0,no_affinity_placement,decode_shared_kv_read_bytes,27145052304032.0,34168182826542.0,7023130522510.0,0.25872598968861876,decode cohort,0.05,True
+4.0,no_affinity_placement,mesh_total_traffic_bytes,279709937152.0,48906661633024.0,48626951695872.0,173.8477802790651,placement/mesh,0.05,True
+4.0,no_affinity_placement,jct_p99_ms,1494.3848575524507,222363.5003687612,220869.11551120874,147.79935328905498,tail latency,0.05,True
+4.0,no_affinity_placement,shared_prefill_compute_ms_saved,13193.271705599906,13193.271705599922,1.6370904631912708e-11,1.240852534323541e-15,prefix compute reuse,0.95,False
+4.0,no_affinity_placement,sram_reload_bytes,25132269568.0,125627793408.0,100495523840.0,3.998664886515354,SRAM/future reuse,0.05,True
+4.0,no_affinity_placement,energy_per_job_j,0.022653765121359998,0.11961550336283903,0.09696173824147904,0.09696173824147904,energy,0.02,True
+4.0,no_aggregator_placement,decode_shared_kv_read_bytes,27145052304032.0,27145052304032.0,0.0,0.0,decode cohort,0.05,False
+4.0,no_aggregator_placement,mesh_total_traffic_bytes,279709937152.0,279709937152.0,0.0,0.0,placement/mesh,0.05,False
+4.0,no_aggregator_placement,jct_p99_ms,1494.3848575524507,1494.3848575524507,0.0,0.0,tail latency,0.05,False
+4.0,no_aggregator_placement,shared_prefill_compute_ms_saved,13193.271705599906,13193.271705599906,0.0,0.0,prefix compute reuse,0.95,False
+4.0,no_aggregator_placement,sram_reload_bytes,25132269568.0,25132269568.0,0.0,0.0,SRAM/future reuse,0.05,False
+4.0,no_aggregator_placement,energy_per_job_j,0.022653765121359998,0.022653765121359998,0.0,0.0,energy,0.02,False
+4.0,no_distributed_sram_policy,decode_shared_kv_read_bytes,27145052304032.0,27096948670315.0,-48103633717.0,-0.0017720958198284595,decode cohort,0.05,False
+4.0,no_distributed_sram_policy,mesh_total_traffic_bytes,279709937152.0,279709937152.0,0.0,0.0,placement/mesh,0.05,False
+4.0,no_distributed_sram_policy,jct_p99_ms,1494.3848575524507,1494.3848575524507,0.0,0.0,tail latency,0.05,False
+4.0,no_distributed_sram_policy,shared_prefill_compute_ms_saved,13193.271705599906,13193.271705599906,0.0,0.0,prefix compute reuse,0.95,False
+4.0,no_distributed_sram_policy,sram_reload_bytes,25132269568.0,24998051840.0,-134217728.0,-0.0053404539385847796,SRAM/future reuse,0.05,False
+4.0,no_distributed_sram_policy,energy_per_job_j,0.022653765121359998,0.0226286395626775,-2.512555868249694e-05,-2.512555868249694e-05,energy,0.02,False
+4.0,no_future_reuse_policy,decode_shared_kv_read_bytes,27145052304032.0,27096948670315.0,-48103633717.0,-0.0017720958198284595,decode cohort,0.05,False
+4.0,no_future_reuse_policy,mesh_total_traffic_bytes,279709937152.0,279709937152.0,0.0,0.0,placement/mesh,0.05,False
+4.0,no_future_reuse_policy,jct_p99_ms,1494.3848575524507,1494.3848575524507,0.0,0.0,tail latency,0.05,False
+4.0,no_future_reuse_policy,shared_prefill_compute_ms_saved,13193.271705599906,13193.271705599906,0.0,0.0,prefix compute reuse,0.95,False
+4.0,no_future_reuse_policy,sram_reload_bytes,25132269568.0,24998051840.0,-134217728.0,-0.0053404539385847796,SRAM/future reuse,0.05,False
+4.0,no_future_reuse_policy,energy_per_job_j,0.022653765121359998,0.0226286395626775,-2.512555868249694e-05,-2.512555868249694e-05,energy,0.02,False
+4.0,no_kv_sharing,decode_shared_kv_read_bytes,27145052304032.0,26564372725600.0,-580679578432.0,-0.021391728110457482,decode cohort,0.05,False
+4.0,no_kv_sharing,mesh_total_traffic_bytes,279709937152.0,2390149492224.0,2110439555072.0,7.545100387066852,placement/mesh,0.05,True
+4.0,no_kv_sharing,jct_p99_ms,1494.3848575524507,14464.446341948638,12970.061484396188,8.67919761020528,tail latency,0.05,True
+4.0,no_kv_sharing,shared_prefill_compute_ms_saved,13193.271705599906,0.0,-13193.271705599906,-1.0,prefix compute reuse,0.95,True
+4.0,no_kv_sharing,sram_reload_bytes,25132269568.0,97140080640.0,72007811072.0,2.8651535380507345,SRAM/future reuse,0.05,True
+4.0,no_kv_sharing,energy_per_job_j,0.022653765121359998,0.03159636350456,0.008942598383200002,0.008942598383200002,energy,0.02,False
+4.0,no_shared_kv_decode_cohort,decode_shared_kv_read_bytes,27145052304032.0,35540854374400.0,8395802070368.0,0.3092940096903378,decode cohort,0.05,True
+4.0,no_shared_kv_decode_cohort,mesh_total_traffic_bytes,279709937152.0,279709937152.0,0.0,0.0,placement/mesh,0.05,False
+4.0,no_shared_kv_decode_cohort,jct_p99_ms,1494.3848575524507,1494.3852955854195,0.0004380329687592166,2.931192500683127e-07,tail latency,0.05,False
+4.0,no_shared_kv_decode_cohort,shared_prefill_compute_ms_saved,13193.271705599906,13193.271705599906,0.0,0.0,prefix compute reuse,0.95,False
+4.0,no_shared_kv_decode_cohort,sram_reload_bytes,25132269568.0,23991418880.0,-1140850688.0,-0.04539385847797063,SRAM/future reuse,0.05,False
+4.0,no_shared_kv_decode_cohort,energy_per_job_j,0.022653765121359998,0.026880657185792002,0.004226892064432004,0.004226892064432004,energy,0.02,False
+4.0,no_shared_kv_replication,decode_shared_kv_read_bytes,27145052304032.0,27145052304032.0,0.0,0.0,decode cohort,0.05,False
+4.0,no_shared_kv_replication,mesh_total_traffic_bytes,279709937152.0,279709937152.0,0.0,0.0,placement/mesh,0.05,False
+4.0,no_shared_kv_replication,jct_p99_ms,1494.3848575524507,1494.3848575524507,0.0,0.0,tail latency,0.05,False
+4.0,no_shared_kv_replication,shared_prefill_compute_ms_saved,13193.271705599906,13193.271705599906,0.0,0.0,prefix compute reuse,0.95,False
+4.0,no_shared_kv_replication,sram_reload_bytes,25132269568.0,25132269568.0,0.0,0.0,SRAM/future reuse,0.05,False
+4.0,no_shared_kv_replication,energy_per_job_j,0.022653765121359998,0.022653765121359998,0.0,0.0,energy,0.02,False
+8.0,no_affinity_placement,decode_shared_kv_read_bytes,27320286969710.0,34168182826542.0,6847895856832.0,0.25065241314720677,decode cohort,0.05,True
+8.0,no_affinity_placement,mesh_total_traffic_bytes,1151051427328.0,54278793305088.0,53127741877760.0,46.15583684309258,placement/mesh,0.05,True
+8.0,no_affinity_placement,jct_p99_ms,7103.580649568296,244369.99136935905,237266.41071979076,33.40095966028204,tail latency,0.05,True
+8.0,no_affinity_placement,shared_prefill_compute_ms_saved,13193.271705599904,13193.271705599931,2.7284841053187847e-11,2.0680875572059017e-15,prefix compute reuse,0.95,False
+8.0,no_affinity_placement,sram_reload_bytes,62579015680.0,138177150976.0,75598135296.0,1.2080428954423592,SRAM/future reuse,0.05,True
+8.0,no_affinity_placement,energy_per_job_j,0.023820492987319,0.129800347216663,0.105979854229344,0.105979854229344,energy,0.02,True
+8.0,no_aggregator_placement,decode_shared_kv_read_bytes,27320286969710.0,27320286969710.0,0.0,0.0,decode cohort,0.05,False
+8.0,no_aggregator_placement,mesh_total_traffic_bytes,1151051427328.0,1151051427328.0,0.0,0.0,placement/mesh,0.05,False
+8.0,no_aggregator_placement,jct_p99_ms,7103.580649568296,7103.580649568296,0.0,0.0,tail latency,0.05,False
+8.0,no_aggregator_placement,shared_prefill_compute_ms_saved,13193.271705599904,13193.271705599904,0.0,0.0,prefix compute reuse,0.95,False
+8.0,no_aggregator_placement,sram_reload_bytes,62579015680.0,62579015680.0,0.0,0.0,SRAM/future reuse,0.05,False
+8.0,no_aggregator_placement,energy_per_job_j,0.023820492987319,0.023820492987319,0.0,0.0,energy,0.02,False
+8.0,no_distributed_sram_policy,decode_shared_kv_read_bytes,27320286969710.0,27272183335993.0,-48103633717.0,-0.0017607294451311034,decode cohort,0.05,False
+8.0,no_distributed_sram_policy,mesh_total_traffic_bytes,1151051427328.0,1151051427328.0,0.0,0.0,placement/mesh,0.05,False
+8.0,no_distributed_sram_policy,jct_p99_ms,7103.580649568296,7103.580649568296,0.0,0.0,tail latency,0.05,False
+8.0,no_distributed_sram_policy,shared_prefill_compute_ms_saved,13193.271705599904,13193.271705599904,0.0,0.0,prefix compute reuse,0.95,False
+8.0,no_distributed_sram_policy,sram_reload_bytes,62579015680.0,62444797952.0,-134217728.0,-0.0021447721179624667,SRAM/future reuse,0.05,False
+8.0,no_distributed_sram_policy,energy_per_job_j,0.023820492987319,0.0237953674286365,-2.512555868250041e-05,-2.512555868250041e-05,energy,0.02,False
+8.0,no_future_reuse_policy,decode_shared_kv_read_bytes,27320286969710.0,27272183335993.0,-48103633717.0,-0.0017607294451311034,decode cohort,0.05,False
+8.0,no_future_reuse_policy,mesh_total_traffic_bytes,1151051427328.0,1151051427328.0,0.0,0.0,placement/mesh,0.05,False
+8.0,no_future_reuse_policy,jct_p99_ms,7103.580649568296,7103.580649568296,0.0,0.0,tail latency,0.05,False
+8.0,no_future_reuse_policy,shared_prefill_compute_ms_saved,13193.271705599904,13193.271705599904,0.0,0.0,prefix compute reuse,0.95,False
+8.0,no_future_reuse_policy,sram_reload_bytes,62579015680.0,62444797952.0,-134217728.0,-0.0021447721179624667,SRAM/future reuse,0.05,False
+8.0,no_future_reuse_policy,energy_per_job_j,0.023820492987319,0.0237953674286365,-2.512555868250041e-05,-2.512555868250041e-05,energy,0.02,False
+8.0,no_kv_sharing,decode_shared_kv_read_bytes,27320286969710.0,26564372725600.0,-755914244110.0,-0.027668605565823012,decode cohort,0.05,False
+8.0,no_kv_sharing,mesh_total_traffic_bytes,1151051427328.0,2561948184064.0,1410896756736.0,1.225746064197317,placement/mesh,0.05,True
+8.0,no_kv_sharing,jct_p99_ms,7103.580649568296,21522.53702500386,14418.956375435566,2.0298152561007163,tail latency,0.05,True
+8.0,no_kv_sharing,shared_prefill_compute_ms_saved,13193.271705599904,0.0,-13193.271705599904,-1.0,prefix compute reuse,0.95,True
+8.0,no_kv_sharing,sram_reload_bytes,62579015680.0,98952019968.0,36373004288.0,0.5812332439678284,SRAM/future reuse,0.05,True
+8.0,no_kv_sharing,energy_per_job_j,0.023820492987319,0.031913654213552,0.008093161226233003,0.008093161226233003,energy,0.02,False
+8.0,no_shared_kv_decode_cohort,decode_shared_kv_read_bytes,27320286969710.0,35540854374400.0,8220567404690.0,0.3008960855280965,decode cohort,0.05,True
+8.0,no_shared_kv_decode_cohort,mesh_total_traffic_bytes,1151051427328.0,1151051427328.0,0.0,0.0,placement/mesh,0.05,False
+8.0,no_shared_kv_decode_cohort,jct_p99_ms,7103.580649568296,7103.62445286516,0.043803296863188734,6.166368627890608e-06,tail latency,0.05,False
+8.0,no_shared_kv_decode_cohort,shared_prefill_compute_ms_saved,13193.271705599904,13193.271705599904,0.0,0.0,prefix compute reuse,0.95,False
+8.0,no_shared_kv_decode_cohort,sram_reload_bytes,62579015680.0,64189628416.0,1610612736.0,0.025737265415549597,SRAM/future reuse,0.05,False
+8.0,no_shared_kv_decode_cohort,energy_per_job_j,0.023820492987319,0.027840582376448,0.004020089389129001,0.004020089389129001,energy,0.02,False
+8.0,no_shared_kv_replication,decode_shared_kv_read_bytes,27320286969710.0,27320286969710.0,0.0,0.0,decode cohort,0.05,False
+8.0,no_shared_kv_replication,mesh_total_traffic_bytes,1151051427328.0,1151051427328.0,0.0,0.0,placement/mesh,0.05,False
+8.0,no_shared_kv_replication,jct_p99_ms,7103.580649568296,7103.580649568296,0.0,0.0,tail latency,0.05,False
+8.0,no_shared_kv_replication,shared_prefill_compute_ms_saved,13193.271705599904,13193.271705599904,0.0,0.0,prefix compute reuse,0.95,False
+8.0,no_shared_kv_replication,sram_reload_bytes,62579015680.0,62579015680.0,0.0,0.0,SRAM/future reuse,0.05,False
+8.0,no_shared_kv_replication,energy_per_job_j,0.023820492987319,0.023820492987319,0.0,0.0,energy,0.02,False
+16.0,no_affinity_placement,decode_shared_kv_read_bytes,27495521635388.0,34168182826542.0,6672661191154.0,0.24268174576349838,decode cohort,0.05,True
+16.0,no_affinity_placement,mesh_total_traffic_bytes,1187021778432.0,51716509768704.0,50529487990272.0,42.56829058100272,placement/mesh,0.05,True
+16.0,no_affinity_placement,jct_p99_ms,11904.771373674172,233635.41233405517,221730.64096038102,18.6253590262732,tail latency,0.05,True
+16.0,no_affinity_placement,shared_prefill_compute_ms_saved,13193.271705599904,13193.271705599933,2.9103830456733704e-11,2.2059600610196288e-15,prefix compute reuse,0.95,False
+16.0,no_affinity_placement,sram_reload_bytes,76269223936.0,131936026624.0,55666802688.0,0.7298724153101628,SRAM/future reuse,0.05,True
+16.0,no_affinity_placement,energy_per_job_j,0.023434590175774,0.12490233966875901,0.10146774949298501,0.10146774949298501,energy,0.02,True
+16.0,no_aggregator_placement,decode_shared_kv_read_bytes,27495521635388.0,27495521635388.0,0.0,0.0,decode cohort,0.05,False
+16.0,no_aggregator_placement,mesh_total_traffic_bytes,1187021778432.0,1187021778432.0,0.0,0.0,placement/mesh,0.05,False
+16.0,no_aggregator_placement,jct_p99_ms,11904.771373674172,11904.771373674172,0.0,0.0,tail latency,0.05,False
+16.0,no_aggregator_placement,shared_prefill_compute_ms_saved,13193.271705599904,13193.271705599904,0.0,0.0,prefix compute reuse,0.95,False
+16.0,no_aggregator_placement,sram_reload_bytes,76269223936.0,76269223936.0,0.0,0.0,SRAM/future reuse,0.05,False
+16.0,no_aggregator_placement,energy_per_job_j,0.023434590175774,0.023434590175774,0.0,0.0,energy,0.02,False
+16.0,no_distributed_sram_policy,decode_shared_kv_read_bytes,27495521635388.0,27447418001671.0,-48103633717.0,-0.001749507950963491,decode cohort,0.05,False
+16.0,no_distributed_sram_policy,mesh_total_traffic_bytes,1187021778432.0,1187021778432.0,0.0,0.0,placement/mesh,0.05,False
+16.0,no_distributed_sram_policy,jct_p99_ms,11904.771373674172,11904.771373674172,0.0,0.0,tail latency,0.05,False
+16.0,no_distributed_sram_policy,shared_prefill_compute_ms_saved,13193.271705599904,13193.271705599904,0.0,0.0,prefix compute reuse,0.95,False
+16.0,no_distributed_sram_policy,sram_reload_bytes,76269223936.0,76135006208.0,-134217728.0,-0.0017597888253409592,SRAM/future reuse,0.05,False
+16.0,no_distributed_sram_policy,energy_per_job_j,0.023434590175774,0.0234094646170915,-2.512555868250041e-05,-2.512555868250041e-05,energy,0.02,False
+16.0,no_future_reuse_policy,decode_shared_kv_read_bytes,27495521635388.0,27447418001671.0,-48103633717.0,-0.001749507950963491,decode cohort,0.05,False
+16.0,no_future_reuse_policy,mesh_total_traffic_bytes,1187021778432.0,1187021778432.0,0.0,0.0,placement/mesh,0.05,False
+16.0,no_future_reuse_policy,jct_p99_ms,11904.771373674172,11904.771373674172,0.0,0.0,tail latency,0.05,False
+16.0,no_future_reuse_policy,shared_prefill_compute_ms_saved,13193.271705599904,13193.271705599904,0.0,0.0,prefix compute reuse,0.95,False
+16.0,no_future_reuse_policy,sram_reload_bytes,76269223936.0,76135006208.0,-134217728.0,-0.0017597888253409592,SRAM/future reuse,0.05,False
+16.0,no_future_reuse_policy,energy_per_job_j,0.023434590175774,0.0234094646170915,-2.512555868250041e-05,-2.512555868250041e-05,energy,0.02,False
+16.0,no_kv_sharing,decode_shared_kv_read_bytes,27495521635388.0,26564372725600.0,-931148909788.0,-0.03386547533579318,decode cohort,0.05,False
+16.0,no_kv_sharing,mesh_total_traffic_bytes,1187021778432.0,2458868968960.0,1271847190528.0,1.0714607041229272,placement/mesh,0.05,True
+16.0,no_kv_sharing,jct_p99_ms,11904.771373674172,22314.9729807734,10410.201607099229,0.8744562394637845,tail latency,0.05,True
+16.0,no_kv_sharing,shared_prefill_compute_ms_saved,13193.271705599904,0.0,-13193.271705599904,-1.0,prefix compute reuse,0.95,True
+16.0,no_kv_sharing,sram_reload_bytes,76269223936.0,96066338816.0,19797114880.0,0.2595688517377915,SRAM/future reuse,0.05,True
+16.0,no_kv_sharing,energy_per_job_j,0.023434590175774,0.031848424397744,0.008413834221969996,0.008413834221969996,energy,0.02,False
+16.0,no_shared_kv_decode_cohort,decode_shared_kv_read_bytes,27495521635388.0,35540854374400.0,8045332739012.0,0.29260520479296115,decode cohort,0.05,True
+16.0,no_shared_kv_decode_cohort,mesh_total_traffic_bytes,1187021778432.0,1152662040064.0,-34359738368.0,-0.02894617351788406,placement/mesh,0.05,False
+16.0,no_shared_kv_decode_cohort,jct_p99_ms,11904.771373674172,11242.15316984363,-662.6182038305415,-0.0556598848505259,tail latency,0.05,False
+16.0,no_shared_kv_decode_cohort,shared_prefill_compute_ms_saved,13193.271705599904,13193.271705599904,0.0,0.0,prefix compute reuse,0.95,False
+16.0,no_shared_kv_decode_cohort,sram_reload_bytes,76269223936.0,73987522560.0,-2281701376.0,-0.029916410030796304,SRAM/future reuse,0.05,False
+16.0,no_shared_kv_decode_cohort,energy_per_job_j,0.023434590175774,0.027502353701888,0.004067763526113998,0.004067763526113998,energy,0.02,False
+16.0,no_shared_kv_replication,decode_shared_kv_read_bytes,27495521635388.0,27495521635388.0,0.0,0.0,decode cohort,0.05,False
+16.0,no_shared_kv_replication,mesh_total_traffic_bytes,1187021778432.0,1187021778432.0,0.0,0.0,placement/mesh,0.05,False
+16.0,no_shared_kv_replication,jct_p99_ms,11904.771373674172,11904.771373674172,0.0,0.0,tail latency,0.05,False
+16.0,no_shared_kv_replication,shared_prefill_compute_ms_saved,13193.271705599904,13193.271705599904,0.0,0.0,prefix compute reuse,0.95,False
+16.0,no_shared_kv_replication,sram_reload_bytes,76269223936.0,76269223936.0,0.0,0.0,SRAM/future reuse,0.05,False
+16.0,no_shared_kv_replication,energy_per_job_j,0.023434590175774,0.023434590175774,0.0,0.0,energy,0.02,False
