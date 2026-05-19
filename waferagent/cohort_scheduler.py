@@ -105,16 +105,29 @@ def _append_if_valid(
     cfg: CohortConfig,
     node_regions: dict[str, str],
 ) -> None:
+    cohort = build_decode_cohort(obj, batch, planned_start, cfg, node_regions, f"cohort_{len(cohorts)}")
+    if cohort is not None:
+        cohorts.append(cohort)
+
+
+def build_decode_cohort(
+    obj: SharedKVObject,
+    batch: list[Stage],
+    planned_start: float,
+    cfg: CohortConfig,
+    node_regions: dict[str, str],
+    cohort_id: str,
+) -> DecodeCohort | None:
     if len(batch) < cfg.min_group_size:
-        return
+        return None
     no_cohort = sum(max(1, s.output_tokens) * obj.kv_bytes for s in batch)
     with_cohort = max(s.output_tokens for s in batch) * obj.kv_bytes
     if no_cohort - with_cohort < cfg.min_expected_saved_kv_bytes:
-        return
+        return None
     node_ids = [s.parent_node_id for s in batch]
     q_regions = {n: node_regions.get(n, "") for n in node_ids}
-    cohort = DecodeCohort(
-        cohort_id=f"cohort_{len(cohorts)}",
+    return DecodeCohort(
+        cohort_id=cohort_id,
         shared_kv_id=obj.prefix_id,
         node_ids=node_ids,
         planned_start_ms=planned_start,
@@ -127,7 +140,6 @@ def _append_if_valid(
         expected_query_transfer_bytes=sum(max(1, s.output_tokens) * 256 for s in batch),
         expected_merge_bytes=sum(max(1, s.output_tokens) * 64 for s in batch),
     )
-    cohorts.append(cohort)
 
 
 def _stats(cohorts: list[DecodeCohort]) -> dict[str, float]:

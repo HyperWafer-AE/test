@@ -13,7 +13,7 @@ def test_apc_saves_prefill_but_not_decode_shared_kv_reads():
         WorkloadParams(workload="decode_heavy_shared_prefix", job_id="gap", num_agents=8, input_len=8192)
     )
     traces = collect_graph_traces([graph], "gap", RunnerConfig(engine="synthetic"))
-    cfg = MeshConfig(4, 4, 16, 1, 1, 50, 1, True, 1, 1, sram_region_rows=2, sram_region_cols=2)
+    cfg = MeshConfig(16, 16, 16, 10, 10, 50, 1, True, 1, 1, sram_region_rows=2, sram_region_cols=2)
     out = simulate_global(
         traces,
         cfg,

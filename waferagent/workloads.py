@@ -27,6 +27,41 @@ class WorkloadParams:
     tool_latency_distribution: str = "fixed"
     mean_tool_latency_ms: float = 1000.0
     message_token_len: int | None = None
+    shared_system_prefix_ratio: float = 1.0
+    shared_task_prefix_ratio: float = 0.5
+    cross_job_task_group_size: int = 10
+    evidence_reuse_group_size: int = 10
+    unique_task_ratio: float = 0.0
+    prefix_namespace: str = "default"
+
+
+def _job_index(job_id: str) -> int:
+    try:
+        return int(str(job_id).rsplit("_", 1)[1])
+    except (ValueError, IndexError):
+        digits = ""
+        for ch in reversed(str(job_id)):
+            if not ch.isdigit():
+                break
+            digits = ch + digits
+        if digits:
+            return int(digits)
+        return abs(stable_rng_seed(job_id)) % 1_000_000
+
+
+def _shared_prefix(params: WorkloadParams, workload: str, kind: str) -> str:
+    idx = _job_index(params.job_id)
+    rng = random.Random(stable_rng_seed(params.seed, params.job_id, workload, kind, "prefix-realism"))
+    if kind == "system":
+        group = "global"
+    elif kind in {"evidence", "repo"}:
+        group_size = max(1, int(params.evidence_reuse_group_size))
+        group = f"e{idx // group_size}"
+    else:
+        unique = rng.random() < max(0.0, min(1.0, params.unique_task_ratio))
+        group_size = max(1, int(params.cross_job_task_group_size))
+        group = f"unique-{params.job_id}" if unique else f"task-{idx // group_size}"
+    return sha256_text(f"{params.prefix_namespace}|{workload}|{kind}|{group}")
 
 
 def _node(
@@ -96,7 +131,7 @@ def _tool_latency(params: WorkloadParams, rng: random.Random) -> float:
 def debate(params: WorkloadParams) -> AgentGraph:
     rng = random.Random(stable_rng_seed(params.seed, params.job_id, "debate"))
     graph = AgentGraph(params.job_id, "debate", params.seed)
-    shared = sha256_text("debate|shared-task")
+    shared = _shared_prefix(params, "debate", "task")
     previous_layer: list[str] = []
     for rnd in range(params.num_rounds):
         proposers: list[str] = []
@@ -144,7 +179,7 @@ def debate(params: WorkloadParams) -> AgentGraph:
 
 def moa(params: WorkloadParams) -> AgentGraph:
     graph = AgentGraph(params.job_id, "moa", params.seed)
-    shared = sha256_text("moa|shared-task")
+    shared = _shared_prefix(params, "moa", "task")
     previous: list[str] = []
     width = params.width or params.num_agents
     for layer in range(params.num_layers):
@@ -182,7 +217,7 @@ def moa(params: WorkloadParams) -> AgentGraph:
 def planner_worker_tool(params: WorkloadParams) -> AgentGraph:
     rng = random.Random(stable_rng_seed(params.seed, params.job_id, "planner_worker_tool"))
     graph = AgentGraph(params.job_id, "planner_worker_tool", params.seed)
-    shared = sha256_text("planner|shared-task")
+    shared = _shared_prefix(params, "planner_worker_tool", "task")
     planner = f"{params.job_id}_planner"
     _node(params, graph, planner, "planner", 0, NodeType.LLM_CALL, "planner", shared)
     workers_done: list[str] = []
@@ -246,7 +281,7 @@ def planner_worker_tool(params: WorkloadParams) -> AgentGraph:
 
 def swe_like(params: WorkloadParams) -> AgentGraph:
     graph = AgentGraph(params.job_id, "swe_like", params.seed)
-    shared = sha256_text("swe|repo-context")
+    shared = _shared_prefix(params, "swe_like", "repo")
     p = WorkloadParams(**{**params.__dict__, "shared_prefix_ratio": params.shared_prefix_ratio})
     planner = f"{p.job_id}_planner"
     _node(p, graph, planner, "planner", 0, NodeType.LLM_CALL, "planner", shared, input_len=p.input_len)
@@ -283,7 +318,7 @@ def swe_like(params: WorkloadParams) -> AgentGraph:
 
 def rag_like(params: WorkloadParams) -> AgentGraph:
     graph = AgentGraph(params.job_id, "rag_like", params.seed)
-    shared = sha256_text("rag|evidence")
+    shared = _shared_prefix(params, "rag_like", "evidence")
     retriever = f"{params.job_id}_retriever"
     _node(
         params,

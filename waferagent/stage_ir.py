@@ -39,6 +39,17 @@ class StageSchedule:
     mesh_wait_ms: float
     queue_wait_ms: float
     stall_reason: str
+    first_token_ms: float = 0.0
+    decode_tokens: int = 0
+    decode_active_ms: float = 0.0
+    cohort_id: str = ""
+    cohort_wait_ms: float = 0.0
+    decode_shared_kv_read_bytes: int = 0
+    decode_shared_kv_read_bytes_without_cohort: int = 0
+    decode_query_transfer_bytes: int = 0
+    decode_merge_bytes: int = 0
+    shared_kv_source_region: str = ""
+    shared_kv_target_region: str = ""
 
     def to_dict(self) -> dict[str, str | int | float]:
         return self.__dict__.copy()

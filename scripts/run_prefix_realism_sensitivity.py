@@ -1,0 +1,131 @@
+#!/usr/bin/env python
+from __future__ import annotations
+
+import argparse
+from pathlib import Path
+
+import pandas as pd
+
+from waferagent.arrival import ArrivalConfig
+from waferagent.global_simulator import simulate_global
+from waferagent.llm_runner import RunnerConfig
+from waferagent.mesh import MeshConfig
+from waferagent.trace_collector import collect_graph_traces
+from waferagent.utils import enforce_clean_git_tree, finalize_run_dir, init_run_dir, write_json
+from waferagent.workloads import WorkloadParams, generate_workload
+
+
+def _ints(text: str) -> list[int]:
+    return [int(x) for x in str(text).split(",") if x.strip()]
+
+
+def _floats(text: str) -> list[float]:
+    return [float(x) for x in str(text).split(",") if x.strip()]
+
+
+def _prefix_hit_rate(traces) -> float:
+    seen: set[str] = set()
+    hits = 0
+    total = 0
+    for tr in traces:
+        for prefix in tr.shared_prefix_ids:
+            total += 1
+            if prefix in seen:
+                hits += 1
+            seen.add(prefix)
+    return hits / total if total else 0.0
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--wafer-config", default="configs/wafer/wse_like.yaml")
+    parser.add_argument("--cross-job-task-group-size", default="1,2,5,10,50")
+    parser.add_argument("--unique-task-ratio", default="0,0.25,0.5,0.75,1.0")
+    parser.add_argument("--workloads", default="debate,moa,long_context_swe_stress")
+    parser.add_argument("--num-jobs", type=int, default=20)
+    parser.add_argument("--baselines", default="apc_like,waferagent_full")
+    parser.add_argument("--duration-source", default="synthetic", choices=["synthetic", "trace", "calibrated"])
+    parser.add_argument("--out", default="results/round6_prefix_realism_sensitivity")
+    parser.add_argument("--seed", type=int, default=11)
+    parser.add_argument("--engine", default="synthetic")
+    parser.add_argument("--model", default="auto")
+    parser.add_argument("--gpus", default="")
+    parser.add_argument("--clean-required", action="store_true")
+    parser.add_argument("--allow-dirty", action="store_true")
+    args = parser.parse_args()
+
+    enforce_clean_git_tree(args.clean_required, args.allow_dirty)
+    out = init_run_dir(
+        args.out,
+        {
+            "run_type": "prefix_realism_sensitivity",
+            "wafer_config": args.wafer_config,
+            "cross_job_task_group_size": args.cross_job_task_group_size,
+            "unique_task_ratio": args.unique_task_ratio,
+            "workloads": args.workloads,
+            "num_jobs": args.num_jobs,
+            "duration_source": args.duration_source,
+            "seed": args.seed,
+        },
+    )
+    mesh = MeshConfig.from_yaml(args.wafer_config)
+    workloads = [x.strip() for x in args.workloads.split(",") if x.strip()]
+    baselines = [x.strip() for x in args.baselines.split(",") if x.strip()]
+    rows = []
+    all_summaries = []
+    for group_size in _ints(args.cross_job_task_group_size):
+        for unique_ratio in _floats(args.unique_task_ratio):
+            graphs = []
+            for workload in workloads:
+                for j in range(args.num_jobs):
+                    graphs.append(
+                        generate_workload(
+                            WorkloadParams(
+                                workload=workload,
+                                job_id=f"{workload}_realism_job_{j}",
+                                seed=args.seed + j,
+                                cross_job_task_group_size=group_size,
+                                unique_task_ratio=unique_ratio,
+                                prefix_namespace=f"round6-g{group_size}-u{unique_ratio}",
+                            )
+                        )
+                    )
+            traces = collect_graph_traces(
+                graphs,
+                f"round6_prefix_realism_g{group_size}_u{unique_ratio}",
+                RunnerConfig(engine="synthetic", seed=args.seed),
+            )
+            result = simulate_global(
+                traces,
+                mesh,
+                baselines,
+                ArrivalConfig(mode="closed_loop", seed=args.seed),
+                seed=args.seed,
+                duration_source=args.duration_source,
+            )
+            summary = result["global_simulation_summary"].copy()
+            summary["cross_job_task_group_size"] = group_size
+            summary["unique_task_ratio"] = unique_ratio
+            summary["cross_job_prefix_hit_rate_observed"] = _prefix_hit_rate(traces)
+            all_summaries.append(summary)
+            rows.append(
+                {
+                    "cross_job_task_group_size": group_size,
+                    "unique_task_ratio": unique_ratio,
+                    "cross_job_prefix_hit_rate_observed": _prefix_hit_rate(traces),
+                    "num_trace_records": len(traces),
+                    "num_unique_prefixes": len({p for tr in traces for p in tr.shared_prefix_ids}),
+                }
+            )
+    sim = out / "simulation"
+    pd.DataFrame(rows).to_csv(sim / "prefix_realism_prefix_stats.csv", index=False)
+    combined = pd.concat(all_summaries, ignore_index=True) if all_summaries else pd.DataFrame()
+    combined.to_csv(sim / "prefix_realism_sensitivity.csv", index=False)
+    write_json(out / "model_selection.json", {"engine_used": args.engine, "model": args.model, "fallback_count": 0})
+    finalize_run_dir(out)
+    print(f"Prefix realism sensitivity complete: {Path(out).resolve()}")
+
+
+if __name__ == "__main__":
+    main()
+

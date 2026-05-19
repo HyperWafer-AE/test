@@ -41,31 +41,66 @@ def main() -> None:
     for tokens in _ints(args.shared_prefix_tokens):
         for queries in _ints(args.num_queries):
             for rep in range(args.reps):
-                try:
-                    k = torch.randn(args.heads, tokens, args.head_dim, device=device, dtype=torch.float16)
-                    q = torch.randn(queries, args.heads, args.head_dim, device=device, dtype=torch.float16)
-                    if device.type == "cuda":
-                        torch.cuda.synchronize(device)
-                    start = time.perf_counter()
-                    _ = torch.einsum("qhd,htd->qht", q, k).sum()
-                    if device.type == "cuda":
-                        torch.cuda.synchronize(device)
-                    ms = (time.perf_counter() - start) * 1000.0
-                    oom = False
-                except RuntimeError as exc:
-                    ms = 0.0
-                    oom = "out of memory" in str(exc).lower()
-                    if device.type == "cuda":
-                        torch.cuda.empty_cache()
-                rows.append({"shared_prefix_tokens": tokens, "num_queries": queries, "rep": rep, "latency_ms": ms, "oom": oom})
+                for mode in ["naive_per_agent_shared_kv_read", "cohort_shared_kv_read"]:
+                    try:
+                        k = torch.randn(args.heads, tokens, args.head_dim, device=device, dtype=torch.float16)
+                        q = torch.randn(queries, args.heads, args.head_dim, device=device, dtype=torch.float16)
+                        if device.type == "cuda":
+                            torch.cuda.synchronize(device)
+                        start = time.perf_counter()
+                        if mode == "naive_per_agent_shared_kv_read":
+                            total = 0
+                            for i in range(queries):
+                                total = total + torch.einsum("hd,htd->ht", q[i], k).sum()
+                        else:
+                            total = torch.einsum("qhd,htd->qht", q, k).sum()
+                        total.item()
+                        if device.type == "cuda":
+                            torch.cuda.synchronize(device)
+                        ms = (time.perf_counter() - start) * 1000.0
+                        oom = False
+                    except RuntimeError as exc:
+                        ms = 0.0
+                        oom = "out of memory" in str(exc).lower()
+                        if device.type == "cuda":
+                            torch.cuda.empty_cache()
+                    elem_bytes = 2
+                    shared_kv_bytes = args.heads * tokens * args.head_dim * elem_bytes * 2
+                    read_multiplier = queries if mode == "naive_per_agent_shared_kv_read" else 1
+                    rows.append(
+                        {
+                            "shared_prefix_tokens": tokens,
+                            "num_queries": queries,
+                            "rep": rep,
+                            "mode": mode,
+                            "latency_ms": ms,
+                            "dram_bytes_estimated": shared_kv_bytes * read_multiplier,
+                            "shared_kv_read_bytes": shared_kv_bytes * read_multiplier,
+                            "oom": oom,
+                        }
+                    )
     raw = pd.DataFrame(rows)
     sim = out / "simulation"
     raw.to_csv(sim / "shared_kv_microbench_raw.csv", index=False)
-    summary = raw.loc[~raw["oom"].astype(bool)].groupby(["shared_prefix_tokens", "num_queries"], as_index=False).agg(
-        latency_ms=("latency_ms", "median")
+    summary = raw.loc[~raw["oom"].astype(bool)].groupby(["shared_prefix_tokens", "num_queries", "mode"], as_index=False).agg(
+        latency_ms=("latency_ms", "median"),
+        dram_bytes_estimated=("dram_bytes_estimated", "median"),
+        shared_kv_read_bytes=("shared_kv_read_bytes", "median"),
     )
+    pivot = summary.pivot_table(
+        index=["shared_prefix_tokens", "num_queries"],
+        columns="mode",
+        values=["latency_ms", "shared_kv_read_bytes"],
+        aggfunc="first",
+    )
+    if not pivot.empty:
+        pivot.columns = ["_".join(col).strip() for col in pivot.columns.to_flat_index()]
+        pivot = pivot.reset_index()
+        pivot["speedup"] = pivot.get("latency_ms_naive_per_agent_shared_kv_read", 0) / pivot.get("latency_ms_cohort_shared_kv_read", 1)
+        pivot["read_byte_reduction_ratio"] = 1.0 - pivot.get("shared_kv_read_bytes_cohort_shared_kv_read", 0) / pivot.get("shared_kv_read_bytes_naive_per_agent_shared_kv_read", 1)
+        pivot.to_csv(sim / "shared_kv_microbench_comparison.csv", index=False)
     summary.to_csv(sim / "shared_kv_microbench_summary.csv", index=False)
-    line_from_csv(sim / "shared_kv_microbench_summary.csv", "shared_prefix_tokens", "latency_ms", out / "figures" / "fig9_h100_shared_kv_microbench", hue="num_queries")
+    line_from_csv(sim / "shared_kv_microbench_summary.csv", "shared_prefix_tokens", "latency_ms", out / "figures" / "fig9_h100_shared_kv_microbench", hue="mode")
     finalize_run_dir(out)
     print(f"Shared KV microbench complete: {Path(out).resolve()}")
 

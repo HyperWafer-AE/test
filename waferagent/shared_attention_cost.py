@@ -19,6 +19,9 @@ def estimate_shared_attention_cost(
     cohorts: list[DecodeCohort] | None = None,
     params: SharedAttentionParams | None = None,
     bytes_per_ms: float = 50e9 / 1000.0,
+    private_tokens_by_node: dict[str, int] | None = None,
+    output_tokens_by_node: dict[str, int] | None = None,
+    kv_bytes_per_token: int | None = None,
 ) -> dict[str, float]:
     params = params or SharedAttentionParams()
     cohorts = cohorts or []
@@ -39,12 +42,15 @@ def estimate_shared_attention_cost(
             with_cohort += waves * steps * obj.kv_bytes * params.reuse_efficiency_penalty
             query_transfer += cohort.expected_query_transfer_bytes * params.query_transfer_factor
             merge_bytes += cohort.expected_merge_bytes * params.merge_overhead_factor
-    private = float(
-        sum(
-            max(0, sum(obj.expected_decode_tokens.values())) * max(0, obj.kv_bytes - obj.token_len)
-            for obj in objects
-        )
-    )
+    private = 0.0
+    private_unavailable = 1.0
+    if private_tokens_by_node is not None and kv_bytes_per_token is not None:
+        private_unavailable = 0.0
+        for obj in objects:
+            for node_id, decode_tokens in obj.expected_decode_tokens.items():
+                private_tokens = max(0, int(private_tokens_by_node.get(node_id, 0)))
+                out_tokens = max(0, int(output_tokens_by_node.get(node_id, decode_tokens))) if output_tokens_by_node else max(0, int(decode_tokens))
+                private += float(private_tokens * int(kv_bytes_per_token) * out_tokens)
     total_with = with_cohort + query_transfer + merge_bytes
     saved = max(0.0, no_cohort_shared - with_cohort)
     return {
@@ -52,6 +58,7 @@ def estimate_shared_attention_cost(
         "shared_kv_bytes_read_with_cohort": with_cohort,
         "decode_shared_kv_read_bytes": with_cohort,
         "decode_private_kv_read_bytes": private,
+        "decode_private_kv_read_bytes_unavailable": private_unavailable,
         "decode_query_transfer_bytes": query_transfer,
         "decode_merge_bytes": merge_bytes,
         "decode_kv_read_reduction_ratio": saved / no_cohort_shared if no_cohort_shared else 0.0,

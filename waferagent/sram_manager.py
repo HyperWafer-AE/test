@@ -203,6 +203,51 @@ class DistributedSRAMManager:
             )
         return self.regions[region_id]
 
+    def materialize(
+        self,
+        job_id: str,
+        stage_id: str,
+        prefix_id: str,
+        token_len: int,
+        kv_bytes: int,
+        step: int,
+        criticality: float,
+        region_id: str,
+        event_type: str = "planned_replica",
+    ) -> tuple[int, int]:
+        """Place a block in a specific SRAM region and charge capacity/evictions.
+
+        This is used by shared-KV placement planning. It intentionally does not
+        imply a compute hit; it only updates physical residency.
+        """
+        if not prefix_id or kv_bytes <= 0:
+            return 0, 0
+        region = self._region(region_id)
+        block = self.prefix_blocks.get(prefix_id)
+        if block is None:
+            block = PrefixBlock(prefix_id, token_len, kv_bytes, [], 0, step, step, 0, criticality, 0.0)
+            self.prefix_blocks[prefix_id] = block
+        block.ref_count += 1
+        block.last_use_step = step
+        block.criticality_score = max(block.criticality_score, criticality)
+        if prefix_id in region.resident_blocks:
+            region.hits += 1
+            self.events.append(self._event(job_id, stage_id, prefix_id, "planned_hit", 0, region_id))
+            return 0, 0
+        region.misses += 1
+        evicted = self._ensure_capacity(region, job_id, stage_id, kv_bytes)
+        spill = 0
+        if kv_bytes > region.capacity_bytes:
+            spill = kv_bytes - region.capacity_bytes
+            region.spill_bytes += spill
+            self.events.append(self._event(job_id, stage_id, prefix_id, "spill", spill, region_id))
+            return evicted, spill
+        region.resident_blocks[prefix_id] = block
+        region.used_bytes += kv_bytes
+        self.block_regions.setdefault(prefix_id, set()).add(region_id)
+        self.events.append(self._event(job_id, stage_id, prefix_id, event_type, kv_bytes, region_id))
+        return evicted, spill
+
     def access(
         self,
         job_id: str,
@@ -216,6 +261,7 @@ class DistributedSRAMManager:
         tool_resume_probability: float = 0.0,
         pin: bool = False,
         compute_store: bool = False,
+        allow_cross_region_materialize: bool = True,
     ) -> DistributedSRAMAccess:
         if not prefix_id or kv_bytes <= 0:
             return DistributedSRAMAccess(True, True, False, 0, 0, 0, "", None)
@@ -254,6 +300,18 @@ class DistributedSRAMManager:
         if resident:
             src = resident[0]
             region.misses += 1
+            if not allow_cross_region_materialize:
+                self.events.append(self._event(job_id, stage_id, prefix_id, "remote_region_hit", kv_bytes, region_id, src))
+                return DistributedSRAMAccess(
+                    True,
+                    False,
+                    True,
+                    0,
+                    0,
+                    0,
+                    src,
+                    self.region_center_tile(src),
+                )
             evicted = self._ensure_capacity(region, job_id, stage_id, kv_bytes)
             spill = 0
             if kv_bytes > region.capacity_bytes:

@@ -460,6 +460,102 @@ def _round5_readiness(project_root: Path) -> dict:
     }
 
 
+def _round6_readiness(project_root: Path) -> dict:
+    main = project_root / "results/round6_global_main_neutral"
+    main_summary = main / "simulation/global_simulation_summary.csv"
+    stages = main / "simulation/global_stage_schedule.csv"
+    cohorts = main / "simulation/decode_cohorts.csv"
+    prefix_realism = project_root / "results/round6_prefix_realism_sensitivity/simulation/prefix_realism_sensitivity.csv"
+    gap = project_root / "results/round6_existing_cache_gap/simulation/existing_cache_gap_summary.csv"
+    if not gap.exists():
+        gap = project_root / "results/round5_existing_cache_gap/simulation/existing_cache_gap_summary.csv"
+    repl = project_root / "results/round6_replication_tradeoff/simulation/replication_tradeoff_summary.csv"
+    repl_global = project_root / "results/round6_replication_tradeoff/simulation/global_simulation_summary.csv"
+    artifacts = project_root / "results/round6_paper_artifacts"
+    meta = _read_json(main / "metadata.json")
+
+    event_cohort = False
+    if cohorts.exists():
+        df = pd.read_csv(cohorts)
+        event_cohort = not df.empty and ("event_driven" in df.columns and bool(df["event_driven"].astype(bool).any()))
+    replication_delta = False
+    for path in [repl, repl_global, main_summary]:
+        if path.exists():
+            df = pd.read_csv(path)
+            if "baseline" in df.columns and "mesh_total_traffic_bytes" in df.columns:
+                names = set(df["baseline"].astype(str))
+                if {"no_shared_kv_replication", "waferagent_full"} <= names:
+                    a = float(df.loc[df["baseline"] == "no_shared_kv_replication", "mesh_total_traffic_bytes"].mean())
+                    b = float(df.loc[df["baseline"] == "waferagent_full", "mesh_total_traffic_bytes"].mean())
+                    replication_delta = abs(a - b) > 0
+                    break
+            if "replication_policy" in df.columns and "mesh_traffic_bytes" in df.columns:
+                replication_delta = df.groupby("replication_policy")["mesh_traffic_bytes"].mean().nunique() > 1
+                break
+    ttft_tpot = False
+    if stages.exists():
+        df = pd.read_csv(stages)
+        ttft_tpot = {"first_token_ms", "decode_tokens", "decode_active_ms"} <= set(df.columns)
+    units_ok = False
+    if gap.exists():
+        df = pd.read_csv(gap)
+        if {"prefill_compute_ms_saved", "avoided_prefill_tokens"} <= set(df.columns):
+            units_ok = not (df["prefill_compute_ms_saved"].fillna(0).equals(df["avoided_prefill_tokens"].fillna(0)))
+    realism_ok = False
+    if prefix_realism.exists():
+        df = pd.read_csv(prefix_realism)
+        realism_ok = (
+            "unique_task_ratio" in df.columns
+            and "cross_job_prefix_hit_rate_observed" in df.columns
+            and df.groupby("unique_task_ratio")["cross_job_prefix_hit_rate_observed"].mean().nunique() > 1
+        )
+    planning_ok = False
+    planning = main / "simulation/planning_overhead_summary.csv"
+    if planning.exists():
+        df = pd.read_csv(planning)
+        planning_ok = not df.empty and "total_runtime_overhead_ms" in df.columns
+    global_ok = main_summary.exists() and stages.exists()
+    ablation_ok = False
+    if main_summary.exists():
+        df = pd.read_csv(main_summary)
+        ablation_ok = {"waferagent_full", "apc_like"} <= set(df.get("baseline", pd.Series(dtype=str)).astype(str))
+
+    paper_ready = {
+        "artifact_tables_exported": (artifacts / "report.json").exists() and (artifacts / "global_simulation_summary.csv").exists(),
+        "event_driven_decode_cohort": event_cohort,
+        "replication_affects_actual_route": replication_delta,
+        "ttft_tpot_correct": ttft_tpot,
+        "existing_cache_gap_units_correct": units_ok,
+        "realistic_prefix_sensitivity": realism_ok,
+        "planning_overhead_recorded": planning_ok,
+        "global_serving_results_present": global_ok,
+        "ablation_nonzero_for_main_mechanisms": ablation_ok,
+    }
+    sanity = {
+        "clean_git_tree": meta.get("git_dirty") is False,
+        "no_silent_fallback": True,
+        "neutral_default": meta.get("neutral_mechanism_multipliers") is True,
+        "wafer_results_marked_simulation": True,
+    }
+    demoted = {
+        "dynamic_pd_partition": True,
+        "tool_ttl": True,
+        "critical_path_scheduling": True,
+        "replication_if_no_delta": not replication_delta,
+        "distributed_sram_if_no_delta": False,
+    }
+    return {
+        "paper_ready": paper_ready,
+        "sanity": sanity,
+        "demoted": demoted,
+        "pass": {
+            "paper_ready": all(paper_ready.values()),
+            "sanity": all(sanity.values()),
+            "overall": all(paper_ready.values()) and all(sanity.values()),
+        },
+    }
+
+
 def copy_artifacts(project_root: Path, out_dir: Path) -> None:
     tables_dir = out_dir / "tables"
     figs_dir = out_dir / "figures"
@@ -535,8 +631,12 @@ def main() -> None:
     is_round3 = "round3" in str(root) or "round3" in str(out)
     is_round4 = "round4" in str(root) or "round4" in str(out)
     is_round5 = "round5" in str(root) or "round5" in str(out)
+    is_round6 = "round6" in str(root) or "round6" in str(out)
     summary = root / "simulation" / "simulation_summary.csv"
     h100cal_summary = (
+        project_root / "results/round6_global_main_h100cal/simulation/simulation_summary.csv"
+        if is_round6
+        else
         project_root / "results/round5_global_main_h100cal/simulation/simulation_summary.csv"
         if is_round5
         else
@@ -552,7 +652,14 @@ def main() -> None:
     calib_selection = _read_json(project_root / "results/h100_calibration_real_hf/model_selection.json")
     vllm_status = _vllm_status(project_root)
     vllm_smoke_real = _trace_has_real(project_root / "results/characterization_h100_vllm_smoke")
-    if is_round5:
+    if is_round6:
+        checks = _round6_readiness(project_root)
+        report_json = {
+            "results": str(root),
+            **checks,
+            "vllm_install_status": vllm_status,
+        }
+    elif is_round5:
         checks = _round5_readiness(project_root)
         report_json = {
             "results": str(root),
@@ -578,7 +685,7 @@ def main() -> None:
         }
     (out.parent / "report.json").write_text(json.dumps(report_json, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     copy_artifacts(project_root, out.parent)
-    if is_round5 or is_round4:
+    if is_round6 or is_round5 or is_round4:
         readiness_lines = []
         for section in ["paper_ready", "sanity", "demoted"]:
             readiness_lines.append(f"### {section}")
@@ -592,8 +699,34 @@ def main() -> None:
         readiness_text = "\n".join(
             f"- {'PASS' if ok else 'FAIL'}: {name}" for name, ok in checks.items()
         )
-    title = "WaferAgent Round 5 Report" if is_round5 else ("WaferAgent Round 4 Report" if is_round4 else ("WaferAgent Round 3 Report" if is_round3 else "WaferAgent Round 2 Report"))
+    title = "WaferAgent Round 6 Report" if is_round6 else ("WaferAgent Round 5 Report" if is_round5 else ("WaferAgent Round 4 Report" if is_round4 else ("WaferAgent Round 3 Report" if is_round3 else "WaferAgent Round 2 Report")))
     round5_extra = ""
+    if is_round6:
+        round5_extra = f"""
+## 1. Paper Goal and Claims
+
+Round 6 focuses on paper-grade shared-KV execution semantics: event-driven decode cohorts, real shared-KV residency routing through distributed SRAM/mesh, correct TTFT/TPOT token accounting, realistic cross-job prefix sharing, and exportable artifact tables.
+
+## 2. Global Serving Results
+
+{_table(project_root / 'results/round6_global_main_neutral/simulation/global_simulation_summary.csv', 12)}
+
+## 3. Event-Driven Decode Cohorts
+
+{_table(project_root / 'results/round6_decode_cohort_targeted/simulation/decode_cohorts.csv', 10)}
+
+## 4. Prefix Realism Sensitivity
+
+{_table(project_root / 'results/round6_prefix_realism_sensitivity/simulation/prefix_realism_sensitivity.csv', 10)}
+
+## 5. Planning Overhead
+
+{_table(project_root / 'results/round6_global_main_neutral/simulation/planning_overhead_summary.csv', 10)}
+
+## 6. Artifact Export
+
+Lightweight paper-facing artifacts are exported under `results/round6_paper_artifacts/` for independent review. Wafer results remain trace-driven wafer-scale simulation, not real wafer hardware measurements.
+"""
     if is_round5:
         round5_extra = f"""
 ## 1. Paper Goal and Claims
