@@ -1,0 +1,135 @@
+{
+  "created_at": "2026-05-19T13:06:44.449676+00:00",
+  "export_dirty_files": [],
+  "export_git_commit": "72f97912e294fc12470bbbf2862b503d0349ef58",
+  "export_git_dirty": false,
+  "export_git_dirty_allowed_reason": "artifact directory is untracked until the artifact commit",
+  "files": [
+    {
+      "path": "ablation_delta_summary.csv",
+      "rows": 126,
+      "sha256": "sha256:241cc453e837eb599e386aa3553621870bd6d8518b81f6e462ac473a7cb36b5c"
+    },
+    {
+      "path": "ablation_global_summary.csv",
+      "rows": 24,
+      "sha256": "sha256:f7bcc341b9dbab82dcff505e936c3472880bffc156e830b7ab392e42ab5511bf"
+    },
+    {
+      "path": "command.txt",
+      "sha256": "sha256:451fac6da2f2c7750ae8c049b90d3187629e435be80e76f74ce8ceb81eb53ab5"
+    },
+    {
+      "path": "commands.log",
+      "sha256": "sha256:451fac6da2f2c7750ae8c049b90d3187629e435be80e76f74ce8ceb81eb53ab5"
+    },
+    {
+      "path": "decode_cohort_analytical_sweep.csv",
+      "rows": 300,
+      "sha256": "sha256:a06b6875551d0f1299800f4f088b961b295c01dbb5d507a9a824ca2056209984"
+    },
+    {
+      "path": "decode_cohorts_event_driven.csv",
+      "rows": 181,
+      "sha256": "sha256:bab28b799d1e792b5638a01faad71138740be634e8b6f068007be01e446aeea4"
+    },
+    {
+      "path": "environment.json",
+      "sha256": "sha256:eae9ae889c950e99369c73a2f27e2b18b5fbfecba4e38dcacbf4fce38cdc580f"
+    },
+    {
+      "path": "environment.txt",
+      "sha256": "sha256:9d3750d9f2178c0d0bdd9e03b5ccbc2edc1c2b259ca5b4468f530cdea007eecd"
+    },
+    {
+      "path": "existing_cache_gap_summary.csv",
+      "rows": 5,
+      "sha256": "sha256:52c9ad5b875ec98d8eeb317b1446e2e01270d66c854616909087e4d59b7775b8"
+    },
+    {
+      "path": "global_job_metrics_sample.csv",
+      "rows": 200,
+      "sha256": "sha256:e95a3aa752a41104e5a8e0f0d01084b1211f2f564dea7be1792e64ec4676fe42"
+    },
+    {
+      "path": "global_simulation_summary.csv",
+      "rows": 28,
+      "sha256": "sha256:72bc7352589dd1df60bfc64cbb42a5cd6968665d8b8585c2e04329fb4621239a"
+    },
+    {
+      "path": "metadata.json",
+      "sha256": "sha256:516120f1ceb92d8138b109aff529f6c57a8882933486b25f92ffef42c3c2c57e"
+    },
+    {
+      "path": "metadata.yaml",
+      "sha256": "sha256:cd852774ef065a1162407db6970b9c5e23d32070e5d93fb3a04fdf03427970f8"
+    },
+    {
+      "path": "paper_claims_matrix.csv",
+      "rows": 5,
+      "sha256": "sha256:d1ff22dce30ad1fe9ecb8e0e36df484d3b62d6067f471bcdac28df89536b6aeb"
+    },
+    {
+      "path": "planning_overhead_summary.csv",
+      "rows": 28,
+      "sha256": "sha256:055ee94825d83f6c5492b6c5e036c53875f5ce0190a7957c7f028013e8d0f3e6"
+    },
+    {
+      "path": "prefix_realism_prefix_stats.csv",
+      "rows": 25,
+      "sha256": "sha256:c7228170685d396aad03f29f23fc78f4690a9b6f535df6db74e1203c374b1228"
+    },
+    {
+      "path": "prefix_realism_sensitivity.csv",
+      "rows": 50,
+      "sha256": "sha256:fa01be039b3a232b866aa1d9749b2763745bae6139190e9f2bf4a8df45e1f29f"
+    },
+    {
+      "path": "replication_tradeoff_summary.csv",
+      "rows": 80,
+      "sha256": "sha256:d707bb702c9682e520f91a59763f302b6e24a4e2bd2c88bac7a10d084d9526e6"
+    },
+    {
+      "path": "report.json",
+      "sha256": "sha256:d459da18d111b69cf15dcbb2277dce2e77b0154444fc2914ed412cd7d1758d2e"
+    },
+    {
+      "path": "report.md",
+      "sha256": "sha256:9c46f8c5a4293c82392b2559806d25514ffa58c0ea6afc50fdbd6f08ebab0d1e"
+    },
+    {
+      "path": "run_manifest.json",
+      "sha256": "sha256:42c7f4904065adef51e6478ba4444221529ae2a303aad8aeee91a2982200d887"
+    },
+    {
+      "path": "shared_kv_microbench_raw_sample.csv",
+      "rows": 54,
+      "sha256": "sha256:ba5c4d2f4d23c08372af79d6a258aac28d2b6de5cf5b955fb3fe33891900bcf1"
+    },
+    {
+      "path": "shared_kv_microbench_summary.csv",
+      "rows": 9,
+      "sha256": "sha256:3a8ff02f4c859129c5497824a9eb3e57087effa5ff243ae729f72b22275df2a5"
+    },
+    {
+      "path": "slo_goodput.csv",
+      "rows": 84,
+      "sha256": "sha256:90bc780c0cff7ccee364c3d90e17e6c577577c950b1f99556c9a06c2962eba4f"
+    },
+    {
+      "path": "source_run_manifest.csv",
+      "rows": 14,
+      "sha256": "sha256:745905a1e9e9f643888b310eb71331a81be48e355655d8397e297fa0f358670e"
+    }
+  ],
+  "source_result_dirs": [
+    "results/round7_global_main_neutral",
+    "results/round7_existing_cache_gap",
+    "results/round7_ablation",
+    "results/round7_decode_cohort_targeted",
+    "results/round7_decode_cohort_sweep",
+    "results/round7_replication_tradeoff",
+    "results/round7_prefix_realism_sensitivity",
+    "results/round7_shared_kv_microbench_h100"
+  ]
+}
