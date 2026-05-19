@@ -1,0 +1,145 @@
+{
+  "created_at": "2026-05-19T14:06:30.526778+00:00",
+  "export_dirty_files": [],
+  "export_git_commit": "b0854cf9c00d8affd8a1bd3c8ffaca27b8a61162",
+  "export_git_dirty": false,
+  "export_git_dirty_allowed_reason": "artifact directory is untracked until the artifact commit",
+  "files": [
+    {
+      "path": "ablation_delta_summary.csv",
+      "rows": 126,
+      "sha256": "sha256:d3cf338e535ac57cec69fcc90249c5ddab3ef6a21c791ca0dc11b8a326735741"
+    },
+    {
+      "path": "ablation_global_summary.csv",
+      "rows": 24,
+      "sha256": "sha256:a8ec847b7b44e828ae0681b0883c95f060823b0300cb55c488064fd6124f12a4"
+    },
+    {
+      "path": "cohort_admission_decisions.csv",
+      "rows": 245,
+      "sha256": "sha256:d0c2b41a770128b318aa10f8bf754e9202de395ff9c6ebc63d08f9123629b9b2"
+    },
+    {
+      "path": "cohort_admission_summary.csv",
+      "rows": 2,
+      "sha256": "sha256:5971d1286f070d5b12d553c07da20fd25afad3edbe4acddadf21cb91514955dc"
+    },
+    {
+      "path": "command.txt",
+      "sha256": "sha256:7ebdec1854dff12949654f55b042ef3527ac8ff44b1378b8852a36b1fa3ce9cc"
+    },
+    {
+      "path": "commands.log",
+      "sha256": "sha256:7ebdec1854dff12949654f55b042ef3527ac8ff44b1378b8852a36b1fa3ce9cc"
+    },
+    {
+      "path": "decode_cohort_analytical_sweep.csv",
+      "rows": 300,
+      "sha256": "sha256:a06b6875551d0f1299800f4f088b961b295c01dbb5d507a9a824ca2056209984"
+    },
+    {
+      "path": "decode_cohorts_event_driven.csv",
+      "rows": 245,
+      "sha256": "sha256:cac90aefeb1c633e782bded75fbbd4addd60976d6f88fd2b51885556e5df0298"
+    },
+    {
+      "path": "environment.json",
+      "sha256": "sha256:8b56531a401690ccc00359ec4baed337b51e7aff1e7ddb80fe96f334cfd9e873"
+    },
+    {
+      "path": "environment.txt",
+      "sha256": "sha256:369d669a33839716e779d8dcb6efc064432ecd964990c4c5bf58f6be1023ffd4"
+    },
+    {
+      "path": "existing_cache_gap_summary.csv",
+      "rows": 5,
+      "sha256": "sha256:b6865642c28f54f9cad414a9294f0fbb25f701826ac8d7ea5bb8ef0223f44920"
+    },
+    {
+      "path": "global_job_metrics_sample.csv",
+      "rows": 200,
+      "sha256": "sha256:e95a3aa752a41104e5a8e0f0d01084b1211f2f564dea7be1792e64ec4676fe42"
+    },
+    {
+      "path": "global_simulation_summary.csv",
+      "rows": 28,
+      "sha256": "sha256:377ace53cdee651b9e9da5a92b11a532a803056d25dfab726d970c09068d79fa"
+    },
+    {
+      "path": "metadata.json",
+      "sha256": "sha256:d32cbf5b63ecc6eba7dd28bcaa34d865887ecff8d72318a6c65ee098d64c6b86"
+    },
+    {
+      "path": "metadata.yaml",
+      "sha256": "sha256:54e0a0233d0fae1394f8e499561efc8224f979f79458090efc9a50da88919da2"
+    },
+    {
+      "path": "paper_claims_matrix.csv",
+      "rows": 6,
+      "sha256": "sha256:4e8a1ff500cca7dfa39b307d49bf7e625a80633f1e7ce85f7c1526f0a926149b"
+    },
+    {
+      "path": "planning_overhead_summary.csv",
+      "rows": 28,
+      "sha256": "sha256:0869571d2997633640c2ac400180db874e4883566d68fdc47e9183facde5e415"
+    },
+    {
+      "path": "prefix_realism_prefix_stats.csv",
+      "rows": 36,
+      "sha256": "sha256:bfb8613565d8e8930449d7e14011599d1e03d93a7136644580f7420d740a8875"
+    },
+    {
+      "path": "prefix_realism_sensitivity.csv",
+      "rows": 72,
+      "sha256": "sha256:412d52abb8864454bcfceca62caede332dd558b4daef3b33c04221fa2091d9e4"
+    },
+    {
+      "path": "replication_tradeoff_summary.csv",
+      "rows": 80,
+      "sha256": "sha256:d707bb702c9682e520f91a59763f302b6e24a4e2bd2c88bac7a10d084d9526e6"
+    },
+    {
+      "path": "report.json",
+      "sha256": "sha256:499e3f5ba36b5d3c2527938db537cd70f3278b0cbbe258869772ddc29718e467"
+    },
+    {
+      "path": "report.md",
+      "sha256": "sha256:1abb508470e4396d6c6888dfc43e1aa5467eb17b518eb4d7607f8f31b0d5ddc6"
+    },
+    {
+      "path": "run_manifest.json",
+      "sha256": "sha256:b360dcebd18343261709f4ac64aa664d59614e5a0fe16059d2bbf2eb8d349a37"
+    },
+    {
+      "path": "shared_attention_microbench_raw_sample.csv",
+      "rows": 200,
+      "sha256": "sha256:85116e1743efecb67d54f437be8049ddc241a3cbdc40f384cee3fa07c797e025"
+    },
+    {
+      "path": "shared_attention_microbench_summary.csv",
+      "rows": 180,
+      "sha256": "sha256:3bb5abaf2ff636364c21e774a5adf6ab7c269927c340f375feafdf7e5666be28"
+    },
+    {
+      "path": "slo_goodput.csv",
+      "rows": 84,
+      "sha256": "sha256:9898a12608ea4f760c1f45c40e44a6950a53601f49221ad69f94b25a18afb3b1"
+    },
+    {
+      "path": "source_run_manifest.csv",
+      "rows": 16,
+      "sha256": "sha256:56fcf169c1423675b536b91e7b52f98c946f345462683daeb3462263fa33dc65"
+    }
+  ],
+  "source_result_dirs": [
+    "results/round8_global_main_neutral",
+    "results/round8_existing_cache_gap",
+    "results/round8_ablation",
+    "results/round8_cohort_admission",
+    "results/round8_decode_cohort_sweep",
+    "results/round8_replication_tradeoff",
+    "results/round8_prefix_realism_sensitivity",
+    "results/round8_shared_attention_microbench_h100"
+  ]
+}
