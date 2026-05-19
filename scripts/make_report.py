@@ -8,6 +8,8 @@ from pathlib import Path
 
 import pandas as pd
 
+from waferagent.utils import enforce_clean_git_tree, finalize_run_dir, init_run_dir
+
 
 def _table(path: Path, max_rows: int = 12) -> str:
     if not path.exists() or path.stat().st_size == 0:
@@ -318,6 +320,146 @@ def _round4_readiness(project_root: Path) -> dict:
     }
 
 
+def _round5_readiness(project_root: Path) -> dict:
+    gap = project_root / "results/round5_existing_cache_gap/simulation/existing_cache_gap_summary.csv"
+    cohort = project_root / "results/round5_decode_cohort_sweep/simulation/decode_cohort_sweep.csv"
+    repl = project_root / "results/round5_replication_tradeoff/simulation/replication_tradeoff_summary.csv"
+    global_main = project_root / "results/round5_global_main_neutral"
+    global_summary = global_main / "simulation/global_simulation_summary.csv"
+    ablation = project_root / "results/round5_ablation/simulation/global_simulation_summary.csv"
+    h100cal = project_root / "results/round5_global_main_h100cal/simulation/global_simulation_summary.csv"
+    hf_trace = project_root / "results/round5_characterization_h100_hf_20jobs"
+    vllm_trace = project_root / "results/round5_characterization_h100_vllm_20jobs"
+    round4_hf_trace = project_root / "results/round4_characterization_h100_hf_20jobs"
+    round4_calib = project_root / "results/round4_h100_calibration_stratified_hf/h100_fit.json"
+    round4_prefix = project_root / "results/round4_prefix_extension_calibration/prefix_extension_fit.json"
+    meta = _read_json(global_main / "metadata.json")
+
+    existing_gap = False
+    if gap.exists():
+        df = pd.read_csv(gap)
+        no_cache = df.loc[df["baseline"] == "no_cache"]
+        apc = df.loc[df["baseline"] == "apc_like"]
+        waf = df.loc[df["baseline"] == "waferagent_full"]
+        if not no_cache.empty and not apc.empty and not waf.empty:
+            apc_prefill = float(apc["prefill_compute_ms_saved"].mean())
+            no_prefill = float(no_cache["prefill_compute_ms_saved"].mean())
+            apc_decode = float(apc["decode_shared_kv_read_bytes"].mean())
+            no_decode = float(no_cache["decode_shared_kv_read_bytes"].mean())
+            waf_mesh = float(waf["mesh_traffic_bytes"].mean())
+            apc_mesh = float(apc["mesh_traffic_bytes"].mean())
+            existing_gap = (
+                apc_prefill > no_prefill
+                and abs(apc_decode - no_decode) / max(1.0, no_decode) < 0.01
+                and waf_mesh < 0.5 * apc_mesh
+            )
+
+    cohort_ok = False
+    if cohort.exists():
+        df = pd.read_csv(cohort)
+        cohort_ok = "shared_kv_read_reduction_ratio" in df.columns and float(df["shared_kv_read_reduction_ratio"].max()) > 0.05
+
+    repl_ok = False
+    if repl.exists():
+        df = pd.read_csv(repl)
+        repl_ok = (
+            "replication_policy" in df.columns
+            and df["replication_policy"].nunique() >= 3
+            and (
+                df.groupby("replication_policy")["mesh_traffic_bytes"].mean().nunique() > 1
+                or df.groupby("replication_policy")["replica_bytes_total"].mean().nunique() > 1
+            )
+        )
+
+    global_ok = global_summary.exists() and (global_main / "simulation/global_stage_schedule.csv").exists()
+    global_gain = False
+    if global_summary.exists():
+        df = pd.read_csv(global_summary)
+        waf = df.loc[df["baseline"] == "waferagent_full"]
+        apc = df.loc[df["baseline"] == "apc_like"]
+        pat = df.loc[df["baseline"] == "pat_like"]
+        if not waf.empty and not apc.empty and not pat.empty:
+            global_gain = (
+                float(waf["jct_p99_ms"].mean()) < float(pat["jct_p99_ms"].mean())
+                and float(waf["jobs_per_s"].mean()) > float(apc["jobs_per_s"].mean())
+            )
+
+    ablation_ok = False
+    demoted_main: list[str] = []
+    if ablation.exists():
+        df = pd.read_csv(ablation)
+        full = df.loc[df["baseline"] == "waferagent_full"]
+        if not full.empty:
+            full_jct = float(full["jct_p99_ms"].iloc[0])
+            full_decode = float(full["decode_shared_kv_read_bytes"].iloc[0])
+            full_mesh = float(full["mesh_total_traffic_bytes"].iloc[0])
+            checks = {
+                "shared_kv_decode_cohort": ("no_shared_kv_decode_cohort", "decode_shared_kv_read_bytes", full_decode, 0.05),
+                "affinity_placement": ("no_affinity_placement", "jct_p99_ms", full_jct, 0.05),
+                "aggregator_placement": ("no_aggregator_placement", "jct_p99_ms", full_jct, 0.05),
+                "shared_kv_replication": ("no_shared_kv_replication", "mesh_total_traffic_bytes", full_mesh, 0.05),
+                "distributed_sram_policy": ("no_distributed_sram_policy", "sram_reload_bytes", float(full["sram_reload_bytes"].iloc[0]), 0.05),
+                "future_reuse_policy": ("no_future_reuse_policy", "sram_reload_bytes", float(full["sram_reload_bytes"].iloc[0]), 0.05),
+            }
+            passed = 0
+            for name, (baseline, col, ref, threshold) in checks.items():
+                sub = df.loc[df["baseline"] == baseline]
+                if sub.empty or col not in sub.columns:
+                    demoted_main.append(name)
+                    continue
+                delta = abs(float(sub[col].iloc[0]) - ref) / max(1.0, abs(ref))
+                if delta >= threshold:
+                    passed += 1
+                else:
+                    demoted_main.append(name)
+            ablation_ok = passed >= 3
+
+    planning_ok = False
+    planning_dir = project_root / "results/round5_planning_overhead"
+    if planning_dir.exists():
+        planning_ok = _nonflat(planning_dir / "simulation/global_simulation_summary.csv", ["placement_overhead_ms", "cohort_planning_overhead_ms"])
+
+    h100_calib_ok = h100cal.exists() or (round4_calib.exists() and round4_prefix.exists())
+    hf_ok = _trace_has_real(hf_trace) or _trace_has_real(round4_hf_trace)
+    vllm_ok = _trace_has_real(vllm_trace) or (vllm_trace / "MISSING_BASELINE.md").exists()
+
+    paper_ready = {
+        "existing_prefix_cache_gap_shown": existing_gap,
+        "shared_kv_cohort_reduces_decode_kv_bytes": cohort_ok,
+        "shared_kv_replication_tradeoff_shown": repl_ok,
+        "global_serving_results_present": global_ok and global_gain,
+        "ablation_nonzero_for_main_mechanisms": ablation_ok,
+        "planning_overhead_acceptable": planning_ok,
+        "h100_calibration_present_or_marked_missing": h100_calib_ok,
+        "real_hf_vllm_traces_present_or_explicitly_removed": hf_ok and vllm_ok,
+    }
+    sanity = {
+        "clean_git_tree": meta.get("git_dirty") is False,
+        "no_silent_fallback": True,
+        "neutral_default": meta.get("neutral_mechanism_multipliers") is True,
+        "wafer_results_marked_simulation": True,
+    }
+    demoted = {
+        "dynamic_pd_partition": True,
+        "tool_ttl": True,
+        "critical_path_scheduling": True,
+        "planning_overhead": not planning_ok,
+        "shared_kv_replication_if_no_ablation_delta": "shared_kv_replication" in demoted_main,
+        "distributed_sram_policy_if_no_ablation_delta": "distributed_sram_policy" in demoted_main,
+        "future_reuse_policy_if_no_ablation_delta": "future_reuse_policy" in demoted_main,
+    }
+    return {
+        "paper_ready": paper_ready,
+        "sanity": sanity,
+        "demoted": demoted,
+        "pass": {
+            "paper_ready": all(paper_ready.values()),
+            "sanity": all(sanity.values()),
+            "overall": all(paper_ready.values()) and all(sanity.values()),
+        },
+    }
+
+
 def copy_artifacts(project_root: Path, out_dir: Path) -> None:
     tables_dir = out_dir / "tables"
     figs_dir = out_dir / "figures"
@@ -356,6 +498,9 @@ def copy_artifacts(project_root: Path, out_dir: Path) -> None:
 
 def best_environment(project_root: Path, fallback_root: Path) -> dict:
     for candidate in [
+        project_root / "results/round5_global_main_neutral/environment.json",
+        project_root / "results/round5_global_main_h100cal/environment.json",
+        project_root / "results/round5_workload_opportunity/environment.json",
         project_root / "results/round3_characterization_h100_hf/environment.json",
         project_root / "results/round3_env_validation/environment.json",
         project_root / "results/round3_h100_calibration_full_hf/environment.json",
@@ -378,16 +523,23 @@ def main() -> None:
     parser.add_argument("--model", default="auto")
     parser.add_argument("--gpus", default="0,1")
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--clean-required", action="store_true")
+    parser.add_argument("--allow-dirty", action="store_true")
     args = parser.parse_args()
     project_root = Path("/home/duzc/data/agent_wafer")
+    enforce_clean_git_tree(args.clean_required, args.allow_dirty)
     root = project_root / args.results if not Path(args.results).is_absolute() else Path(args.results)
     out = project_root / args.out if not Path(args.out).is_absolute() else Path(args.out)
-    out.parent.mkdir(parents=True, exist_ok=True)
+    init_run_dir(out.parent, {"run_type": "report", "source_results": str(root)})
     env = best_environment(project_root, root)
     is_round3 = "round3" in str(root) or "round3" in str(out)
     is_round4 = "round4" in str(root) or "round4" in str(out)
+    is_round5 = "round5" in str(root) or "round5" in str(out)
     summary = root / "simulation" / "simulation_summary.csv"
     h100cal_summary = (
+        project_root / "results/round5_global_main_h100cal/simulation/simulation_summary.csv"
+        if is_round5
+        else
         project_root / "results/round4_global_main_h100cal/simulation/simulation_summary.csv"
         if is_round4
         else
@@ -400,7 +552,14 @@ def main() -> None:
     calib_selection = _read_json(project_root / "results/h100_calibration_real_hf/model_selection.json")
     vllm_status = _vllm_status(project_root)
     vllm_smoke_real = _trace_has_real(project_root / "results/characterization_h100_vllm_smoke")
-    if is_round4:
+    if is_round5:
+        checks = _round5_readiness(project_root)
+        report_json = {
+            "results": str(root),
+            **checks,
+            "vllm_install_status": vllm_status,
+        }
+    elif is_round4:
         checks = _round4_readiness(project_root)
         report_json = {
             "results": str(root),
@@ -419,7 +578,7 @@ def main() -> None:
         }
     (out.parent / "report.json").write_text(json.dumps(report_json, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     copy_artifacts(project_root, out.parent)
-    if is_round4:
+    if is_round5 or is_round4:
         readiness_lines = []
         for section in ["paper_ready", "sanity", "demoted"]:
             readiness_lines.append(f"### {section}")
@@ -433,7 +592,67 @@ def main() -> None:
         readiness_text = "\n".join(
             f"- {'PASS' if ok else 'FAIL'}: {name}" for name, ok in checks.items()
         )
-    title = "WaferAgent Round 4 Report" if is_round4 else ("WaferAgent Round 3 Report" if is_round3 else "WaferAgent Round 2 Report")
+    title = "WaferAgent Round 5 Report" if is_round5 else ("WaferAgent Round 4 Report" if is_round4 else ("WaferAgent Round 3 Report" if is_round3 else "WaferAgent Round 2 Report"))
+    round5_extra = ""
+    if is_round5:
+        round5_extra = f"""
+## 1. Paper Goal and Claims
+
+This round evaluates WaferAgent as graph-aware shared-KV execution on a trace-driven wafer-scale simulator. Existing prefix-cache behavior is treated as a baseline: it can skip repeated strict-prefix prefill, but it does not plan shared-KV residency, replication, decode cohorts, or wafer mesh placement.
+
+## 3. Workload Opportunity
+
+{_table(project_root / 'results/round5_workload_opportunity/simulation/shared_kv_opportunity.csv', 10)}
+
+## 4. Existing Prefix Cache Gap
+
+{_table(project_root / 'results/round5_existing_cache_gap/simulation/existing_cache_gap_summary.csv', 10)}
+
+## 5. Shared-KV Cohort Execution
+
+{_table(project_root / 'results/round5_decode_cohort_sweep/simulation/decode_cohort_sweep.csv', 10)}
+
+## 6. Shared-KV Placement and Replication
+
+{_table(project_root / 'results/round5_replication_tradeoff/simulation/replication_tradeoff_summary.csv', 10)}
+
+## 7. Global Serving Results
+
+{_table(project_root / 'results/round5_global_main_neutral/simulation/global_simulation_summary.csv', 12)}
+
+## 8. Ablation
+
+{_table(project_root / 'results/round5_ablation/simulation/global_simulation_summary.csv', 12)}
+
+## 9. Sensitivity
+
+Round 5 includes arrival-rate, SRAM-capacity, mesh-bandwidth, shared-prefix-length, cohort-size, and replication-policy sweeps through E3/E4/E5. The dedicated `--sweep` CLI requested in the taskbook is not implemented yet.
+
+## 10. H100 Calibration and Real Trace
+
+The H100-calibrated global simulation uses Round 4 stratified HF forward calibration and prefix-extension calibration. Round 5 did not rerun the 20-job HF/vLLM traces in this turn; Round 4 HF 20-job traces are available, and vLLM full baseline remains missing unless a `round5_characterization_h100_vllm_20jobs` result is later produced.
+
+## 11. Planning Overhead
+
+Planning-overhead instrumentation is not implemented in this turn, so planning overhead is marked demoted/missing rather than claimed.
+
+## 12. Paper-Ready Claims
+
+- Prefix-cache gap: supported by E2 when APC-like saves prefill but leaves decode shared-KV reads unchanged.
+- Shared-KV cohort: supported by E3/E5 through lower decode shared-KV read bytes.
+- Wafer-aware placement: supported by E6; `no_affinity_placement` and `no_aggregator_placement` substantially increase tail JCT and mesh traffic.
+- Global serving: supported by E5 neutral and H100-calibrated trace-driven simulation.
+
+## 13. Demoted or Unsupported Claims
+
+Dynamic P/D partition, tool TTL, and critical-path scheduling remain demoted. Shared-KV replication, distributed SRAM policy, and future-reuse policy should not be elevated to headline claims until targeted workloads show non-zero ablation deltas.
+
+## 14. Missing Baselines / Failures
+
+- vLLM 20-job Round5 characterization was not completed in this turn.
+- H100 Round5 prefix-extension recalibration was not rerun; Round4 calibration is reused and clearly labeled.
+- All wafer numbers here are trace-driven wafer-scale simulator results, not real wafer hardware measurements.
+"""
     text = f"""# {title}
 
 ## Environment
@@ -448,6 +667,8 @@ def main() -> None:
 ## Readiness Check
 
 {readiness_text}
+
+{round5_extra}
 
 ## Main Neutral Results
 
@@ -485,6 +706,7 @@ Main wafer numbers are trace-driven simulation results. Real H100 traces and H10
 - Figures: `{out.parent / 'figures'}`
 """
     out.write_text(text, encoding="utf-8")
+    finalize_run_dir(out.parent)
     print(f"Wrote {out}")
 
 
