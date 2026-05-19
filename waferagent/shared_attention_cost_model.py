@@ -23,9 +23,11 @@ class SharedAttentionCostModel:
         shared_prefix_tokens: int,
         private_tokens: int,
         num_agents: int,
-        heads: int = 28,
-        head_dim: int = 128,
+        heads: int | None = 28,
+        head_dim: int | None = 128,
     ) -> float:
+        heads = int(heads or 28)
+        head_dim = int(head_dim or 128)
         candidates = [r for r in self.rows if str(r.get("mode")) == mode]
         if not candidates:
             candidates = self.rows
