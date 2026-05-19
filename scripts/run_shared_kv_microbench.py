@@ -82,12 +82,13 @@ def main() -> None:
     raw = pd.DataFrame(rows)
     sim = out / "simulation"
     raw.to_csv(sim / "shared_kv_microbench_raw.csv", index=False)
-    summary = raw.loc[~raw["oom"].astype(bool)].groupby(["shared_prefix_tokens", "num_queries", "mode"], as_index=False).agg(
+    valid = raw.loc[~raw["oom"].astype(bool)]
+    summary_long = valid.groupby(["shared_prefix_tokens", "num_queries", "mode"], as_index=False).agg(
         latency_ms=("latency_ms", "median"),
         dram_bytes_estimated=("dram_bytes_estimated", "median"),
         shared_kv_read_bytes=("shared_kv_read_bytes", "median"),
     )
-    pivot = summary.pivot_table(
+    pivot = summary_long.pivot_table(
         index=["shared_prefix_tokens", "num_queries"],
         columns="mode",
         values=["latency_ms", "shared_kv_read_bytes"],
@@ -96,11 +97,42 @@ def main() -> None:
     if not pivot.empty:
         pivot.columns = ["_".join(col).strip() for col in pivot.columns.to_flat_index()]
         pivot = pivot.reset_index()
-        pivot["speedup"] = pivot.get("latency_ms_naive_per_agent_shared_kv_read", 0) / pivot.get("latency_ms_cohort_shared_kv_read", 1)
-        pivot["read_byte_reduction_ratio"] = 1.0 - pivot.get("shared_kv_read_bytes_cohort_shared_kv_read", 0) / pivot.get("shared_kv_read_bytes_naive_per_agent_shared_kv_read", 1)
-        pivot.to_csv(sim / "shared_kv_microbench_comparison.csv", index=False)
+        summary = pd.DataFrame(
+            {
+                "shared_prefix_tokens": pivot["shared_prefix_tokens"],
+                "num_queries": pivot["num_queries"],
+                "naive_latency_ms": pivot.get("latency_ms_naive_per_agent_shared_kv_read", 0),
+                "cohort_latency_ms": pivot.get("latency_ms_cohort_shared_kv_read", 0),
+                "naive_read_bytes": pivot.get("shared_kv_read_bytes_naive_per_agent_shared_kv_read", 0),
+                "cohort_read_bytes": pivot.get("shared_kv_read_bytes_cohort_shared_kv_read", 0),
+            }
+        )
+        summary["speedup"] = summary["naive_latency_ms"] / summary["cohort_latency_ms"].clip(lower=1e-9)
+        summary["read_byte_reduction_ratio"] = 1.0 - summary["cohort_read_bytes"] / summary["naive_read_bytes"].clip(lower=1)
+        summary["device"] = str(device)
+        summary["dtype"] = "float16"
+        summary["reps"] = args.reps
+    else:
+        summary = pd.DataFrame(
+            columns=[
+                "shared_prefix_tokens",
+                "num_queries",
+                "naive_latency_ms",
+                "cohort_latency_ms",
+                "speedup",
+                "naive_read_bytes",
+                "cohort_read_bytes",
+                "read_byte_reduction_ratio",
+                "device",
+                "dtype",
+                "reps",
+            ]
+        )
+    summary_long.to_csv(sim / "shared_kv_microbench_long.csv", index=False)
     summary.to_csv(sim / "shared_kv_microbench_summary.csv", index=False)
-    line_from_csv(sim / "shared_kv_microbench_summary.csv", "shared_prefix_tokens", "latency_ms", out / "figures" / "fig9_h100_shared_kv_microbench", hue="mode")
+    plot_long = summary_long.rename(columns={"latency_ms": "latency_ms"})
+    plot_long.to_csv(sim / "shared_kv_microbench_plot.csv", index=False)
+    line_from_csv(sim / "shared_kv_microbench_plot.csv", "shared_prefix_tokens", "latency_ms", out / "figures" / "fig9_h100_shared_kv_microbench", hue="mode")
     finalize_run_dir(out)
     print(f"Shared KV microbench complete: {Path(out).resolve()}")
 

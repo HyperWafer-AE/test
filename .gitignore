@@ -30,3 +30,6 @@ results/round5_dev_*/
 results/round6_*/
 !results/round6_paper_artifacts/
 !results/round6_paper_artifacts/**
+results/round7_*/
+!results/round7_paper_artifacts/
+!results/round7_paper_artifacts/**

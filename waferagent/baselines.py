@@ -114,6 +114,23 @@ NEUTRAL_BASELINES: dict[str, BaselineConfig] = {
         future_reuse_policy=True,
         oracle=True,
     ),
+    "ideal_next_use_cache": BaselineConfig(
+        name="ideal_next_use_cache",
+        placement_policy="communication_affinity",
+        scheduling_policy="critical_path",
+        kv_sharing=True,
+        ttl_policy="oracle_next_use",
+        tool_ttl=True,
+        critical_path=True,
+        dynamic_pd_partition=True,
+        aggregator_placement=True,
+        mesh_congestion_penalty=True,
+        hotspot_aware_placement=True,
+        shared_kv_decode_cohort=True,
+        shared_kv_placement=True,
+        shared_kv_replication_policy="no_replication",
+        future_reuse_policy=True,
+    ),
 }
 
 
@@ -144,6 +161,7 @@ LEGACY_BASELINES: dict[str, BaselineConfig] = {
         parallelism_multiplier=1.35,
     ),
     "oracle": _legacy(NEUTRAL_BASELINES["oracle"]),
+    "ideal_next_use_cache": _legacy(NEUTRAL_BASELINES["ideal_next_use_cache"]),
 }
 
 
