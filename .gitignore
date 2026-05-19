@@ -27,3 +27,6 @@ results/round4_*/
 results/round4_dev_*/
 results/round5_*/
 results/round5_dev_*/
+results/round6_*/
+!results/round6_paper_artifacts/
+!results/round6_paper_artifacts/**
