@@ -327,7 +327,7 @@ def simulate_global(
                     users = prefix_decode_users.get(stage.shared_prefix_ids[0], 1)
                     waves = (users + 4 - 1) // 4
                     shared_bytes = int(shared_bytes * min(1.0, (waves * 1.15) / max(1, users)))
-                src_tile = (0, 0)
+                src_tile = placement.tile if (baseline.shared_kv_placement or baseline.oracle) else (0, 0)
                 w, t, b = mesh.route(job_id, sid, src_tile, placement.tile, shared_bytes, dep_ready, "decode_shared_kv")
                 mesh_wait += w
                 mesh_time = max(mesh_time, t)
