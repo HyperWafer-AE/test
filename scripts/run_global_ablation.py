@@ -30,12 +30,12 @@ def _variants(text: str) -> list[str]:
 
 def _delta_rows(summary: pd.DataFrame) -> list[dict]:
     metrics = [
-        ("decode_shared_kv_read_bytes", "decode cohort", 0.05),
-        ("mesh_total_traffic_bytes", "placement/mesh", 0.05),
-        ("jct_p99_ms", "tail latency", 0.05),
-        ("shared_prefill_compute_ms_saved", "prefix compute reuse", 0.95),
-        ("sram_reload_bytes", "SRAM/future reuse", 0.05),
-        ("energy_per_job_j", "energy", 0.02),
+        ("decode_shared_kv_read_bytes", "decode cohort", 0.05, "higher_variant"),
+        ("mesh_total_traffic_bytes", "placement/mesh", 0.05, "higher_variant"),
+        ("jct_p99_ms", "tail latency", 0.05, "higher_variant"),
+        ("shared_prefill_compute_ms_saved", "prefix compute reuse", 0.95, "lower_variant"),
+        ("sram_reload_bytes", "SRAM/future reuse", 0.05, "higher_variant"),
+        ("energy_per_job_j", "energy", 0.02, "higher_variant"),
     ]
     rows: list[dict] = []
     for rate, group in summary.groupby("arrival_rate_jobs_per_s", dropna=False):
@@ -47,7 +47,7 @@ def _delta_rows(summary: pd.DataFrame) -> list[dict]:
             name = str(variant["baseline"])
             if name == "waferagent_full":
                 continue
-            for metric, claim, threshold in metrics:
+            for metric, claim, threshold, direction in metrics:
                 if metric not in group.columns:
                     continue
                 full_value = float(full_row.get(metric, 0.0))
@@ -55,7 +55,10 @@ def _delta_rows(summary: pd.DataFrame) -> list[dict]:
                 delta_abs = variant_value - full_value
                 denom = max(1.0, abs(full_value))
                 delta_pct = delta_abs / denom
-                supported = abs(delta_pct) >= threshold
+                if direction == "higher_variant":
+                    supported = delta_pct >= threshold
+                else:
+                    supported = delta_pct <= -threshold
                 if name == "no_kv_sharing" and metric == "shared_prefill_compute_ms_saved":
                     supported = variant_value <= 1e-9 and full_value > 0
                     delta_pct = -1.0 if full_value > 0 else 0.0
@@ -156,4 +159,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
