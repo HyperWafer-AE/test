@@ -319,7 +319,19 @@ def _report_json(out: Path, missing: list[dict[str, str]]) -> dict[str, Any]:
             )
     arrival_fields = True
     if not source_manifest.empty and {"source_result_dir", "source_arrival_mode", "source_arrival_rates"} <= set(source_manifest.columns):
-        global_rows = source_manifest[source_manifest["source_result_dir"].astype(str).str.contains("global|cohort|ablation", regex=True, na=False)]
+        arrival_required_artifacts = {
+            "global_simulation_summary.csv",
+            "global_job_metrics_sample.csv",
+            "slo_goodput.csv",
+            "ablation_global_summary.csv",
+            "ablation_delta_summary.csv",
+            "cohort_admission_summary.csv",
+            "cohort_admission_decisions.csv",
+            "cohort_policy_comparison.csv",
+            "decode_cohorts_event_driven.csv",
+            "planning_overhead_summary.csv",
+        }
+        global_rows = source_manifest[source_manifest["artifact_file"].isin(arrival_required_artifacts)]
         if not global_rows.empty:
             arrival_fields = bool(
                 global_rows["source_arrival_mode"].astype(str).str.len().gt(0).all()
