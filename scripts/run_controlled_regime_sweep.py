@@ -89,6 +89,8 @@ def main() -> None:
     validation_rows = []
     validation_node_rows = []
     policy_rows = []
+    policy_assignment_rows = []
+    policy_stage_rows = []
     policy_summary_rows = []
     for group_size in _ints(args.reuse_group_size):
         for shared_tokens in _ints(args.shared_prefix_tokens):
@@ -143,7 +145,7 @@ def main() -> None:
                             summary["cross_job_prefix_hit_rate_observed"] = hit_rate
                             summary["shared_attention_accounting_mode"] = args.shared_attention_accounting
                             rows.append(summary)
-                            for name in ["policy_decisions", "policy_summary"]:
+                            for name in ["policy_decisions", "policy_assignments", "policy_effective_stage_map", "policy_summary"]:
                                 df = result.get(name, pd.DataFrame()).copy()
                                 if not df.empty:
                                     df["reuse_group_size"] = group_size
@@ -154,6 +156,10 @@ def main() -> None:
                                     df["arrival_rate_jobs_per_s"] = rate
                                     if name == "policy_decisions":
                                         policy_rows.append(df)
+                                    elif name == "policy_assignments":
+                                        policy_assignment_rows.append(df)
+                                    elif name == "policy_effective_stage_map":
+                                        policy_stage_rows.append(df)
                                     else:
                                         policy_summary_rows.append(df)
     combined = pd.concat(rows, ignore_index=True) if rows else pd.DataFrame()
@@ -354,6 +360,8 @@ def main() -> None:
     validation_df.to_csv(sim / "controlled_workload_validation.csv", index=False)
     validation_nodes_df.to_csv(sim / "controlled_workload_validation_nodes.csv", index=False)
     (pd.concat(policy_rows, ignore_index=True) if policy_rows else pd.DataFrame()).to_csv(sim / "policy_decisions.csv", index=False)
+    (pd.concat(policy_assignment_rows, ignore_index=True) if policy_assignment_rows else pd.DataFrame()).to_csv(sim / "policy_assignments.csv", index=False)
+    (pd.concat(policy_stage_rows, ignore_index=True) if policy_stage_rows else pd.DataFrame()).to_csv(sim / "policy_effective_stage_map.csv", index=False)
     (pd.concat(policy_summary_rows, ignore_index=True) if policy_summary_rows else pd.DataFrame()).to_csv(sim / "policy_summary.csv", index=False)
     fig = out / "figures"
     if not combined.empty:
