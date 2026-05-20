@@ -64,7 +64,6 @@ def _plot_bar(df: pd.DataFrame, x: str, y: str, out: Path, title: str) -> None:
         vals = df[y].astype(float).tolist()
         ax.bar(labels, vals, color="#4C78A8")
         ax.tick_params(axis="x", rotation=25)
-    ax.set_title(title)
     ax.set_ylabel(y)
     fig.tight_layout()
     fig.savefig(out.with_suffix(".pdf"))
@@ -79,7 +78,6 @@ def _plot_line(df: pd.DataFrame, x: str, y: str, hue: str, out: Path, title: str
             sub = sub.sort_values(x)
             ax.plot(sub[x], sub[y], marker="o", label=str(key))
         ax.legend(frameon=False, fontsize=8)
-    ax.set_title(title)
     ax.set_xlabel(x)
     ax.set_ylabel(y)
     fig.tight_layout()
@@ -108,7 +106,11 @@ def main() -> None:
     src_dir.mkdir(exist_ok=True)
 
     global_df = _copy_csv(sources, "simulation/global_simulation_summary.csv", out / "global_simulation_summary.csv", "global")
+    planning_df = _copy_csv(sources, "simulation/planning_overhead_summary.csv", out / "planning_overhead_summary.csv", "global")
+    slo_df = _copy_csv(sources, "simulation/slo_goodput.csv", out / "slo_goodput.csv", "global")
+    cohort_admission_df = _copy_csv(sources, "simulation/cohort_admission_summary.csv", out / "cohort_admission_summary.csv", "global")
     gap_df = _copy_csv(sources, "simulation/existing_cache_gap_summary.csv", out / "existing_cache_gap_summary.csv", "existing_cache_gap")
+    ablation_delta_df = _copy_csv(sources, "simulation/ablation_delta_summary.csv", out / "ablation_delta_summary.csv", "ablation")
     accounting_df = _copy_csv(sources, "simulation/accounting_summary.csv", out / "accounting_summary.csv", "attention_accounting")
     accounting_delta = _copy_csv(sources, "simulation/accounting_delta.csv", out / "accounting_delta.csv", "attention_accounting")
     regime_df = _copy_csv(sources, "simulation/controlled_regime_classification.csv", out / "controlled_regime_classification.csv", "controlled_regime")
@@ -143,6 +145,15 @@ def main() -> None:
     global_df.to_csv(src_dir / "fig4_global_tail_latency.csv", index=False)
     accounting_df.to_csv(src_dir / "fig8_accounting_mode_sensitivity.csv", index=False)
     regime_df.to_csv(src_dir / "fig7_regime_map.csv", index=False)
+    if not ablation_delta_df.empty and {"variant", "metric", "delta_pct"}.issubset(ablation_delta_df.columns):
+        affinity = ablation_delta_df[
+            (ablation_delta_df["variant"] == "no_affinity_placement")
+            & (ablation_delta_df["metric"].isin(["mesh_total_traffic_bytes", "jct_p99_ms"]))
+        ].copy()
+        affinity["metric_variant"] = affinity["metric"].astype(str) + "@" + affinity["arrival_rate_jobs_per_s"].astype(str)
+    else:
+        affinity = pd.DataFrame(columns=["metric_variant", "delta_pct"])
+    affinity.to_csv(src_dir / "fig6_affinity_placement_ablation.csv", index=False)
     _plot_bar(gap_df, "baseline", "decode_shared_kv_read_bytes", fig_dir / "fig2_existing_prefix_cache_gap", "Trace-driven wafer simulation: prefix-cache gap")
     _plot_line(micro_df[micro_df.get("mode", "") == "cohort_attention"] if not micro_df.empty else micro_df, "shared_prefix_tokens", "latency_p50_ms", "num_agents", fig_dir / "fig3_shared_attention_microbench", "H100 microbench-fit shared-attention cost model")
     _plot_line(global_df, "arrival_rate_jobs_per_s", "jct_p99_ms", "baseline", fig_dir / "fig4_global_tail_latency", "Trace-driven wafer simulation: p99 JCT")
@@ -168,7 +179,8 @@ def main() -> None:
     )
     trace_status_df.to_csv(src_dir / "fig9_hf_vllm_trace_status.csv", index=False)
     _plot_bar(trace_status_df, "engine", "completed_jobs", fig_dir / "fig9_hf_vllm_trace_status", "Real H100 mini trace characterization")
-    for fig_id in ["fig1_system_overview", "fig6_affinity_placement_ablation"]:
+    _plot_bar(affinity, "metric_variant", "delta_pct", fig_dir / "fig6_affinity_placement_ablation", "Affinity placement ablation")
+    for fig_id in ["fig1_system_overview"]:
         placeholder = pd.DataFrame([{"note": "See corresponding CSV/report; generated placeholder for paper package completeness."}])
         placeholder.to_csv(src_dir / f"{fig_id}.csv", index=False)
         _plot_bar(pd.DataFrame({"x": ["status"], "y": [1]}), "x", "y", fig_dir / fig_id, fig_id.replace("_", " "))
@@ -395,7 +407,7 @@ def main() -> None:
         files.append({"path": p.relative_to(out).as_posix(), "sha256": file_sha256(p)})
     write_json(out / "artifact_manifest.json", {"created_at": datetime.now(timezone.utc).isoformat(), "export_git_commit": pre_meta.get("git_commit", ""), "files": files})
     finalize_run_dir(out)
-    print(f"Exported Round 10 paper figures/artifacts: {Path(out).resolve()}")
+    print(f"Exported {round_label} paper figures/artifacts: {Path(out).resolve()}")
 
 
 if __name__ == "__main__":
