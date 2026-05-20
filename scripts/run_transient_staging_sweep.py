@@ -72,7 +72,7 @@ def main() -> None:
                 float(row.get("planned_start_ms", 0.0)),
                 1.0,
                 bytes_per_ms,
-                int(mesh.sram_per_tile_mb * 1024 * 1024 * 64),
+                    int(mesh.tile_sram_mb * 1024 * 1024 * 64),
             )
             events.append(dec.to_dict())
     event_df = pd.DataFrame(events)
@@ -91,4 +91,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
