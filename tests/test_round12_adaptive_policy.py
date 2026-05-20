@@ -27,7 +27,7 @@ def test_controlled_validation_summary_is_nonempty_and_passes():
 
 
 def test_policy_assignments_can_mix_apc_and_waferagent():
-    cfg_fallback = StrictControlledSharedKVConfig(4, 4, 8192, 128, 512, 16, seed=1)
+    cfg_fallback = StrictControlledSharedKVConfig(4, 4, 4096, 128, 32, 16, seed=1)
     cfg_high = StrictControlledSharedKVConfig(4, 4, 8192, 128, 512, 4, seed=2)
     objects = []
     for cfg in [cfg_fallback, cfg_high]:

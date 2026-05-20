@@ -42,6 +42,7 @@ def choose_shared_kv_policy(
     token_len = float(shared_kv_object.token_len)
     decode_tokens = float(sum(shared_kv_object.expected_decode_tokens.values()))
     consumers = float(max(1, len(set(shared_kv_object.decode_users))))
+    avg_decode_tokens = decode_tokens / max(1.0, consumers)
     reuse_count = float(max(0, consumers - 1))
     mesh_distance = float(ctx.get("mesh_distance_to_consumers", max(1.0, len(shared_kv_object.candidate_regions))))
     sram_pressure = float(state.get("sram_pressure", 0.0))
@@ -62,10 +63,18 @@ def choose_shared_kv_policy(
     predicted_apc = max(0.0, benefit)
     predicted_pat = max(0.0, benefit - shared_kv_read_saved_ms * 0.45)
     predicted_wafer = max(0.0, predicted_apc - score)
-    # Large shared objects with many simultaneous consumers are precisely where
-    # the current simulator shows queue/SRAM amplification. The adaptive policy
-    # must be allowed to fall back instead of blindly enabling WaferAgent.
-    high_queue_risk = token_len >= 8192 and consumers >= 16
+    # Queue risk is most damaging when there is little decode work to amortize
+    # cohort/placement orchestration. Large shared prefixes can still be worth
+    # wafer-aware execution even with many consumers; short-prefix, short-decode
+    # groups should conservatively fall back.
+    low_queue_pressure = queue_pressure < 0.5
+    high_queue_risk = (
+        low_queue_pressure
+        and (
+            (token_len < 8192 and avg_decode_tokens <= 64 and consumers >= 16)
+            or (consumers >= 32 and avg_decode_tokens <= 256)
+        )
+    )
     if high_queue_risk:
         chosen = "apc_like"
         reason = "high_queue_and_sram_risk"
