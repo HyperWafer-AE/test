@@ -191,7 +191,17 @@ def main() -> None:
     if not accounting_delta.empty:
         sub = accounting_delta[(accounting_delta["metric"] == "jct_p99_ms") & (accounting_delta["accounting_mode"] == "stage_amortized")]
         accounting_ok = bool((sub["delta_pct_vs_cohort_stage"].abs() <= 0.10).all()) if not sub.empty else True
-    has_beneficial = bool((regime_df.get("regime_label", pd.Series(dtype=str)) == "waferagent_latency_beneficial").any()) if not regime_df.empty else False
+    if not regime_df.empty:
+        beneficial_mask = regime_df.get("regime_label", pd.Series(dtype=str)) == "waferagent_latency_beneficial"
+        high_reuse_beneficial_mask = (
+            beneficial_mask
+            & (pd.to_numeric(regime_df.get("cross_job_prefix_hit_rate_observed", pd.Series(dtype=float)), errors="coerce") > 0.10)
+            & (pd.to_numeric(regime_df.get("shared_kv_read_reduction_ratio", pd.Series(dtype=float)), errors="coerce") > 0.05)
+        )
+    else:
+        beneficial_mask = pd.Series(dtype=bool)
+        high_reuse_beneficial_mask = pd.Series(dtype=bool)
+    has_beneficial = bool(high_reuse_beneficial_mask.any()) if not regime_df.empty else False
     validation_pass = bool(validation_df.get("pass", pd.Series(dtype=bool)).astype(bool).all()) if not validation_df.empty else False
     adaptive_non_worse = bool((pd.to_numeric(regime_df.get("waferagent_vs_apc_jct_p99_delta_pct", pd.Series(dtype=float)), errors="coerce") <= 0.05).all()) if not regime_df.empty else False
     hf_completed = bool(hf_status and read_json(hf_status).get("completed_jobs", 0) > 0)
@@ -263,7 +273,7 @@ def main() -> None:
         sub = accounting_delta[(accounting_delta["metric"] == "jct_p99_ms") & (accounting_delta["accounting_mode"] == "stage_amortized")]
         if not sub.empty:
             accounting_stage_delta = float(pd.to_numeric(sub["delta_pct_vs_cohort_stage"], errors="coerce").abs().max() * 100.0)
-    beneficial_count = int((regime_df.get("regime_label", pd.Series(dtype=str)) == "waferagent_latency_beneficial").sum()) if not regime_df.empty else 0
+    beneficial_count = int(high_reuse_beneficial_mask.sum()) if not regime_df.empty else 0
     regime_count = int(len(regime_df))
     staging_delta = None
     if not staging_df.empty and {"baseline", "jct_p99_ms"}.issubset(staging_df.columns):
@@ -387,11 +397,18 @@ def main() -> None:
     for src in sources:
         meta = read_json(src / "metadata.json") if (src / "metadata.json").exists() else {}
         cmd = (src / "command.txt").read_text(encoding="utf-8", errors="replace").strip() if (src / "command.txt").exists() else ""
+        dirty_files = meta.get("dirty_files", []) or []
+        source_dirty_allowed_reason = ""
+        if bool(meta.get("git_dirty", False)) and dirty_files:
+            src_prefix = src.as_posix().rstrip("/") + "/"
+            if all(str(x).startswith(src_prefix) for x in dirty_files):
+                source_dirty_allowed_reason = "only output directory was untracked after clean-required run"
         source_rows.append(
             {
                 "source_result_dir": src.as_posix(),
                 "source_git_commit": meta.get("git_commit", ""),
                 "source_git_dirty": meta.get("git_dirty", ""),
+                "source_dirty_allowed_reason": source_dirty_allowed_reason,
                 "source_command": cmd,
                 "source_arrival_mode": _cmd_value(cmd, "--arrival-mode"),
                 "source_arrival_rates": _cmd_value(cmd, "--arrival-rate-jobs-per-s"),
