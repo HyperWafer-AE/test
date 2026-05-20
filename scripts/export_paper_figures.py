@@ -168,6 +168,12 @@ def main() -> None:
             missing = _find(sources, "MISSING_BASELINE.md", label)
             if missing:
                 shutil.copy2(missing, out / f"{label}_MISSING_BASELINE.md")
+    for label in ["hf", "vllm"]:
+        for src in sources:
+            if f"h100_{label}" in src.as_posix() and "10jobs" in src.as_posix():
+                missing = src / "MISSING_BASELINE.md"
+                if missing.exists():
+                    shutil.copy2(missing, out / f"{label}_10jobs_MISSING_BASELINE.md")
 
     # Figure sources and figures.
     gap_df.to_csv(src_dir / "fig2_existing_prefix_cache_gap.csv", index=False)
@@ -252,6 +258,17 @@ def main() -> None:
         mixed_policy_pass = bool(mix["chosen_policy"].nunique() >= 2)
     hf_completed = bool(hf_status and read_json(hf_status).get("completed_jobs", 0) > 0)
     vllm_completed = bool(vllm_status and read_json(vllm_status).get("completed_jobs", 0) > 0)
+    hf_10jobs_completed = False
+    vllm_10jobs_completed = False
+    for src in sources:
+        status = src / "trace_completion_status.json"
+        if not status.exists() or "10jobs" not in src.as_posix():
+            continue
+        payload = read_json(status)
+        if "h100_hf" in src.as_posix():
+            hf_10jobs_completed = bool(payload.get("complete", False))
+        if "h100_vllm" in src.as_posix():
+            vllm_10jobs_completed = bool(payload.get("complete", False))
     report = {
         "artifact_ready": {"pass": True, "figures_exported": True, "tables_exported": True},
         "method_ready": {
@@ -269,7 +286,10 @@ def main() -> None:
             "existing_prefix_cache_gap_supported": not gap_df.empty,
             "regime_map_has_non_low_reuse_beneficial_region": has_beneficial,
             "hf_mini_trace_completed": hf_completed,
+            "hf_10jobs_trace_completed": hf_10jobs_completed,
             "vllm_mini_trace_completed": vllm_completed,
+            "vllm_10jobs_trace_completed": vllm_10jobs_completed,
+            "real_trace_scope": "10jobs_per_workload" if (hf_10jobs_completed or vllm_10jobs_completed) else "mini_sanity_only",
             "hf_or_vllm_mini_trace_completed_or_formally_missing_with_timeout_logs": hf_completed or vllm_completed or (out / "hf_MISSING_BASELINE.md").exists() or (out / "vllm_MISSING_BASELINE.md").exists(),
         },
         "claim_ready": {
