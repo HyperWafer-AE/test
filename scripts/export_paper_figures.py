@@ -176,13 +176,115 @@ def main() -> None:
         and report["evidence_ready"]["hf_or_vllm_mini_trace_completed_or_formally_missing_with_timeout_logs"]
         and has_beneficial
     )
+    def _mean_metric(df: pd.DataFrame, baseline: str, metric: str) -> float | None:
+        if df.empty or metric not in df.columns or "baseline" not in df.columns:
+            return None
+        sub = df[df["baseline"] == baseline]
+        if sub.empty:
+            return None
+        return float(pd.to_numeric(sub[metric], errors="coerce").mean())
+
+    def _delta_pct(wafer: float | None, comp: float | None) -> float | None:
+        if wafer is None or comp in (None, 0):
+            return None
+        return 100.0 * (wafer - float(comp)) / float(comp)
+
+    apc_decode = _mean_metric(gap_df, "apc_like", "decode_shared_kv_read_bytes")
+    wafer_decode = _mean_metric(gap_df, "waferagent_latency_safe", "decode_shared_kv_read_bytes")
+    apc_p99 = _mean_metric(global_df, "apc_like", "jct_p99_ms")
+    wafer_p99 = _mean_metric(global_df, "waferagent_latency_safe", "jct_p99_ms")
+    accounting_stage_delta = None
+    if not accounting_delta.empty and {"metric", "accounting_mode", "delta_pct_vs_cohort_stage"}.issubset(accounting_delta.columns):
+        sub = accounting_delta[(accounting_delta["metric"] == "jct_p99_ms") & (accounting_delta["accounting_mode"] == "stage_amortized")]
+        if not sub.empty:
+            accounting_stage_delta = float(pd.to_numeric(sub["delta_pct_vs_cohort_stage"], errors="coerce").abs().max() * 100.0)
+    beneficial_count = int((regime_df.get("regime_label", pd.Series(dtype=str)) == "waferagent_latency_beneficial").sum()) if not regime_df.empty else 0
+    regime_count = int(len(regime_df))
+    staging_delta = None
+    if not staging_df.empty and {"baseline", "jct_p99_ms"}.issubset(staging_df.columns):
+        no_stage = _mean_metric(staging_df, "waferagent_latency_safe_no_staging", "jct_p99_ms")
+        transient = _mean_metric(staging_df, "waferagent_latency_safe_transient_staging", "jct_p99_ms")
+        staging_delta = _delta_pct(transient, no_stage)
     claims = pd.DataFrame(
         [
-            {"claim": "Existing prefix cache gap", "status": "supported" if not gap_df.empty else "missing", "evidence_file": "existing_cache_gap_summary.csv", "figure_id": "Fig2"},
-            {"claim": "H100 shared-attention fit validation", "status": "supported" if fit_q else "missing", "evidence_file": "shared_attention_fit_quality.json", "figure_id": "Fig3"},
-            {"claim": "Accounting sensitivity", "status": "supported" if accounting_ok else "partial", "evidence_file": "accounting_delta.csv", "figure_id": "Fig8"},
-            {"claim": "Controlled high-reuse beneficial regime", "status": "supported" if has_beneficial else "failed", "evidence_file": "controlled_regime_classification.csv", "figure_id": "Fig7"},
-            {"claim": "Persistent replication", "status": "demoted", "evidence_file": "transient_staging_summary.csv", "figure_id": "Appendix"},
+            {
+                "claim": "Existing prefix cache gap",
+                "status": "supported" if apc_decode and wafer_decode and wafer_decode < 0.95 * apc_decode else "missing",
+                "primary_metric": "decode_shared_kv_read_bytes",
+                "baseline": "apc_like",
+                "waferagent_value": wafer_decode,
+                "comparison_value": apc_decode,
+                "delta_pct": _delta_pct(wafer_decode, apc_decode),
+                "threshold": "<= -5%",
+                "evidence_file": "existing_cache_gap_summary.csv",
+                "figure_id": "Fig2",
+                "notes": "APC-like saves prefill but leaves decode-side shared-KV reads high.",
+            },
+            {
+                "claim": "Global serving tail latency in synthetic trace-driven simulation",
+                "status": "supported" if apc_p99 and wafer_p99 and wafer_p99 < 0.95 * apc_p99 else "partial",
+                "primary_metric": "mean_jct_p99_ms",
+                "baseline": "apc_like",
+                "waferagent_value": wafer_p99,
+                "comparison_value": apc_p99,
+                "delta_pct": _delta_pct(wafer_p99, apc_p99),
+                "threshold": "<= -5%",
+                "evidence_file": "global_simulation_summary.csv",
+                "figure_id": "Fig4",
+                "notes": "Trace-driven wafer-scale simulator; not real wafer hardware.",
+            },
+            {
+                "claim": "H100 shared-attention fit validation",
+                "status": "supported" if fit_q and fit_q.get("paper_safe") else "partial",
+                "primary_metric": "heldout_mape",
+                "baseline": "validation_threshold",
+                "waferagent_value": fit_q.get("heldout_mape"),
+                "comparison_value": 0.25,
+                "delta_pct": None,
+                "threshold": "<= 0.25 for p50 prediction, otherwise conservative p90",
+                "evidence_file": "shared_attention_fit_quality.json",
+                "figure_id": "Fig3",
+                "notes": fit_q.get("fit_note", ""),
+            },
+            {
+                "claim": "Accounting sensitivity",
+                "status": "supported" if accounting_ok else "partial",
+                "primary_metric": "max_abs_jct_p99_delta_pct_stage_amortized_vs_cohort_stage",
+                "baseline": "cohort_stage",
+                "waferagent_value": accounting_stage_delta,
+                "comparison_value": 10.0,
+                "delta_pct": None,
+                "threshold": "<= 10%",
+                "evidence_file": "accounting_delta.csv",
+                "figure_id": "Fig8",
+                "notes": "Main paper mode is cohort_stage or conservative accounting.",
+            },
+            {
+                "claim": "Controlled high-reuse beneficial regime",
+                "status": "supported" if has_beneficial else "failed",
+                "primary_metric": "num_waferagent_latency_beneficial_regimes",
+                "baseline": "controlled_regime_grid",
+                "waferagent_value": beneficial_count,
+                "comparison_value": regime_count,
+                "delta_pct": None,
+                "threshold": ">= 1 beneficial regime",
+                "evidence_file": "controlled_regime_classification.csv",
+                "figure_id": "Fig7",
+                "notes": "If failed, end-to-end latency claim must be narrowed to traffic reduction/preliminary serving gains.",
+            },
+            {
+                "claim": "Persistent replication / transient staging headline",
+                "status": "demoted" if staging_delta is None or staging_delta > -5.0 else "partial",
+                "primary_metric": "jct_p99_delta_pct_transient_vs_no_staging",
+                "baseline": "waferagent_latency_safe_no_staging",
+                "waferagent_value": staging_delta,
+                "comparison_value": -5.0,
+                "delta_pct": staging_delta,
+                "threshold": "<= -5% required for headline",
+                "evidence_file": "transient_staging_summary.csv",
+                "figure_id": "Appendix",
+                "notes": "Persistent replication remains demoted unless staging/replication has clear p99 or traffic benefit.",
+            },
         ]
     )
     claims.to_csv(out / "paper_claims_matrix.csv", index=False)
@@ -221,4 +323,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
