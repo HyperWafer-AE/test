@@ -1,0 +1,8 @@
+{
+  "complete": true,
+  "completed_jobs": 10,
+  "expected_jobs": 10,
+  "fallback_used": false,
+  "resume": false,
+  "stop_after_minutes": 20.0
+}

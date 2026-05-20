@@ -1,0 +1,30 @@
+{
+  "command": "scripts/export_paper_figures.py --source-results results/round10_global_main,results/round10_existing_cache_gap,results/round10_attention_accounting_sweep,results/round10_controlled_regime_sweep,results/round10_transient_staging_sweep,results/round10_shared_attention_fit,results/round9_shared_attention_microbench_h100,results/round10_characterization_h100_hf_mini,results/round10_characterization_h100_vllm_mini --out results/round10_paper_artifacts --clean-required",
+  "cuda_available": "True",
+  "env": {
+    "CUDA_CACHE_PATH": "/home/duzc/data/agent_wafer/.cache/cuda",
+    "HF_HOME": "/home/duzc/data/agent_wafer/.cache/huggingface",
+    "MODEL_ZOO": "/data2/model_zoo",
+    "PROJECT_ROOT": "/home/duzc/data/agent_wafer",
+    "RAY_TMPDIR": "/home/duzc/data/agent_wafer/tmp/ray",
+    "TMPDIR": "/home/duzc/data/agent_wafer/tmp",
+    "TOKENIZERS_PARALLELISM": "false",
+    "TRANSFORMERS_CACHE": "/home/duzc/data/agent_wafer/.cache/huggingface",
+    "TRITON_CACHE_DIR": "/home/duzc/data/agent_wafer/.cache/triton",
+    "UV_CACHE_DIR": "/home/duzc/data/agent_wafer/.cache/uv",
+    "UV_PYTHON_INSTALL_DIR": "/home/duzc/data/agent_wafer/.cache/uv/python",
+    "VLLM_CACHE_ROOT": "/home/duzc/data/agent_wafer/.cache/vllm",
+    "VLLM_WORKER_MULTIPROC_METHOD": "spawn",
+    "XDG_CACHE_HOME": "/home/duzc/data/agent_wafer/.cache"
+  },
+  "git_commit": "a42177d10f933389920202a6b62f3971b4bbb880",
+  "gpu_count": "2",
+  "model_zoo": "/data2/model_zoo",
+  "nvidia_smi": "NVIDIA H100 PCIe, 81559 MiB, 570.211.01\nNVIDIA H100 PCIe, 81559 MiB, 570.211.01",
+  "platform": "Linux-6.17.0-19-generic-x86_64-with-glibc2.39",
+  "project_root": "/home/duzc/data/agent_wafer",
+  "python": "3.11.14 (main, Oct 28 2025, 12:11:26) [Clang 20.1.4 ]",
+  "python_executable": "/home/duzc/data/agent_wafer/.venv/bin/python3",
+  "torch_cuda_version": "12.4",
+  "torch_version": "2.5.1+cu124"
+}
