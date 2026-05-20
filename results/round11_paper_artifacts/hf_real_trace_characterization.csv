@@ -1,0 +1,16 @@
+engine,workload,node_type,timing_source,timing_quality,records,jobs,prompt_tokens_mean,completion_tokens_mean,total_ms_mean,ttft_ms_mean,decode_ms_mean,real_trace_fraction,fallback_fraction
+hf,debate,aggregate,hf_generate_walltime,walltime_approx,5,5,2048.0,16.0,803.7413696289062,205.4451690673828,598.2962005615234,1.0,0.0
+hf,debate,llm_call,hf_generate_walltime,walltime_approx,40,5,2048.0,16.0,804.9626693725586,217.14037857055663,587.8222908020019,1.0,0.0
+hf,moa,llm_call,hf_generate_walltime,walltime_approx,40,5,2048.0,16.0,804.6543823242188,206.08008460998536,598.5742977142334,1.0,0.0
+hf,moa,summarize,hf_generate_walltime,walltime_approx,5,5,2048.0,16.0,804.80927734375,206.08800659179687,598.7212707519532,1.0,0.0
+hf,planner_worker_tool,aggregate,hf_generate_walltime,walltime_approx,5,5,2048.0,16.0,805.867724609375,207.01734008789063,598.8503845214843,1.0,0.0
+hf,planner_worker_tool,llm_call,hf_generate_walltime,walltime_approx,45,5,2048.0,16.0,805.6382364908854,206.80633375379773,598.8319027370877,1.0,0.0
+hf,planner_worker_tool,summarize,hf_generate_walltime,walltime_approx,5,5,2048.0,16.0,805.8328369140625,206.83786315917968,598.9949737548828,1.0,0.0
+hf,planner_worker_tool,tool_call,synthetic_model,walltime_approx,20,5,32.0,16.0,1000.0,0.0,1000.0,0.0,0.0
+hf,rag_like,llm_call,hf_generate_walltime,walltime_approx,20,5,2048.0,16.0,810.0685241699218,210.9993698120117,599.0691543579102,1.0,0.0
+hf,rag_like,summarize,hf_generate_walltime,walltime_approx,5,5,2048.0,16.0,810.7234252929687,211.25865783691407,599.4647674560547,1.0,0.0
+hf,rag_like,tool_call,synthetic_model,walltime_approx,5,5,64.0,128.0,1000.0,0.0,1000.0,0.0,0.0
+hf,rag_like,verify,hf_generate_walltime,walltime_approx,5,5,2048.0,16.0,809.7565185546875,210.9292022705078,598.8273162841797,1.0,0.0
+hf,swe_like,llm_call,hf_generate_walltime,walltime_approx,30,5,2048.0,16.0,809.7032836914062,210.02017517089843,599.6831085205079,1.0,0.0
+hf,swe_like,summarize,hf_generate_walltime,walltime_approx,5,5,2048.0,16.0,810.7327758789063,211.5754608154297,599.1573150634765,1.0,0.0
+hf,swe_like,verify,hf_generate_walltime,walltime_approx,5,5,2048.0,16.0,811.9651977539063,209.7622802734375,602.2029174804687,1.0,0.0
