@@ -99,19 +99,23 @@ def main() -> None:
 
     pre_meta = git_metadata()
     enforce_clean_git_tree(args.clean_required, args.allow_dirty)
-    out = init_run_dir(args.out, {"run_type": "round10_paper_artifacts", "source_results": args.source_results, "seed": args.seed})
+    round_label = "round11" if "round11" in str(args.out) else ("round10" if "round10" in str(args.out) else "round")
+    out = init_run_dir(args.out, {"run_type": f"{round_label}_paper_artifacts", "source_results": args.source_results, "seed": args.seed})
     sources = _split(args.source_results)
     fig_dir = out / "figures"
     src_dir = out / "figures_source"
     fig_dir.mkdir(exist_ok=True)
     src_dir.mkdir(exist_ok=True)
 
-    global_df = _copy_csv(sources, "simulation/global_simulation_summary.csv", out / "global_simulation_summary.csv", "round10_global")
+    global_df = _copy_csv(sources, "simulation/global_simulation_summary.csv", out / "global_simulation_summary.csv", "global")
     gap_df = _copy_csv(sources, "simulation/existing_cache_gap_summary.csv", out / "existing_cache_gap_summary.csv", "existing_cache_gap")
     accounting_df = _copy_csv(sources, "simulation/accounting_summary.csv", out / "accounting_summary.csv", "attention_accounting")
     accounting_delta = _copy_csv(sources, "simulation/accounting_delta.csv", out / "accounting_delta.csv", "attention_accounting")
     regime_df = _copy_csv(sources, "simulation/controlled_regime_classification.csv", out / "controlled_regime_classification.csv", "controlled_regime")
     controlled_df = _copy_csv(sources, "simulation/controlled_regime_summary.csv", out / "controlled_regime_summary.csv", "controlled_regime")
+    validation_df = _copy_csv(sources, "simulation/controlled_workload_validation.csv", out / "controlled_workload_validation.csv", "controlled_regime")
+    policy_decisions_df = _copy_csv(sources, "simulation/policy_decisions.csv", out / "policy_decisions.csv", "controlled_regime")
+    policy_summary_df = _copy_csv(sources, "simulation/policy_summary.csv", out / "policy_summary.csv", "controlled_regime")
     staging_df = _copy_csv(sources, "simulation/transient_staging_summary.csv", out / "transient_staging_summary.csv", "transient_staging")
     fit_quality = _find(sources, "simulation/shared_attention_fit_quality.json", "shared_attention_fit")
     if fit_quality:
@@ -123,6 +127,11 @@ def main() -> None:
     for label, src in [("hf", hf_status), ("vllm", vllm_status)]:
         if src:
             shutil.copy2(src, out / f"{label}_trace_completion_status.json")
+            trace_src_dir = src.parent
+            _copy_csv([trace_src_dir], "simulation/real_trace_characterization.csv", out / f"{label}_real_trace_characterization.csv")
+            _copy_csv([trace_src_dir], "simulation/real_trace_token_distribution.csv", out / f"{label}_real_trace_token_distribution.csv")
+            _copy_csv([trace_src_dir], "simulation/real_trace_latency_distribution.csv", out / f"{label}_real_trace_latency_distribution.csv")
+            _copy_csv([trace_src_dir], "simulation/real_trace_prefix_reuse_stats.csv", out / f"{label}_real_trace_prefix_reuse_stats.csv")
         else:
             missing = _find(sources, "MISSING_BASELINE.md", label)
             if missing:
@@ -145,7 +154,21 @@ def main() -> None:
     counts.to_csv(src_dir / "fig7_regime_map.csv", index=False)
     _plot_bar(counts, "regime_label", "count", fig_dir / "fig7_regime_map", "Controlled regime classification")
     _plot_bar(staging_df, "baseline", "jct_p99_ms", fig_dir / "fig_appendix_transient_staging", "Transient staging design-space")
-    for fig_id in ["fig1_system_overview", "fig5_cohort_policy_comparison", "fig6_affinity_placement_ablation", "fig9_hf_vllm_trace_status"]:
+    if not policy_summary_df.empty and "chosen_policy" in policy_summary_df.columns:
+        policy_summary_df.groupby("chosen_policy", as_index=False)["num_decisions"].sum().to_csv(src_dir / "fig5_adaptive_policy_comparison.csv", index=False)
+        _plot_bar(pd.read_csv(src_dir / "fig5_adaptive_policy_comparison.csv"), "chosen_policy", "num_decisions", fig_dir / "fig5_adaptive_policy_comparison", "Adaptive policy mix")
+    else:
+        pd.DataFrame().to_csv(src_dir / "fig5_adaptive_policy_comparison.csv", index=False)
+        _plot_bar(pd.DataFrame({"x": ["missing"], "y": [0]}), "x", "y", fig_dir / "fig5_adaptive_policy_comparison", "Adaptive policy mix")
+    trace_status_df = pd.DataFrame(
+        [
+            {"engine": "hf", "completed_jobs": read_json(hf_status).get("completed_jobs", 0) if hf_status else 0},
+            {"engine": "vllm", "completed_jobs": read_json(vllm_status).get("completed_jobs", 0) if vllm_status else 0},
+        ]
+    )
+    trace_status_df.to_csv(src_dir / "fig9_hf_vllm_trace_status.csv", index=False)
+    _plot_bar(trace_status_df, "engine", "completed_jobs", fig_dir / "fig9_hf_vllm_trace_status", "Real H100 mini trace characterization")
+    for fig_id in ["fig1_system_overview", "fig6_affinity_placement_ablation"]:
         placeholder = pd.DataFrame([{"note": "See corresponding CSV/report; generated placeholder for paper package completeness."}])
         placeholder.to_csv(src_dir / f"{fig_id}.csv", index=False)
         _plot_bar(pd.DataFrame({"x": ["status"], "y": [1]}), "x", "y", fig_dir / fig_id, fig_id.replace("_", " "))
@@ -157,6 +180,8 @@ def main() -> None:
         sub = accounting_delta[(accounting_delta["metric"] == "jct_p99_ms") & (accounting_delta["accounting_mode"] == "stage_amortized")]
         accounting_ok = bool((sub["delta_pct_vs_cohort_stage"].abs() <= 0.10).all()) if not sub.empty else True
     has_beneficial = bool((regime_df.get("regime_label", pd.Series(dtype=str)) == "waferagent_latency_beneficial").any()) if not regime_df.empty else False
+    validation_pass = bool(validation_df.get("pass", pd.Series(dtype=bool)).astype(bool).all()) if not validation_df.empty else False
+    adaptive_non_worse = bool((pd.to_numeric(regime_df.get("waferagent_vs_apc_jct_p99_delta_pct", pd.Series(dtype=float)), errors="coerce") <= 0.05).all()) if not regime_df.empty else False
     hf_completed = bool(hf_status and read_json(hf_status).get("completed_jobs", 0) > 0)
     vllm_completed = bool(vllm_status and read_json(vllm_status).get("completed_jobs", 0) > 0)
     report = {
@@ -167,6 +192,9 @@ def main() -> None:
             "shared_attention_accounting_main_mode": main_mode,
         },
         "evidence_ready": {
+            "controlled_workload_validation_pass": validation_pass,
+            "adaptive_non_worse_all_regimes": adaptive_non_worse,
+            "adaptive_has_beneficial_regime": has_beneficial,
             "existing_prefix_cache_gap_supported": not gap_df.empty,
             "regime_map_has_non_low_reuse_beneficial_region": has_beneficial,
             "hf_mini_trace_completed": hf_completed,
@@ -174,8 +202,12 @@ def main() -> None:
             "hf_or_vllm_mini_trace_completed_or_formally_missing_with_timeout_logs": hf_completed or vllm_completed or (out / "hf_MISSING_BASELINE.md").exists() or (out / "vllm_MISSING_BASELINE.md").exists(),
         },
         "claim_ready": {
+            "end_to_end_latency_claim": bool(validation_pass and adaptive_non_worse and has_beneficial),
+            "traffic_reduction_claim": not gap_df.empty,
+            "universal_superiority_claim": False,
             "latency_safe_cohort_supported_or_traffic_only_demoted": True,
             "affinity_placement_supported": True,
+            "replication_claim": False,
             "replication_demoted": True,
         },
         "demoted": {
@@ -191,6 +223,8 @@ def main() -> None:
         and report["method_ready"]["main_sim_uses_cohort_stage_or_conservative_accounting"]
         and report["evidence_ready"]["existing_prefix_cache_gap_supported"]
         and report["evidence_ready"]["hf_or_vllm_mini_trace_completed_or_formally_missing_with_timeout_logs"]
+        and validation_pass
+        and adaptive_non_worse
         and has_beneficial
     )
     def _mean_metric(df: pd.DataFrame, baseline: str, metric: str) -> float | None:
@@ -209,7 +243,9 @@ def main() -> None:
     apc_decode = _mean_metric(gap_df, "apc_like", "decode_shared_kv_read_bytes")
     wafer_decode = _mean_metric(gap_df, "waferagent_latency_safe", "decode_shared_kv_read_bytes")
     apc_p99 = _mean_metric(global_df, "apc_like", "jct_p99_ms")
-    wafer_p99 = _mean_metric(global_df, "waferagent_latency_safe", "jct_p99_ms")
+    wafer_p99 = _mean_metric(global_df, "waferagent_adaptive", "jct_p99_ms")
+    if wafer_p99 is None:
+        wafer_p99 = _mean_metric(global_df, "waferagent_latency_safe", "jct_p99_ms")
     accounting_stage_delta = None
     if not accounting_delta.empty and {"metric", "accounting_mode", "delta_pct_vs_cohort_stage"}.issubset(accounting_delta.columns):
         sub = accounting_delta[(accounting_delta["metric"] == "jct_p99_ms") & (accounting_delta["accounting_mode"] == "stage_amortized")]
@@ -277,6 +313,19 @@ def main() -> None:
                 "notes": "Main paper mode is cohort_stage or conservative accounting.",
             },
             {
+                "claim": "Adaptive non-worse controlled regimes",
+                "status": "supported" if validation_pass and adaptive_non_worse else "failed",
+                "primary_metric": "max_waferagent_adaptive_vs_apc_jct_p99_delta_pct",
+                "baseline": "apc_like",
+                "waferagent_value": float(pd.to_numeric(regime_df.get("waferagent_vs_apc_jct_p99_delta_pct", pd.Series(dtype=float)), errors="coerce").max()) if not regime_df.empty else None,
+                "comparison_value": 0.05,
+                "delta_pct": None,
+                "threshold": "<= 0.05 in every controlled regime",
+                "evidence_file": "controlled_regime_classification.csv",
+                "figure_id": "Fig6",
+                "notes": "Adaptive policy should fall back when WaferAgent mechanisms are not beneficial.",
+            },
+            {
                 "claim": "Controlled high-reuse beneficial regime",
                 "status": "supported" if has_beneficial else "failed",
                 "primary_metric": "num_waferagent_latency_beneficial_regimes",
@@ -307,7 +356,7 @@ def main() -> None:
     claims.to_csv(out / "paper_claims_matrix.csv", index=False)
     write_json(out / "report.json", report)
     lines = [
-        "# WaferAgent Round 10 Paper-Facing Artifacts",
+        f"# WaferAgent {round_label.capitalize()} Paper-Facing Artifacts",
         "",
         "All wafer numbers are trace-driven wafer-scale simulator results, not real wafer hardware measurements.",
         "",
