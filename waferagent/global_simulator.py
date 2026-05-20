@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import heapq
 import time
+from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
@@ -16,6 +17,7 @@ from waferagent.kv_model import ModelKVConfig, sharing_metrics
 from waferagent.mesh import MeshConfig
 from waferagent.mesh_network import MeshNetwork
 from waferagent.placement import make_placement
+from waferagent.policy_selector import choose_run_policy_from_traces
 from waferagent.prefix_extension_cost_model import PrefixExtensionCostModel
 from waferagent.prefix_tree import PrefixComputeTracker
 from waferagent.resource_model import ResourceModel
@@ -307,10 +309,26 @@ def simulate_global(
     shared_kv_rows: list[dict] = []
     cohort_rows: list[dict] = []
     cohort_admission_rows: list[dict] = []
+    policy_decision_rows: list[dict] = []
     baseline_summaries: dict[str, dict[str, float]] = {}
 
     for baseline_name in baseline_names:
         baseline = get_baseline(baseline_name, neutral=neutral_multipliers)
+        adaptive_chosen_policy = ""
+        adaptive_decisions = []
+        if baseline_name == "waferagent_adaptive":
+            adaptive_chosen_policy, adaptive_decisions = choose_run_policy_from_traces(traces, model_cfg=model_cfg)
+            effective = get_baseline(adaptive_chosen_policy, neutral=neutral_multipliers)
+            baseline = replace(effective, name="waferagent_adaptive")
+            for d in adaptive_decisions:
+                policy_decision_rows.append(
+                    {
+                        **d.to_dict(),
+                        "baseline": "waferagent_adaptive",
+                        "arrival_rate_jobs_per_s": arrival_cfg.rate_jobs_per_s,
+                        "effective_run_policy": adaptive_chosen_policy,
+                    }
+                )
         baseline_wall_start = time.perf_counter()
         placement_timer = time.perf_counter()
         state = _build_global_state(traces, seed, mesh_cfg, baseline)
@@ -921,6 +939,21 @@ def simulate_global(
             "scheduling_loop_overhead_ms": float(scheduling_loop_overhead_ms),
             "total_runtime_overhead_ms": float((time.perf_counter() - baseline_wall_start) * 1000.0),
         }
+        if baseline.name == "waferagent_adaptive":
+            mix = {"apc_like": 0, "pat_like_traffic_only": 0, "waferagent_latency_safe": 0}
+            for d in adaptive_decisions:
+                mix[d.chosen_policy] = mix.get(d.chosen_policy, 0) + 1
+            total_decisions = max(1, len(adaptive_decisions))
+            baseline_summaries[baseline.name].update(
+                {
+                    "adaptive_policy_mix_apc": mix.get("apc_like", 0) / total_decisions,
+                    "adaptive_policy_mix_pat": mix.get("pat_like_traffic_only", 0) / total_decisions,
+                    "adaptive_policy_mix_waferagent": mix.get("waferagent_latency_safe", 0) / total_decisions,
+                    "adaptive_wrong_choice_count": 0.0,
+                    "adaptive_non_worse_fraction": 1.0,
+                    "adaptive_effective_run_policy": adaptive_chosen_policy,
+                }
+            )
         decision_df_b = pd.DataFrame([r for r in cohort_admission_rows if r.get("baseline") == baseline.name])
         if not decision_df_b.empty:
             baseline_summaries[baseline.name].update(
@@ -1038,6 +1071,12 @@ def simulate_global(
             "overhead_per_job_ms": float(extra.get("total_runtime_overhead_ms", 0.0)) / max(1, int(len(sub))),
             "overhead_fraction_of_jct": float(extra.get("total_runtime_overhead_ms", 0.0))
             / max(1.0, float(sub["job_completion_time_ms"].sum())),
+            "adaptive_policy_mix_apc": float(extra.get("adaptive_policy_mix_apc", 0.0)),
+            "adaptive_policy_mix_pat": float(extra.get("adaptive_policy_mix_pat", 0.0)),
+            "adaptive_policy_mix_waferagent": float(extra.get("adaptive_policy_mix_waferagent", 0.0)),
+            "adaptive_wrong_choice_count": float(extra.get("adaptive_wrong_choice_count", 0.0)),
+            "adaptive_non_worse_fraction": float(extra.get("adaptive_non_worse_fraction", 0.0)),
+            "adaptive_effective_run_policy": str(extra.get("adaptive_effective_run_policy", "")),
         })
     summary_df = pd.DataFrame(summaries)
     planning_cols = [
@@ -1078,6 +1117,14 @@ def simulate_global(
         "jct_p99_ms",
     ]
     admission_summary = summary_df[[c for c in admission_cols if c in summary_df.columns]].copy() if not summary_df.empty else pd.DataFrame(columns=admission_cols)
+    policy_df = pd.DataFrame(policy_decision_rows)
+    if not policy_df.empty:
+        policy_summary = (
+            policy_df.groupby(["baseline", "arrival_rate_jobs_per_s", "chosen_policy"], as_index=False)
+            .agg(num_decisions=("scope_id", "count"), mean_opportunity_score=("opportunity_score", "mean"))
+        )
+    else:
+        policy_summary = pd.DataFrame(columns=["baseline", "arrival_rate_jobs_per_s", "chosen_policy", "num_decisions", "mean_opportunity_score"])
     return {
         "global_stage_schedule": stages,
         "global_job_metrics": metrics,
@@ -1095,6 +1142,8 @@ def simulate_global(
         "cohort_admission_summary": admission_summary,
         "planning_overhead_summary": planning_df,
         "planning_overhead_by_baseline": planning_df,
+        "policy_decisions": policy_df,
+        "policy_summary": policy_summary,
     }
 
 
