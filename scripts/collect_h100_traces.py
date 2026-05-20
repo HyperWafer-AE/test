@@ -171,6 +171,49 @@ def main() -> None:
                 "timing_quality",
             ]
         ).to_csv(out / "simulation" / "vllm_batch_layer_metrics.csv", index=False)
+    trace_rows = [tr.to_dict() for tr in traces]
+    trace_df = pd.DataFrame(trace_rows)
+    if not trace_df.empty:
+        trace_df.assign(
+            is_llm=~trace_df["node_type"].eq("tool_call"),
+        ).groupby(["engine", "workload", "node_type", "timing_source", "timing_quality"], as_index=False).agg(
+            records=("node_id", "count"),
+            jobs=("job_id", "nunique"),
+            prompt_tokens_mean=("input_tokens", "mean"),
+            completion_tokens_mean=("output_tokens", "mean"),
+            total_ms_mean=("total_ms", "mean"),
+            ttft_ms_mean=("ttft_ms", "mean"),
+            decode_ms_mean=("decode_ms", "mean"),
+            real_trace_fraction=("real_trace", "mean"),
+            fallback_fraction=("fallback_used", "mean"),
+        ).to_csv(out / "simulation" / "real_trace_characterization.csv", index=False)
+        trace_df[["job_id", "workload", "node_id", "node_type", "input_tokens", "output_tokens", "shared_prefix_token_len", "private_prefix_token_len"]].to_csv(
+            out / "simulation" / "real_trace_token_distribution.csv", index=False
+        )
+        trace_df[["job_id", "workload", "node_id", "node_type", "ttft_ms", "decode_ms", "total_ms", "timing_source", "timing_quality"]].to_csv(
+            out / "simulation" / "real_trace_latency_distribution.csv", index=False
+        )
+        prefix_rows = []
+        for (workload, prefix_id), sub in trace_df.explode("shared_prefix_ids").dropna(subset=["shared_prefix_ids"]).groupby(["workload", "shared_prefix_ids"]):
+            prefix_rows.append(
+                {
+                    "workload": workload,
+                    "shared_prefix_id": prefix_id,
+                    "jobs": int(sub["job_id"].nunique()),
+                    "nodes": int(sub["node_id"].nunique()),
+                    "shared_prefix_tokens_max": int(sub["shared_prefix_token_len"].max()),
+                    "cross_job_reused": bool(sub["job_id"].nunique() > 1),
+                }
+            )
+        pd.DataFrame(prefix_rows).to_csv(out / "simulation" / "real_trace_prefix_reuse_stats.csv", index=False)
+    else:
+        for name in [
+            "real_trace_characterization.csv",
+            "real_trace_token_distribution.csv",
+            "real_trace_latency_distribution.csv",
+            "real_trace_prefix_reuse_stats.csv",
+        ]:
+            pd.DataFrame().to_csv(out / "simulation" / name, index=False)
     write_json(out / "model_selection.json", {"model_name": model_name, "model_path": model_path, "engine_used": runner_cfg.engine, "fallback_count": sum(1 for tr in traces if tr.fallback_used)})
     tables = write_characterization_tables(graphs, traces, out / "simulation", model_cfg)
     shared_rows = []
