@@ -22,6 +22,8 @@ def test_policy_selector_falls_back_for_low_opportunity():
     decision = choose_shared_kv_policy(_obj(128, 1, 8))
     assert decision.chosen_policy == "apc_like"
     assert decision.opportunity_score <= 0
+    assert "predicted_apc_jct_ms" not in decision.to_dict()
+    assert "predicted_apc_cost_proxy" in decision.to_dict()
 
 
 def test_policy_selector_enables_waferagent_for_high_opportunity():

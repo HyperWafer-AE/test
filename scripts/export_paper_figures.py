@@ -97,7 +97,11 @@ def main() -> None:
 
     pre_meta = git_metadata()
     enforce_clean_git_tree(args.clean_required, args.allow_dirty)
-    round_label = "round11" if "round11" in str(args.out) else ("round10" if "round10" in str(args.out) else "round")
+    round_label = (
+        "round12"
+        if "round12" in str(args.out)
+        else ("round11" if "round11" in str(args.out) else ("round10" if "round10" in str(args.out) else "round"))
+    )
     out = init_run_dir(args.out, {"run_type": f"{round_label}_paper_artifacts", "source_results": args.source_results, "seed": args.seed})
     sources = _split(args.source_results)
     fig_dir = out / "figures"
@@ -116,8 +120,17 @@ def main() -> None:
     regime_df = _copy_csv(sources, "simulation/controlled_regime_classification.csv", out / "controlled_regime_classification.csv", "controlled_regime")
     controlled_df = _copy_csv(sources, "simulation/controlled_regime_summary.csv", out / "controlled_regime_summary.csv", "controlled_regime")
     validation_df = _copy_csv(sources, "simulation/controlled_workload_validation.csv", out / "controlled_workload_validation.csv", "controlled_regime")
+    validation_nodes_df = _copy_csv(sources, "simulation/controlled_workload_validation_nodes.csv", out / "controlled_workload_validation_nodes.csv", "controlled_regime")
     policy_decisions_df = _copy_csv(sources, "simulation/policy_decisions.csv", out / "policy_decisions.csv", "controlled_regime")
+    policy_assignments_df = _copy_csv(sources, "simulation/policy_assignments.csv", out / "policy_assignments.csv", "controlled_regime")
+    policy_stage_df = _copy_csv(sources, "simulation/policy_effective_stage_map.csv", out / "policy_effective_stage_map.csv", "controlled_regime")
     policy_summary_df = _copy_csv(sources, "simulation/policy_summary.csv", out / "policy_summary.csv", "controlled_regime")
+    policy_eval_df = _copy_csv(sources, "simulation/policy_prediction_eval.csv", out / "policy_prediction_eval.csv", "controlled_regime")
+    policy_oracle_df = _copy_csv(sources, "simulation/policy_oracle_labels.csv", out / "policy_oracle_labels.csv", "controlled_regime")
+    for split in ["train", "validation", "test"]:
+        _copy_csv(sources, f"simulation/policy_{split}_regimes.csv", out / f"policy_{split}_regimes.csv", "controlled_regime")
+    mechanism_summary_df = _copy_csv(sources, "simulation/mechanism_attribution_summary.csv", out / "mechanism_attribution_summary.csv", "controlled_regime")
+    mechanism_delta_df = _copy_csv(sources, "simulation/mechanism_attribution_delta.csv", out / "mechanism_attribution_delta.csv", "controlled_regime")
     staging_df = _copy_csv(sources, "simulation/transient_staging_summary.csv", out / "transient_staging_summary.csv", "transient_staging")
     fit_quality = _find(sources, "simulation/shared_attention_fit_quality.json", "shared_attention_fit")
     if fit_quality:
@@ -202,8 +215,17 @@ def main() -> None:
         beneficial_mask = pd.Series(dtype=bool)
         high_reuse_beneficial_mask = pd.Series(dtype=bool)
     has_beneficial = bool(high_reuse_beneficial_mask.any()) if not regime_df.empty else False
-    validation_pass = bool(validation_df.get("pass", pd.Series(dtype=bool)).astype(bool).all()) if not validation_df.empty else False
+    validation_pass = bool(not validation_df.empty and validation_df.get("pass", pd.Series(dtype=bool)).astype(bool).all())
     adaptive_non_worse = bool((pd.to_numeric(regime_df.get("waferagent_vs_apc_jct_p99_delta_pct", pd.Series(dtype=float)), errors="coerce") <= 0.05).all()) if not regime_df.empty else False
+    heldout_pass = False
+    if not policy_eval_df.empty and {"split", "pass"}.issubset(policy_eval_df.columns):
+        test_eval = policy_eval_df[policy_eval_df["split"] == "test"]
+        heldout_pass = bool(not test_eval.empty and test_eval["pass"].astype(bool).all())
+    mechanism_pass = bool(
+        not mechanism_summary_df.empty
+        and "primary_benefit_source" in mechanism_summary_df.columns
+        and not (mechanism_summary_df["primary_benefit_source"] == "unexplained_benefit").all()
+    )
     hf_completed = bool(hf_status and read_json(hf_status).get("completed_jobs", 0) > 0)
     vllm_completed = bool(vllm_status and read_json(vllm_status).get("completed_jobs", 0) > 0)
     report = {
@@ -217,6 +239,8 @@ def main() -> None:
             "controlled_workload_validation_pass": validation_pass,
             "adaptive_non_worse_all_regimes": adaptive_non_worse,
             "adaptive_has_beneficial_regime": has_beneficial,
+            "adaptive_policy_heldout_pass": heldout_pass,
+            "mechanism_attribution_pass": mechanism_pass,
             "existing_prefix_cache_gap_supported": not gap_df.empty,
             "regime_map_has_non_low_reuse_beneficial_region": has_beneficial,
             "hf_mini_trace_completed": hf_completed,
@@ -246,6 +270,8 @@ def main() -> None:
         and report["evidence_ready"]["existing_prefix_cache_gap_supported"]
         and report["evidence_ready"]["hf_or_vllm_mini_trace_completed_or_formally_missing_with_timeout_logs"]
         and validation_pass
+        and heldout_pass
+        and mechanism_pass
         and adaptive_non_worse
         and has_beneficial
     )
@@ -359,6 +385,34 @@ def main() -> None:
                 "evidence_file": "controlled_regime_classification.csv",
                 "figure_id": "Fig7",
                 "notes": "If failed, end-to-end latency claim must be narrowed to traffic reduction/preliminary serving gains.",
+            },
+            {
+                "claim": "Held-out adaptive policy validation",
+                "status": "supported" if heldout_pass else "failed",
+                "primary_metric": "test_fraction_non_worse_than_apc_within_5pct",
+                "baseline": "apc_like",
+                "waferagent_value": float(policy_eval_df.loc[policy_eval_df["split"] == "test", "fraction_non_worse_than_apc_within_5pct"].iloc[0])
+                if not policy_eval_df.empty and (policy_eval_df["split"] == "test").any()
+                else None,
+                "comparison_value": 0.95,
+                "delta_pct": None,
+                "threshold": ">= 0.95 and max slowdown <= 0.10",
+                "evidence_file": "policy_prediction_eval.csv",
+                "figure_id": "Fig5",
+                "notes": "Config-level train/validation/test split; adaptive is judged on held-out controlled regimes.",
+            },
+            {
+                "claim": "Mechanism attribution",
+                "status": "supported" if mechanism_pass else "failed",
+                "primary_metric": "benefit_source_classification",
+                "baseline": "controlled_ablation_variants",
+                "waferagent_value": int((mechanism_summary_df.get("primary_benefit_source", pd.Series(dtype=str)) != "unexplained_benefit").sum()) if not mechanism_summary_df.empty else 0,
+                "comparison_value": len(mechanism_summary_df),
+                "delta_pct": None,
+                "threshold": "beneficial regimes cannot all be unexplained",
+                "evidence_file": "mechanism_attribution_summary.csv",
+                "figure_id": "Fig6",
+                "notes": "Separates shared-KV decode, placement/mesh, prefill-cache, and mixed benefits.",
             },
             {
                 "claim": "Persistent replication / transient staging headline",

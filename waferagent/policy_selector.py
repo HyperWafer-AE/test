@@ -12,9 +12,9 @@ from waferagent.trace_schema import TraceRecord
 class PolicyDecision:
     scope_id: str
     chosen_policy: str
-    predicted_apc_jct_ms: float
-    predicted_pat_jct_ms: float
-    predicted_waferagent_jct_ms: float
+    predicted_apc_cost_proxy: float
+    predicted_pat_cost_proxy: float
+    predicted_waferagent_cost_proxy: float
     opportunity_score: float
     reason: str
 
@@ -81,9 +81,9 @@ def choose_shared_kv_policy(
     return PolicyDecision(
         scope_id=shared_kv_object.prefix_id,
         chosen_policy=chosen,
-        predicted_apc_jct_ms=predicted_apc,
-        predicted_pat_jct_ms=predicted_pat,
-        predicted_waferagent_jct_ms=predicted_wafer,
+        predicted_apc_cost_proxy=predicted_apc,
+        predicted_pat_cost_proxy=predicted_pat,
+        predicted_waferagent_cost_proxy=predicted_wafer,
         opportunity_score=score,
         reason=reason,
     )

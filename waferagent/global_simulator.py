@@ -2,13 +2,13 @@ from __future__ import annotations
 
 import heapq
 import time
-from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
 import pandas as pd
 
 from waferagent.arrival import ArrivalConfig, generate_arrivals
+from waferagent.adaptive_executor import effective_policy, policy_for_stage
 from waferagent.baselines import get_baseline
 from waferagent.calibrated_cost_model import CalibratedCostModel
 from waferagent.cohort_admission import CohortAdmissionConfig, evaluate_cohort_candidate
@@ -17,7 +17,7 @@ from waferagent.kv_model import ModelKVConfig, sharing_metrics
 from waferagent.mesh import MeshConfig
 from waferagent.mesh_network import MeshNetwork
 from waferagent.placement import make_placement
-from waferagent.policy_selector import choose_run_policy_from_traces
+from waferagent.policy_assignment import PolicyAssignment, build_policy_assignments
 from waferagent.prefix_extension_cost_model import PrefixExtensionCostModel
 from waferagent.prefix_tree import PrefixComputeTracker
 from waferagent.resource_model import ResourceModel
@@ -310,25 +310,13 @@ def simulate_global(
     cohort_rows: list[dict] = []
     cohort_admission_rows: list[dict] = []
     policy_decision_rows: list[dict] = []
+    policy_assignment_rows: list[dict] = []
+    policy_stage_rows: list[dict] = []
     baseline_summaries: dict[str, dict[str, float]] = {}
 
     for baseline_name in baseline_names:
         baseline = get_baseline(baseline_name, neutral=neutral_multipliers)
-        adaptive_chosen_policy = ""
-        adaptive_decisions = []
-        if baseline_name == "waferagent_adaptive":
-            adaptive_chosen_policy, adaptive_decisions = choose_run_policy_from_traces(traces, model_cfg=model_cfg)
-            effective = get_baseline(adaptive_chosen_policy, neutral=neutral_multipliers)
-            baseline = replace(effective, name="waferagent_adaptive")
-            for d in adaptive_decisions:
-                policy_decision_rows.append(
-                    {
-                        **d.to_dict(),
-                        "baseline": "waferagent_adaptive",
-                        "arrival_rate_jobs_per_s": arrival_cfg.rate_jobs_per_s,
-                        "effective_run_policy": adaptive_chosen_policy,
-                    }
-                )
+        adaptive_assignments: dict[str, PolicyAssignment] = {}
         baseline_wall_start = time.perf_counter()
         placement_timer = time.perf_counter()
         state = _build_global_state(traces, seed, mesh_cfg, baseline)
@@ -380,8 +368,47 @@ def simulate_global(
         )
         replication_planning_overhead_ms = (time.perf_counter() - replication_timer) * 1000.0
         shared_by_prefix = {obj.prefix_id: obj for obj in shared_objects}
+        if baseline.name == "waferagent_adaptive":
+            adaptive_assignments = build_policy_assignments(
+                shared_objects,
+                resource_state={"queue_pressure": max(0.0, arrival_cfg.rate_jobs_per_s / 16.0)},
+            )
+            for assignment in adaptive_assignments.values():
+                row = {
+                    **assignment.to_dict(),
+                    "baseline": baseline.name,
+                    "arrival_rate_jobs_per_s": arrival_cfg.rate_jobs_per_s,
+                }
+                policy_assignment_rows.append(row)
+                policy_decision_rows.append(
+                    {
+                        "scope_id": assignment.prefix_id,
+                        "chosen_policy": assignment.selected_policy,
+                        "predicted_apc_cost_proxy": 0.0,
+                        "predicted_pat_cost_proxy": 0.0,
+                        "predicted_waferagent_cost_proxy": assignment.predicted_delta_ms_vs_apc,
+                        "opportunity_score": assignment.opportunity_score,
+                        "reason": assignment.reason,
+                        "baseline": baseline.name,
+                        "arrival_rate_jobs_per_s": arrival_cfg.rate_jobs_per_s,
+                    }
+                )
+
+        def _adaptive_selected_policy(stage: Stage) -> str:
+            return policy_for_stage(stage, adaptive_assignments) if baseline.name == "waferagent_adaptive" else baseline.name
+
+        def _effective_for_stage(stage: Stage):
+            return effective_policy(_adaptive_selected_policy(stage))
+
+        placement_objects = [
+            obj
+            for obj in shared_objects
+            if baseline.name != "waferagent_adaptive"
+            or adaptive_assignments.get(obj.prefix_id, None) is not None
+            and adaptive_assignments[obj.prefix_id].selected_policy == "waferagent_latency_safe"
+        ]
         if baseline.shared_kv_placement or baseline.oracle:
-            for obj in shared_objects:
+            for obj in placement_objects:
                 regions = [r for r in [obj.home_region, *obj.replica_regions] if r]
                 for i, region in enumerate(regions):
                     sram.materialize(
@@ -408,12 +435,30 @@ def simulate_global(
         policy = baseline.cohort_admission_policy
         cost_aware_cohort = policy == "latency_safe"
         traffic_only_cohort = policy == "traffic_only" or baseline.oracle
-        cohort_cfg = CohortConfig(
-            enabled=baseline.shared_kv_decode_cohort or baseline.oracle,
-            max_group_size=2 if cost_aware_cohort else 16,
-            max_wait_ms=0.0 if cost_aware_cohort else 2.0,
-            max_critical_wait_ms=0.0 if cost_aware_cohort else 0.2,
-        )
+        def _cohort_settings(stage: Stage) -> tuple[CohortConfig, bool, bool]:
+            if baseline.name == "waferagent_adaptive":
+                eff = _effective_for_stage(stage)
+                local_cost_aware = eff.latency_safe_admission
+                return (
+                    CohortConfig(
+                        enabled=eff.decode_cohort,
+                        max_group_size=2 if local_cost_aware else 16,
+                        max_wait_ms=0.0 if local_cost_aware else 2.0,
+                        max_critical_wait_ms=0.0 if local_cost_aware else 0.2,
+                    ),
+                    local_cost_aware,
+                    eff.traffic_only_admission,
+                )
+            return (
+                CohortConfig(
+                    enabled=baseline.shared_kv_decode_cohort or baseline.oracle,
+                    max_group_size=2 if cost_aware_cohort else 16,
+                    max_wait_ms=0.0 if cost_aware_cohort else 2.0,
+                    max_critical_wait_ms=0.0 if cost_aware_cohort else 0.2,
+                ),
+                cost_aware_cohort,
+                traffic_only_cohort,
+            )
         cohorts: list[DecodeCohort] = []
         cohort_stats: dict[str, float] = {}
         attention_stats = estimate_shared_attention_cost(
@@ -477,6 +522,8 @@ def simulate_global(
             _ready_time, _prio, sid = heapq.heappop(ready)
             if sid in end_times:
                 continue
+            first_stage = stages[sid]
+            cohort_cfg, local_cost_aware_cohort, local_traffic_only_cohort = _cohort_settings(first_stage)
             cohort_timer = time.perf_counter()
             batch_sids, cohort, admission = _try_form_event_cohort(
                 ready,
@@ -491,8 +538,8 @@ def simulate_global(
                 event_cohort_index,
                 _ready_time,
                 bytes_per_ms,
-                cost_aware_cohort,
-                cost_aware_cohort,
+                local_cost_aware_cohort,
+                local_cost_aware_cohort,
             )
             decode_cohort_planning_overhead_ms += (time.perf_counter() - cohort_timer) * 1000.0
             if admission is not None:
@@ -502,16 +549,16 @@ def simulate_global(
                         "baseline": baseline.name,
                         "arrival_rate_jobs_per_s": arrival_cfg.rate_jobs_per_s,
                         "event_driven": True,
+                        "selected_policy": _adaptive_selected_policy(first_stage),
                     }
                 )
-            first_stage = stages[sid]
             if (
                 cohort is None
                 and first_stage.stage_type == "decode"
                 and cohort_cfg.enabled
                 and first_stage.shared_prefix_ids
                 and sid not in held_for_cohort
-                and not cost_aware_cohort
+                and not local_cost_aware_cohort
             ):
                 obj = shared_by_prefix.get(first_stage.shared_prefix_ids[0])
                 if obj is not None and len(obj.decode_users) >= cohort_cfg.min_group_size:
@@ -540,6 +587,20 @@ def simulate_global(
 
             for member_index, sid in enumerate(batch_sids):
                 stage = stages[sid]
+                selected_policy = _adaptive_selected_policy(stage)
+                stage_effective = _effective_for_stage(stage)
+                policy_stage_rows.append(
+                    {
+                        "baseline": baseline.name,
+                        "arrival_rate_jobs_per_s": arrival_cfg.rate_jobs_per_s,
+                        "global_stage_id": sid,
+                        "job_id": stage.job_id,
+                        "parent_node_id": stage.parent_node_id,
+                        "stage_type": stage.stage_type,
+                        "prefix_id": stage.shared_prefix_ids[0] if stage.shared_prefix_ids else "",
+                        "selected_policy": selected_policy,
+                    }
+                )
                 job_id = stage.job_id
                 graph = graphs[job_id]
                 node = graph.nodes[stage.parent_node_id]
@@ -563,7 +624,13 @@ def simulate_global(
                 shared_target_region = sram.region_id_for_tile(placement.tile)
                 prediction_quality = ""
                 pending: list[tuple[tuple[int, int], int]] = []
-                if stage.stage_type == "prefill" and baseline.kv_sharing:
+                kv_sharing_enabled = baseline.kv_sharing if baseline.name != "waferagent_adaptive" else stage_effective.kv_sharing
+                shared_kv_placement_enabled = (
+                    baseline.shared_kv_placement or baseline.oracle
+                    if baseline.name != "waferagent_adaptive"
+                    else stage_effective.shared_kv_placement
+                )
+                if stage.stage_type == "prefill" and kv_sharing_enabled:
                     for pid in stage.shared_prefix_ids:
                         block_bytes = int(stage.shared_prefix_token_len * model_cfg.kv_bytes_per_token)
                         prob = tool_resume_probability(graph, stage.parent_node_id)
@@ -580,7 +647,10 @@ def simulate_global(
                         pin=(baseline.tool_ttl or baseline.oracle) and prob > 0,
                         compute_store=bool(decision and decision.shared_tokens_computed > 0),
                         allow_cross_region_materialize=baseline.oracle
-                        or baseline.shared_kv_replication_policy not in {"none", "no_replication"},
+                        or (
+                            shared_kv_placement_enabled
+                            and baseline.shared_kv_replication_policy not in {"none", "no_replication"}
+                        ),
                     )
                         if access.hit:
                             sram_read += block_bytes
@@ -628,11 +698,15 @@ def simulate_global(
                             * int(stage.shared_prefix_token_len)
                             * int(model_cfg.kv_bytes_per_token)
                         )
-                        if cohort is not None and cohort.shared_kv_id == stage.shared_prefix_ids[0]:
+                        if (
+                            cohort is not None
+                            and cohort.shared_kv_id == stage.shared_prefix_ids[0]
+                            and stage_effective.decode_cohort
+                        ):
                             shared_actual_metric_bytes = cohort_shared_bytes_total if member_index == 0 else 0
                             shared_bytes_for_duration = cohort_shared_bytes_total / max(1, len(batch_sids))
-                            shared_route_bytes = 0 if cost_aware_cohort else (cohort_shared_bytes_total if member_index == 0 else 0)
-                            if cost_aware_cohort and member_index == 0:
+                            shared_route_bytes = 0 if stage_effective.latency_safe_admission else (cohort_shared_bytes_total if member_index == 0 else 0)
+                            if stage_effective.latency_safe_admission and member_index == 0:
                                 sram_read += int(cohort_shared_bytes_total)
                             query_transfer_bytes = int(max(1, stage.output_tokens) * 256)
                             merge_bytes = int(max(1, stage.output_tokens) * 64 * 0.03)
@@ -697,8 +771,11 @@ def simulate_global(
                 elif stage.stage_type == "decode" and shared_route_bytes > 0 and stage.shared_prefix_ids:
                     pid = stage.shared_prefix_ids[0]
                     block_bytes = int(stage.shared_prefix_token_len * model_cfg.kv_bytes_per_token)
-                    if baseline.shared_kv_placement or baseline.oracle:
-                        allow_replica = baseline.oracle or baseline.shared_kv_replication_policy not in {"none", "no_replication"}
+                    if shared_kv_placement_enabled or baseline.oracle:
+                        allow_replica = baseline.oracle or (
+                            shared_kv_placement_enabled
+                            and baseline.shared_kv_replication_policy not in {"none", "no_replication"}
+                        )
                         access = sram.access(
                             job_id,
                             sid,
@@ -941,9 +1018,9 @@ def simulate_global(
         }
         if baseline.name == "waferagent_adaptive":
             mix = {"apc_like": 0, "pat_like_traffic_only": 0, "waferagent_latency_safe": 0}
-            for d in adaptive_decisions:
-                mix[d.chosen_policy] = mix.get(d.chosen_policy, 0) + 1
-            total_decisions = max(1, len(adaptive_decisions))
+            for assignment in adaptive_assignments.values():
+                mix[assignment.selected_policy] = mix.get(assignment.selected_policy, 0) + 1
+            total_decisions = max(1, len(adaptive_assignments))
             baseline_summaries[baseline.name].update(
                 {
                     "adaptive_policy_mix_apc": mix.get("apc_like", 0) / total_decisions,
@@ -951,7 +1028,7 @@ def simulate_global(
                     "adaptive_policy_mix_waferagent": mix.get("waferagent_latency_safe", 0) / total_decisions,
                     "adaptive_wrong_choice_count": 0.0,
                     "adaptive_non_worse_fraction": 1.0,
-                    "adaptive_effective_run_policy": adaptive_chosen_policy,
+                    "adaptive_effective_run_policy": "per_prefix_mixed",
                 }
             )
         decision_df_b = pd.DataFrame([r for r in cohort_admission_rows if r.get("baseline") == baseline.name])
@@ -1118,6 +1195,8 @@ def simulate_global(
     ]
     admission_summary = summary_df[[c for c in admission_cols if c in summary_df.columns]].copy() if not summary_df.empty else pd.DataFrame(columns=admission_cols)
     policy_df = pd.DataFrame(policy_decision_rows)
+    policy_assignments_df = pd.DataFrame(policy_assignment_rows)
+    policy_stage_df = pd.DataFrame(policy_stage_rows)
     if not policy_df.empty:
         policy_summary = (
             policy_df.groupby(["baseline", "arrival_rate_jobs_per_s", "chosen_policy"], as_index=False)
@@ -1143,6 +1222,8 @@ def simulate_global(
         "planning_overhead_summary": planning_df,
         "planning_overhead_by_baseline": planning_df,
         "policy_decisions": policy_df,
+        "policy_assignments": policy_assignments_df,
+        "policy_effective_stage_map": policy_stage_df,
         "policy_summary": policy_summary,
     }
 

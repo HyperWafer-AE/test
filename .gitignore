@@ -45,3 +45,6 @@ results/round10_*/
 results/round11_*/
 !results/round11_paper_artifacts/
 !results/round11_paper_artifacts/**
+results/round12_*/
+!results/round12_paper_artifacts/
+!results/round12_paper_artifacts/**

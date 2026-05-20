@@ -135,3 +135,32 @@ def strict_controlled_validation_rows(
                 }
             )
     return rows
+
+
+def strict_controlled_validation_summary_rows(
+    graphs: list[AgentGraph],
+    cfg: StrictControlledSharedKVConfig,
+) -> list[dict[str, object]]:
+    node_rows = strict_controlled_validation_rows(graphs, cfg)
+    prefixes = {
+        pid
+        for graph in graphs
+        for node in graph.nodes.values()
+        for pid in node.shared_prefix_ids
+    }
+    expected_unique_prefixes = (cfg.num_jobs + cfg.reuse_group_size - 1) // cfg.reuse_group_size
+    return [
+        {
+            "reuse_group_size": cfg.reuse_group_size,
+            "shared_prefix_tokens": cfg.shared_prefix_tokens,
+            "private_suffix_tokens": cfg.private_suffix_tokens,
+            "decode_tokens": cfg.decode_tokens,
+            "num_agents_per_job": cfg.num_agents_per_job,
+            "num_jobs": cfg.num_jobs,
+            "num_nodes_checked": len(node_rows),
+            "all_nodes_match_requested_tokens": bool(node_rows) and all(bool(row["pass"]) for row in node_rows),
+            "unique_prefixes_observed": len(prefixes),
+            "expected_unique_prefixes": expected_unique_prefixes,
+            "pass": bool(node_rows) and all(bool(row["pass"]) for row in node_rows) and len(prefixes) == expected_unique_prefixes,
+        }
+    ]
