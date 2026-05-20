@@ -68,12 +68,10 @@ def choose_shared_kv_policy(
     # wafer-aware execution even with many consumers; short-prefix, short-decode
     # groups should conservatively fall back.
     low_queue_pressure = queue_pressure < 0.5
+    moderate_or_lower_queue_pressure = queue_pressure <= 1.0
     high_queue_risk = (
-        low_queue_pressure
-        and (
-            (token_len < 8192 and avg_decode_tokens <= 64 and consumers >= 16)
-            or (consumers >= 32 and avg_decode_tokens <= 256)
-        )
+        (moderate_or_lower_queue_pressure and token_len < 8192 and avg_decode_tokens <= 64 and consumers >= 16)
+        or (low_queue_pressure and consumers >= 32 and avg_decode_tokens <= 256)
     )
     if high_queue_risk:
         chosen = "apc_like"
