@@ -57,6 +57,23 @@ def _copy_csv(sources: list[Path], rel: str, dst: Path, contains: str | None = N
     return pd.DataFrame()
 
 
+def _copy_prefer_csv(
+    sources: list[Path],
+    rel: str,
+    dst: Path,
+    preferred_contains: str,
+    fallback_contains: str,
+) -> pd.DataFrame:
+    src = _find(sources, rel, preferred_contains)
+    if src is None:
+        src = _find(sources, rel, fallback_contains)
+    if src:
+        shutil.copy2(src, dst)
+        return pd.read_csv(dst)
+    pd.DataFrame().to_csv(dst, index=False)
+    return pd.DataFrame()
+
+
 def _plot_bar(df: pd.DataFrame, x: str, y: str, out: Path, title: str) -> None:
     fig, ax = plt.subplots(figsize=(6.0, 3.2))
     if not df.empty and x in df.columns and y in df.columns:
@@ -122,9 +139,9 @@ def main() -> None:
     validation_df = _copy_csv(sources, "simulation/controlled_workload_validation.csv", out / "controlled_workload_validation.csv", "controlled_regime")
     validation_nodes_df = _copy_csv(sources, "simulation/controlled_workload_validation_nodes.csv", out / "controlled_workload_validation_nodes.csv", "controlled_regime")
     policy_decisions_df = _copy_csv(sources, "simulation/policy_decisions.csv", out / "policy_decisions.csv", "controlled_regime")
-    policy_assignments_df = _copy_csv(sources, "simulation/policy_assignments.csv", out / "policy_assignments.csv", "controlled_regime")
-    policy_stage_df = _copy_csv(sources, "simulation/policy_effective_stage_map.csv", out / "policy_effective_stage_map.csv", "controlled_regime")
-    policy_summary_df = _copy_csv(sources, "simulation/policy_summary.csv", out / "policy_summary.csv", "controlled_regime")
+    policy_assignments_df = _copy_prefer_csv(sources, "simulation/policy_assignments.csv", out / "policy_assignments.csv", "adaptive_policy_sweep", "controlled_regime")
+    policy_stage_df = _copy_prefer_csv(sources, "simulation/policy_effective_stage_map.csv", out / "policy_effective_stage_map.csv", "adaptive_policy_sweep", "controlled_regime")
+    policy_summary_df = _copy_prefer_csv(sources, "simulation/policy_summary.csv", out / "policy_summary.csv", "adaptive_policy_sweep", "controlled_regime")
     policy_eval_df = _copy_csv(sources, "simulation/policy_prediction_eval.csv", out / "policy_prediction_eval.csv", "controlled_regime")
     policy_oracle_df = _copy_csv(sources, "simulation/policy_oracle_labels.csv", out / "policy_oracle_labels.csv", "controlled_regime")
     for split in ["train", "validation", "test"]:
@@ -226,6 +243,13 @@ def main() -> None:
         and "primary_benefit_source" in mechanism_summary_df.columns
         and not (mechanism_summary_df["primary_benefit_source"] == "unexplained_benefit").all()
     )
+    mixed_policy_pass = False
+    if not policy_summary_df.empty and {"baseline", "chosen_policy", "num_decisions"}.issubset(policy_summary_df.columns):
+        mix = policy_summary_df[
+            (policy_summary_df["baseline"] == "waferagent_adaptive")
+            & (pd.to_numeric(policy_summary_df["num_decisions"], errors="coerce") > 0)
+        ]
+        mixed_policy_pass = bool(mix["chosen_policy"].nunique() >= 2)
     hf_completed = bool(hf_status and read_json(hf_status).get("completed_jobs", 0) > 0)
     vllm_completed = bool(vllm_status and read_json(vllm_status).get("completed_jobs", 0) > 0)
     report = {
@@ -240,6 +264,7 @@ def main() -> None:
             "adaptive_non_worse_all_regimes": adaptive_non_worse,
             "adaptive_has_beneficial_regime": has_beneficial,
             "adaptive_policy_heldout_pass": heldout_pass,
+            "per_object_adaptive_policy_mixed": mixed_policy_pass,
             "mechanism_attribution_pass": mechanism_pass,
             "existing_prefix_cache_gap_supported": not gap_df.empty,
             "regime_map_has_non_low_reuse_beneficial_region": has_beneficial,
@@ -271,6 +296,7 @@ def main() -> None:
         and report["evidence_ready"]["hf_or_vllm_mini_trace_completed_or_formally_missing_with_timeout_logs"]
         and validation_pass
         and heldout_pass
+        and mixed_policy_pass
         and mechanism_pass
         and adaptive_non_worse
         and has_beneficial
@@ -400,6 +426,26 @@ def main() -> None:
                 "evidence_file": "policy_prediction_eval.csv",
                 "figure_id": "Fig5",
                 "notes": "Config-level train/validation/test split; adaptive is judged on held-out controlled regimes.",
+            },
+            {
+                "claim": "Per-object adaptive policy mix",
+                "status": "supported" if mixed_policy_pass else "failed",
+                "primary_metric": "num_distinct_policies_in_waferagent_adaptive_run",
+                "baseline": "waferagent_adaptive",
+                "waferagent_value": int(
+                    policy_summary_df[
+                        (policy_summary_df.get("baseline", pd.Series(dtype=str)) == "waferagent_adaptive")
+                        & (pd.to_numeric(policy_summary_df.get("num_decisions", pd.Series(dtype=float)), errors="coerce") > 0)
+                    ]["chosen_policy"].nunique()
+                )
+                if not policy_summary_df.empty and "chosen_policy" in policy_summary_df.columns
+                else 0,
+                "comparison_value": 2,
+                "delta_pct": None,
+                "threshold": ">= 2 policies in one adaptive run",
+                "evidence_file": "policy_summary.csv",
+                "figure_id": "Fig5",
+                "notes": "Verifies adaptive execution is not a run-level baseline replacement.",
             },
             {
                 "claim": "Mechanism attribution",
