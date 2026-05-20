@@ -102,6 +102,7 @@ def decisions_from_traces(
     traces: Iterable[TraceRecord],
     model_cfg: ModelKVConfig | None = None,
     cfg: PolicySelectorConfig | None = None,
+    resource_state: dict[str, float] | None = None,
 ) -> list[PolicyDecision]:
     model_cfg = model_cfg or ModelKVConfig()
     grouped: dict[str, dict[str, object]] = {}
@@ -136,7 +137,7 @@ def decisions_from_traces(
             choose_shared_kv_policy(
                 obj,
                 graph_context={"mesh_distance_to_consumers": max(1.0, len(jobs))},
-                resource_state={"queue_pressure": 0.0},
+                resource_state=resource_state or {"queue_pressure": 0.0},
                 cfg=cfg,
             )
         )

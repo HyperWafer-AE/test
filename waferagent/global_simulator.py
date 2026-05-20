@@ -321,7 +321,11 @@ def simulate_global(
         adaptive_assignments: dict[str, PolicyAssignment] = {}
         preliminary_adaptive_decisions = []
         if baseline_name == "waferagent_adaptive":
-            preliminary_adaptive_decisions = decisions_from_traces(traces, model_cfg=model_cfg)
+            preliminary_adaptive_decisions = decisions_from_traces(
+                traces,
+                model_cfg=model_cfg,
+                resource_state={"queue_pressure": max(0.0, arrival_cfg.rate_jobs_per_s / 16.0)},
+            )
             if preliminary_adaptive_decisions and all(d.chosen_policy == "apc_like" for d in preliminary_adaptive_decisions):
                 baseline = replace(get_baseline("apc_like", neutral=neutral_multipliers), name="waferagent_adaptive")
         baseline_wall_start = time.perf_counter()
