@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import shlex
 import shutil
 from datetime import datetime, timezone
 from pathlib import Path
@@ -15,6 +16,22 @@ from waferagent.utils import enforce_clean_git_tree, file_sha256, finalize_run_d
 
 def _split(text: str) -> list[Path]:
     return [Path(x.strip()) for x in str(text).split(",") if x.strip()]
+
+
+def _cmd_value(command: str, flag: str) -> str:
+    try:
+        parts = shlex.split(command)
+    except ValueError:
+        parts = command.split()
+    if flag in parts:
+        idx = parts.index(flag)
+        if idx + 1 < len(parts):
+            return parts[idx + 1]
+    prefix = flag + "="
+    for part in parts:
+        if part.startswith(prefix):
+            return part[len(prefix):]
+    return ""
 
 
 def _find(sources: list[Path], rel: str, contains: str | None = None) -> Path | None:
@@ -309,7 +326,18 @@ def main() -> None:
     for src in sources:
         meta = read_json(src / "metadata.json") if (src / "metadata.json").exists() else {}
         cmd = (src / "command.txt").read_text(encoding="utf-8", errors="replace").strip() if (src / "command.txt").exists() else ""
-        source_rows.append({"source_result_dir": src.as_posix(), "source_git_commit": meta.get("git_commit", ""), "source_command": cmd})
+        source_rows.append(
+            {
+                "source_result_dir": src.as_posix(),
+                "source_git_commit": meta.get("git_commit", ""),
+                "source_git_dirty": meta.get("git_dirty", ""),
+                "source_command": cmd,
+                "source_arrival_mode": _cmd_value(cmd, "--arrival-mode"),
+                "source_arrival_rates": _cmd_value(cmd, "--arrival-rate-jobs-per-s"),
+                "source_duration_source": _cmd_value(cmd, "--duration-source"),
+                "source_accounting_mode": _cmd_value(cmd, "--shared-attention-accounting"),
+            }
+        )
     pd.DataFrame(source_rows).to_csv(out / "source_run_manifest.csv", index=False)
     files = []
     for p in sorted(x for x in out.rglob("*") if x.is_file()):
