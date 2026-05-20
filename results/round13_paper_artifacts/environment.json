@@ -1,0 +1,30 @@
+{
+  "command": "scripts/export_round13_paper_artifacts.py --source-results results/round13_randomized_regime_sweep,results/round13_adaptive_semantics_audit,results/round13_policy_selector_v2,results/round13_policy_selector_v2_eval,results/round12_paper_artifacts,results/round12_characterization_h100_hf_10jobs,results/round12_characterization_h100_vllm_10jobs --out results/round13_paper_artifacts --clean-required --allow-dirty",
+  "cuda_available": "True",
+  "env": {
+    "CUDA_CACHE_PATH": "/home/duzc/data/agent_wafer/.cache/cuda",
+    "HF_HOME": "/home/duzc/data/agent_wafer/.cache/huggingface",
+    "MODEL_ZOO": "/data2/model_zoo",
+    "PROJECT_ROOT": "/home/duzc/data/agent_wafer",
+    "RAY_TMPDIR": "/home/duzc/data/agent_wafer/tmp/ray",
+    "TMPDIR": "/home/duzc/data/agent_wafer/tmp",
+    "TOKENIZERS_PARALLELISM": "false",
+    "TRANSFORMERS_CACHE": "/home/duzc/data/agent_wafer/.cache/huggingface",
+    "TRITON_CACHE_DIR": "/home/duzc/data/agent_wafer/.cache/triton",
+    "UV_CACHE_DIR": "/home/duzc/data/agent_wafer/.cache/uv",
+    "UV_PYTHON_INSTALL_DIR": "/home/duzc/data/agent_wafer/.cache/uv/python",
+    "VLLM_CACHE_ROOT": "/home/duzc/data/agent_wafer/.cache/vllm",
+    "VLLM_WORKER_MULTIPROC_METHOD": "spawn",
+    "XDG_CACHE_HOME": "/home/duzc/data/agent_wafer/.cache"
+  },
+  "git_commit": "584860a2d6dbac4bf06756a93c810a5e7128c393",
+  "gpu_count": "2",
+  "model_zoo": "/data2/model_zoo",
+  "nvidia_smi": "NVIDIA H100 PCIe, 81559 MiB, 570.211.01\nNVIDIA H100 PCIe, 81559 MiB, 570.211.01",
+  "platform": "Linux-6.17.0-19-generic-x86_64-with-glibc2.39",
+  "project_root": "/home/duzc/data/agent_wafer",
+  "python": "3.11.14 (main, Oct 28 2025, 12:11:26) [Clang 20.1.4 ]",
+  "python_executable": "/home/duzc/data/agent_wafer/.venv/bin/python3",
+  "torch_cuda_version": "12.4",
+  "torch_version": "2.5.1+cu124"
+}

@@ -1,0 +1,20 @@
+{
+  "feature_columns": [
+    "shared_prefix_tokens",
+    "private_suffix_tokens",
+    "decode_tokens",
+    "num_consumers",
+    "intra_job_reuse_count",
+    "cross_job_reuse_count",
+    "reuse_group_size",
+    "fan_in_degree",
+    "estimated_queue_pressure",
+    "shared_kv_read_bytes_without_cohort",
+    "expected_cohort_size"
+  ],
+  "model_type": "threshold_table_v2",
+  "thresholds": {
+    "apc_threshold": 15.322942940357725,
+    "waferagent_threshold": 15.422942940357725
+  }
+}

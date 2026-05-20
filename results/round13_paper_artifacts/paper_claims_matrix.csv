@@ -1,0 +1,5 @@
+claim,status,primary_metric,evidence_file
+Randomized held-out adaptive policy,supported,test_fraction_non_worse_than_apc_within_5pct,randomized_policy_prediction_eval.csv
+Adaptive execution semantics audit,supported,semantic_violations,adaptive_semantics_summary.csv
+Mechanism attribution unexplained bound,supported,unexplained_pct,mechanism_attribution_summary.csv
+Real trace scope,mini_sanity,trace_completion_status,hf/vllm trace status or missing baseline

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import gzip
 import json
 import shlex
 import shutil
@@ -31,10 +32,23 @@ def _find(sources: list[Path], rel: str, contains: str | None = None) -> Path | 
     return None
 
 
-def _copy_csv(sources: list[Path], rel: str, dst: Path, contains: str | None = None) -> pd.DataFrame:
+def _copy_csv(
+    sources: list[Path],
+    rel: str,
+    dst: Path,
+    contains: str | None = None,
+    max_rows: int | None = None,
+    full_gzip_dst: Path | None = None,
+) -> pd.DataFrame:
     src = _find(sources, rel, contains)
     if src:
-        shutil.copy2(src, dst)
+        if full_gzip_dst is not None:
+            with src.open("rb") as fin, gzip.open(full_gzip_dst, "wb", compresslevel=9) as fout:
+                shutil.copyfileobj(fin, fout)
+        if max_rows is None:
+            shutil.copy2(src, dst)
+        else:
+            pd.read_csv(src, nrows=max_rows).to_csv(dst, index=False)
         return pd.read_csv(dst)
     pd.DataFrame().to_csv(dst, index=False)
     return pd.DataFrame()
@@ -115,13 +129,27 @@ def main() -> None:
     validation = _copy_csv(sources, "simulation/controlled_workload_validation.csv", out / "controlled_workload_validation.csv", "randomized_regime")
     validation_nodes = _copy_csv(sources, "simulation/controlled_workload_validation_nodes.csv", out / "controlled_workload_validation_nodes.csv", "randomized_regime")
     policy_assignments = _copy_csv(sources, "simulation/policy_assignments.csv", out / "policy_assignments.csv", "randomized_regime")
-    policy_stage = _copy_csv(sources, "simulation/policy_effective_stage_map.csv", out / "policy_effective_stage_map.csv", "randomized_regime")
+    policy_stage = _copy_csv(
+        sources,
+        "simulation/policy_effective_stage_map.csv",
+        out / "policy_effective_stage_map.csv",
+        "randomized_regime",
+        max_rows=50000,
+        full_gzip_dst=out / "policy_effective_stage_map.csv.gz",
+    )
     policy_summary = _copy_csv(sources, "simulation/policy_summary.csv", out / "policy_summary.csv", "randomized_regime")
     fair_summary = _copy_csv(sources, "simulation/fair_baseline_summary.csv", out / "fair_baseline_summary.csv", "randomized_regime")
     fair_delta = _copy_csv(sources, "simulation/fair_baseline_delta.csv", out / "fair_baseline_delta.csv", "randomized_regime")
     mechanism_summary = _copy_csv(sources, "simulation/mechanism_attribution_summary.csv", out / "mechanism_attribution_summary.csv", "randomized_regime")
     mechanism_delta = _copy_csv(sources, "simulation/mechanism_attribution_delta.csv", out / "mechanism_attribution_delta.csv", "randomized_regime")
-    semantics_detail = _copy_csv(sources, "simulation/adaptive_stage_semantics.csv", out / "adaptive_stage_semantics.csv", "adaptive_semantics")
+    semantics_detail = _copy_csv(
+        sources,
+        "simulation/adaptive_stage_semantics.csv",
+        out / "adaptive_stage_semantics.csv",
+        "adaptive_semantics",
+        max_rows=50000,
+        full_gzip_dst=out / "adaptive_stage_semantics.csv.gz",
+    )
     semantics_summary = _copy_csv(sources, "simulation/adaptive_semantics_summary.csv", out / "adaptive_semantics_summary.csv", "adaptive_semantics")
     v2_eval = _copy_csv(sources, "simulation/policy_selector_v2_eval.csv", out / "policy_selector_v2_eval.csv", "policy_selector_v2_eval")
     v2_decisions = _copy_csv(sources, "simulation/policy_selector_v2_decisions.csv", out / "policy_selector_v2_decisions.csv", "policy_selector_v2_eval")
@@ -210,6 +238,7 @@ def main() -> None:
     (out / "report.md").write_text(
         "# WaferAgent Round13 Paper Artifacts\n\n"
         "All wafer performance numbers are trace-driven wafer-scale simulator results, not real wafer hardware measurements.\n\n"
+        "The stage-level semantic audit CSVs in this artifact directory are bounded samples; full stage maps are included as `.csv.gz` files.\n\n"
         f"```json\n{json.dumps(report, indent=2, sort_keys=True)}\n```\n",
         encoding="utf-8",
     )
