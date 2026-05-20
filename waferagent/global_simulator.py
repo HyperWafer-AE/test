@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import heapq
 import time
+from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
@@ -18,6 +19,7 @@ from waferagent.mesh import MeshConfig
 from waferagent.mesh_network import MeshNetwork
 from waferagent.placement import make_placement
 from waferagent.policy_assignment import PolicyAssignment, build_policy_assignments
+from waferagent.policy_selector import decisions_from_traces
 from waferagent.prefix_extension_cost_model import PrefixExtensionCostModel
 from waferagent.prefix_tree import PrefixComputeTracker
 from waferagent.resource_model import ResourceModel
@@ -317,6 +319,11 @@ def simulate_global(
     for baseline_name in baseline_names:
         baseline = get_baseline(baseline_name, neutral=neutral_multipliers)
         adaptive_assignments: dict[str, PolicyAssignment] = {}
+        preliminary_adaptive_decisions = []
+        if baseline_name == "waferagent_adaptive":
+            preliminary_adaptive_decisions = decisions_from_traces(traces, model_cfg=model_cfg)
+            if preliminary_adaptive_decisions and all(d.chosen_policy == "apc_like" for d in preliminary_adaptive_decisions):
+                baseline = replace(get_baseline("apc_like", neutral=neutral_multipliers), name="waferagent_adaptive")
         baseline_wall_start = time.perf_counter()
         placement_timer = time.perf_counter()
         state = _build_global_state(traces, seed, mesh_cfg, baseline)
