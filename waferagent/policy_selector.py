@@ -62,7 +62,14 @@ def choose_shared_kv_policy(
     predicted_apc = max(0.0, benefit)
     predicted_pat = max(0.0, benefit - shared_kv_read_saved_ms * 0.45)
     predicted_wafer = max(0.0, predicted_apc - score)
-    if score <= 0:
+    # Large shared objects with many simultaneous consumers are precisely where
+    # the current simulator shows queue/SRAM amplification. The adaptive policy
+    # must be allowed to fall back instead of blindly enabling WaferAgent.
+    high_queue_risk = token_len >= 8192 and consumers >= 16
+    if high_queue_risk:
+        chosen = "apc_like"
+        reason = "high_queue_and_sram_risk"
+    elif score <= 0:
         chosen = "apc_like"
         reason = "non_positive_opportunity"
     elif score < cfg.min_waferagent_score_ms:
