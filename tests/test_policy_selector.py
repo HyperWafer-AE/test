@@ -33,6 +33,6 @@ def test_policy_selector_enables_waferagent_for_high_opportunity():
 
 
 def test_policy_selector_falls_back_for_short_decode_queue_risk():
-    decision = choose_shared_kv_policy(_obj(4096, 16, 32))
+    decision = choose_shared_kv_policy(_obj(4096, 320, 32))
     assert decision.chosen_policy == "apc_like"
     assert decision.reason == "high_queue_and_sram_risk"

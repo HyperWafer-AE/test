@@ -70,9 +70,9 @@ def choose_shared_kv_policy(
     low_queue_pressure = queue_pressure < 0.5
     moderate_or_lower_queue_pressure = queue_pressure <= 1.0
     high_queue_risk = (
-        (moderate_or_lower_queue_pressure and token_len < 8192 and avg_decode_tokens <= 64 and consumers >= 16)
-        or (low_queue_pressure and consumers >= 32 and avg_decode_tokens <= 256)
-        or (moderate_or_lower_queue_pressure and consumers >= 320 and avg_decode_tokens <= 600)
+        (moderate_or_lower_queue_pressure and token_len < 8192 and avg_decode_tokens <= 64 and consumers >= 320)
+        or (low_queue_pressure and consumers >= 320 and avg_decode_tokens <= 256)
+        or (moderate_or_lower_queue_pressure and token_len >= 8192 and consumers >= 320 and avg_decode_tokens <= 600)
     )
     if high_queue_risk:
         chosen = "apc_like"

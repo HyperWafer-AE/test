@@ -5,7 +5,7 @@ from waferagent.controlled_workloads import (
 )
 from waferagent.kv_model import ModelKVConfig
 from waferagent.policy_assignment import build_policy_assignments
-from waferagent.shared_kv import extract_shared_kv_objects
+from waferagent.shared_kv import SharedKVObject
 
 
 def test_controlled_validation_summary_is_nonempty_and_passes():
@@ -27,13 +27,37 @@ def test_controlled_validation_summary_is_nonempty_and_passes():
 
 
 def test_policy_assignments_can_mix_apc_and_waferagent():
-    cfg_fallback = StrictControlledSharedKVConfig(4, 4, 4096, 128, 32, 16, seed=1)
-    cfg_high = StrictControlledSharedKVConfig(4, 4, 8192, 128, 512, 4, seed=2)
-    objects = []
-    for cfg in [cfg_fallback, cfg_high]:
-        for graph in generate_strict_controlled_shared_kv_graphs(cfg):
-            extracted, _ = extract_shared_kv_objects(graph, ModelKVConfig(), {}, None)
-            objects.extend(extracted)
+    model = ModelKVConfig()
+    fallback_users = [f"f{i}" for i in range(320)]
+    high_users = [f"h{i}" for i in range(16)]
+    objects = [
+        SharedKVObject(
+            prefix_id="fallback",
+            token_len=4096,
+            kv_bytes=4096 * model.kv_bytes_per_token,
+            logical_users=fallback_users,
+            decode_users=fallback_users,
+            producer_node=None,
+            first_use_step=0,
+            last_use_step=1,
+            expected_decode_tokens={u: 32 for u in fallback_users},
+            expected_decode_steps=32,
+            candidate_regions=[],
+        ),
+        SharedKVObject(
+            prefix_id="high",
+            token_len=8192,
+            kv_bytes=8192 * model.kv_bytes_per_token,
+            logical_users=high_users,
+            decode_users=high_users,
+            producer_node=None,
+            first_use_step=0,
+            last_use_step=1,
+            expected_decode_tokens={u: 512 for u in high_users},
+            expected_decode_steps=512,
+            candidate_regions=[],
+        ),
+    ]
     assignments = build_policy_assignments(objects)
     chosen = {a.selected_policy for a in assignments.values()}
     assert "apc_like" in chosen
