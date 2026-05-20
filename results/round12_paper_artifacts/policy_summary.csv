@@ -1,0 +1,3 @@
+baseline,arrival_rate_jobs_per_s,chosen_policy,num_decisions,mean_opportunity_score
+waferagent_adaptive,4.0,apc_like,1,3186379.692294848
+waferagent_adaptive,4.0,waferagent_latency_safe,1,88509.801035968

@@ -1,0 +1,7 @@
+reuse_group_size,shared_prefix_tokens,private_suffix_tokens,decode_tokens,num_agents_per_job,arrival_rate_jobs_per_s,split,oracle_best_policy,oracle_best_jct_p99_ms,apc_like_jct_p99_ms,waferagent_adaptive_jct_p99_ms,adaptive_regret_ms,adaptive_slowdown_vs_apc,oracle_speedup_vs_apc,adaptive_speedup_vs_apc,oracle_beneficial,adaptive_beneficial,adaptive_non_worse_than_apc_within_5pct,adaptive_within_5pct_of_oracle
+1,512,128,32,2,2.0,test,waferagent_latency_safe,8.051039994466919,49.17049247446721,8.051039994466919,0.0,-0.8362627749020902,0.8362627749020902,0.8362627749020902,True,True,True,True
+1,512,128,32,2,16.0,test,waferagent_latency_safe,8.051039994466919,49.17049247446685,8.051039994466919,0.0,-0.836262774902089,0.836262774902089,0.836262774902089,True,True,True,True
+8,512,128,512,2,2.0,test,waferagent_latency_safe,22.505621724962044,707.8701686049626,22.505621724962044,0.0,-0.9682065684879545,0.9682065684879545,0.9682065684879545,True,True,True,True
+8,512,128,512,2,16.0,test,waferagent_latency_safe,22.505621724961827,707.8701686049618,22.505621724961827,0.0,-0.9682065684879547,0.9682065684879547,0.9682065684879547,True,True,True,True
+64,32768,128,512,16,2.0,test,apc_like,662165.0977115267,662165.0977115267,662165.0977115267,0.0,0.0,0.0,0.0,False,False,True,True
+64,32768,128,512,16,16.0,test,apc_like,662165.0977115267,662165.0977115267,662165.0977115267,0.0,0.0,0.0,0.0,False,False,True,True

@@ -1,0 +1,7 @@
+arrival_rate_jobs_per_s,variant,metric,full_value,variant_value,delta_abs,delta_pct,paper_claim,threshold,supported,metric_variant
+4.0,no_affinity_placement,mesh_total_traffic_bytes,279709937152.0,48906661633024.0,48626951695872.0,173.8477802790651,placement/mesh,0.05,True,mesh_total_traffic_bytes@4.0
+4.0,no_affinity_placement,jct_p99_ms,1494.3848575524507,222363.5003687612,220869.11551120877,147.79935328905498,tail latency,0.05,True,jct_p99_ms@4.0
+8.0,no_affinity_placement,mesh_total_traffic_bytes,1151051427328.0,54278793305088.0,53127741877760.0,46.15583684309258,placement/mesh,0.05,True,mesh_total_traffic_bytes@8.0
+8.0,no_affinity_placement,jct_p99_ms,7103.580649568296,244369.99136935905,237266.4107197908,33.40095966028204,tail latency,0.05,True,jct_p99_ms@8.0
+16.0,no_affinity_placement,mesh_total_traffic_bytes,1187021778432.0,51716509768704.0,50529487990272.0,42.56829058100272,placement/mesh,0.05,True,mesh_total_traffic_bytes@16.0
+16.0,no_affinity_placement,jct_p99_ms,11904.771373674172,233635.4123340552,221730.64096038105,18.6253590262732,tail latency,0.05,True,jct_p99_ms@16.0
