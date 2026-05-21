@@ -27,6 +27,11 @@ def actual_query_tile_sizes(num_agents: int, query_tile_size: int) -> List[int]:
     return sizes
 
 
+def actual_query_tiles(num_agents: int, max_tile_size: int) -> List[int]:
+    """Compatibility alias using the paper terminology."""
+    return actual_query_tile_sizes(num_agents, max_tile_size)
+
+
 @dataclass(frozen=True)
 class ModelConfig:
     model_path: str = "/data1/duzc/model/model/LLM-Research/Meta-Llama-3___1-8B-Instruct"

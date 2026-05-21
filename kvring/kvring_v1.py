@@ -87,6 +87,7 @@ def simulate_kvring_v1(
             "throughput_bound_latency_s": max(network_cycles, sram_cycles) / hardware.clock_hz,
             "critical_path_latency_s": setup_cycles / hardware.clock_hz,
             "attention_stage_proxy_latency_s": max(network_cycles, sram_cycles) / hardware.clock_hz,
+            "latency_bound_used": "throughput_bound",
             "network_latency_s": network_cycles / hardware.clock_hz,
             "sram_latency_s": sram_cycles / hardware.clock_hz,
             "compute_latency_s": 0.0,
@@ -96,6 +97,8 @@ def simulate_kvring_v1(
             "local_suffix_latency_s": 0.0,
             "region_capacity_violation": region_capacity_violation,
             "valid_capacity": not region_capacity_violation,
+            "region_capacity_bytes": hardware.region_capacity_bytes,
+            "peak_region_sram_bytes": max(region_sram.values()),
             "capacity_violation_reason": (
                 f"peak region SRAM {max(region_sram.values())} exceeds capacity {hardware.region_capacity_bytes}"
                 if region_capacity_violation

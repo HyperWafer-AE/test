@@ -67,8 +67,11 @@ def simulate_replicate_all(
             "setup_route_max_hops": max_setup_hops,
             "logical_decode_queries": workload.total_decode_steps,
             "query_tiles": workload.total_decode_steps,
+            "latency_bound_used": "throughput_bound",
             "region_capacity_violation": region_capacity_violation,
             "valid_capacity": not region_capacity_violation,
+            "region_capacity_bytes": hardware.region_capacity_bytes,
+            "peak_region_sram_bytes": max(region_sram.values()),
             "capacity_violation_reason": (
                 f"peak region SRAM {max(region_sram.values())} exceeds capacity {hardware.region_capacity_bytes}"
                 if region_capacity_violation
@@ -137,8 +140,11 @@ def simulate_pull_kv_independent(
             "remote_kv_pull_bytes": shared * workload.total_decode_steps,
             "remote_kv_pull_wire_bytes": stats.total_wire_bytes,
             "home_sram_bytes": shared,
+            "latency_bound_used": "throughput_bound",
             "region_capacity_violation": region_capacity_violation,
             "valid_capacity": not region_capacity_violation,
+            "region_capacity_bytes": hardware.region_capacity_bytes,
+            "peak_region_sram_bytes": max(region_sram.values()),
             "capacity_violation_reason": (
                 f"peak region SRAM {max(region_sram.values())} exceeds capacity {hardware.region_capacity_bytes}"
                 if region_capacity_violation
@@ -211,6 +217,14 @@ def simulate_central_kv_stationary(
     critical_path_cycles = query_max_hops * hardware.hop_latency_cycles + sram_cycles + compute_cycles + return_max_hops * hardware.hop_latency_cycles
     sram_port_bytes = central_sram_read_bytes + private_write_bytes
     region_capacity_violation = max(region_sram.values()) > hardware.region_capacity_bytes
+    component_cycles = {
+        "query_mesh": query_mesh_cycles,
+        "result_mesh": return_mesh_cycles,
+        "sram_read": sram_cycles,
+        "compute": compute_cycles,
+        "queue": central_queue_cycles,
+    }
+    central_bottleneck_component = max(component_cycles.items(), key=lambda kv: kv[1])[0]
 
     result = result_from_stats(
         mode="Central-KV-Stationary",
@@ -241,16 +255,20 @@ def simulate_central_kv_stationary(
             "central_compute_proxy_bytes": central_compute_ops,
             "central_query_payload_bytes": query_payload_per_step * workload.decode_tokens_per_agent,
             "central_result_payload_bytes": partial_payload_per_step * workload.decode_tokens_per_agent,
+            "central_query_wire_bytes": query_stats.total_wire_bytes,
+            "central_result_wire_bytes": return_stats.total_wire_bytes,
             "query_bytes_sent": query_payload_per_step * workload.decode_tokens_per_agent,
             "partial_bytes_returned": partial_payload_per_step * workload.decode_tokens_per_agent,
             "central_router_in_bytes": query_payload_per_step * workload.decode_tokens_per_agent,
             "central_router_out_bytes": partial_payload_per_step * workload.decode_tokens_per_agent,
             "central_max_link_load_bytes": stats.max_link_load_bytes,
+            "central_max_directed_link_load_bytes": stats.max_link_load_bytes,
             "central_hotspot_ratio": stats.hotspot_ratio,
             "serialized_latency_s": serialized_cycles / hardware.clock_hz,
             "throughput_bound_latency_s": throughput_bound_cycles / hardware.clock_hz,
             "critical_path_latency_s": critical_path_cycles / hardware.clock_hz,
             "attention_stage_proxy_latency_s": throughput_bound_cycles / hardware.clock_hz,
+            "latency_bound_used": "throughput_bound",
             "network_latency_s": network_cycles / hardware.clock_hz,
             "sram_latency_s": sram_cycles / hardware.clock_hz,
             "compute_latency_s": compute_cycles / hardware.clock_hz,
@@ -264,7 +282,10 @@ def simulate_central_kv_stationary(
             "central_sram_read_latency_s": sram_cycles / hardware.clock_hz,
             "central_compute_latency_s": compute_cycles / hardware.clock_hz,
             "central_return_mesh_latency_s": return_mesh_cycles / hardware.clock_hz,
+            "central_result_mesh_latency_s": return_mesh_cycles / hardware.clock_hz,
             "central_queue_latency_s": central_queue_cycles / hardware.clock_hz,
+            "central_total_latency_s": throughput_bound_cycles / hardware.clock_hz,
+            "central_bottleneck_component": central_bottleneck_component,
             "central_sram_queue_time_s": sram_cycles / hardware.clock_hz,
             "central_compute_queue_time_s": compute_cycles / hardware.clock_hz,
             "private_kv_write_gib_total": gib(private_write_bytes),
@@ -275,6 +296,8 @@ def simulate_central_kv_stationary(
             "partial_state_payload_bytes_per_step": partial_payload_per_step,
             "region_capacity_violation": region_capacity_violation,
             "valid_capacity": not region_capacity_violation,
+            "region_capacity_bytes": hardware.region_capacity_bytes,
+            "peak_region_sram_bytes": max(region_sram.values()),
             "capacity_violation_reason": (
                 f"peak region SRAM {max(region_sram.values())} exceeds capacity {hardware.region_capacity_bytes}"
                 if region_capacity_violation

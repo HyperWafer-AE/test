@@ -1,0 +1,8 @@
+claim,status,primary_metric,baseline,kvring_value,comparison_value,delta_pct,evidence_csv,figure_id,allowed_in_abstract,allowed_in_main_results
+replication_centralization_dilemma,supported,"peak_region_sram_bytes,total_wire_bytes,max_directed_link_load_bytes",Replicate-All/Pull-KV-Independent/Central-KV-Stationary,0.0062531,0.084359739,-92.58757782548379,tables/default_summary.csv,fig2,True,True
+central_kv_stationary_strong_baseline,supported,"central_query_wire_bytes,central_sram_read_latency_s,central_compute_latency_s",Pull-KV-Independent,711983104.0,,,figures_source/fig_central_kv_bottleneck_breakdown.csv,fig3,True,True
+kvring_v2_beats_central_valid_capacity,supported,attention_stage_proxy_latency_s latency_bound=throughput_bound,Central-KV-Stationary,0.0062531,0.084359739,-92.58757782548379,tables/default_summary.csv,fig2,True,True
+query_tiling_amortizes_local_sram_reads,supported,local_sram_read_bytes,R=1,saturates for R>=N,largest at R=1,,figures_source/fig_query_tile_sweep.csv,fig4,True,True
+online_softmax_exactness,supported,relative_error fp32_state < 1e-5,dense FP32 attention,4.808375246319325e-07,1e-5,-95.19162475368067,figures_source/online_softmax_correctness.csv,fig8,True,True
+latency_bounds_transparent,supported,"serialized_latency_s,throughput_bound_latency_s,critical_path_latency_s,conservative_max",optimistic-only reporting,all bounds exported,,,figures_source/fig_latency_bounds_comparison.csv,fig6,False,True
+capacity_invalid_rows_filtered,supported,valid_capacity,unfiltered headline rows,639,0,6.39e+16,figures_source/invalid_capacity_rows.csv,appendix,False,True

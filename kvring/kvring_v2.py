@@ -185,6 +185,8 @@ def simulate_kvring_v2(
         "tree": "binary_tree",
         "binary_tree": "binary_tree",
         "binary_tree_reduce": "binary_tree",
+        "balanced_tree": "balanced_tree",
+        "balanced_tree_reduce": "balanced_tree",
         "full_ring": "full_ring_v1_legacy",
         "region_split": "region_split_ring",
         "region_split_ring": "region_split_ring",
@@ -234,7 +236,7 @@ def simulate_kvring_v2(
             model,
             workload.decode_tokens_per_agent,
         )
-    elif reduction == "binary_tree":
+    elif reduction in {"binary_tree", "balanced_tree"}:
         reduce_max_hops, reduction_hops = _tree_reduce(
             mesh,
             reduction_stats,
@@ -348,12 +350,14 @@ def simulate_kvring_v2(
     reduction_topology = {
         "selected_ring": "selected_ring_reduce",
         "binary_tree": "binary_tree_reduce",
+        "balanced_tree": "balanced_tree_reduce",
         "region_split_ring": "region_split_ring",
         "full_ring_v1_legacy": "full_ring_v1_legacy",
     }[reduction]
     mode_name = {
         "selected_ring": "KVRing-v2-ring",
         "binary_tree": "KVRing-v2-tree",
+        "balanced_tree": "KVRing-v2-balanced-tree",
         "region_split_ring": "KVRing-v2-region-split",
         "full_ring_v1_legacy": "KVRing-v2-full-ring-legacy",
     }[reduction]
@@ -417,6 +421,7 @@ def simulate_kvring_v2(
             "private_suffix_read_bytes": private_suffix_read_bytes,
             "private_kv_write_bytes": private_write_bytes,
             "query_bytes_sent": query_stats.payload_bytes,
+            "partial_bytes_returned": reduction_stats.payload_bytes,
             "reduction_bytes": reduction_stats.payload_bytes,
             "reduction_wire_bytes": reduction_stats.total_wire_bytes,
             "reduction_byte_hops": reduction_stats.total_wire_bytes,
@@ -439,6 +444,7 @@ def simulate_kvring_v2(
             "throughput_bound_latency_s": throughput_bound_cycles / hardware.clock_hz,
             "critical_path_latency_s": critical_path_cycles / hardware.clock_hz,
             "attention_stage_proxy_latency_s": throughput_bound_cycles / hardware.clock_hz,
+            "latency_bound_used": "throughput_bound",
             "network_latency_s": (query_scatter_cycles + reduction_cycles) / hardware.clock_hz,
             "sram_latency_s": local_sram_cycles / hardware.clock_hz,
             "compute_latency_s": local_compute_cycles / hardware.clock_hz,
@@ -460,6 +466,7 @@ def simulate_kvring_v2(
             "peak_region_sram_bytes": max(region_sram.values()) if region_sram else 0.0,
             "region_capacity_violation": region_capacity_violation,
             "valid_capacity": not region_capacity_violation,
+            "region_capacity_bytes": hardware.region_capacity_bytes,
             "capacity_violation_reason": (
                 f"peak region SRAM {max(region_sram.values())} exceeds capacity {hardware.region_capacity_bytes}"
                 if region_capacity_violation

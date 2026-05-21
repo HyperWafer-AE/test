@@ -14,16 +14,14 @@ Headline latency uses `throughput_bound_latency_s`; serialized and critical-path
 
 | Mode | Peak SRAM | Wire traffic | Max directed link | SRAM port | Attention-stage proxy latency |
 |---|---:|---:|---:|---:|---:|
+| Replicate-All | 4.031 GiB | 368.000 GiB | 16.000 GiB | 1.000 TiB | 221.810980 ms |
+| Pull-KV-Independent | 4.000 GiB | 92.000 TiB | 4.000 TiB | 8.000 TiB | 44.380582 s |
+| Central-KV-Stationary | 4.000 GiB | 679.000 MiB | 32.500 MiB | 1.000 TiB | 84.359739 ms |
 | KVRing-v1-sequential-pipeline | 544.000 MiB | 9.000 GiB | 36.000 MiB | 1.000 TiB | 50.012208 ms |
 | KVRing-v2-ring | 544.000 MiB | 3.527 GiB | 144.500 MiB | 1.031 TiB | 6.253100 ms |
 | KVRing-v2-tree | 544.000 MiB | 3.273 GiB | 112.000 MiB | 1.031 TiB | 6.253100 ms |
-
-## Capacity-Invalid Rows
-
-These rows are kept for replication-centralization stress analysis but are not used as valid headline comparisons.
-- Replicate-All: peak region SRAM 4328521728.0 exceeds capacity 1073741824.0
-- Pull-KV-Independent: peak region SRAM 4294967296.0 exceeds capacity 1073741824.0
-- Central-KV-Stationary: peak region SRAM 4294967296.0 exceeds capacity 1073741824.0
+| KVRing-v2-region-split | 544.000 MiB | 2.512 GiB | 144.500 MiB | 1.031 TiB | 6.253100 ms |
+| KVRing-v3-adaptive | 544.000 MiB | 3.527 GiB | 144.500 MiB | 1.031 TiB | 6.253100 ms |
 
 KVRing-v2 packet accounting is symbolic: `Q_tile + FP32(m,l,z)`; exact online-softmax state is reduced by ring/tree collectives.
 
@@ -32,3 +30,4 @@ KVRing-v2 packet accounting is symbolic: `Q_tile + FP32(m,l,z)`; exact online-so
 - Central-KV-Stationary keeps KV off the mesh during decode; its bottleneck is central SRAM/compute queueing (0.084359739 s).
 - KVRing-v2-ring reports query scatter, shard compute, exact online-softmax reduction, suffix, and merge components separately.
 - KVRing-v2-tree reports query scatter, shard compute, exact online-softmax reduction, suffix, and merge components separately.
+- KVRing-v2-region-split reports query scatter, shard compute, exact online-softmax reduction, suffix, and merge components separately.

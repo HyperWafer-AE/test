@@ -1,6 +1,15 @@
 """KVRing wafer-scale mesh attention collective simulator."""
 
-from .config import Agent, HardwareConfig, KVShard, ModelConfig, ShardGroup, WorkloadConfig
+from .config import (
+    Agent,
+    HardwareConfig,
+    KVShard,
+    ModelConfig,
+    ShardGroup,
+    WorkloadConfig,
+    actual_query_tile_sizes,
+    actual_query_tiles,
+)
 
 __all__ = [
     "Agent",
@@ -9,4 +18,6 @@ __all__ = [
     "ModelConfig",
     "ShardGroup",
     "WorkloadConfig",
+    "actual_query_tile_sizes",
+    "actual_query_tiles",
 ]

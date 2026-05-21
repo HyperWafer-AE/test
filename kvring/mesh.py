@@ -136,6 +136,21 @@ def place_shard_groups(
         group_size = max(1, int(math.ceil(shard_bytes / hardware.region_capacity_bytes)))
         if placement in {"central", "centralized"}:
             start_idx = cycle.index(central_home(hardware))
+        elif placement == "balanced_link_load":
+            anchors = [
+                (0, 0),
+                (0, mesh.cols - 1),
+                (mesh.rows - 1, mesh.cols - 1),
+                (mesh.rows - 1, 0),
+                (mesh.rows // 2, mesh.cols // 2),
+                (0, mesh.cols // 2),
+                (mesh.rows // 2, mesh.cols - 1),
+                (mesh.rows - 1, mesh.cols // 2),
+                (mesh.rows // 2, 0),
+                central_home(hardware),
+            ]
+            coord = anchors[sid % len(anchors)] if sid < len(anchors) else cycle[(sid * 29) % len(cycle)]
+            start_idx = cycle.index(coord) if coord in cycle else (sid * len(cycle)) // num_shards
         elif placement == "diagonal":
             diag = (sid * max(mesh.rows, mesh.cols)) // num_shards
             coord = (diag % mesh.rows, diag % mesh.cols)

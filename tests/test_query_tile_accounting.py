@@ -19,12 +19,13 @@ def test_kvring_v2_r_greater_than_agents_does_not_double_count_payload() -> None
     hardware = HardwareConfig()
     r8 = simulate_kvring_v2(ModelConfig(query_tile_size=8), workload, hardware, query_tile_size=8)
     r16 = simulate_kvring_v2(ModelConfig(query_tile_size=16), workload, hardware, query_tile_size=16)
+    r32 = simulate_kvring_v2(ModelConfig(query_tile_size=32), workload, hardware, query_tile_size=32)
     assert r8.extra["actual_query_tile_sizes"] == [8]
     assert r16.extra["actual_query_tile_sizes"] == [8]
-    assert r8.extra["query_bytes_sent"] == r16.extra["query_bytes_sent"]
-    assert r8.extra["reduction_bytes"] == r16.extra["reduction_bytes"]
-    assert r8.payload_bytes == r16.payload_bytes
-    assert r8.extra["local_sram_read_bytes"] == r16.extra["local_sram_read_bytes"]
+    assert r32.extra["actual_query_tile_sizes"] == [8]
+    for key in ["query_bytes_sent", "reduction_bytes", "local_sram_read_bytes", "estimated_attention_stage_latency_s"]:
+        assert r8.extra[key] == r16.extra[key] == r32.extra[key]
+    assert r8.payload_bytes == r16.payload_bytes == r32.payload_bytes
 
 
 def test_central_r_greater_than_agents_does_not_double_count_payload() -> None:
@@ -36,11 +37,20 @@ def test_central_r_greater_than_agents_does_not_double_count_payload() -> None:
     r16 = simulate_central_kv_stationary(
         ModelConfig(query_tile_size=16), workload, hardware, query_tile_size=16
     )
+    r32 = simulate_central_kv_stationary(
+        ModelConfig(query_tile_size=32), workload, hardware, query_tile_size=32
+    )
     assert r8.extra["actual_query_tile_sizes"] == [8]
     assert r16.extra["actual_query_tile_sizes"] == [8]
-    assert r8.extra["central_query_payload_bytes"] == r16.extra["central_query_payload_bytes"]
-    assert r8.extra["central_result_payload_bytes"] == r16.extra["central_result_payload_bytes"]
-    assert r8.extra["central_sram_read_bytes"] == r16.extra["central_sram_read_bytes"]
+    assert r32.extra["actual_query_tile_sizes"] == [8]
+    for key in [
+        "central_query_payload_bytes",
+        "central_result_payload_bytes",
+        "central_sram_read_bytes",
+        "central_compute_ops",
+        "attention_stage_proxy_latency_s",
+    ]:
+        assert r8.extra[key] == r16.extra[key] == r32.extra[key]
 
 
 def test_n10_r4_payloads_match_sum_over_actual_tiles() -> None:
