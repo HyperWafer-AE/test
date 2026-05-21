@@ -1,109 +1,55 @@
 {
   "config": {
-    "agents": [
-      {
-        "id": 0,
-        "position": [
-          0,
-          0
-        ]
-      },
-      {
-        "id": 1,
-        "position": [
-          0,
-          15
-        ]
-      },
-      {
-        "id": 2,
-        "position": [
-          15,
-          0
-        ]
-      },
-      {
-        "id": 3,
-        "position": [
-          15,
-          15
-        ]
-      },
-      {
-        "id": 4,
-        "position": [
-          0,
-          8
-        ]
-      },
-      {
-        "id": 5,
-        "position": [
-          8,
-          0
-        ]
-      },
-      {
-        "id": 6,
-        "position": [
-          15,
-          7
-        ]
-      },
-      {
-        "id": 7,
-        "position": [
-          7,
-          15
-        ]
-      }
-    ],
     "hardware": {
+      "attention_compute_tops_per_region": 1024.0,
       "clock_hz": 1000000000.0,
-      "home_region": [
-        7,
-        7
-      ],
+      "enable_vc_model": false,
       "hop_latency_cycles": 5,
       "link_bandwidth_gbps": 100.0,
       "mesh_cols": 16,
       "mesh_rows": 16,
-      "noc_channel_model": "directed_bidirectional",
+      "region_capacity_gib": 1.0,
       "region_sram_bandwidth_tibps": 20.0,
-      "ring_congestion_bubble_factor": 1.15
+      "region_sram_capacity_gib": 1.0,
+      "regions_per_shard": 1,
+      "ring_congestion_bubble_factor": 1.15,
+      "vc_model": "not_modeled_for_performance"
     },
     "model": {
       "dtype_bytes": 2,
       "head_dim": 128,
       "hidden_dim": 4096,
       "kv_heads": 8,
-      "kv_token_bytes": 131072,
       "layers": 32,
-      "path": "/data1/duzc/model/model/LLM-Research/Meta-Llama-3___1-8B-Instruct",
-      "query_bytes": 8192,
-      "ring_packet_bytes": 18432
+      "model_path": "/data1/duzc/model/model/LLM-Research/Meta-Llama-3___1-8B-Instruct",
+      "query_heads": 32,
+      "query_tile_size": 8
     },
     "workload": {
       "concurrent_agents": 8,
       "decode_tokens_per_agent": 256,
-      "shared_kv_bytes": 4294967296,
-      "shared_prefix_tokens": 32768,
-      "total_decode_steps": 2048
+      "private_suffix_kv_tokens": null,
+      "shared_prefix_tokens": 32768
     }
   },
   "results": [
     {
       "compute_cycles": 50012208,
       "compute_time_s": 0.050012208,
-      "description": "Full shared KV cache copied to every agent region; decode reads are local.",
+      "description": "Full shared KV cache copied to every agent region; steady-state decode reads are local.",
       "estimated_cycles": 221810980,
       "estimated_latency_s": 0.22181098,
       "extra": {
+        "local_sram_read_bytes": 1099511627776,
         "private_decode_kv_per_agent_mib": 32.0,
+        "private_kv_write_bytes": 268435456,
         "private_kv_write_gib_total": 0.25,
         "replicas": 8,
+        "setup_replication_payload_gib": 32.0,
+        "setup_replication_wire_tib": 0.359375,
         "setup_route_max_hops": 16,
-        "shared_kv_per_replica_gib": 4.0
+        "shared_kv_per_replica_gib": 4.0,
+        "steady_state_local_decode_read_gib": 1024.0
       },
       "hotspot_ratio_max_over_mean_active": 2.608695652173913,
       "link_load_gib": {
@@ -169,7 +115,6 @@
         "(9,7)->(10,7)": 12.0
       },
       "max_directed_link": "(7,7)->(8,7)",
-      "max_link": "(7,7)->(8,7)",
       "max_link_load_gib": 16.0,
       "mesh_time_s": 0.171798772,
       "mode": "Replicate-All",
@@ -275,16 +220,22 @@
     {
       "compute_cycles": 400012208,
       "compute_time_s": 0.400012208,
-      "description": "Shared KV cache stays at one center home; every decode step performs remote KV reads.",
+      "description": "One shared KV home; each agent remotely pulls the full shared KV every decode step.",
       "estimated_cycles": 44380581686,
       "estimated_latency_s": 44.380581686,
       "extra": {
+        "central_sram_read_bytes": 8796093022208,
         "decode_route_max_hops": 16,
         "home_region": [
           7,
           7
         ],
+        "local_sram_read_bytes": 8796093022208,
+        "old_mode_alias": "Single-Home",
+        "partial_bytes_returned": 16777216,
+        "private_kv_write_bytes": 268435456,
         "private_kv_write_gib_total": 0.25,
+        "query_bytes_sent": 16777216,
         "remote_read_gib_per_agent": 1024.0,
         "tiny_query_request_kib_per_agent": 2048.0
       },
@@ -412,10 +363,9 @@
         "(9,7)->(8,7)": 0.001953125
       },
       "max_directed_link": "(7,7)->(8,7)",
-      "max_link": "(7,7)->(8,7)",
       "max_link_load_gib": 4096.0078125,
       "mesh_time_s": 43.980569478,
-      "mode": "Single-Home",
+      "mode": "Pull-KV-Independent",
       "network_cycles": 43980569478,
       "payload_gib": 8192.03125,
       "peak_region_sram_gib": 4.0,
@@ -519,14 +469,19 @@
     {
       "compute_cycles": 50012208,
       "compute_time_s": 0.050012208,
-      "description": "Shared KV is sharded on a full-wafer serpentine ring; only query and online-softmax state move.",
+      "description": "Legacy full-serpentine ring: one small packet per agent decode step circulates around all regions.",
       "estimated_cycles": 50447599,
       "estimated_latency_s": 0.050447599,
       "extra": {
         "effective_pipeline_throughput_packets_per_cycle": 0.004717693236714976,
         "ideal_pipeline_throughput_packets_per_cycle": 0.005425347222222222,
+        "legacy_behavior_preserved": true,
+        "local_sram_read_bytes": 1099511627776.0,
         "network_formula": "ceil(total_packets / (min(1, link_bytes_per_cycle / packet_bytes) / bubble_factor)) + ring_setup_hops * hop_latency_cycles",
+        "packet_model": "legacy fixed whole-query + aggregated online state",
+        "private_kv_write_bytes": 268435456,
         "private_kv_write_gib_total": 0.25,
+        "region_capacity_violation": false,
         "ring_congestion_bubble_factor": 1.15,
         "ring_edges": 256,
         "ring_packet_kib": 18.0,
@@ -534,81 +489,131 @@
         "ring_setup_hops": 256,
         "ring_shards": 8,
         "ring_steady_state_cycles": 434111,
-        "shard_gib": [
-          0.5,
-          0.5,
-          0.5,
-          0.5,
-          0.5,
-          0.5,
-          0.5,
-          0.5
+        "shard_group_size": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
         ],
         "shard_positions": [
           {
-            "id": 0,
-            "position": [
+            "home_region": [
               0,
               0
             ],
-            "ring_index": 0
+            "id": 0,
+            "region_group": [
+              [
+                0,
+                0
+              ]
+            ]
           },
           {
-            "id": 1,
-            "position": [
+            "home_region": [
               2,
               2
             ],
-            "ring_index": 32
+            "id": 1,
+            "region_group": [
+              [
+                2,
+                2
+              ]
+            ]
           },
           {
-            "id": 2,
-            "position": [
+            "home_region": [
               4,
               4
             ],
-            "ring_index": 64
+            "id": 2,
+            "region_group": [
+              [
+                4,
+                4
+              ]
+            ]
           },
           {
-            "id": 3,
-            "position": [
+            "home_region": [
               6,
               6
             ],
-            "ring_index": 96
+            "id": 3,
+            "region_group": [
+              [
+                6,
+                6
+              ]
+            ]
           },
           {
-            "id": 4,
-            "position": [
+            "home_region": [
               8,
               8
             ],
-            "ring_index": 128
+            "id": 4,
+            "region_group": [
+              [
+                8,
+                8
+              ]
+            ]
           },
           {
-            "id": 5,
-            "position": [
+            "home_region": [
               10,
               10
             ],
-            "ring_index": 160
+            "id": 5,
+            "region_group": [
+              [
+                10,
+                10
+              ]
+            ]
           },
           {
-            "id": 6,
-            "position": [
+            "home_region": [
               12,
               12
             ],
-            "ring_index": 192
+            "id": 6,
+            "region_group": [
+              [
+                12,
+                12
+              ]
+            ]
           },
           {
-            "id": 7,
-            "position": [
+            "home_region": [
               14,
               14
             ],
-            "ring_index": 224
+            "id": 7,
+            "region_group": [
+              [
+                14,
+                14
+              ]
+            ]
           }
+        ],
+        "shard_region_bytes": [
+          536870912.0,
+          536870912.0,
+          536870912.0,
+          536870912.0,
+          536870912.0,
+          536870912.0,
+          536870912.0,
+          536870912.0
         ],
         "total_packets": 2048
       },
@@ -872,10 +877,9 @@
         "(9,9)->(9,8)": 0.03515625
       },
       "max_directed_link": "(0,0)->(0,1)",
-      "max_link": "(0,0)->(0,1)",
       "max_link_load_gib": 0.03515625,
       "mesh_time_s": 0.000435391,
-      "mode": "KVRing",
+      "mode": "KVRing-v1-sequential-pipeline",
       "network_cycles": 435391,
       "payload_gib": 0.03515625,
       "peak_region_sram_gib": 0.53125,

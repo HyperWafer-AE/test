@@ -38,4 +38,4 @@ line-length = 100
 testpaths = ["tests"]
 
 [tool.setuptools.packages.find]
-include = ["waferagent*"]
+include = ["waferagent*", "kvring*"]

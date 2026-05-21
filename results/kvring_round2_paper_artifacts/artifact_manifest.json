@@ -1,0 +1,396 @@
+{
+  "artifact_count": 43,
+  "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+  "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+  "outputs": [
+    {
+      "bytes": 14388,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "figures/fig_kv_move_vs_query_move.pdf",
+      "row_count": "",
+      "rows": "",
+      "sha256": "2c05e4b0c191f73e87089ce5a39b2c5a4f2a29c3af282ad5fa453dc7668959f4"
+    },
+    {
+      "bytes": 77732,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "figures/fig_kv_move_vs_query_move.png",
+      "row_count": "",
+      "rows": "",
+      "sha256": "e5a9c7b8f390ba12eb50bbc421a7a2b2279d7ce35d8d25bd05b5b536cb826ce7"
+    },
+    {
+      "bytes": 16161,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "figures/fig_numerical_stability.pdf",
+      "row_count": "",
+      "rows": "",
+      "sha256": "cd656c7a189227c177ad2e9f8ca236b6fe31453fec4f993fd9a4d19a01788dcd"
+    },
+    {
+      "bytes": 78621,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "figures/fig_numerical_stability.png",
+      "row_count": "",
+      "rows": "",
+      "sha256": "c8c534fccf2545639b6f0ae0b8380c9171cb948da7fd992aa59696c654fafa33"
+    },
+    {
+      "bytes": 14887,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "figures/fig_prefix_length_sweep.pdf",
+      "row_count": "",
+      "rows": "",
+      "sha256": "c3ee14926e0fd56029202a044caa0a1b829b594e5693548a575239a2cc4f9ffb"
+    },
+    {
+      "bytes": 70696,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "figures/fig_prefix_length_sweep.png",
+      "row_count": "",
+      "rows": "",
+      "sha256": "b3f5f9ff217f86c5b20b47c398c6533bc567c56cc1b623e492844d60a44310f1"
+    },
+    {
+      "bytes": 16800,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "figures/fig_query_tile_sweep.pdf",
+      "row_count": "",
+      "rows": "",
+      "sha256": "df18ce54504792ff84755dd59ed5493ef0a34761fe499b595743295865b34075"
+    },
+    {
+      "bytes": 81873,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "figures/fig_query_tile_sweep.png",
+      "row_count": "",
+      "rows": "",
+      "sha256": "abbe07d38320138f51a2f9d65c114374a39f21dead268b471bd0988c0be34969"
+    },
+    {
+      "bytes": 14346,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "figures/fig_reduction_topology.pdf",
+      "row_count": "",
+      "rows": "",
+      "sha256": "eb6c4425a2be9db9db6acbd885f32144c34fbfee3020a5477af4923f4f833029"
+    },
+    {
+      "bytes": 86793,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "figures/fig_reduction_topology.png",
+      "row_count": "",
+      "rows": "",
+      "sha256": "cd9ba7c855dc23a1dd79e5e626b81f0b65ce33e378d403ee81473fa20699505f"
+    },
+    {
+      "bytes": 21804,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "figures/fig_replication_centralization_dilemma.pdf",
+      "row_count": "",
+      "rows": "",
+      "sha256": "2c1e98b7c9c1bf6a9e97f926eaaa65011e8fbbb351ef0a982815a4101048ccd8"
+    },
+    {
+      "bytes": 281830,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "figures/fig_replication_centralization_dilemma.png",
+      "row_count": "",
+      "rows": "",
+      "sha256": "c23d2cafb5f06d8b7a84fc30119c66e7ba1a80ff2a043694d272e20c1ad69ca8"
+    },
+    {
+      "bytes": 13743,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "figures/fig_shard_count_sweep.pdf",
+      "row_count": "",
+      "rows": "",
+      "sha256": "6398a0c7da0f891731a1cbe0aa9aa4f5b4fa89be70050019d47b046161b091ee"
+    },
+    {
+      "bytes": 61153,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "figures/fig_shard_count_sweep.png",
+      "row_count": "",
+      "rows": "",
+      "sha256": "a6c1343a40cb91ba214cd6d81fff8fd583f83dbb2bc1b66a169261dce591a842"
+    },
+    {
+      "bytes": 21008,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "figures_source/agent_count_sweep.csv",
+      "row_count": 18,
+      "rows": 18,
+      "sha256": "78372ddba96f0b1eccbf62a601a779200fc5245816922eaac16632d18ee5b8af"
+    },
+    {
+      "bytes": 4882,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "figures_source/fig_kv_move_vs_query_move.csv",
+      "row_count": 3,
+      "rows": 3,
+      "sha256": "f7099b8a0f290e3841fc971eab146f771ab51fa74af5271332eb895a91b4118f"
+    },
+    {
+      "bytes": 7774,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "figures_source/fig_numerical_stability.csv",
+      "row_count": 72,
+      "rows": 72,
+      "sha256": "b0d2566559a9eed4eb12a84801b35500c956d37b41b49a67b26ed3eb32a15d25"
+    },
+    {
+      "bytes": 22089,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "figures_source/fig_prefix_length_sweep.csv",
+      "row_count": 24,
+      "rows": 24,
+      "sha256": "3f6486384bb31a27d240feeb6d38148cf2745508e9bd7dbf366bc8a1bcb8e373"
+    },
+    {
+      "bytes": 1829638,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "figures_source/fig_query_tile_sweep.csv",
+      "row_count": 2160,
+      "rows": 2160,
+      "sha256": "575b928aed66a06da46ce2ab7a5b3474572873b4002501f8ac5b9b3b67e4ae4e"
+    },
+    {
+      "bytes": 17555,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "figures_source/fig_reduction_topology.csv",
+      "row_count": 12,
+      "rows": 12,
+      "sha256": "9110de1d9f6f3d3ac8a23d4ce9ebc8b8b7fa283042e22a2e2703cb9d70e26ca0"
+    },
+    {
+      "bytes": 6880,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "figures_source/fig_replication_centralization_dilemma.csv",
+      "row_count": 6,
+      "rows": 6,
+      "sha256": "5c3e14a4208696ac891c377a065b5ab30a1c1566dcabd9765485751c2c4a4802"
+    },
+    {
+      "bytes": 22112,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "figures_source/fig_shard_count_sweep.csv",
+      "row_count": 18,
+      "rows": 18,
+      "sha256": "c0820526d42737cdbeaa88a7b06ffdaa1bffe4176a375175e2a02025a6394ce3"
+    },
+    {
+      "bytes": 99657,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "figures_source/hardware_sensitivity.csv",
+      "row_count": 80,
+      "rows": 80,
+      "sha256": "881232bd9201f218706ada4b15946882fa15c745552390c4828c7a3ea40150c8"
+    },
+    {
+      "bytes": 14459,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "figures_source/online_softmax_correctness.csv",
+      "row_count": 120,
+      "rows": 120,
+      "sha256": "e2e6fe43824c2794b971ec35d0bcf03b3ed386d6cc8a81c3a5dc14ae9ba33ecf"
+    },
+    {
+      "bytes": 61723,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "figures_source/topology_sweep.csv",
+      "row_count": 40,
+      "rows": 40,
+      "sha256": "e357af2d309c7c856a250483eddb5dd68caa911e52726edd3608ab52a47cd566"
+    },
+    {
+      "bytes": 61146,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "report.json",
+      "row_count": "",
+      "rows": "",
+      "sha256": "cc39df0a9e7ca2da138dc589c7afff22ea41d2e0216e1d5a2c0611344d51ea4f"
+    },
+    {
+      "bytes": 1956,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "report.md",
+      "row_count": "",
+      "rows": "",
+      "sha256": "57f9ac1db6ceba34131d0bcaa14c28b949a772e8ce2963992cfbe6e0b937dd41"
+    },
+    {
+      "bytes": 21008,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "tables/agent_count_sweep.csv",
+      "row_count": 18,
+      "rows": 18,
+      "sha256": "78372ddba96f0b1eccbf62a601a779200fc5245816922eaac16632d18ee5b8af"
+    },
+    {
+      "bytes": 6880,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "tables/baseline_summary.csv",
+      "row_count": 6,
+      "rows": 6,
+      "sha256": "5c3e14a4208696ac891c377a065b5ab30a1c1566dcabd9765485751c2c4a4802"
+    },
+    {
+      "bytes": 14459,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "tables/correctness_summary.csv",
+      "row_count": 120,
+      "rows": 120,
+      "sha256": "e2e6fe43824c2794b971ec35d0bcf03b3ed386d6cc8a81c3a5dc14ae9ba33ecf"
+    },
+    {
+      "bytes": 99657,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "tables/hardware_sensitivity.csv",
+      "row_count": 80,
+      "rows": 80,
+      "sha256": "881232bd9201f218706ada4b15946882fa15c745552390c4828c7a3ea40150c8"
+    },
+    {
+      "bytes": 3089,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "tables/link_load_summary.csv",
+      "row_count": 48,
+      "rows": 48,
+      "sha256": "8c3242932b4d293d196294eb4bd6316e759e64c1e45fda54a9fc59795dde5c82"
+    },
+    {
+      "bytes": 6880,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "tables/mode_summary.csv",
+      "row_count": 6,
+      "rows": 6,
+      "sha256": "5c3e14a4208696ac891c377a065b5ab30a1c1566dcabd9765485751c2c4a4802"
+    },
+    {
+      "bytes": 7774,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "tables/numerical_error_summary.csv",
+      "row_count": 72,
+      "rows": 72,
+      "sha256": "b0d2566559a9eed4eb12a84801b35500c956d37b41b49a67b26ed3eb32a15d25"
+    },
+    {
+      "bytes": 14459,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "tables/online_softmax_correctness.csv",
+      "row_count": 120,
+      "rows": 120,
+      "sha256": "e2e6fe43824c2794b971ec35d0bcf03b3ed386d6cc8a81c3a5dc14ae9ba33ecf"
+    },
+    {
+      "bytes": 1829638,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "tables/query_tile_sweep.csv",
+      "row_count": 2160,
+      "rows": 2160,
+      "sha256": "575b928aed66a06da46ce2ab7a5b3474572873b4002501f8ac5b9b3b67e4ae4e"
+    },
+    {
+      "bytes": 17555,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "tables/reduction_topology_sweep.csv",
+      "row_count": 12,
+      "rows": 12,
+      "sha256": "9110de1d9f6f3d3ac8a23d4ce9ebc8b8b7fa283042e22a2e2703cb9d70e26ca0"
+    },
+    {
+      "bytes": 22112,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "tables/shard_count_sweep.csv",
+      "row_count": 18,
+      "rows": 18,
+      "sha256": "c0820526d42737cdbeaa88a7b06ffdaa1bffe4176a375175e2a02025a6394ce3"
+    },
+    {
+      "bytes": 22089,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "tables/shared_prefix_sweep.csv",
+      "row_count": 24,
+      "rows": 24,
+      "sha256": "3f6486384bb31a27d240feeb6d38148cf2745508e9bd7dbf366bc8a1bcb8e373"
+    },
+    {
+      "bytes": 6880,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "tables/sram_summary.csv",
+      "row_count": 6,
+      "rows": 6,
+      "sha256": "5c3e14a4208696ac891c377a065b5ab30a1c1566dcabd9765485751c2c4a4802"
+    },
+    {
+      "bytes": 61723,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "tables/topology_summary.csv",
+      "row_count": 40,
+      "rows": 40,
+      "sha256": "e357af2d309c7c856a250483eddb5dd68caa911e52726edd3608ab52a47cd566"
+    },
+    {
+      "bytes": 61723,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "tables/topology_sweep.csv",
+      "row_count": 40,
+      "rows": 40,
+      "sha256": "e357af2d309c7c856a250483eddb5dd68caa911e52726edd3608ab52a47cd566"
+    },
+    {
+      "bytes": 10364,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round2_paper_artifacts",
+      "commit_hash": "5cabcf07254a176ee02c6d50bac074a11055195a",
+      "file_path": "source_run_manifest.csv",
+      "row_count": 42,
+      "rows": 42,
+      "sha256": "531e612eae2adbd3320537a41c281be12dc17772146edfa9d554f423b64ae08d"
+    }
+  ],
+  "project": "KVRing Round 2",
+  "vc_model": "not_modeled_for_performance"
+}
