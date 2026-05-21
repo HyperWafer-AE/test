@@ -1,0 +1,48 @@
+KV Replication-Hotspot Dilemma Trace Report
+========================================================
+Model path: /data1/duzc/model/model/LLM-Research/Meta-Llama-3___1-8B-Instruct
+KV/token: 128.000 KiB
+Shared prefix: 32768 tokens = 4.000 GiB
+Agents: 8; decode tokens/agent: 256
+Query bytes: 8.000 KiB
+KVRing packet: 18.000 KiB
+Private decode KV writes: 256.000 MiB included in SRAM port bytes
+Mesh: 16x16; home: (7, 7)
+Link BW: 100.0 GB/s; SRAM BW/region: 20.0 TiB/s
+NoC channels: directed bidirectional links; max link load is single-direction
+KVRing congestion bubble factor: 1.15
+Agents: [(0, 0), (0, 15), (15, 0), (15, 15), (0, 8), (8, 0), (15, 7), (7, 15)]
+
+Replicate-All
+-------------
+SRAM total / peak region: 32.250 GiB / 4.031 GiB
+SRAM port bytes read+write: 1.000 TiB
+Payload / mesh byte-hop traffic: 32.000 GiB / 368.000 GiB
+Max directed link load: 16.000 GiB on (7,7)->(8,7)
+Hotspot ratio max/mean-active: 2.609x
+Mesh time: 171.798772 ms (171,798,772 cycles)
+Compute time: 50.012208 ms (50,012,208 cycles)
+Estimated JCT: 221.810980 ms (221,810,980 cycles)
+
+Single-Home
+-----------
+SRAM total / peak region: 4.250 GiB / 4.000 GiB
+SRAM port bytes read+write: 8.000 TiB
+Payload / mesh byte-hop traffic: 8.000 TiB / 92.000 TiB
+Max directed link load: 4.000 TiB on (7,7)->(8,7)
+Hotspot ratio max/mean-active: 5.217x
+Mesh time: 43.980569 s (43,980,569,478 cycles)
+Compute time: 400.012208 ms (400,012,208 cycles)
+Estimated JCT: 44.380582 s (44,380,581,686 cycles)
+
+KVRing
+------
+SRAM total / peak region: 4.250 GiB / 544.000 MiB
+SRAM port bytes read+write: 1.000 TiB
+Payload / mesh byte-hop traffic: 36.000 MiB / 9.000 GiB
+Max directed link load: 36.000 MiB on (0,0)->(0,1)
+Hotspot ratio max/mean-active: 1.000x
+Mesh time: 435.391000 us (435,391 cycles)
+Compute time: 50.012208 ms (50,012,208 cycles)
+Estimated JCT: 50.447599 ms (50,447,599 cycles)
+KVRing network model: total_packets / effective_pipeline_throughput + ring_setup_hops * hop_latency

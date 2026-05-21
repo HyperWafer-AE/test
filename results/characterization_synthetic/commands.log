@@ -1,1 +1,0 @@
-scripts/collect_h100_traces.py --engine synthetic --workloads debate,moa,planner_worker_tool,swe_like,rag_like --num-jobs 200 --out results/characterization_synthetic

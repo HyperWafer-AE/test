@@ -1,5 +1,0 @@
-split,num_regimes,selection_accuracy_vs_oracle_best,mean_regret_ms,p95_regret_ms,max_slowdown_vs_apc,fraction_non_worse_than_apc_within_5pct,beneficial_regime_recall,beneficial_regime_precision,heldout_beneficial_regimes,pass
-all,72,0.8888888888888888,1631.1576473602026,6542.357680070006,0.0,1.0,0.8333333333333334,1.0,40,True
-train,50,0.92,555.9581915595387,2878.28025025172,0.0,1.0,0.8823529411764706,1.0,30,True
-validation,16,0.75,5602.840064497352,44109.96864020747,0.0,1.0,0.6,1.0,6,True
-test,6,1.0,0.0,0.0,0.0,1.0,1.0,1.0,4,True

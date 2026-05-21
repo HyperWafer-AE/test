@@ -1,1 +1,0 @@
-scripts/calibrate_h100.py --model auto --engine hf --gpus 0,1 --out results/h100_calibration

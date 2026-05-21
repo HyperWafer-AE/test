@@ -1,1 +1,0 @@
-scripts/run_sensitivity.py --engine synthetic --wafer-config configs/wafer/wse_like.yaml --out results/sensitivity_synthetic

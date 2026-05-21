@@ -1,6 +1,0 @@
-job_id,workload,critical_path_weight,total_work_weight,critical_path_fraction
-debate_job_0,debate,7104.0,20544.0,0.34579439252336447
-moa_job_0,moa,7488.0,22080.0,0.3391304347826087
-planner_worker_tool_job_0,planner_worker_tool,11540.0,25232.0,0.4573557387444515
-swe_like_job_0,swe_like,11392.0,17920.0,0.6357142857142857
-rag_like_job_0,rag_like,7460.0,14372.0,0.5190648483161703

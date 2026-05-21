@@ -1,8 +1,0 @@
-{
-  "command": "scripts/run_sensitivity.py --engine synthetic --wafer-config configs/wafer/wse_like.yaml --out results/sensitivity_synthetic",
-  "created_unix": 1779027913.1122086,
-  "engine": "synthetic",
-  "git_commit": "unavailable: Command '['git', 'rev-parse', 'HEAD']' returned non-zero exit status 128.",
-  "run_type": "sensitivity",
-  "wafer_config": "configs/wafer/wse_like.yaml"
-}

@@ -1,6 +1,0 @@
-claim,status,primary_metric,baseline,waferagent_value,comparison_value,delta,threshold,evidence_file,paper_section,notes
-Existing prefix cache gap,supported,decode_shared_kv_read_bytes,apc_like,15357299811897.0,35540854374400.0,-20183554562503.0,-0.05,existing_cache_gap_summary.csv,Existing prefix-cache gap,
-Global serving tail latency,supported,jct_p99_ms,apc_like,16590.930477492242,33477.3995576944,-16886.469080202158,-0.05,global_simulation_summary.csv,Global serving results,
-Decode cohort event-driven benefit,supported,decode_shared_kv_read_bytes,no_shared_kv_decode_cohort,22277995364268.0,35540854374400.0,-13262859010132.0,0.05,ablation_delta_summary.csv,Ablation,
-Shared-KV replication,demoted,mesh_traffic_bytes,no_replication,9959223853056.0,9998683865088.0,-39460012032.0,-0.05,replication_tradeoff_summary.csv,Replication design-space,Benefit-cost replication is not a headline claim unless it beats no_replication.
-Oracle semantics,demoted,n/a,oracle,0.0,0.0,0.0,0.0,report.json,Limitations,Renamed to ideal_next_use_cache; not claimed as full-system upper bound.

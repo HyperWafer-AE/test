@@ -1,6 +1,0 @@
-nodes,edges,max_fan_in,max_fan_out,avg_fan_in,avg_fan_out,unique_shared_prefixes,shared_prefix_reuse_events,unique_shared_tokens,logical_shared_tokens,shared_prefix_ratio,job_id,workload,critical_path_weight,total_work_weight
-9,8,4,1,0.8888888888888888,0.8888888888888888,1,8,1280,9728,0.5,debate_job_0,debate,7104.0,20544.0
-9,20,4,4,2.2222222222222223,2.2222222222222223,1,8,1280,10496,0.5,moa_job_0,moa,7488.0,22080.0
-15,17,4,4,1.1333333333333333,1.1333333333333333,1,14,1280,11712,0.5,planner_worker_tool_job_0,planner_worker_tool,11540.0,25232.0
-8,10,4,4,1.25,1.25,1,7,1280,8448,0.5,swe_like_job_0,swe_like,11392.0,17920.0
-7,9,4,4,1.2857142857142858,1.2857142857142858,1,6,1280,6688,0.5,rag_like_job_0,rag_like,7460.0,14372.0

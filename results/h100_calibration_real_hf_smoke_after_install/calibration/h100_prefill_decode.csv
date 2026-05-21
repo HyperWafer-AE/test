@@ -1,2 +1,0 @@
-engine,model_name,model_path,gpu_id,input_len,output_len,batch_size,seed,ttft_ms,tpot_ms,decode_ms,total_ms,prefill_tokens_per_s,decode_tokens_per_s,peak_gpu_mem_bytes,oom
-hf,Qwen2.5-7B-Instruct-local,/data2/model_zoo/Qwen2.5-7B-Instruct,0,128,1,1,41,525.31298828125,0.0,0.0,29.653919219970703,243.6642589378914,999999999.9999999,6757778432,False

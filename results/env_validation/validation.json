@@ -1,6 +1,0 @@
-{
-  "package_check": "/home/duzc/data/agent_wafer/.venv/lib/python3.11/site-packages/transformers/utils/hub.py:128: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.\n  warnings.warn(\ntorch=2.5.1\ntransformers=4.46.3\nvllm=0.6.4.post1\nxformers=0.0.28.post3\nnumpy=1.26.4\npandas=3.0.3\npytest=9.0.3\nimport:torch=ok\nimport:transformers=ok\nimport:vllm=ok\n",
-  "package_check_exit_code": 0,
-  "torch_cuda_check": "2.5.1+cu124\nTrue\n2\n0 NVIDIA H100 PCIe\n1 NVIDIA H100 PCIe\n",
-  "torch_cuda_check_exit_code": 0
-}

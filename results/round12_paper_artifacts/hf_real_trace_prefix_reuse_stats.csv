@@ -1,6 +1,0 @@
-workload,shared_prefix_id,jobs,nodes,shared_prefix_tokens_max,cross_job_reused
-debate,sha256:189cf4f6f9e04f1e4e11d36545c0a19aca2cbcb501f9dbcb9c4f9dc74210cfca,5,45,1280,True
-moa,sha256:58f7c17a1b9af2723e85ab27cd91f85fcda1d8bd2f77fc754c0c9336309766d8,5,45,1280,True
-planner_worker_tool,sha256:1ff09d0aadb0076ca0e31b264ec72309ffecf1eb1facc2f282954e67c838cdb8,5,75,1280,True
-rag_like,sha256:d468d95ef67b52dca921670cffceb48bb6cc0e9e4050f82542ad86eabbde74d4,5,35,1280,True
-swe_like,sha256:d87bb32c680f6f336acaccf8d28838f2881e1767bb65bbc97c09858935e8f200,5,40,1280,True

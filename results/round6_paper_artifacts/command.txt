@@ -1,1 +1,0 @@
-scripts/export_paper_artifacts.py --source-results results/round6_global_main_neutral,results/round6_existing_cache_gap,results/round6_decode_cohort_targeted,results/round6_replication_tradeoff,results/round6_prefix_realism_sensitivity,results/round6_final_report --out results/round6_paper_artifacts --allow-dirty

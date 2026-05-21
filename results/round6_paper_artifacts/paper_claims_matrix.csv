@@ -1,7 +1,0 @@
-claim,supported,evidence
-Existing prefix cache gap shown,True,existing_cache_gap_summary.csv
-Event-driven decode cohort exported,True,decode_cohort_sweep.csv
-Global serving results exported,True,global_simulation_summary.csv
-Planning overhead recorded,True,planning_overhead_summary.csv
-Replication tradeoff exported,True,replication_tradeoff_summary.csv
-SLO goodput exported,True,slo_goodput.csv
