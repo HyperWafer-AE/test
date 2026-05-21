@@ -20,7 +20,7 @@ def main() -> None:
     parser.add_argument("--no-clean", action="store_true")
     args = parser.parse_args()
     export_round2_artifacts(args.out, clean=not args.no_clean)
-    print(f"exported KVRing Round 2 artifacts to {args.out}")
+    print(f"exported KVRing Round 3 artifacts to {args.out}")
 
 
 if __name__ == "__main__":

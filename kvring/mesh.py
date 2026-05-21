@@ -134,7 +134,7 @@ def place_shard_groups(
     for sid in range(num_shards):
         shard_bytes = base + (1 if sid < rem else 0)
         group_size = max(1, int(math.ceil(shard_bytes / hardware.region_capacity_bytes)))
-        if placement == "central":
+        if placement in {"central", "centralized"}:
             start_idx = cycle.index(central_home(hardware))
         elif placement == "diagonal":
             diag = (sid * max(mesh.rows, mesh.cols)) // num_shards

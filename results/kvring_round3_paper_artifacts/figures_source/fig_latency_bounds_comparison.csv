@@ -1,0 +1,7 @@
+mode,reduction_topology,latency_bound,latency_s
+KVRing-v2-ring,selected_ring_reduce,critical_path,2.4707e-05
+KVRing-v2-ring,selected_ring_reduce,throughput_bound,0.0062531
+KVRing-v2-ring,selected_ring_reduce,serialized,0.007963124
+KVRing-v2-tree,binary_tree_reduce,critical_path,2.4647e-05
+KVRing-v2-tree,binary_tree_reduce,throughput_bound,0.0062531
+KVRing-v2-tree,binary_tree_reduce,serialized,0.008644638

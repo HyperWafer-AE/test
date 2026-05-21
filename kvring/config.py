@@ -12,6 +12,21 @@ Coord = Tuple[int, int]
 Edge = Tuple[Coord, Coord]
 
 
+def actual_query_tile_sizes(num_agents: int, query_tile_size: int) -> List[int]:
+    """Return real query counts in each tile for one decode step."""
+    if num_agents < 0:
+        raise ValueError("num_agents must be non-negative")
+    if query_tile_size <= 0:
+        raise ValueError("query_tile_size must be positive")
+    sizes: List[int] = []
+    remaining = num_agents
+    while remaining > 0:
+        tile = min(query_tile_size, remaining)
+        sizes.append(tile)
+        remaining -= tile
+    return sizes
+
+
 @dataclass(frozen=True)
 class ModelConfig:
     model_path: str = "/data1/duzc/model/model/LLM-Research/Meta-Llama-3___1-8B-Instruct"
@@ -79,7 +94,7 @@ class WorkloadConfig:
         return self.concurrent_agents * self.decode_tokens_per_agent
 
     def query_tiles_per_step(self, query_tile_size: int) -> int:
-        return int(math.ceil(self.concurrent_agents / query_tile_size))
+        return len(actual_query_tile_sizes(self.concurrent_agents, query_tile_size))
 
     def query_tiles_total(self, query_tile_size: int) -> int:
         return self.decode_tokens_per_agent * self.query_tiles_per_step(query_tile_size)

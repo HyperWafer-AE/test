@@ -7,7 +7,15 @@ from collections import defaultdict
 from typing import DefaultDict, Dict, List, Tuple
 
 from .accounting import ModeResult, TraceStats
-from .config import Agent, Coord, HardwareConfig, ModelConfig, ShardGroup, WorkloadConfig
+from .config import (
+    Agent,
+    Coord,
+    HardwareConfig,
+    ModelConfig,
+    ShardGroup,
+    WorkloadConfig,
+    actual_query_tile_sizes,
+)
 from .mesh import WaferMesh, default_agents, place_shard_groups
 from .units import gib, tib
 
@@ -16,11 +24,13 @@ def _attention_ops(model: ModelConfig, query_count: int, prefix_tokens: int) -> 
     return 4.0 * model.layers * model.query_heads * query_count * prefix_tokens * model.head_dim
 
 
-def _tile_sources(agents: List[Agent], query_tile_size: int) -> List[Agent]:
-    sources: List[Agent] = []
-    for i in range(0, len(agents), query_tile_size):
-        sources.append(agents[i])
-    return sources
+def _tile_sources_and_sizes(agents: List[Agent], query_tile_size: int) -> List[Tuple[Agent, int]]:
+    out: List[Tuple[Agent, int]] = []
+    offset = 0
+    for tile in actual_query_tile_sizes(len(agents), query_tile_size):
+        out.append((agents[offset], tile))
+        offset += tile
+    return out
 
 
 def _add_query_scatter(
@@ -29,12 +39,13 @@ def _add_query_scatter(
     agents: List[Agent],
     shards: List[ShardGroup],
     query_tile_size: int,
-    query_tile_bytes: int,
+    model: ModelConfig,
     decode_tokens: int,
 ) -> int:
     max_hops = 0
-    sources = _tile_sources(agents, query_tile_size)
-    for source in sources:
+    sources = _tile_sources_and_sizes(agents, query_tile_size)
+    for source, actual_tile_size in sources:
+        query_tile_bytes = model.query_tile_bytes(actual_tile_size)
         for shard in shards:
             for region in shard.regions:
                 hops = mesh.add_transfer(stats, source.position, region, query_tile_bytes * decode_tokens)
@@ -48,14 +59,15 @@ def _ring_reduce(
     agents: List[Agent],
     shards: List[ShardGroup],
     query_tile_size: int,
-    partial_state_bytes: int,
+    model: ModelConfig,
     decode_tokens: int,
 ) -> Tuple[int, int]:
     max_hops = 0
     total_hops = 0
     roots = [s.home_region for s in shards]
-    sources = _tile_sources(agents, query_tile_size)
-    for source in sources:
+    sources = _tile_sources_and_sizes(agents, query_tile_size)
+    for source, actual_tile_size in sources:
+        partial_state_bytes = model.partial_state_bytes(actual_tile_size)
         for i, root in enumerate(roots):
             nxt = roots[(i + 1) % len(roots)]
             hops = mesh.add_transfer(stats, root, nxt, partial_state_bytes * decode_tokens)
@@ -72,13 +84,20 @@ def _full_ring_reduce(
     stats: TraceStats,
     agents: List[Agent],
     query_tile_size: int,
-    partial_state_bytes: int,
+    model: ModelConfig,
     decode_tokens: int,
 ) -> Tuple[int, int]:
-    sources = _tile_sources(agents, query_tile_size)
-    packets = len(sources) * decode_tokens
-    mesh.add_ring_cycle_transfer(stats, packet_bytes=partial_state_bytes, packets=packets)
-    return len(mesh.serpentine_cycle_edges()), len(mesh.serpentine_cycle_edges()) * packets
+    sources = _tile_sources_and_sizes(agents, query_tile_size)
+    total_hops = 0
+    for _, actual_tile_size in sources:
+        packets = decode_tokens
+        mesh.add_ring_cycle_transfer(
+            stats,
+            packet_bytes=model.partial_state_bytes(actual_tile_size),
+            packets=packets,
+        )
+        total_hops += len(mesh.serpentine_cycle_edges()) * packets
+    return len(mesh.serpentine_cycle_edges()), total_hops
 
 
 def _region_split_ring_reduce(
@@ -87,16 +106,17 @@ def _region_split_ring_reduce(
     agents: List[Agent],
     shards: List[ShardGroup],
     query_tile_size: int,
-    partial_state_bytes: int,
+    model: ModelConfig,
     decode_tokens: int,
 ) -> Tuple[int, int]:
     max_hops = 0
     total_hops = 0
-    sources = _tile_sources(agents, query_tile_size)
+    sources = _tile_sources_and_sizes(agents, query_tile_size)
     roots = [s.home_region for s in shards]
     midpoint = len(roots) // 2 or 1
     groups = [roots[:midpoint], roots[midpoint:]]
-    for idx, source in enumerate(sources):
+    for idx, (source, actual_tile_size) in enumerate(sources):
+        partial_state_bytes = model.partial_state_bytes(actual_tile_size)
         group = groups[idx % len(groups)] or roots
         for i, root in enumerate(group):
             nxt = group[(i + 1) % len(group)]
@@ -115,13 +135,14 @@ def _tree_reduce(
     agents: List[Agent],
     shards: List[ShardGroup],
     query_tile_size: int,
-    partial_state_bytes: int,
+    model: ModelConfig,
     decode_tokens: int,
 ) -> Tuple[int, int]:
     max_hops = 0
     total_hops = 0
-    sources = _tile_sources(agents, query_tile_size)
-    for source in sources:
+    sources = _tile_sources_and_sizes(agents, query_tile_size)
+    for source, actual_tile_size in sources:
+        partial_state_bytes = model.partial_state_bytes(actual_tile_size)
         nodes = [s.home_region for s in shards]
         while len(nodes) > 1:
             next_nodes: List[Coord] = []
@@ -164,6 +185,8 @@ def simulate_kvring_v2(
         "tree": "binary_tree",
         "binary_tree": "binary_tree",
         "binary_tree_reduce": "binary_tree",
+        "full_ring": "full_ring_v1_legacy",
+        "region_split": "region_split_ring",
         "region_split_ring": "region_split_ring",
         "full_ring_v1_legacy": "full_ring_v1_legacy",
     }
@@ -178,11 +201,17 @@ def simulate_kvring_v2(
     shared = workload.shared_kv_bytes(model)
     shards = place_shard_groups(mesh, shared, num_shards, hardware, placement=placement)
 
-    tiles_per_step = workload.query_tiles_per_step(query_tile_size)
-    num_query_tiles_total = workload.query_tiles_total(query_tile_size)
-    query_tile_bytes = model.query_tile_bytes(query_tile_size)
-    partial_state_bytes = model.partial_state_bytes(query_tile_size)
-    packet_bytes = model.collective_packet_bytes(query_tile_size)
+    tile_sizes = actual_query_tile_sizes(len(agents), query_tile_size)
+    tiles_per_step = len(tile_sizes)
+    num_query_tiles_total = workload.decode_tokens_per_agent * tiles_per_step
+    max_actual_tile_size = max(tile_sizes, default=0)
+    query_tile_bytes = model.query_tile_bytes(max_actual_tile_size) if max_actual_tile_size else 0
+    partial_state_bytes = (
+        model.partial_state_bytes(max_actual_tile_size) if max_actual_tile_size else 0
+    )
+    packet_bytes = model.collective_packet_bytes(max_actual_tile_size) if max_actual_tile_size else 0
+    query_payload_per_step = sum(model.query_tile_bytes(tile) for tile in tile_sizes)
+    partial_payload_per_step = sum(model.partial_state_bytes(tile) for tile in tile_sizes)
 
     query_stats = TraceStats()
     scatter_max_hops = _add_query_scatter(
@@ -191,7 +220,7 @@ def simulate_kvring_v2(
         agents,
         shards,
         query_tile_size,
-        query_tile_bytes,
+        model,
         workload.decode_tokens_per_agent,
     )
     reduction_stats = TraceStats()
@@ -202,7 +231,7 @@ def simulate_kvring_v2(
             agents,
             shards,
             query_tile_size,
-            partial_state_bytes,
+            model,
             workload.decode_tokens_per_agent,
         )
     elif reduction == "binary_tree":
@@ -212,7 +241,7 @@ def simulate_kvring_v2(
             agents,
             shards,
             query_tile_size,
-            partial_state_bytes,
+            model,
             workload.decode_tokens_per_agent,
         )
     elif reduction == "region_split_ring":
@@ -222,7 +251,7 @@ def simulate_kvring_v2(
             agents,
             shards,
             query_tile_size,
-            partial_state_bytes,
+            model,
             workload.decode_tokens_per_agent,
         )
     else:
@@ -231,7 +260,7 @@ def simulate_kvring_v2(
             reduction_stats,
             agents,
             query_tile_size,
-            partial_state_bytes,
+            model,
             workload.decode_tokens_per_agent,
         )
 
@@ -262,10 +291,14 @@ def simulate_kvring_v2(
     local_sram_read_bottleneck_bytes = num_query_tiles_total * max_shard_region_bytes
     tokens_per_shard = workload.shared_prefix_tokens / num_shards
     max_group = max(s.group_size for s in shards)
-    shard_compute_ops_per_tile_per_region = _attention_ops(
-        model, min(query_tile_size, workload.concurrent_agents), int(math.ceil(tokens_per_shard / max_group))
+    shard_compute_ops_per_max_tile_per_region = _attention_ops(
+        model, max(1, max_actual_tile_size), int(math.ceil(tokens_per_shard / max_group))
     )
-    shard_compute_ops_total = shard_compute_ops_per_tile_per_region * num_query_tiles_total
+    shard_compute_ops_total = _attention_ops(
+        model,
+        workload.total_decode_steps,
+        int(math.ceil(tokens_per_shard / max_group)),
+    )
 
     local_sram_cycles = math.ceil(local_sram_read_bottleneck_bytes / hardware.sram_bytes_per_cycle)
     local_compute_cycles = math.ceil(
@@ -287,7 +320,7 @@ def simulate_kvring_v2(
     query_scatter_cycles += scatter_max_hops * hardware.hop_latency_cycles
     reduction_cycles = math.ceil(reduction_stats.max_link_load_bytes / hardware.link_bytes_per_cycle)
     reduction_cycles += reduce_max_hops * hardware.hop_latency_cycles
-    merge_bytes = num_query_tiles_total * partial_state_bytes * 2
+    merge_bytes = workload.decode_tokens_per_agent * partial_payload_per_step * 2
     merge_cycles = max(1, math.ceil(merge_bytes / hardware.sram_bytes_per_cycle))
 
     serialized_cycles = (
@@ -299,7 +332,7 @@ def simulate_kvring_v2(
     first_tile_compute_cycles = max(
         math.ceil(max_shard_region_bytes / hardware.sram_bytes_per_cycle),
         math.ceil(
-            shard_compute_ops_per_tile_per_region
+            shard_compute_ops_per_max_tile_per_region
             / (hardware.attention_compute_ops_per_s / hardware.clock_hz)
         ),
     )
@@ -318,8 +351,15 @@ def simulate_kvring_v2(
         "region_split_ring": "region_split_ring",
         "full_ring_v1_legacy": "full_ring_v1_legacy",
     }[reduction]
+    mode_name = {
+        "selected_ring": "KVRing-v2-ring",
+        "binary_tree": "KVRing-v2-tree",
+        "region_split_ring": "KVRing-v2-region-split",
+        "full_ring_v1_legacy": "KVRing-v2-full-ring-legacy",
+    }[reduction]
+    region_capacity_violation = max(region_sram.values()) > hardware.region_capacity_bytes
     result = ModeResult(
-        mode="KVRing-v2-query-tiled-parallel",
+        mode=mode_name,
         description="KV-stationary, query-tiled shard-local attention with exact online-softmax reduction.",
         total_sram_bytes=float(sum(region_sram.values())),
         peak_region_sram_bytes=float(max(region_sram.values()) if region_sram else 0.0),
@@ -348,8 +388,12 @@ def simulate_kvring_v2(
             "head_dim": model.head_dim,
             "hidden_dim": model.hidden_dim,
             "query_tile_size": query_tile_size,
+            "requested_query_tile_size": query_tile_size,
+            "actual_query_tile_sizes": tile_sizes,
             "num_query_tiles_per_step": tiles_per_step,
             "num_query_tiles_total": num_query_tiles_total,
+            "logical_decode_queries": workload.total_decode_steps,
+            "query_tiles": num_query_tiles_total,
             "num_shards": num_shards,
             "placement": placement,
             "reduction": reduction,
@@ -364,7 +408,10 @@ def simulate_kvring_v2(
             "query_dtype_bytes": model.dtype_bytes,
             "packet_bytes": packet_bytes,
             "packet_model": "R*hidden_dim*dtype + FP32(m,l,z) online-softmax state",
+            "query_tile_payload_bytes_per_step": query_payload_per_step,
+            "partial_state_payload_bytes_per_step": partial_payload_per_step,
             "local_sram_read_bytes": local_sram_read_bytes,
+            "local_sram_read_bytes_per_hot_shard": local_sram_read_bottleneck_bytes,
             "local_sram_read_tib": tib(local_sram_read_bytes),
             "private_suffix_kv_tokens": workload.modeled_private_suffix_tokens_per_agent,
             "private_suffix_read_bytes": private_suffix_read_bytes,
@@ -391,6 +438,10 @@ def simulate_kvring_v2(
             "serialized_latency_s": serialized_cycles / hardware.clock_hz,
             "throughput_bound_latency_s": throughput_bound_cycles / hardware.clock_hz,
             "critical_path_latency_s": critical_path_cycles / hardware.clock_hz,
+            "attention_stage_proxy_latency_s": throughput_bound_cycles / hardware.clock_hz,
+            "network_latency_s": (query_scatter_cycles + reduction_cycles) / hardware.clock_hz,
+            "sram_latency_s": local_sram_cycles / hardware.clock_hz,
+            "compute_latency_s": local_compute_cycles / hardware.clock_hz,
             "estimated_attention_stage_latency_s": estimated_cycles / hardware.clock_hz,
             "estimated_decode_attention_latency_s": estimated_cycles / hardware.clock_hz,
             "overlap_model": "pipeline",
@@ -407,7 +458,13 @@ def simulate_kvring_v2(
             "shard_region_bytes": [s.bytes_per_region for s in shards],
             "shard_bytes_per_region": [s.bytes_per_region for s in shards],
             "peak_region_sram_bytes": max(region_sram.values()) if region_sram else 0.0,
-            "region_capacity_violation": max(region_sram.values()) > hardware.region_capacity_bytes,
+            "region_capacity_violation": region_capacity_violation,
+            "valid_capacity": not region_capacity_violation,
+            "capacity_violation_reason": (
+                f"peak region SRAM {max(region_sram.values())} exceeds capacity {hardware.region_capacity_bytes}"
+                if region_capacity_violation
+                else ""
+            ),
             "shard_groups": [
                 {
                     "shard_id": s.shard_id,

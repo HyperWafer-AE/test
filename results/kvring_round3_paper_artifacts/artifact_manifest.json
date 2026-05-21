@@ -1,0 +1,504 @@
+{
+  "artifact_count": 55,
+  "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+  "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+  "outputs": [
+    {
+      "bytes": 15485,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures/fig_central_kv_bottleneck_breakdown.pdf",
+      "row_count": "",
+      "rows": "",
+      "sha256": "5633088b9a8fae50d290bef9ab1960934bef0d86a418926cb90ca313cd11a9ef"
+    },
+    {
+      "bytes": 90194,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures/fig_central_kv_bottleneck_breakdown.png",
+      "row_count": "",
+      "rows": "",
+      "sha256": "96c95f4368256734be93e34678fae66094356fb5effc9708ca6e14a191ae5acc"
+    },
+    {
+      "bytes": 14036,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures/fig_kv_move_vs_query_move.pdf",
+      "row_count": "",
+      "rows": "",
+      "sha256": "0ab17ed18b2962676c26f8ae5d2b7cee7c3ec41ffda4ebf33425274d4cee50db"
+    },
+    {
+      "bytes": 70434,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures/fig_kv_move_vs_query_move.png",
+      "row_count": "",
+      "rows": "",
+      "sha256": "ce5b99b8d5788f9ed208573050672b6bd5c8cc142b1b2deddec5067eb43f6441"
+    },
+    {
+      "bytes": 14309,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures/fig_latency_bounds_comparison.pdf",
+      "row_count": "",
+      "rows": "",
+      "sha256": "898989d0218f704411f04225d0a88c73855c7c56b5bd5f65ecc747aab7cc08d9"
+    },
+    {
+      "bytes": 67222,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures/fig_latency_bounds_comparison.png",
+      "row_count": "",
+      "rows": "",
+      "sha256": "1a9c56318e5e39f5d7ae1fc7db0742582723483b609e488d1b49720e0b5e5373"
+    },
+    {
+      "bytes": 16161,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures/fig_numerical_stability.pdf",
+      "row_count": "",
+      "rows": "",
+      "sha256": "a06f14a475e23772e38e1d7d0aa451e16dd5726ad9cd6ff29ae73cfa347d2bee"
+    },
+    {
+      "bytes": 78621,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures/fig_numerical_stability.png",
+      "row_count": "",
+      "rows": "",
+      "sha256": "c8c534fccf2545639b6f0ae0b8380c9171cb948da7fd992aa59696c654fafa33"
+    },
+    {
+      "bytes": 14887,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures/fig_prefix_length_sweep.pdf",
+      "row_count": "",
+      "rows": "",
+      "sha256": "85db74040aa3c00eeab33218255ab1070fb58180786dea94b83593529a3a35a7"
+    },
+    {
+      "bytes": 70696,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures/fig_prefix_length_sweep.png",
+      "row_count": "",
+      "rows": "",
+      "sha256": "b3f5f9ff217f86c5b20b47c398c6533bc567c56cc1b623e492844d60a44310f1"
+    },
+    {
+      "bytes": 16800,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures/fig_query_tile_sweep.pdf",
+      "row_count": "",
+      "rows": "",
+      "sha256": "7412c4819ed3dd60652c517f7eb55a9cb9115d59fe808dd61ddc7a93263a6578"
+    },
+    {
+      "bytes": 81873,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures/fig_query_tile_sweep.png",
+      "row_count": "",
+      "rows": "",
+      "sha256": "abbe07d38320138f51a2f9d65c114374a39f21dead268b471bd0988c0be34969"
+    },
+    {
+      "bytes": 16854,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures/fig_query_tile_sweep_fixed.pdf",
+      "row_count": "",
+      "rows": "",
+      "sha256": "5e8aa15f352ae4e4b25249a852783e279ed31ecff3b337f19a34bd6abf0cf413"
+    },
+    {
+      "bytes": 74092,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures/fig_query_tile_sweep_fixed.png",
+      "row_count": "",
+      "rows": "",
+      "sha256": "1ed6b54e0a22cb8624b2186ebf3d1ee3a5ef2ad9c4f5b8a9a12026d90c7426a2"
+    },
+    {
+      "bytes": 14346,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures/fig_reduction_topology.pdf",
+      "row_count": "",
+      "rows": "",
+      "sha256": "c092dd0287b63032120f4ab79ab3b00ba46a2d0631b25d03501a5934f09c6553"
+    },
+    {
+      "bytes": 86793,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures/fig_reduction_topology.png",
+      "row_count": "",
+      "rows": "",
+      "sha256": "cd9ba7c855dc23a1dd79e5e626b81f0b65ce33e378d403ee81473fa20699505f"
+    },
+    {
+      "bytes": 21803,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures/fig_replication_centralization_dilemma.pdf",
+      "row_count": "",
+      "rows": "",
+      "sha256": "26856be19bad54adb7cad578dcbd1e60b83056a674ecedf27f97965289c96b51"
+    },
+    {
+      "bytes": 280725,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures/fig_replication_centralization_dilemma.png",
+      "row_count": "",
+      "rows": "",
+      "sha256": "5fc05f0492a8fd571c3364d299966319779b1f89276384ef3a57cbf0db623fa1"
+    },
+    {
+      "bytes": 13743,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures/fig_shard_count_sweep.pdf",
+      "row_count": "",
+      "rows": "",
+      "sha256": "4bb01ad8245bcab135147f89b0d435921b285c5c6091f9d237fbbe1a109b45af"
+    },
+    {
+      "bytes": 61153,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures/fig_shard_count_sweep.png",
+      "row_count": "",
+      "rows": "",
+      "sha256": "a6c1343a40cb91ba214cd6d81fff8fd583f83dbb2bc1b66a169261dce591a842"
+    },
+    {
+      "bytes": 22987,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures_source/agent_count_sweep.csv",
+      "row_count": 18,
+      "rows": 18,
+      "sha256": "dcb72cdcbe853c1038b791199d3f02922c502e813c2ddf2b7546cbd9b1ab7481"
+    },
+    {
+      "bytes": 604,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures_source/fig_central_kv_bottleneck_breakdown.csv",
+      "row_count": 5,
+      "rows": 5,
+      "sha256": "d40a6e0576364be800538822f35f60c1b158e31e8eb8f82298e356b98dc6219f"
+    },
+    {
+      "bytes": 5442,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures_source/fig_kv_move_vs_query_move.csv",
+      "row_count": 3,
+      "rows": 3,
+      "sha256": "6124c7399d6c69fdb56f3a791053287c02ca0f3b31e66b6c648426acc265c089"
+    },
+    {
+      "bytes": 415,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures_source/fig_latency_bounds_comparison.csv",
+      "row_count": 6,
+      "rows": 6,
+      "sha256": "7ad38fcdc5357c02b011966adcafb7d471eb3fe3895f36cc4f22592f170cf865"
+    },
+    {
+      "bytes": 7774,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures_source/fig_numerical_stability.csv",
+      "row_count": 72,
+      "rows": 72,
+      "sha256": "b0d2566559a9eed4eb12a84801b35500c956d37b41b49a67b26ed3eb32a15d25"
+    },
+    {
+      "bytes": 24566,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures_source/fig_prefix_length_sweep.csv",
+      "row_count": 24,
+      "rows": 24,
+      "sha256": "1df77c00faddc0141d518069413c498dcc6e2207e6afe5a4beb2fb9da925cc69"
+    },
+    {
+      "bytes": 2026289,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures_source/fig_query_tile_sweep.csv",
+      "row_count": 2160,
+      "rows": 2160,
+      "sha256": "7639c62933776d7268d5fd9786e17edf6ef5c1ae555925fc6189d83946b5dd43"
+    },
+    {
+      "bytes": 36836,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures_source/fig_query_tile_sweep_fixed.csv",
+      "row_count": 30,
+      "rows": 30,
+      "sha256": "17a2c5b2de7f9db9bc376f647953ad97e9490bf6528f83b27f0c6a2aa6181de3"
+    },
+    {
+      "bytes": 18747,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures_source/fig_reduction_topology.csv",
+      "row_count": 12,
+      "rows": 12,
+      "sha256": "33902010ce9917b9b5fa190e215e53e4c470b95fce85380f5335a6f206f5e395"
+    },
+    {
+      "bytes": 7800,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures_source/fig_replication_centralization_dilemma.csv",
+      "row_count": 6,
+      "rows": 6,
+      "sha256": "9bd02dd904ccd360fdd3b64eae6d44036ccf07dfde92f2d4707034f657c31da6"
+    },
+    {
+      "bytes": 23829,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures_source/fig_shard_count_sweep.csv",
+      "row_count": 18,
+      "rows": 18,
+      "sha256": "4968679b62258f1c558559faa9224ef8c5b81b61eda354ddb1eaf41629101fdb"
+    },
+    {
+      "bytes": 104809,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures_source/hardware_sensitivity.csv",
+      "row_count": 80,
+      "rows": 80,
+      "sha256": "4fe18be9d2ffee2896dcb4efe146c91f73a5530f13b6686fcbbe421b3b23f6bb"
+    },
+    {
+      "bytes": 910377,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures_source/invalid_capacity_rows.csv",
+      "row_count": 990,
+      "rows": 990,
+      "sha256": "6bd0bc5a501e99391887c04e7f77bfdf49a313539e95a506e420bc48a79a0435"
+    },
+    {
+      "bytes": 14459,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures_source/online_softmax_correctness.csv",
+      "row_count": 120,
+      "rows": 120,
+      "sha256": "e2e6fe43824c2794b971ec35d0bcf03b3ed386d6cc8a81c3a5dc14ae9ba33ecf"
+    },
+    {
+      "bytes": 64485,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "figures_source/topology_sweep.csv",
+      "row_count": 40,
+      "rows": 40,
+      "sha256": "04e69bcc8ce348e1dd1fb502c98aa1211b149d531e96b79a8aaf71ca41b71bfa"
+    },
+    {
+      "bytes": 64714,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "report.json",
+      "row_count": "",
+      "rows": "",
+      "sha256": "7b910619b249df97ad5a5bbb767045351c1e8b504691e432c72bd3eeabfa40a0"
+    },
+    {
+      "bytes": 2180,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "report.md",
+      "row_count": "",
+      "rows": "",
+      "sha256": "e875a178039277cc1c834a422bf12cd1edf696103a4e40680b03612dbfb06bc4"
+    },
+    {
+      "bytes": 22987,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "tables/agent_count_sweep.csv",
+      "row_count": 18,
+      "rows": 18,
+      "sha256": "dcb72cdcbe853c1038b791199d3f02922c502e813c2ddf2b7546cbd9b1ab7481"
+    },
+    {
+      "bytes": 7800,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "tables/baseline_summary.csv",
+      "row_count": 6,
+      "rows": 6,
+      "sha256": "9bd02dd904ccd360fdd3b64eae6d44036ccf07dfde92f2d4707034f657c31da6"
+    },
+    {
+      "bytes": 14459,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "tables/correctness_summary.csv",
+      "row_count": 120,
+      "rows": 120,
+      "sha256": "e2e6fe43824c2794b971ec35d0bcf03b3ed386d6cc8a81c3a5dc14ae9ba33ecf"
+    },
+    {
+      "bytes": 7800,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "tables/default_summary.csv",
+      "row_count": 6,
+      "rows": 6,
+      "sha256": "9bd02dd904ccd360fdd3b64eae6d44036ccf07dfde92f2d4707034f657c31da6"
+    },
+    {
+      "bytes": 104809,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "tables/hardware_sensitivity.csv",
+      "row_count": 80,
+      "rows": 80,
+      "sha256": "4fe18be9d2ffee2896dcb4efe146c91f73a5530f13b6686fcbbe421b3b23f6bb"
+    },
+    {
+      "bytes": 2833,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "tables/link_load_summary.csv",
+      "row_count": 48,
+      "rows": 48,
+      "sha256": "c6dd40ba66e92f03c53d4eaead4c5a6321a2d7ab0bbcb05c361790c9da9d8b9a"
+    },
+    {
+      "bytes": 7800,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "tables/mode_summary.csv",
+      "row_count": 6,
+      "rows": 6,
+      "sha256": "9bd02dd904ccd360fdd3b64eae6d44036ccf07dfde92f2d4707034f657c31da6"
+    },
+    {
+      "bytes": 7774,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "tables/numerical_error_summary.csv",
+      "row_count": 72,
+      "rows": 72,
+      "sha256": "b0d2566559a9eed4eb12a84801b35500c956d37b41b49a67b26ed3eb32a15d25"
+    },
+    {
+      "bytes": 14459,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "tables/online_softmax_correctness.csv",
+      "row_count": 120,
+      "rows": 120,
+      "sha256": "e2e6fe43824c2794b971ec35d0bcf03b3ed386d6cc8a81c3a5dc14ae9ba33ecf"
+    },
+    {
+      "bytes": 2026289,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "tables/query_tile_sweep.csv",
+      "row_count": 2160,
+      "rows": 2160,
+      "sha256": "7639c62933776d7268d5fd9786e17edf6ef5c1ae555925fc6189d83946b5dd43"
+    },
+    {
+      "bytes": 36836,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "tables/query_tile_sweep_fixed.csv",
+      "row_count": 30,
+      "rows": 30,
+      "sha256": "17a2c5b2de7f9db9bc376f647953ad97e9490bf6528f83b27f0c6a2aa6181de3"
+    },
+    {
+      "bytes": 18747,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "tables/reduction_topology_sweep.csv",
+      "row_count": 12,
+      "rows": 12,
+      "sha256": "33902010ce9917b9b5fa190e215e53e4c470b95fce85380f5335a6f206f5e395"
+    },
+    {
+      "bytes": 23829,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "tables/shard_count_sweep.csv",
+      "row_count": 18,
+      "rows": 18,
+      "sha256": "4968679b62258f1c558559faa9224ef8c5b81b61eda354ddb1eaf41629101fdb"
+    },
+    {
+      "bytes": 24566,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "tables/shared_prefix_sweep.csv",
+      "row_count": 24,
+      "rows": 24,
+      "sha256": "1df77c00faddc0141d518069413c498dcc6e2207e6afe5a4beb2fb9da925cc69"
+    },
+    {
+      "bytes": 7800,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "tables/sram_summary.csv",
+      "row_count": 6,
+      "rows": 6,
+      "sha256": "9bd02dd904ccd360fdd3b64eae6d44036ccf07dfde92f2d4707034f657c31da6"
+    },
+    {
+      "bytes": 64485,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "tables/topology_summary.csv",
+      "row_count": 40,
+      "rows": 40,
+      "sha256": "04e69bcc8ce348e1dd1fb502c98aa1211b149d531e96b79a8aaf71ca41b71bfa"
+    },
+    {
+      "bytes": 64485,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "tables/topology_sweep.csv",
+      "row_count": 40,
+      "rows": 40,
+      "sha256": "04e69bcc8ce348e1dd1fb502c98aa1211b149d531e96b79a8aaf71ca41b71bfa"
+    },
+    {
+      "bytes": 13388,
+      "command": "uv run python scripts/export_kvring_artifacts.py --out results/kvring_round3_paper_artifacts",
+      "commit_hash": "7c231476b932b00abc4faabce7c5369d7facb2c3",
+      "file_path": "source_run_manifest.csv",
+      "row_count": 54,
+      "rows": 54,
+      "sha256": "0430b0d0de9bf7bc45064d4023f30f20e810519960a9946d6e65d179d6c7cf1c"
+    }
+  ],
+  "project": "KVRing Round 3",
+  "vc_model": "not_modeled_for_performance"
+}

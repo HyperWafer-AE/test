@@ -44,8 +44,11 @@ MODE_ALIASES = {
     "pull_kv_independent": "Pull-KV-Independent",
     "central_kv_stationary": "Central-KV-Stationary",
     "kvring_v1": "KVRing-v1-sequential-pipeline",
-    "kvring_v2_ring": "KVRing-v2-query-tiled-parallel",
-    "kvring_v2_tree": "KVRing-v2-query-tiled-parallel",
+    "kvring_v2": "KVRing-v2-ring",
+    "kvring_v2_ring": "KVRing-v2-ring",
+    "kvring_v2_tree": "KVRing-v2-tree",
+    "kvring_v2_region_split": "KVRing-v2-region-split",
+    "kvring_v2_full_ring_legacy": "KVRing-v2-full-ring-legacy",
 }
 
 
@@ -69,7 +72,7 @@ def run_mode(
         )
     if mode == "kvring_v1":
         return simulate_kvring_v1(model, workload, hardware, ring_shards=num_shards)
-    if mode in {"kvring_v2_ring", "kvring_v2_query_tiled_parallel_ring_reduce"}:
+    if mode in {"kvring_v2", "kvring_v2_ring", "kvring_v2_query_tiled_parallel_ring_reduce"}:
         return simulate_kvring_v2(
             model,
             workload,
@@ -87,6 +90,26 @@ def run_mode(
             query_tile_size=query_tile_size,
             num_shards=num_shards,
             reduction="binary_tree",
+            placement=placement,
+        )
+    if mode in {"kvring_v2_region_split", "kvring_v2_query_tiled_parallel_region_split"}:
+        return simulate_kvring_v2(
+            model,
+            workload,
+            hardware,
+            query_tile_size=query_tile_size,
+            num_shards=num_shards,
+            reduction="region_split_ring",
+            placement=placement,
+        )
+    if mode in {"kvring_v2_full_ring_legacy", "kvring_v2_query_tiled_parallel_full_ring"}:
+        return simulate_kvring_v2(
+            model,
+            workload,
+            hardware,
+            query_tile_size=query_tile_size,
+            num_shards=num_shards,
+            reduction="full_ring_v1_legacy",
             placement=placement,
         )
     raise ValueError(f"unknown mode: {mode}")
@@ -132,6 +155,19 @@ def result_row(result: ModeResult, **params: object) -> Dict[str, object]:
     private_kv_write_bytes = extra.get("private_kv_write_bytes", "")
     local_sram_read_bytes = extra.get("local_sram_read_bytes", extra.get("central_sram_read_bytes", ""))
     reduction_topology = extra.get("reduction_topology", extra.get("reduction", params.get("reduction", "")))
+    region_capacity_violation = bool(extra.get("region_capacity_violation", False))
+    valid_capacity = bool(extra.get("valid_capacity", not region_capacity_violation))
+    serialized_latency_s = float(extra.get("serialized_latency_s", result.estimated_latency_seconds))
+    throughput_bound_latency_s = float(
+        extra.get("throughput_bound_latency_s", result.estimated_latency_seconds)
+    )
+    critical_path_latency_s = float(extra.get("critical_path_latency_s", result.estimated_latency_seconds))
+    attention_proxy_latency_s = float(
+        extra.get("attention_stage_proxy_latency_s", throughput_bound_latency_s)
+    )
+    network_latency_s = float(extra.get("network_latency_s", result.mesh_seconds))
+    sram_latency_s = float(extra.get("sram_latency_s", result.compute_seconds))
+    compute_latency_s = float(extra.get("compute_latency_s", result.compute_seconds))
     row: Dict[str, object] = {
         "mode": result.mode,
         "old_mode_alias": extra.get("old_mode_alias", ""),
@@ -149,22 +185,17 @@ def result_row(result: ModeResult, **params: object) -> Dict[str, object]:
         "total_wire_bytes": result.total_wire_bytes,
         "max_directed_link_load_bytes": result.max_link_load_bytes,
         "mean_active_link_load_bytes": result.mean_active_link_load_bytes,
-        "network_latency_s": result.mesh_seconds,
-        "compute_latency_s": result.compute_seconds,
-        "sram_latency_s": result.compute_seconds,
-        "estimated_attention_stage_latency_s": extra.get(
-            "estimated_attention_stage_latency_s", result.estimated_latency_seconds
-        ),
-        "attention_stage_latency_s": extra.get(
-            "estimated_attention_stage_latency_s", result.estimated_latency_seconds
-        ),
-        "estimated_end_to_end_proxy_latency_s": result.estimated_latency_seconds,
+        "network_latency_s": network_latency_s,
+        "compute_latency_s": compute_latency_s,
+        "sram_latency_s": sram_latency_s,
+        "serialized_latency_s": serialized_latency_s,
+        "throughput_bound_latency_s": throughput_bound_latency_s,
+        "critical_path_latency_s": critical_path_latency_s,
+        "estimated_attention_stage_latency_s": attention_proxy_latency_s,
+        "attention_stage_latency_s": attention_proxy_latency_s,
+        "estimated_end_to_end_proxy_latency_s": attention_proxy_latency_s,
         "metric_warning": "This is a shared-prefix attention-stage proxy, not full LLM end-to-end JCT.",
         "estimated_latency_s": result.estimated_latency_seconds,
-        "critical_path_latency_s": extra.get("critical_path_latency_s", result.estimated_latency_seconds),
-        "throughput_bound_latency_s": extra.get(
-            "throughput_bound_latency_s", result.estimated_latency_seconds
-        ),
         "mesh_time_s": result.mesh_seconds,
         "compute_time_s": result.compute_seconds,
         "total_sram_gib": gib(result.total_sram_bytes),
@@ -189,10 +220,7 @@ def result_row(result: ModeResult, **params: object) -> Dict[str, object]:
         "central_hotspot_ratio": extra.get("central_hotspot_ratio", ""),
         "central_compute_bytes_or_ops": extra.get("central_compute_bytes_or_ops", ""),
         "central_region_queue_time_s": extra.get("central_region_queue_time_s", ""),
-        "attention_stage_proxy_latency_s": extra.get(
-            "attention_stage_proxy_latency_s",
-            extra.get("estimated_attention_stage_latency_s", result.estimated_latency_seconds),
-        ),
+        "attention_stage_proxy_latency_s": attention_proxy_latency_s,
         "query_bytes_sent": extra.get("query_bytes_sent", ""),
         "partial_bytes_returned": extra.get("partial_bytes_returned", ""),
         "query_scatter_latency_s": extra.get("query_scatter_latency_s", ""),
@@ -200,6 +228,11 @@ def result_row(result: ModeResult, **params: object) -> Dict[str, object]:
         "reduction_latency_s": extra.get("reduction_latency_s", ""),
         "local_suffix_latency_s": extra.get("local_suffix_latency_s", ""),
         "merge_latency_s": extra.get("merge_latency_s", ""),
+        "central_query_mesh_latency_s": extra.get("central_query_mesh_latency_s", ""),
+        "central_sram_read_latency_s": extra.get("central_sram_read_latency_s", ""),
+        "central_compute_latency_s": extra.get("central_compute_latency_s", ""),
+        "central_return_mesh_latency_s": extra.get("central_return_mesh_latency_s", ""),
+        "central_queue_latency_s": extra.get("central_queue_latency_s", ""),
         "reduction_bytes": extra.get("reduction_bytes", ""),
         "reduction_wire_bytes": extra.get("reduction_wire_bytes", ""),
         "reduction_byte_hops": extra.get("reduction_byte_hops", ""),
@@ -221,6 +254,12 @@ def result_row(result: ModeResult, **params: object) -> Dict[str, object]:
         "query_dtype_bytes": extra.get("query_dtype_bytes", ""),
         "packet_bytes": extra.get("packet_bytes", ""),
         "packet_model": extra.get("packet_model", ""),
+        "actual_query_tile_sizes": json.dumps(extra.get("actual_query_tile_sizes", "")),
+        "requested_query_tile_size": extra.get("requested_query_tile_size", ""),
+        "logical_decode_queries": extra.get("logical_decode_queries", ""),
+        "query_tiles": extra.get("query_tiles", ""),
+        "query_tile_payload_bytes_per_step": extra.get("query_tile_payload_bytes_per_step", ""),
+        "partial_state_payload_bytes_per_step": extra.get("partial_state_payload_bytes_per_step", ""),
         "shard_group_size": json.dumps(extra.get("shard_group_size", "")),
         "placement_unit": extra.get("placement_unit", ""),
         "regions_per_shard": json.dumps(extra.get("regions_per_shard", "")),
@@ -232,7 +271,10 @@ def result_row(result: ModeResult, **params: object) -> Dict[str, object]:
         "reduction": extra.get("reduction", ""),
         "placement": extra.get("placement", ""),
         "num_shards": extra.get("num_shards", params.get("num_shards", "")),
-        "region_capacity_violation": extra.get("region_capacity_violation", ""),
+        "region_capacity_violation": region_capacity_violation,
+        "valid_capacity": valid_capacity,
+        "capacity_valid": valid_capacity,
+        "capacity_violation_reason": extra.get("capacity_violation_reason", ""),
         "vc_model": extra.get("vc_model", ""),
     }
     row.update(params)
@@ -260,12 +302,25 @@ def write_json(path: Path, data: object) -> None:
     path.write_text(json.dumps(data, indent=2, sort_keys=True), encoding="utf-8")
 
 
+def _result_attention_proxy_latency(result: ModeResult) -> float:
+    return float(
+        result.extra.get(
+            "attention_stage_proxy_latency_s",
+            result.extra.get("throughput_bound_latency_s", result.estimated_latency_seconds),
+        )
+    )
+
+
+def _result_capacity_valid(result: ModeResult) -> bool:
+    return bool(result.extra.get("valid_capacity", not result.extra.get("region_capacity_violation", False)))
+
+
 def write_text_report(path: Path, results: List[ModeResult]) -> None:
     model = ModelConfig()
     workload = WorkloadConfig()
     hardware = HardwareConfig()
     lines: List[str] = []
-    lines.append("# KVRing Round 2 Report")
+    lines.append("# KVRing Round 3 Report")
     lines.append("")
     lines.append("Scope: attention-only shared-prefix plus local suffix modeling; non-attention LLM layers are not included.")
     lines.append("This is a microarchitectural shared-prefix attention-stage simulator, not a full LLM serving system and not a real wafer hardware measurement.")
@@ -275,14 +330,27 @@ def write_text_report(path: Path, results: List[ModeResult]) -> None:
     lines.append(f"Agents: {workload.concurrent_agents}; decode tokens/agent: {workload.decode_tokens_per_agent}")
     lines.append(f"NoC channel model: directed bidirectional; VC model: `{hardware.vc_model}`")
     lines.append("")
+    headline_results = [r for r in results if _result_capacity_valid(r)] or results
+    lines.append("Headline latency uses `throughput_bound_latency_s`; serialized and critical-path bounds are exported separately.")
+    lines.append("")
+    lines.append("## Main Headline Table (capacity-valid rows only)")
+    lines.append("")
     lines.append("| Mode | Peak SRAM | Wire traffic | Max directed link | SRAM port | Attention-stage proxy latency |")
     lines.append("|---|---:|---:|---:|---:|---:|")
-    for r in results:
+    for r in headline_results:
         lines.append(
             f"| {r.mode} | {fmt_bytes(r.peak_region_sram_bytes)} | {fmt_bytes(r.total_wire_bytes)} | "
             f"{fmt_bytes(r.max_link_load_bytes)} | {fmt_bytes(r.sram_port_bytes)} | "
-            f"{fmt_seconds(r.estimated_latency_seconds)} |"
+            f"{fmt_seconds(_result_attention_proxy_latency(r))} |"
         )
+    invalid = [r for r in results if not _result_capacity_valid(r)]
+    if invalid:
+        lines.append("")
+        lines.append("## Capacity-Invalid Rows")
+        lines.append("")
+        lines.append("These rows are kept for replication-centralization stress analysis but are not used as valid headline comparisons.")
+        for r in invalid:
+            lines.append(f"- {r.mode}: {r.extra.get('capacity_violation_reason', 'capacity violation')}")
     lines.append("")
     lines.append("KVRing-v2 packet accounting is symbolic: `Q_tile + FP32(m,l,z)`; exact online-softmax state is reduced by ring/tree collectives.")
     lines.append("")
@@ -300,7 +368,7 @@ def write_text_report(path: Path, results: List[ModeResult]) -> None:
                 "- Central-KV-Stationary keeps KV off the mesh during decode; its bottleneck is central SRAM/compute queueing "
                 f"({r.extra.get('central_region_queue_time_s')} s)."
             )
-        if r.mode == "KVRing-v2-query-tiled-parallel":
+        if r.mode.startswith("KVRing-v2-"):
             lines.append(
                 f"- {r.mode} reports query scatter, shard compute, exact online-softmax reduction, suffix, and merge components separately."
             )
@@ -323,7 +391,7 @@ def plot_mode_comparison(results: List[ModeResult], path_base: Path) -> None:
     axes[1, 0].set_yscale("log")
     axes[1, 0].set_title("Max Directed Link Load")
     axes[1, 0].set_ylabel("GiB")
-    axes[1, 1].bar(x, [max(r.estimated_latency_seconds, 1e-12) for r in results], color="#54A24B")
+    axes[1, 1].bar(x, [max(_result_attention_proxy_latency(r), 1e-12) for r in results], color="#54A24B")
     axes[1, 1].set_yscale("log")
     axes[1, 1].set_title("Estimated Attention Latency")
     axes[1, 1].set_ylabel("s")
@@ -337,7 +405,7 @@ def plot_mode_comparison(results: List[ModeResult], path_base: Path) -> None:
 
 
 def plot_query_tile_sweep(rows: List[Dict[str, object]], path_base: Path) -> None:
-    v2_rows = [r for r in rows if r["mode"] == "KVRing-v2-query-tiled-parallel"]
+    v2_rows = [r for r in rows if str(r["mode"]).startswith("KVRing-v2-")]
     if not v2_rows:
         return
     target_prefix = 32768
@@ -390,6 +458,50 @@ def plot_simple_bar(rows: List[Dict[str, object]], key: str, group_key: str, pat
     ax.set_xticks(np.arange(len(rows)), labels, rotation=30, ha="right")
     ax.set_title(title)
     ax.set_ylabel(key)
+    ax.grid(axis="y", alpha=0.25)
+    fig.tight_layout()
+    for ext in ("png", "pdf"):
+        fig.savefig(path_base.with_suffix(f".{ext}"), dpi=220)
+    plt.close(fig)
+
+
+def plot_latency_bounds(rows: List[Dict[str, object]], path_base: Path) -> None:
+    modes = []
+    bounds = ["critical_path", "throughput_bound", "serialized"]
+    for row in rows:
+        mode = str(row["mode"])
+        if mode not in modes:
+            modes.append(mode)
+    x = np.arange(len(modes))
+    width = 0.24
+    fig, ax = plt.subplots(figsize=(8.2, 4.5))
+    colors = {"critical_path": "#4C78A8", "throughput_bound": "#54A24B", "serialized": "#E45756"}
+    for i, bound in enumerate(bounds):
+        vals = [
+            float(next(r["latency_s"] for r in rows if r["mode"] == mode and r["latency_bound"] == bound))
+            for mode in modes
+        ]
+        ax.bar(x + (i - 1) * width, vals, width=width, label=bound, color=colors[bound])
+    ax.set_xticks(x, modes, rotation=20, ha="right")
+    ax.set_yscale("log")
+    ax.set_ylabel("seconds")
+    ax.set_title("KVRing-v2 Attention-Stage Latency Bounds")
+    ax.grid(axis="y", alpha=0.25, which="both")
+    ax.legend(frameon=False)
+    fig.tight_layout()
+    for ext in ("png", "pdf"):
+        fig.savefig(path_base.with_suffix(f".{ext}"), dpi=220)
+    plt.close(fig)
+
+
+def plot_central_breakdown(rows: List[Dict[str, object]], path_base: Path) -> None:
+    labels = [str(r["component"]) for r in rows]
+    vals = [float(r["latency_s"]) for r in rows]
+    fig, ax = plt.subplots(figsize=(7.2, 4.2))
+    ax.bar(np.arange(len(rows)), vals, color=["#4C78A8", "#F58518", "#E45756", "#72B7B2", "#54A24B"])
+    ax.set_xticks(np.arange(len(rows)), labels, rotation=25, ha="right")
+    ax.set_ylabel("seconds")
+    ax.set_title("Central-KV-Stationary Bottleneck Breakdown")
     ax.grid(axis="y", alpha=0.25)
     fig.tight_layout()
     for ext in ("png", "pdf"):
@@ -764,7 +876,9 @@ def export_round2_artifacts(outdir: Path, clean: bool = True) -> None:
 
     results = default_results()
     mode_rows = [result_row(r) for r in results]
+    all_rows: List[Dict[str, object]] = list(mode_rows)
     write_csv(table_dir / "mode_summary.csv", mode_rows)
+    write_csv(table_dir / "default_summary.csv", mode_rows)
     write_csv(outdir / "figures_source" / "fig_replication_centralization_dilemma.csv", mode_rows)
     write_text_report(outdir / "report.md", results)
     write_json(outdir / "report.json", {"results": [r.to_full_dict() for r in results]})
@@ -785,17 +899,30 @@ def export_round2_artifacts(outdir: Path, clean: bool = True) -> None:
         [1, 2, 4, 8, 16, 32],
         [64, 256, 512],
     )
+    all_rows.extend(query_rows)
     write_csv(outdir / "figures_source" / "fig_query_tile_sweep.csv", query_rows)
     plot_query_tile_sweep(query_rows, fig_dir / "fig_query_tile_sweep")
 
+    fixed_query_rows = generate_query_tile_sweep(
+        table_dir / "query_tile_sweep_fixed.csv",
+        ["kvring_v2_ring", "kvring_v2_tree", "central_kv_stationary"],
+        [1, 2, 3, 4, 5, 6, 7, 8, 16, 32],
+        [32768],
+        [8],
+        [256],
+    )
+    all_rows.extend(fixed_query_rows)
+    write_csv(outdir / "figures_source" / "fig_query_tile_sweep_fixed.csv", fixed_query_rows)
+    plot_query_tile_sweep(fixed_query_rows, fig_dir / "fig_query_tile_sweep_fixed")
+
     prefix_rows = generate_shared_prefix_sweep(table_dir / "shared_prefix_sweep.csv")
+    all_rows.extend(prefix_rows)
     write_csv(outdir / "figures_source" / "fig_prefix_length_sweep.csv", prefix_rows)
     plot_simple_bar(
         [
             r
             for r in prefix_rows
-            if r["mode"] == "KVRing-v2-query-tiled-parallel"
-            and r["reduction_topology"] == "binary_tree_reduce"
+            if r["mode"] == "KVRing-v2-tree"
         ],
         "estimated_attention_stage_latency_s",
         "shared_prefix_tokens",
@@ -804,16 +931,17 @@ def export_round2_artifacts(outdir: Path, clean: bool = True) -> None:
     )
 
     agent_rows = generate_agent_count_sweep(table_dir / "agent_count_sweep.csv")
+    all_rows.extend(agent_rows)
     write_csv(outdir / "figures_source" / "agent_count_sweep.csv", agent_rows)
 
     shard_rows = generate_shard_count_sweep(table_dir / "shard_count_sweep.csv")
+    all_rows.extend(shard_rows)
     write_csv(outdir / "figures_source" / "fig_shard_count_sweep.csv", shard_rows)
     plot_simple_bar(
         [
             r
             for r in shard_rows
-            if r["mode"] == "KVRing-v2-query-tiled-parallel"
-            and r["reduction_topology"] == "binary_tree_reduce"
+            if r["mode"] == "KVRing-v2-tree"
         ],
         "estimated_attention_stage_latency_s",
         "ring_shards",
@@ -822,6 +950,7 @@ def export_round2_artifacts(outdir: Path, clean: bool = True) -> None:
     )
 
     reduction_rows = generate_reduction_topology_sweep(table_dir / "reduction_topology_sweep.csv")
+    all_rows.extend(reduction_rows)
     write_csv(outdir / "figures_source" / "fig_reduction_topology.csv", reduction_rows)
     plot_simple_bar(
         reduction_rows,
@@ -832,16 +961,18 @@ def export_round2_artifacts(outdir: Path, clean: bool = True) -> None:
     )
 
     topo_rows = generate_topology_sweep(table_dir / "topology_sweep.csv")
+    all_rows.extend(topo_rows)
     write_csv(table_dir / "topology_summary.csv", topo_rows)
     write_csv(outdir / "figures_source" / "topology_sweep.csv", topo_rows)
 
     hw_rows = generate_hardware_sensitivity(table_dir / "hardware_sensitivity.csv")
+    all_rows.extend(hw_rows)
     write_csv(outdir / "figures_source" / "hardware_sensitivity.csv", hw_rows)
 
     kv_move_rows = [
         r
         for r in mode_rows
-        if r["mode"] in {"Pull-KV-Independent", "KVRing-v2-query-tiled-parallel"}
+        if r["mode"] in {"Pull-KV-Independent", "KVRing-v2-ring", "KVRing-v2-tree"}
     ]
     write_csv(outdir / "figures_source" / "fig_kv_move_vs_query_move.csv", kv_move_rows)
     plot_simple_bar(
@@ -851,6 +982,53 @@ def export_round2_artifacts(outdir: Path, clean: bool = True) -> None:
         fig_dir / "fig_kv_move_vs_query_move",
         "Moving KV vs Moving Query/States",
     )
+
+    latency_bound_rows = []
+    for row in mode_rows:
+        if row["mode"] in {"KVRing-v2-ring", "KVRing-v2-tree"}:
+            for key, label in [
+                ("critical_path_latency_s", "critical_path"),
+                ("throughput_bound_latency_s", "throughput_bound"),
+                ("serialized_latency_s", "serialized"),
+            ]:
+                latency_bound_rows.append(
+                    {
+                        "mode": row["mode"],
+                        "reduction_topology": row["reduction_topology"],
+                        "latency_bound": label,
+                        "latency_s": row[key],
+                    }
+                )
+    write_csv(outdir / "figures_source" / "fig_latency_bounds_comparison.csv", latency_bound_rows)
+    plot_latency_bounds(latency_bound_rows, fig_dir / "fig_latency_bounds_comparison")
+
+    central_rows = [r for r in mode_rows if r["mode"] == "Central-KV-Stationary"]
+    central_breakdown_rows = []
+    if central_rows:
+        central = central_rows[0]
+        for key, component in [
+            ("central_query_mesh_latency_s", "query mesh"),
+            ("central_sram_read_latency_s", "central SRAM read"),
+            ("central_compute_latency_s", "central compute"),
+            ("central_return_mesh_latency_s", "return mesh"),
+            ("central_queue_latency_s", "central queue"),
+        ]:
+            central_breakdown_rows.append(
+                {
+                    "mode": central["mode"],
+                    "component": component,
+                    "latency_s": central[key],
+                    "central_router_in_bytes": central["central_router_in_bytes"],
+                    "central_router_out_bytes": central["central_router_out_bytes"],
+                    "central_max_link_load_bytes": central["central_max_link_load_bytes"],
+                    "central_hotspot_ratio": central["central_hotspot_ratio"],
+                }
+            )
+    write_csv(
+        outdir / "figures_source" / "fig_central_kv_bottleneck_breakdown.csv",
+        central_breakdown_rows,
+    )
+    plot_central_breakdown(central_breakdown_rows, fig_dir / "fig_central_kv_bottleneck_breakdown")
 
     correctness_rows = generate_online_softmax_correctness(table_dir / "online_softmax_correctness.csv")
     write_csv(outdir / "figures_source" / "online_softmax_correctness.csv", correctness_rows)
@@ -867,6 +1045,13 @@ def export_round2_artifacts(outdir: Path, clean: bool = True) -> None:
     write_csv(table_dir / "sram_summary.csv", mode_rows)
     write_csv(table_dir / "baseline_summary.csv", mode_rows)
     write_csv(table_dir / "correctness_summary.csv", correctness_rows)
+    invalid_rows = [
+        row
+        for row in all_rows
+        if str(row.get("valid_capacity", row.get("capacity_valid", "True"))).lower() in {"false", "0"}
+        or str(row.get("region_capacity_violation", "False")).lower() in {"true", "1"}
+    ]
+    write_csv(outdir / "figures_source" / "invalid_capacity_rows.csv", invalid_rows)
 
     command = f"uv run python scripts/export_kvring_artifacts.py --out {outdir}"
     commit_hash = _git_commit()
@@ -901,7 +1086,7 @@ def export_round2_artifacts(outdir: Path, clean: bool = True) -> None:
     write_json(
         outdir / "artifact_manifest.json",
         {
-            "project": "KVRing Round 2",
+            "project": "KVRing Round 3",
             "artifact_count": len(manifest_rows),
             "vc_model": HardwareConfig().vc_model,
             "command": command,

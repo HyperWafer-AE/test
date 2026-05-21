@@ -1,0 +1,6 @@
+mode,component,latency_s,central_router_in_bytes,central_router_out_bytes,central_max_link_load_bytes,central_hotspot_ratio
+Central-KV-Stationary,query mesh,0.000185693,16777216,34078720,34078720.0,1.3402061855670102
+Central-KV-Stationary,central SRAM read,0.05,16777216,34078720,34078720.0,1.3402061855670102
+Central-KV-Stationary,central compute,0.034359739,16777216,34078720,34078720.0,1.3402061855670102
+Central-KV-Stationary,return mesh,0.000358708,16777216,34078720,34078720.0,1.3402061855670102
+Central-KV-Stationary,central queue,0.084359739,16777216,34078720,34078720.0,1.3402061855670102

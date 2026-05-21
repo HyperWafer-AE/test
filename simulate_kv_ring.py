@@ -18,20 +18,26 @@ def main() -> None:
     args = parser.parse_args()
     results = write_default_artifacts(args.outdir, legacy_only=not args.round2_full)
 
-    print("\n=== KVRing Round 2 Wafer Mesh Simulator ===")
+    print("\n=== KVRing Round 3 Wafer Mesh Simulator ===")
     print("NoC accounting: directed bidirectional channels; VC model is not modeled for performance.")
     print("Scope: attention-only shared-prefix plus local suffix. Non-attention LLM layers are not included.\n")
     header = (
         f"{'Mode':<34} {'Peak SRAM':>12} {'Wire':>12} "
-        f"{'Max dir link':>14} {'Latency':>12}"
+        f"{'Max dir link':>14} {'Attn proxy':>12}"
     )
     print(header)
     print("-" * len(header))
     for r in results:
+        latency = float(
+            r.extra.get(
+                "attention_stage_proxy_latency_s",
+                r.extra.get("throughput_bound_latency_s", r.estimated_latency_seconds),
+            )
+        )
         print(
             f"{r.mode:<34} {fmt_bytes(r.peak_region_sram_bytes):>12} "
             f"{fmt_bytes(r.total_wire_bytes):>12} {fmt_bytes(r.max_link_load_bytes):>14} "
-            f"{fmt_seconds(r.estimated_latency_seconds):>12}"
+            f"{fmt_seconds(latency):>12}"
         )
     print("\nSaved:")
     for name in [

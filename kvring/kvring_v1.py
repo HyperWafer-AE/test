@@ -48,6 +48,8 @@ def simulate_kvring_v1(
     setup_cycles = ring_setup_hops * hardware.hop_latency_cycles
     network_cycles = steady_cycles + setup_cycles
 
+    region_capacity_violation = max(region_sram.values()) > hardware.region_capacity_bytes
+    sram_cycles = math.ceil(sram_port_bytes / hardware.sram_bytes_per_cycle)
     return result_from_stats(
         mode="KVRing-v1-sequential-pipeline",
         description="Legacy full-serpentine ring: one small packet per agent decode step circulates around all regions.",
@@ -79,7 +81,26 @@ def simulate_kvring_v1(
             "network_formula": "ceil(total_packets / (min(1, link_bytes_per_cycle / packet_bytes) / bubble_factor)) + ring_setup_hops * hop_latency_cycles",
             "shard_group_size": [s.group_size for s in shards],
             "shard_region_bytes": [s.bytes_per_region for s in shards],
-            "region_capacity_violation": max(region_sram.values()) > hardware.region_capacity_bytes,
+            "logical_decode_queries": workload.total_decode_steps,
+            "query_tiles": workload.total_decode_steps,
+            "serialized_latency_s": (network_cycles + sram_cycles) / hardware.clock_hz,
+            "throughput_bound_latency_s": max(network_cycles, sram_cycles) / hardware.clock_hz,
+            "critical_path_latency_s": setup_cycles / hardware.clock_hz,
+            "attention_stage_proxy_latency_s": max(network_cycles, sram_cycles) / hardware.clock_hz,
+            "network_latency_s": network_cycles / hardware.clock_hz,
+            "sram_latency_s": sram_cycles / hardware.clock_hz,
+            "compute_latency_s": 0.0,
+            "merge_latency_s": 0.0,
+            "query_scatter_latency_s": 0.0,
+            "reduction_latency_s": network_cycles / hardware.clock_hz,
+            "local_suffix_latency_s": 0.0,
+            "region_capacity_violation": region_capacity_violation,
+            "valid_capacity": not region_capacity_violation,
+            "capacity_violation_reason": (
+                f"peak region SRAM {max(region_sram.values())} exceeds capacity {hardware.region_capacity_bytes}"
+                if region_capacity_violation
+                else ""
+            ),
             "shard_positions": [
                 {"id": s.shard_id, "home_region": s.home_region, "region_group": s.regions}
                 for s in shards
