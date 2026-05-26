@@ -1,0 +1,8 @@
+workflow,total_prompt_tokens,unique_state_tokens,raw_duplicated_state_tokens,exact_prefix_cache_covered_tokens,deterministic_operator_output_cache_covered_tokens,future_cache_covered_tokens,residual_non_prefix_non_deterministic_dynamic_state_tokens,raw_redundancy_ratio,residual_redundancy_ratio,dynamic_hot_residual_fraction,residual_token_weighted_fanout,wafer_opportunity_score,decision,decision_reason
+mapreduce,16493,5493,11000,11000,0,0,0,3.0025486983433463,1.0,0.0,0,0.0,abandon_or_pivot,residual_redundancy_ratio=1.00 is below 1.50
+debate,43818,11013,32805,30000,2805,0,0,3.9787523835467176,1.0,0.0,0,0.0,abandon_or_pivot,residual_redundancy_ratio=1.00 is below 1.50
+reflection,13936,6183,7753,7000,0,753,0,2.2539220443150576,1.0,0.0,0,0.0,abandon_or_pivot,residual_redundancy_ratio=1.00 is below 1.50
+iterative,40072,12072,28000,28000,0,0,0,3.3194168323392974,1.0,0.0,0,0.0,abandon_or_pivot,residual_redundancy_ratio=1.00 is below 1.50
+parallel_chains,31284,6621,24663,23000,0,1663,0,4.724966017217943,1.0,0.0,0,0.0,abandon_or_pivot,residual_redundancy_ratio=1.00 is below 1.50
+trading,89002,15009,73993,68800,0,5193,0,5.929908721433806,1.0,0.0,0,0.0,abandon_or_pivot,residual_redundancy_ratio=1.00 is below 1.50
+software_dev,36988,8843,28145,26400,0,1745,0,4.182743412868936,1.0,0.0,0,0.0,abandon_or_pivot,residual_redundancy_ratio=1.00 is below 1.50

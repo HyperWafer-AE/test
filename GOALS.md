@@ -195,3 +195,34 @@ as a promising backend mechanism.
     supported in this synthetic sweep; sensitivity sweep is mostly won by
     non-WaferStateFlow baselines after bias removal.
 - Next action: The next credible step is real trace ingestion and calibration.
+
+### G11: Residual redundancy decision analysis
+- Status: done
+- Evidence:
+  - Added `waferstateflow/residual_redundancy_analyzer.py`.
+  - The analyzer decomposes raw duplicated state tokens into exact-prefix cache
+    coverage, deterministic operator-output cache coverage, KVFlow-like
+    future-cache coverage under capacity, and residual uncovered redundancy.
+  - Per-state derived labels are exported: `prefix_covered`,
+    `operator_cache_covered`, `kvflow_cache_covered`, `residual_candidate`, and
+    `reason`.
+  - Workflow-level metrics are exported: `raw_redundancy_ratio`,
+    `residual_redundancy_ratio`, `dynamic_hot_residual_fraction`,
+    `residual_token_weighted_fanout`, and `wafer_opportunity_score`.
+  - Added `waferstateflow.experiments.run_residual_analysis`; it does not add
+    scheduling or placement features.
+  - Added `tests/test_residual_redundancy.py` for decomposition and KVFlow
+    capacity behavior.
+  - Ran `python -m pytest tests -q`; result: 26 passed.
+  - Ran `python -m waferstateflow.experiments.run_residual_analysis --workflows
+    all --seed 0 --out results/waferstateflow_residual_analysis`.
+  - Generated:
+    - `results/waferstateflow_residual_analysis/report.md`
+    - `results/waferstateflow_residual_analysis/residual_state_table.csv`
+    - `results/waferstateflow_residual_analysis/residual_summary.csv`
+  - Negative result retained: with default KVFlow-like capacity, all seven
+    synthetic workflows have residual redundancy ratio 1.00 and zero residual
+    token-weighted fanout. The report recommends abandon/pivot for the
+    hot-state wafer-mapping paper direction under these synthetic settings.
+- Next action: If continuing, collect real traces or constrain baseline cache
+  capacity with justified measurements before revisiting wafer-specific claims.
