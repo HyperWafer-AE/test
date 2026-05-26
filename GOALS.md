@@ -221,8 +221,39 @@ as a promising backend mechanism.
     - `results/waferstateflow_residual_analysis/residual_state_table.csv`
     - `results/waferstateflow_residual_analysis/residual_summary.csv`
   - Negative result retained: with default KVFlow-like capacity, all seven
-    synthetic workflows have residual redundancy ratio 1.00 and zero residual
-    token-weighted fanout. The report recommends abandon/pivot for the
-    hot-state wafer-mapping paper direction under these synthetic settings.
+  synthetic workflows have residual redundancy ratio 1.00 and zero residual
+  token-weighted fanout. The report recommends abandon/pivot for the
+  hot-state wafer-mapping paper direction under these synthetic settings.
 - Next action: If continuing, collect real traces or constrain baseline cache
   capacity with justified measurements before revisiting wafer-specific claims.
+
+### G12: FlowMorph phase/resource irregularity characterization
+- Status: done
+- Evidence:
+  - Added a new `flowmorph` package independent of WaferStateFlow claims.
+  - Defined `PhaseDAG` and `PhaseOperator` with operator id, dependencies,
+    estimated input/output tokens, prefill cost, decode cost, local/tool cost,
+    criticality, and earliest ready time.
+  - Added converter from existing synthetic workflow graphs to PhaseDAGs.
+  - Added phase/resource characterization metrics: frontier width over time,
+    prefill demand over time, decode demand over time, phase mix entropy,
+    critical path length, total work / critical path ratio, fixed worker idle
+    fraction, and fixed prefill/decode partition imbalance.
+  - Added `flowmorph.experiments.run_characterization`; it generates reports
+    for all workflow types and does not implement wafer scheduling.
+  - Added `tests/test_flowmorph.py` for PhaseDAG topology, converter output,
+    irregular/weak decision gates, and artifact generation.
+  - Ran `python -m pytest tests -q`; result: 31 passed.
+  - Ran `python -m flowmorph.experiments.run_characterization --workflows all
+    --batch-size 8 --seed 0 --out results/flowmorph_characterization`.
+  - Generated:
+    - `results/flowmorph_characterization/report.md`
+    - `results/flowmorph_characterization/flowmorph_summary.csv`
+    - `results/flowmorph_characterization/frontier_timeline.csv`
+    - `results/flowmorph_characterization/phase_operators.csv`
+  - Decision gate result: only `debate` passes both frontier-width and phase-mix
+    variation thresholds in the default synthetic run; other workflows are
+    marked `weak_direction`. The report says FlowMorph scheduling should be
+    conditional rather than assumed broadly useful.
+- Next action: If continuing, prototype a non-wafer FlowMorph scheduler only
+  for workflows that pass the irregularity gate, then validate on real traces.
