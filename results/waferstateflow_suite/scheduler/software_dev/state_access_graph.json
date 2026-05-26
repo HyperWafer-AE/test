@@ -1,0 +1,1349 @@
+{
+  "edges": [
+    {
+      "dst": "O_planner",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_planner",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_repo_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_planner",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_coding_standards",
+      "token_size": 800
+    },
+    {
+      "dst": "S_plan",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_planner",
+      "token_size": 251
+    },
+    {
+      "dst": "O_coder_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_coder_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_repo_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_coder_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_tool_schema",
+      "token_size": 800
+    },
+    {
+      "dst": "O_coder_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_plan",
+      "token_size": 251
+    },
+    {
+      "dst": "O_coder_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_feature_slice_0",
+      "token_size": 349
+    },
+    {
+      "dst": "S_code_0",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_coder_0",
+      "token_size": 219
+    },
+    {
+      "dst": "O_tester_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_tester_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_test_plan",
+      "token_size": 800
+    },
+    {
+      "dst": "O_tester_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_repo_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_tester_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_code_0",
+      "token_size": 219
+    },
+    {
+      "dst": "S_test_result_0",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_tester_0",
+      "token_size": 247
+    },
+    {
+      "dst": "O_debugger_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_debugger_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_repo_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_debugger_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_code_0",
+      "token_size": 219
+    },
+    {
+      "dst": "O_debugger_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_test_result_0",
+      "token_size": 247
+    },
+    {
+      "dst": "S_fixed_code_0",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_debugger_0",
+      "token_size": 210
+    },
+    {
+      "dst": "O_coder_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_coder_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_repo_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_coder_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_tool_schema",
+      "token_size": 800
+    },
+    {
+      "dst": "O_coder_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_plan",
+      "token_size": 251
+    },
+    {
+      "dst": "O_coder_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_feature_slice_1",
+      "token_size": 409
+    },
+    {
+      "dst": "S_code_1",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_coder_1",
+      "token_size": 225
+    },
+    {
+      "dst": "O_tester_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_tester_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_test_plan",
+      "token_size": 800
+    },
+    {
+      "dst": "O_tester_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_repo_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_tester_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_code_1",
+      "token_size": 225
+    },
+    {
+      "dst": "S_test_result_1",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_tester_1",
+      "token_size": 249
+    },
+    {
+      "dst": "O_debugger_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_debugger_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_repo_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_debugger_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_code_1",
+      "token_size": 225
+    },
+    {
+      "dst": "O_debugger_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_test_result_1",
+      "token_size": 249
+    },
+    {
+      "dst": "S_fixed_code_1",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_debugger_1",
+      "token_size": 249
+    },
+    {
+      "dst": "O_coder_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_coder_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_repo_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_coder_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_tool_schema",
+      "token_size": 800
+    },
+    {
+      "dst": "O_coder_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_plan",
+      "token_size": 251
+    },
+    {
+      "dst": "O_coder_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_feature_slice_2",
+      "token_size": 505
+    },
+    {
+      "dst": "S_code_2",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_coder_2",
+      "token_size": 273
+    },
+    {
+      "dst": "O_tester_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_tester_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_test_plan",
+      "token_size": 800
+    },
+    {
+      "dst": "O_tester_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_repo_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_tester_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_code_2",
+      "token_size": 273
+    },
+    {
+      "dst": "S_test_result_2",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_tester_2",
+      "token_size": 189
+    },
+    {
+      "dst": "O_debugger_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_debugger_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_repo_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_debugger_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_code_2",
+      "token_size": 273
+    },
+    {
+      "dst": "O_debugger_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_test_result_2",
+      "token_size": 189
+    },
+    {
+      "dst": "S_fixed_code_2",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_debugger_2",
+      "token_size": 286
+    },
+    {
+      "dst": "O_coder_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_coder_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_repo_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_coder_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_tool_schema",
+      "token_size": 800
+    },
+    {
+      "dst": "O_coder_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_plan",
+      "token_size": 251
+    },
+    {
+      "dst": "O_coder_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_feature_slice_3",
+      "token_size": 356
+    },
+    {
+      "dst": "S_code_3",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_coder_3",
+      "token_size": 275
+    },
+    {
+      "dst": "O_tester_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_tester_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_test_plan",
+      "token_size": 800
+    },
+    {
+      "dst": "O_tester_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_repo_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_tester_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_code_3",
+      "token_size": 275
+    },
+    {
+      "dst": "S_test_result_3",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_tester_3",
+      "token_size": 268
+    },
+    {
+      "dst": "O_debugger_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_debugger_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_repo_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_debugger_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_code_3",
+      "token_size": 275
+    },
+    {
+      "dst": "O_debugger_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_test_result_3",
+      "token_size": 268
+    },
+    {
+      "dst": "S_fixed_code_3",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_debugger_3",
+      "token_size": 283
+    },
+    {
+      "dst": "O_reviewer",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_reviewer",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_repo_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_reviewer",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_coding_standards",
+      "token_size": 800
+    },
+    {
+      "dst": "O_reviewer",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_fixed_code_0",
+      "token_size": 210
+    },
+    {
+      "dst": "O_reviewer",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_fixed_code_1",
+      "token_size": 249
+    },
+    {
+      "dst": "O_reviewer",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_fixed_code_2",
+      "token_size": 286
+    },
+    {
+      "dst": "O_reviewer",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_fixed_code_3",
+      "token_size": 283
+    },
+    {
+      "dst": "S_reviewed_patch",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_reviewer",
+      "token_size": 242
+    }
+  ],
+  "graph_id": "software_dev",
+  "metadata": {
+    "config": {
+      "batch_size": 8,
+      "dynamic_hot_state_probability": 0.25,
+      "num_agents": 4,
+      "num_branches": 4,
+      "num_rounds": 2,
+      "output_token_mean": 250,
+      "seed": 0,
+      "shared_state_size": 4000,
+      "unique_state_size": 400
+    },
+    "workflow": "software_dev"
+  },
+  "operators": [
+    {
+      "criticality": 1.8,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2400,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_repo_context",
+        "S_coding_standards"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_planner",
+      "output_states": [
+        "S_plan"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "planner"
+    },
+    {
+      "criticality": 1.2,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 3000,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_repo_context",
+        "S_tool_schema",
+        "S_plan",
+        "S_feature_slice_0"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_coder_0",
+      "output_states": [
+        "S_code_0"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "coder"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2619,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_test_plan",
+        "S_repo_context",
+        "S_code_0"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_tester_0",
+      "output_states": [
+        "S_test_result_0"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "tester"
+    },
+    {
+      "criticality": 1.5,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2066,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_repo_context",
+        "S_code_0",
+        "S_test_result_0"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_debugger_0",
+      "output_states": [
+        "S_fixed_code_0"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "debugger"
+    },
+    {
+      "criticality": 1.2,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 3060,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_repo_context",
+        "S_tool_schema",
+        "S_plan",
+        "S_feature_slice_1"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_coder_1",
+      "output_states": [
+        "S_code_1"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "coder"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2625,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_test_plan",
+        "S_repo_context",
+        "S_code_1"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_tester_1",
+      "output_states": [
+        "S_test_result_1"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "tester"
+    },
+    {
+      "criticality": 1.5,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2074,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_repo_context",
+        "S_code_1",
+        "S_test_result_1"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_debugger_1",
+      "output_states": [
+        "S_fixed_code_1"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "debugger"
+    },
+    {
+      "criticality": 1.2,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 3156,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_repo_context",
+        "S_tool_schema",
+        "S_plan",
+        "S_feature_slice_2"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_coder_2",
+      "output_states": [
+        "S_code_2"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "coder"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2673,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_test_plan",
+        "S_repo_context",
+        "S_code_2"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_tester_2",
+      "output_states": [
+        "S_test_result_2"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "tester"
+    },
+    {
+      "criticality": 1.5,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2062,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_repo_context",
+        "S_code_2",
+        "S_test_result_2"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_debugger_2",
+      "output_states": [
+        "S_fixed_code_2"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "debugger"
+    },
+    {
+      "criticality": 1.2,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 3007,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_repo_context",
+        "S_tool_schema",
+        "S_plan",
+        "S_feature_slice_3"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_coder_3",
+      "output_states": [
+        "S_code_3"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "coder"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2675,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_test_plan",
+        "S_repo_context",
+        "S_code_3"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_tester_3",
+      "output_states": [
+        "S_test_result_3"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "tester"
+    },
+    {
+      "criticality": 1.5,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2143,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_repo_context",
+        "S_code_3",
+        "S_test_result_3"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_debugger_3",
+      "output_states": [
+        "S_fixed_code_3"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "debugger"
+    },
+    {
+      "criticality": 2.2,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 3428,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_repo_context",
+        "S_coding_standards",
+        "S_fixed_code_0",
+        "S_fixed_code_1",
+        "S_fixed_code_2",
+        "S_fixed_code_3"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_reviewer",
+      "output_states": [
+        "S_reviewed_patch"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "reviewer"
+    }
+  ],
+  "states": [
+    {
+      "consumers": [
+        "O_planner",
+        "O_coder_0",
+        "O_tester_0",
+        "O_debugger_0",
+        "O_coder_1",
+        "O_tester_1",
+        "O_debugger_1",
+        "O_coder_2",
+        "O_tester_2",
+        "O_debugger_2",
+        "O_coder_3",
+        "O_tester_3",
+        "O_debugger_3",
+        "O_reviewer"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 1354.471398930731,
+      "kind": "task",
+      "kv_size_bytes": 819200,
+      "lifetime_end": 13,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "text",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_task",
+      "static_hotness": 97760.0,
+      "token_size": 800
+    },
+    {
+      "consumers": [
+        "O_planner",
+        "O_coder_0",
+        "O_tester_0",
+        "O_debugger_0",
+        "O_coder_1",
+        "O_tester_1",
+        "O_debugger_1",
+        "O_coder_2",
+        "O_tester_2",
+        "O_debugger_2",
+        "O_coder_3",
+        "O_tester_3",
+        "O_debugger_3",
+        "O_reviewer"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 1354.471398930731,
+      "kind": "repo_context",
+      "kv_size_bytes": 819200,
+      "lifetime_end": 13,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "text",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_repo_context",
+      "static_hotness": 97760.0,
+      "token_size": 800
+    },
+    {
+      "consumers": [
+        "O_planner",
+        "O_reviewer"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 1633.238461171601,
+      "kind": "coding_standards",
+      "kv_size_bytes": 819200,
+      "lifetime_end": 13,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "text",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_coding_standards",
+      "static_hotness": 1600.0,
+      "token_size": 800
+    },
+    {
+      "consumers": [
+        "O_coder_0",
+        "O_coder_1",
+        "O_coder_2",
+        "O_coder_3"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 959.9998233343676,
+      "kind": "tool_schema",
+      "kv_size_bytes": 819200,
+      "lifetime_end": 4,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "text",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_tool_schema",
+      "static_hotness": 5760.0,
+      "token_size": 800
+    },
+    {
+      "consumers": [
+        "O_tester_0",
+        "O_tester_1",
+        "O_tester_2",
+        "O_tester_3"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 799.9998527786398,
+      "kind": "test_plan",
+      "kv_size_bytes": 819200,
+      "lifetime_end": 8,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "text",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_test_plan",
+      "static_hotness": 4800.0,
+      "token_size": 800
+    },
+    {
+      "consumers": [
+        "O_coder_0",
+        "O_coder_1",
+        "O_coder_2",
+        "O_coder_3"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 301.19994457115786,
+      "kind": "planner_output",
+      "kv_size_bytes": 257024,
+      "lifetime_end": 4,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_planner",
+      "state_id": "S_plan",
+      "static_hotness": 1807.2,
+      "token_size": 251
+    },
+    {
+      "consumers": [
+        "O_coder_0"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 410.12585090349137,
+      "kind": "unique_context",
+      "kv_size_bytes": 357376,
+      "lifetime_end": 1,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_feature_slice_0",
+      "static_hotness": 0.0,
+      "token_size": 349
+    },
+    {
+      "consumers": [
+        "O_tester_0",
+        "O_debugger_0"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 285.24122011967665,
+      "kind": "output",
+      "kv_size_bytes": 224256,
+      "lifetime_end": 9,
+      "lifetime_start": 1,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_coder_0",
+      "state_id": "S_code_0",
+      "static_hotness": 273.75,
+      "token_size": 219
+    },
+    {
+      "consumers": [
+        "O_debugger_0"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 362.82623629356146,
+      "kind": "critic_feedback",
+      "kv_size_bytes": 252928,
+      "lifetime_end": 9,
+      "lifetime_start": 5,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_tester_0",
+      "state_id": "S_test_result_0",
+      "static_hotness": 0.0,
+      "token_size": 247
+    },
+    {
+      "consumers": [
+        "O_reviewer"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 452.43109626889463,
+      "kind": "output",
+      "kv_size_bytes": 215040,
+      "lifetime_end": 13,
+      "lifetime_start": 9,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_debugger_0",
+      "state_id": "S_fixed_code_0",
+      "static_hotness": 0.0,
+      "token_size": 210
+    },
+    {
+      "consumers": [
+        "O_coder_1"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 480.63459317916323,
+      "kind": "unique_context",
+      "kv_size_bytes": 418816,
+      "lifetime_end": 2,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_feature_slice_1",
+      "static_hotness": 0.0,
+      "token_size": 409
+    },
+    {
+      "consumers": [
+        "O_tester_1",
+        "O_debugger_1"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 293.056048068161,
+      "kind": "output",
+      "kv_size_bytes": 230400,
+      "lifetime_end": 10,
+      "lifetime_start": 2,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_coder_1",
+      "state_id": "S_code_1",
+      "static_hotness": 281.25,
+      "token_size": 225
+    },
+    {
+      "consumers": [
+        "O_debugger_1"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 365.7641005550479,
+      "kind": "critic_feedback",
+      "kv_size_bytes": 254976,
+      "lifetime_end": 10,
+      "lifetime_start": 6,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_tester_1",
+      "state_id": "S_test_result_1",
+      "static_hotness": 0.0,
+      "token_size": 249
+    },
+    {
+      "consumers": [
+        "O_reviewer"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 536.4540141474035,
+      "kind": "output",
+      "kv_size_bytes": 254976,
+      "lifetime_end": 13,
+      "lifetime_start": 10,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_debugger_1",
+      "state_id": "S_fixed_code_1",
+      "static_hotness": 0.0,
+      "token_size": 249
+    },
+    {
+      "consumers": [
+        "O_coder_2"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 593.4485808202382,
+      "kind": "unique_context",
+      "kv_size_bytes": 517120,
+      "lifetime_end": 3,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_feature_slice_2",
+      "static_hotness": 0.0,
+      "token_size": 505
+    },
+    {
+      "consumers": [
+        "O_tester_2",
+        "O_debugger_2"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 355.5746716560353,
+      "kind": "output",
+      "kv_size_bytes": 279552,
+      "lifetime_end": 11,
+      "lifetime_start": 3,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_coder_2",
+      "state_id": "S_code_2",
+      "static_hotness": 341.25,
+      "token_size": 273
+    },
+    {
+      "consumers": [
+        "O_debugger_2"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 277.628172710458,
+      "kind": "critic_feedback",
+      "kv_size_bytes": 193536,
+      "lifetime_end": 11,
+      "lifetime_start": 7,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_tester_2",
+      "state_id": "S_test_result_2",
+      "static_hotness": 0.0,
+      "token_size": 189
+    },
+    {
+      "consumers": [
+        "O_reviewer"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 616.1680644423992,
+      "kind": "output",
+      "kv_size_bytes": 292864,
+      "lifetime_end": 13,
+      "lifetime_start": 11,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_debugger_2",
+      "state_id": "S_fixed_code_2",
+      "static_hotness": 0.0,
+      "token_size": 286
+    },
+    {
+      "consumers": [
+        "O_coder_3"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 418.35187083565313,
+      "kind": "unique_context",
+      "kv_size_bytes": 364544,
+      "lifetime_end": 4,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_feature_slice_3",
+      "static_hotness": 0.0,
+      "token_size": 356
+    },
+    {
+      "consumers": [
+        "O_tester_3",
+        "O_debugger_3"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 358.1796143055301,
+      "kind": "output",
+      "kv_size_bytes": 281600,
+      "lifetime_end": 12,
+      "lifetime_start": 4,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_coder_3",
+      "state_id": "S_code_3",
+      "static_hotness": 343.75,
+      "token_size": 275
+    },
+    {
+      "consumers": [
+        "O_debugger_3"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 393.67381103916796,
+      "kind": "critic_feedback",
+      "kv_size_bytes": 274432,
+      "lifetime_end": 12,
+      "lifetime_start": 8,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_tester_3",
+      "state_id": "S_test_result_3",
+      "static_hotness": 0.0,
+      "token_size": 268
+    },
+    {
+      "consumers": [
+        "O_reviewer"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 609.7047630671293,
+      "kind": "output",
+      "kv_size_bytes": 289792,
+      "lifetime_end": 13,
+      "lifetime_start": 12,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_debugger_3",
+      "state_id": "S_fixed_code_3",
+      "static_hotness": 0.0,
+      "token_size": 283
+    },
+    {
+      "consumers": [],
+      "deterministic": true,
+      "dynamic_hotness": 0.0,
+      "kind": "output",
+      "kv_size_bytes": 247808,
+      "lifetime_end": 13,
+      "lifetime_start": 13,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_reviewer",
+      "state_id": "S_reviewed_patch",
+      "static_hotness": 0.0,
+      "token_size": 242
+    }
+  ]
+}

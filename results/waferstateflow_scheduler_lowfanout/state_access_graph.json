@@ -1,0 +1,488 @@
+{
+  "edges": [
+    {
+      "dst": "O_refine_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 68
+    },
+    {
+      "dst": "O_refine_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_rubric",
+      "token_size": 66
+    },
+    {
+      "dst": "O_refine_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_global_context",
+      "token_size": 66
+    },
+    {
+      "dst": "O_refine_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_chunk_0",
+      "token_size": 230
+    },
+    {
+      "dst": "S_running_summary_0",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_refine_0",
+      "token_size": 293
+    },
+    {
+      "dst": "O_refine_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 68
+    },
+    {
+      "dst": "O_refine_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_rubric",
+      "token_size": 66
+    },
+    {
+      "dst": "O_refine_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_global_context",
+      "token_size": 66
+    },
+    {
+      "dst": "O_refine_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_chunk_1",
+      "token_size": 199
+    },
+    {
+      "dst": "O_refine_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_running_summary_0",
+      "token_size": 293
+    },
+    {
+      "dst": "S_running_summary_1",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_refine_1",
+      "token_size": 285
+    },
+    {
+      "dst": "O_refine_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 68
+    },
+    {
+      "dst": "O_refine_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_rubric",
+      "token_size": 66
+    },
+    {
+      "dst": "O_refine_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_global_context",
+      "token_size": 66
+    },
+    {
+      "dst": "O_refine_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_chunk_2",
+      "token_size": 175
+    },
+    {
+      "dst": "O_refine_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_running_summary_1",
+      "token_size": 285
+    },
+    {
+      "dst": "S_running_summary_2",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_refine_2",
+      "token_size": 206
+    },
+    {
+      "dst": "O_refine_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 68
+    },
+    {
+      "dst": "O_refine_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_rubric",
+      "token_size": 66
+    },
+    {
+      "dst": "O_refine_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_global_context",
+      "token_size": 66
+    },
+    {
+      "dst": "O_refine_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_chunk_3",
+      "token_size": 244
+    },
+    {
+      "dst": "O_refine_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_running_summary_2",
+      "token_size": 206
+    },
+    {
+      "dst": "S_running_summary_3",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_refine_3",
+      "token_size": 260
+    }
+  ],
+  "graph_id": "iterative",
+  "metadata": {
+    "config": {
+      "batch_size": 1,
+      "dynamic_hot_state_probability": 0.25,
+      "num_agents": 4,
+      "num_branches": 1,
+      "num_rounds": 4,
+      "output_token_mean": 250,
+      "seed": 1,
+      "shared_state_size": 200,
+      "unique_state_size": 100
+    },
+    "workflow": "iterative"
+  },
+  "operators": [
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 430,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_rubric",
+        "S_global_context",
+        "S_chunk_0"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_refine_0",
+      "output_states": [
+        "S_running_summary_0"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "iterative_refiner"
+    },
+    {
+      "criticality": 1.1,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 692,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_rubric",
+        "S_global_context",
+        "S_chunk_1",
+        "S_running_summary_0"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_refine_1",
+      "output_states": [
+        "S_running_summary_1"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "iterative_refiner"
+    },
+    {
+      "criticality": 1.2,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 660,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_rubric",
+        "S_global_context",
+        "S_chunk_2",
+        "S_running_summary_1"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_refine_2",
+      "output_states": [
+        "S_running_summary_2"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "iterative_refiner"
+    },
+    {
+      "criticality": 1.3,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 650,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_rubric",
+        "S_global_context",
+        "S_chunk_3",
+        "S_running_summary_2"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_refine_3",
+      "output_states": [
+        "S_running_summary_3"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "iterative_refiner"
+    }
+  ],
+  "states": [
+    {
+      "consumers": [
+        "O_refine_0",
+        "O_refine_1",
+        "O_refine_2",
+        "O_refine_3"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 81.68182977849969,
+      "kind": "task",
+      "kv_size_bytes": 69632,
+      "lifetime_end": 3,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "text",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_task",
+      "static_hotness": 469.2,
+      "token_size": 68
+    },
+    {
+      "consumers": [
+        "O_refine_0",
+        "O_refine_1",
+        "O_refine_2",
+        "O_refine_3"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 79.27942302030853,
+      "kind": "rubric",
+      "kv_size_bytes": 67584,
+      "lifetime_end": 3,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "text",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_rubric",
+      "static_hotness": 455.4,
+      "token_size": 66
+    },
+    {
+      "consumers": [
+        "O_refine_0",
+        "O_refine_1",
+        "O_refine_2",
+        "O_refine_3"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 79.27942302030853,
+      "kind": "global_context",
+      "kv_size_bytes": 67584,
+      "lifetime_end": 3,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "text",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_global_context",
+      "static_hotness": 455.4,
+      "token_size": 66
+    },
+    {
+      "consumers": [
+        "O_refine_0"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 225.23626004728516,
+      "kind": "document",
+      "kv_size_bytes": 235520,
+      "lifetime_end": 0,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_chunk_0",
+      "static_hotness": 0.0,
+      "token_size": 230
+    },
+    {
+      "consumers": [
+        "O_refine_1"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 315.6245504923478,
+      "kind": "intermediate_summary",
+      "kv_size_bytes": 300032,
+      "lifetime_end": 1,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_refine_0",
+      "state_id": "S_running_summary_0",
+      "static_hotness": 0.0,
+      "token_size": 293
+    },
+    {
+      "consumers": [
+        "O_refine_1"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 214.36616227978573,
+      "kind": "document",
+      "kv_size_bytes": 203776,
+      "lifetime_end": 1,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_chunk_1",
+      "static_hotness": 0.0,
+      "token_size": 199
+    },
+    {
+      "consumers": [
+        "O_refine_2"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 334.9165258094414,
+      "kind": "intermediate_summary",
+      "kv_size_bytes": 291840,
+      "lifetime_end": 2,
+      "lifetime_start": 1,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_refine_1",
+      "state_id": "S_running_summary_1",
+      "static_hotness": 0.0,
+      "token_size": 285
+    },
+    {
+      "consumers": [
+        "O_refine_2"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 205.65049830404297,
+      "kind": "document",
+      "kv_size_bytes": 179200,
+      "lifetime_end": 2,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_chunk_2",
+      "static_hotness": 0.0,
+      "token_size": 175
+    },
+    {
+      "consumers": [
+        "O_refine_3"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 262.2533497420129,
+      "kind": "intermediate_summary",
+      "kv_size_bytes": 210944,
+      "lifetime_end": 3,
+      "lifetime_start": 2,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": true
+      },
+      "producer": "O_refine_2",
+      "state_id": "S_running_summary_2",
+      "static_hotness": 0.0,
+      "token_size": 206
+    },
+    {
+      "consumers": [
+        "O_refine_3"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 310.6301812478211,
+      "kind": "document",
+      "kv_size_bytes": 249856,
+      "lifetime_end": 3,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_chunk_3",
+      "static_hotness": 0.0,
+      "token_size": 244
+    },
+    {
+      "consumers": [],
+      "deterministic": false,
+      "dynamic_hotness": 0.0,
+      "kind": "intermediate_summary",
+      "kv_size_bytes": 266240,
+      "lifetime_end": 3,
+      "lifetime_start": 3,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_refine_3",
+      "state_id": "S_running_summary_3",
+      "static_hotness": 0.0,
+      "token_size": 260
+    }
+  ]
+}

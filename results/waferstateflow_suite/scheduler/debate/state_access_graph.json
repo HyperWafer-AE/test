@@ -1,0 +1,1217 @@
+{
+  "edges": [
+    {
+      "dst": "O_debate_r0_a0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r0_a0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_document",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r0_a0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_rubric",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r0_a0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_role_instruction",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r0_a0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_round_0_stance_0",
+      "token_size": 445
+    },
+    {
+      "dst": "S_debate_r0_a0",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_debate_r0_a0",
+      "token_size": 208
+    },
+    {
+      "dst": "O_debate_r0_a1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r0_a1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_document",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r0_a1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_rubric",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r0_a1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_role_instruction",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r0_a1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_round_0_stance_1",
+      "token_size": 396
+    },
+    {
+      "dst": "S_debate_r0_a1",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_debate_r0_a1",
+      "token_size": 285
+    },
+    {
+      "dst": "O_debate_r0_a2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r0_a2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_document",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r0_a2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_rubric",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r0_a2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_role_instruction",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r0_a2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_round_0_stance_2",
+      "token_size": 408
+    },
+    {
+      "dst": "S_debate_r0_a2",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_debate_r0_a2",
+      "token_size": 225
+    },
+    {
+      "dst": "O_debate_r0_a3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r0_a3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_document",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r0_a3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_rubric",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r0_a3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_role_instruction",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r0_a3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_round_0_stance_3",
+      "token_size": 309
+    },
+    {
+      "dst": "S_debate_r0_a3",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_debate_r0_a3",
+      "token_size": 217
+    },
+    {
+      "dst": "O_transcript_r0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_debate_r0_a0",
+      "token_size": 208
+    },
+    {
+      "dst": "O_transcript_r0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_debate_r0_a1",
+      "token_size": 285
+    },
+    {
+      "dst": "O_transcript_r0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_debate_r0_a2",
+      "token_size": 225
+    },
+    {
+      "dst": "O_transcript_r0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_debate_r0_a3",
+      "token_size": 217
+    },
+    {
+      "dst": "S_transcript_r0",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_transcript_r0",
+      "token_size": 935
+    },
+    {
+      "dst": "O_debate_r1_a0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r1_a0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_document",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r1_a0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_rubric",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r1_a0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_role_instruction",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r1_a0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_round_1_stance_0",
+      "token_size": 383
+    },
+    {
+      "dst": "O_debate_r1_a0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_transcript_r0",
+      "token_size": 935
+    },
+    {
+      "dst": "S_debate_r1_a0",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_debate_r1_a0",
+      "token_size": 299
+    },
+    {
+      "dst": "O_debate_r1_a1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r1_a1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_document",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r1_a1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_rubric",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r1_a1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_role_instruction",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r1_a1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_round_1_stance_1",
+      "token_size": 399
+    },
+    {
+      "dst": "O_debate_r1_a1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_transcript_r0",
+      "token_size": 935
+    },
+    {
+      "dst": "S_debate_r1_a1",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_debate_r1_a1",
+      "token_size": 315
+    },
+    {
+      "dst": "O_debate_r1_a2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r1_a2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_document",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r1_a2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_rubric",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r1_a2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_role_instruction",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r1_a2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_round_1_stance_2",
+      "token_size": 438
+    },
+    {
+      "dst": "O_debate_r1_a2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_transcript_r0",
+      "token_size": 935
+    },
+    {
+      "dst": "S_debate_r1_a2",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_debate_r1_a2",
+      "token_size": 189
+    },
+    {
+      "dst": "O_debate_r1_a3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r1_a3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_document",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r1_a3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_rubric",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r1_a3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_role_instruction",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_debate_r1_a3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_round_1_stance_3",
+      "token_size": 387
+    },
+    {
+      "dst": "O_debate_r1_a3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_transcript_r0",
+      "token_size": 935
+    },
+    {
+      "dst": "S_debate_r1_a3",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_debate_r1_a3",
+      "token_size": 186
+    },
+    {
+      "dst": "O_transcript_r1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_debate_r1_a0",
+      "token_size": 299
+    },
+    {
+      "dst": "O_transcript_r1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_debate_r1_a1",
+      "token_size": 315
+    },
+    {
+      "dst": "O_transcript_r1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_debate_r1_a2",
+      "token_size": 189
+    },
+    {
+      "dst": "O_transcript_r1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_debate_r1_a3",
+      "token_size": 186
+    },
+    {
+      "dst": "S_transcript_r1",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_transcript_r1",
+      "token_size": 989
+    },
+    {
+      "dst": "O_judge",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_judge",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_rubric",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_judge",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_transcript_r1",
+      "token_size": 989
+    },
+    {
+      "dst": "S_verdict",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_judge",
+      "token_size": 275
+    }
+  ],
+  "graph_id": "debate",
+  "metadata": {
+    "config": {
+      "batch_size": 8,
+      "dynamic_hot_state_probability": 0.25,
+      "num_agents": 4,
+      "num_branches": 4,
+      "num_rounds": 2,
+      "output_token_mean": 250,
+      "seed": 0,
+      "shared_state_size": 4000,
+      "unique_state_size": 400
+    },
+    "workflow": "debate"
+  },
+  "operators": [
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 4445,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_document",
+        "S_rubric",
+        "S_role_instruction",
+        "S_round_0_stance_0"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_debate_r0_a0",
+      "output_states": [
+        "S_debate_r0_a0"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "debater_0"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 4396,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_document",
+        "S_rubric",
+        "S_role_instruction",
+        "S_round_0_stance_1"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_debate_r0_a1",
+      "output_states": [
+        "S_debate_r0_a1"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "debater_1"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 4408,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_document",
+        "S_rubric",
+        "S_role_instruction",
+        "S_round_0_stance_2"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_debate_r0_a2",
+      "output_states": [
+        "S_debate_r0_a2"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "debater_2"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 4309,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_document",
+        "S_rubric",
+        "S_role_instruction",
+        "S_round_0_stance_3"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_debate_r0_a3",
+      "output_states": [
+        "S_debate_r0_a3"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "debater_3"
+    },
+    {
+      "criticality": 0.8,
+      "deps": [],
+      "deterministic": true,
+      "estimated_input_tokens": 935,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_debate_r0_a0",
+        "S_debate_r0_a1",
+        "S_debate_r0_a2",
+        "S_debate_r0_a3"
+      ],
+      "kind": "aggregate",
+      "metadata": {},
+      "op_id": "O_transcript_r0",
+      "output_states": [
+        "S_transcript_r0"
+      ],
+      "phase_profile": "mixed",
+      "ready_time": 0,
+      "role": "transcript_builder"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 5318,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_document",
+        "S_rubric",
+        "S_role_instruction",
+        "S_round_1_stance_0",
+        "S_transcript_r0"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_debate_r1_a0",
+      "output_states": [
+        "S_debate_r1_a0"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "debater_0"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 5334,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_document",
+        "S_rubric",
+        "S_role_instruction",
+        "S_round_1_stance_1",
+        "S_transcript_r0"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_debate_r1_a1",
+      "output_states": [
+        "S_debate_r1_a1"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "debater_1"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 5373,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_document",
+        "S_rubric",
+        "S_role_instruction",
+        "S_round_1_stance_2",
+        "S_transcript_r0"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_debate_r1_a2",
+      "output_states": [
+        "S_debate_r1_a2"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "debater_2"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 5322,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_document",
+        "S_rubric",
+        "S_role_instruction",
+        "S_round_1_stance_3",
+        "S_transcript_r0"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_debate_r1_a3",
+      "output_states": [
+        "S_debate_r1_a3"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "debater_3"
+    },
+    {
+      "criticality": 0.8,
+      "deps": [],
+      "deterministic": true,
+      "estimated_input_tokens": 989,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_debate_r1_a0",
+        "S_debate_r1_a1",
+        "S_debate_r1_a2",
+        "S_debate_r1_a3"
+      ],
+      "kind": "aggregate",
+      "metadata": {},
+      "op_id": "O_transcript_r1",
+      "output_states": [
+        "S_transcript_r1"
+      ],
+      "phase_profile": "mixed",
+      "ready_time": 0,
+      "role": "transcript_builder"
+    },
+    {
+      "criticality": 2.2,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2989,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_rubric",
+        "S_transcript_r1"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_judge",
+      "output_states": [
+        "S_verdict"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "judge"
+    }
+  ],
+  "states": [
+    {
+      "consumers": [
+        "O_debate_r0_a0",
+        "O_debate_r0_a1",
+        "O_debate_r0_a2",
+        "O_debate_r0_a3",
+        "O_debate_r1_a0",
+        "O_debate_r1_a1",
+        "O_debate_r1_a2",
+        "O_debate_r1_a3",
+        "O_judge"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 1428.8829870453362,
+      "kind": "task",
+      "kv_size_bytes": 1024000,
+      "lifetime_end": 10,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "text",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_task",
+      "static_hotness": 40800.0,
+      "token_size": 1000
+    },
+    {
+      "consumers": [
+        "O_debate_r0_a0",
+        "O_debate_r0_a1",
+        "O_debate_r0_a2",
+        "O_debate_r0_a3",
+        "O_debate_r1_a0",
+        "O_debate_r1_a1",
+        "O_debate_r1_a2",
+        "O_debate_r1_a3"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 999.9999999999662,
+      "kind": "document",
+      "kv_size_bytes": 1024000,
+      "lifetime_end": 8,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "text",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_document",
+      "static_hotness": 28000.0,
+      "token_size": 1000
+    },
+    {
+      "consumers": [
+        "O_debate_r0_a0",
+        "O_debate_r0_a1",
+        "O_debate_r0_a2",
+        "O_debate_r0_a3",
+        "O_debate_r1_a0",
+        "O_debate_r1_a1",
+        "O_debate_r1_a2",
+        "O_debate_r1_a3",
+        "O_judge"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 1428.8829870453362,
+      "kind": "rubric",
+      "kv_size_bytes": 1024000,
+      "lifetime_end": 10,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "text",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_rubric",
+      "static_hotness": 40800.0,
+      "token_size": 1000
+    },
+    {
+      "consumers": [
+        "O_debate_r0_a0",
+        "O_debate_r0_a1",
+        "O_debate_r0_a2",
+        "O_debate_r0_a3",
+        "O_debate_r1_a0",
+        "O_debate_r1_a1",
+        "O_debate_r1_a2",
+        "O_debate_r1_a3"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 999.9999999999662,
+      "kind": "role_instruction",
+      "kv_size_bytes": 1024000,
+      "lifetime_end": 8,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "text",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_role_instruction",
+      "static_hotness": 28000.0,
+      "token_size": 1000
+    },
+    {
+      "consumers": [
+        "O_debate_r0_a0"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 435.7831987871387,
+      "kind": "unique_context",
+      "kv_size_bytes": 455680,
+      "lifetime_end": 0,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_round_0_stance_0",
+      "static_hotness": 0.0,
+      "token_size": 445
+    },
+    {
+      "consumers": [
+        "O_transcript_r0"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 162.953537703775,
+      "kind": "debate_turn",
+      "kv_size_bytes": 212992,
+      "lifetime_end": 4,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_debate_r0_a0",
+      "state_id": "S_debate_r0_a0",
+      "static_hotness": 0.0,
+      "token_size": 208
+    },
+    {
+      "consumers": [
+        "O_debate_r0_a1"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 387.79808251619534,
+      "kind": "unique_context",
+      "kv_size_bytes": 405504,
+      "lifetime_end": 1,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_round_0_stance_1",
+      "static_hotness": 0.0,
+      "token_size": 396
+    },
+    {
+      "consumers": [
+        "O_transcript_r0"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 223.27768387296095,
+      "kind": "debate_turn",
+      "kv_size_bytes": 291840,
+      "lifetime_end": 4,
+      "lifetime_start": 1,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_debate_r0_a1",
+      "state_id": "S_debate_r0_a1",
+      "static_hotness": 0.0,
+      "token_size": 285
+    },
+    {
+      "consumers": [
+        "O_debate_r0_a2"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 399.5495395621406,
+      "kind": "unique_context",
+      "kv_size_bytes": 417792,
+      "lifetime_end": 2,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_round_0_stance_2",
+      "static_hotness": 0.0,
+      "token_size": 408
+    },
+    {
+      "consumers": [
+        "O_transcript_r0"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 176.2718556891797,
+      "kind": "debate_turn",
+      "kv_size_bytes": 230400,
+      "lifetime_end": 4,
+      "lifetime_start": 2,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_debate_r0_a2",
+      "state_id": "S_debate_r0_a2",
+      "static_hotness": 0.0,
+      "token_size": 225
+    },
+    {
+      "consumers": [
+        "O_debate_r0_a3"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 302.6000189330918,
+      "kind": "unique_context",
+      "kv_size_bytes": 316416,
+      "lifetime_end": 3,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_round_0_stance_3",
+      "static_hotness": 0.0,
+      "token_size": 309
+    },
+    {
+      "consumers": [
+        "O_transcript_r0"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 170.00441193134222,
+      "kind": "debate_turn",
+      "kv_size_bytes": 222208,
+      "lifetime_end": 4,
+      "lifetime_start": 3,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_debate_r0_a3",
+      "state_id": "S_debate_r0_a3",
+      "static_hotness": 0.0,
+      "token_size": 217
+    },
+    {
+      "consumers": [
+        "O_debate_r1_a0",
+        "O_debate_r1_a1",
+        "O_debate_r1_a2",
+        "O_debate_r1_a3"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 934.9998279350352,
+      "kind": "intermediate_summary",
+      "kv_size_bytes": 957440,
+      "lifetime_end": 8,
+      "lifetime_start": 4,
+      "location": null,
+      "materialized_form": "text",
+      "metadata": {
+        "aggregated_from": [
+          "S_debate_r0_a0",
+          "S_debate_r0_a1",
+          "S_debate_r0_a2",
+          "S_debate_r0_a3"
+        ],
+        "synthetic": true
+      },
+      "producer": "O_transcript_r0",
+      "state_id": "S_transcript_r0",
+      "static_hotness": 5610.0,
+      "token_size": 935
+    },
+    {
+      "consumers": [
+        "O_debate_r1_a0"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 375.0673373830879,
+      "kind": "unique_context",
+      "kv_size_bytes": 392192,
+      "lifetime_end": 5,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_round_1_stance_0",
+      "static_hotness": 0.0,
+      "token_size": 383
+    },
+    {
+      "consumers": [
+        "O_transcript_r1"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 234.24571044917658,
+      "kind": "debate_turn",
+      "kv_size_bytes": 306176,
+      "lifetime_end": 9,
+      "lifetime_start": 5,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_debate_r1_a0",
+      "state_id": "S_debate_r1_a0",
+      "static_hotness": 0.0,
+      "token_size": 299
+    },
+    {
+      "consumers": [
+        "O_debate_r1_a1"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 390.7359467776816,
+      "kind": "unique_context",
+      "kv_size_bytes": 408576,
+      "lifetime_end": 6,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_round_1_stance_1",
+      "static_hotness": 0.0,
+      "token_size": 399
+    },
+    {
+      "consumers": [
+        "O_transcript_r1"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 246.78059796485155,
+      "kind": "debate_turn",
+      "kv_size_bytes": 322560,
+      "lifetime_end": 9,
+      "lifetime_start": 6,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_debate_r1_a1",
+      "state_id": "S_debate_r1_a1",
+      "static_hotness": 0.0,
+      "token_size": 315
+    },
+    {
+      "consumers": [
+        "O_debate_r1_a2"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 428.9281821770039,
+      "kind": "unique_context",
+      "kv_size_bytes": 448512,
+      "lifetime_end": 7,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_round_1_stance_2",
+      "static_hotness": 0.0,
+      "token_size": 438
+    },
+    {
+      "consumers": [
+        "O_transcript_r1"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 148.06835877891095,
+      "kind": "debate_turn",
+      "kv_size_bytes": 193536,
+      "lifetime_end": 9,
+      "lifetime_start": 7,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_debate_r1_a2",
+      "state_id": "S_debate_r1_a2",
+      "static_hotness": 0.0,
+      "token_size": 189
+    },
+    {
+      "consumers": [
+        "O_debate_r1_a3"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 378.9844897317363,
+      "kind": "unique_context",
+      "kv_size_bytes": 396288,
+      "lifetime_end": 8,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_round_1_stance_3",
+      "static_hotness": 0.0,
+      "token_size": 387
+    },
+    {
+      "consumers": [
+        "O_transcript_r1"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 145.7180673697219,
+      "kind": "debate_turn",
+      "kv_size_bytes": 190464,
+      "lifetime_end": 9,
+      "lifetime_start": 8,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_debate_r1_a3",
+      "state_id": "S_debate_r1_a3",
+      "static_hotness": 0.0,
+      "token_size": 186
+    },
+    {
+      "consumers": [
+        "O_judge"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 2130.7350200473174,
+      "kind": "intermediate_summary",
+      "kv_size_bytes": 1012736,
+      "lifetime_end": 10,
+      "lifetime_start": 9,
+      "location": null,
+      "materialized_form": "text",
+      "metadata": {
+        "aggregated_from": [
+          "S_debate_r1_a0",
+          "S_debate_r1_a1",
+          "S_debate_r1_a2",
+          "S_debate_r1_a3"
+        ],
+        "synthetic": true
+      },
+      "producer": "O_transcript_r1",
+      "state_id": "S_transcript_r1",
+      "static_hotness": 0.0,
+      "token_size": 989
+    },
+    {
+      "consumers": [],
+      "deterministic": true,
+      "dynamic_hotness": 0.0,
+      "kind": "output",
+      "kv_size_bytes": 281600,
+      "lifetime_end": 10,
+      "lifetime_start": 10,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_judge",
+      "state_id": "S_verdict",
+      "static_hotness": 0.0,
+      "token_size": 275
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+state_id,kind,token_size,kv_size_bytes,producer,consumers,lifetime_start,lifetime_end,materialized_form,location,static_hotness,dynamic_hotness,deterministic,metadata
+S_task,task,1334,1366016,,"[""O_refine_0"", ""O_refine_1"", ""O_refine_2"", ""O_refine_3"", ""O_refine_4"", ""O_refine_5"", ""O_refine_6"", ""O_refine_7""]",0,7,text,,50425.200000000004,2055.182157665915,True,{}
+S_rubric,rubric,1333,1364992,,"[""O_refine_0"", ""O_refine_1"", ""O_refine_2"", ""O_refine_3"", ""O_refine_4"", ""O_refine_5"", ""O_refine_6"", ""O_refine_7""]",0,7,text,,50387.4,2053.641541355821,True,{}
+S_global_context,global_context,1333,1364992,,"[""O_refine_0"", ""O_refine_1"", ""O_refine_2"", ""O_refine_3"", ""O_refine_4"", ""O_refine_5"", ""O_refine_6"", ""O_refine_7""]",0,7,text,,50387.4,2053.641541355821,True,{}
+S_chunk_0,document,890,911360,,"[""O_refine_0""]",0,0,inline,,0.0,871.5663975742774,True,{}
+S_running_summary_0,intermediate_summary,208,212992,O_refine_0,"[""O_refine_1""]",0,1,output,,0.0,224.06111434269064,False,"{""dynamic_hot_candidate"": false}"
+S_chunk_1,document,793,812032,,"[""O_refine_1""]",0,1,inline,,0.0,854.2329984315081,True,{}
+S_running_summary_1,intermediate_summary,285,291840,O_refine_1,"[""O_refine_2""]",1,2,output,,0.0,334.9165258094414,False,"{""dynamic_hot_candidate"": false}"
+S_chunk_2,document,817,836608,,"[""O_refine_2""]",0,2,inline,,0.0,960.0940406537321,True,{}
+S_running_summary_2,intermediate_summary,225,230400,O_refine_2,"[""O_refine_3""]",2,3,output,,0.0,286.44176549491704,False,"{""dynamic_hot_candidate"": false}"
+S_chunk_3,document,618,632832,,"[""O_refine_3""]",0,3,inline,,0.0,786.7600492260387,True,{}
+S_running_summary_3,intermediate_summary,217,222208,O_refine_3,"[""O_refine_4""]",3,4,output,,0.0,297.5077208798488,False,"{""dynamic_hot_candidate"": false}"
+S_chunk_4,document,767,785408,,"[""O_refine_4""]",0,4,inline,,0.0,1051.559547994673,True,{}
+S_running_summary_4,intermediate_summary,299,306176,O_refine_4,"[""O_refine_5""]",4,5,output,,0.0,439.2107070922061,False,"{""dynamic_hot_candidate"": false}"
+S_chunk_5,document,799,818176,,"[""O_refine_5""]",0,5,inline,,0.0,1173.676772463788,True,{}
+S_running_summary_5,intermediate_summary,315,322560,O_refine_5,"[""O_refine_6""]",5,6,output,,0.0,493.5611959297031,False,"{""dynamic_hot_candidate"": false}"
+S_chunk_6,document,876,897024,,"[""O_refine_6""]",0,6,inline,,0.0,1372.5701829664126,True,{}
+S_running_summary_6,intermediate_summary,189,193536,O_refine_6,"[""O_refine_7""]",6,7,output,,0.0,314.64526240518575,False,"{""dynamic_hot_candidate"": false}"
+S_chunk_7,document,774,792576,,"[""O_refine_7""]",0,7,inline,,0.0,1288.5472650879037,True,{}
+S_running_summary_7,intermediate_summary,186,190464,O_refine_7,[],7,7,output,,0.0,0.0,False,"{""dynamic_hot_candidate"": false}"

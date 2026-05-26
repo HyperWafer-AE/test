@@ -1,0 +1,12 @@
+op_id,kind,role,input_states,output_states,deps,estimated_input_tokens,estimated_output_tokens,phase_profile,deterministic,criticality,ready_time,metadata
+O_debate_r0_a0,llm,debater_0,"[""S_task"", ""S_document"", ""S_rubric"", ""S_role_instruction"", ""S_round_0_stance_0""]","[""S_debate_r0_a0""]",[],4445,0,prefill_heavy,False,1.0,0,{}
+O_debate_r0_a1,llm,debater_1,"[""S_task"", ""S_document"", ""S_rubric"", ""S_role_instruction"", ""S_round_0_stance_1""]","[""S_debate_r0_a1""]",[],4396,0,prefill_heavy,False,1.0,0,{}
+O_debate_r0_a2,llm,debater_2,"[""S_task"", ""S_document"", ""S_rubric"", ""S_role_instruction"", ""S_round_0_stance_2""]","[""S_debate_r0_a2""]",[],4408,0,prefill_heavy,False,1.0,0,{}
+O_debate_r0_a3,llm,debater_3,"[""S_task"", ""S_document"", ""S_rubric"", ""S_role_instruction"", ""S_round_0_stance_3""]","[""S_debate_r0_a3""]",[],4309,0,prefill_heavy,False,1.0,0,{}
+O_transcript_r0,aggregate,transcript_builder,"[""S_debate_r0_a0"", ""S_debate_r0_a1"", ""S_debate_r0_a2"", ""S_debate_r0_a3""]","[""S_transcript_r0""]",[],935,0,mixed,True,0.8,0,{}
+O_debate_r1_a0,llm,debater_0,"[""S_task"", ""S_document"", ""S_rubric"", ""S_role_instruction"", ""S_round_1_stance_0"", ""S_transcript_r0""]","[""S_debate_r1_a0""]",[],5318,0,prefill_heavy,False,1.0,0,{}
+O_debate_r1_a1,llm,debater_1,"[""S_task"", ""S_document"", ""S_rubric"", ""S_role_instruction"", ""S_round_1_stance_1"", ""S_transcript_r0""]","[""S_debate_r1_a1""]",[],5334,0,prefill_heavy,False,1.0,0,{}
+O_debate_r1_a2,llm,debater_2,"[""S_task"", ""S_document"", ""S_rubric"", ""S_role_instruction"", ""S_round_1_stance_2"", ""S_transcript_r0""]","[""S_debate_r1_a2""]",[],5373,0,prefill_heavy,False,1.0,0,{}
+O_debate_r1_a3,llm,debater_3,"[""S_task"", ""S_document"", ""S_rubric"", ""S_role_instruction"", ""S_round_1_stance_3"", ""S_transcript_r0""]","[""S_debate_r1_a3""]",[],5322,0,prefill_heavy,False,1.0,0,{}
+O_transcript_r1,aggregate,transcript_builder,"[""S_debate_r1_a0"", ""S_debate_r1_a1"", ""S_debate_r1_a2"", ""S_debate_r1_a3""]","[""S_transcript_r1""]",[],989,0,mixed,True,0.8,0,{}
+O_judge,llm,judge,"[""S_task"", ""S_rubric"", ""S_transcript_r1""]","[""S_verdict""]",[],2989,0,prefill_heavy,False,2.2,0,{}

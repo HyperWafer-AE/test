@@ -1,0 +1,13 @@
+state_id,kind,token_size,kv_size_bytes,producer,consumers,lifetime_start,lifetime_end,materialized_form,location,static_hotness,dynamic_hotness,deterministic,metadata
+S_task,task,1000,1024000,,"[""O_expert_draft"", ""O_critic_0"", ""O_critic_1"", ""O_critic_2"", ""O_revise""]",0,4,text,,13200.0,0.0,True,{}
+S_document,document,1000,1024000,,"[""O_expert_draft"", ""O_revise""]",0,4,text,,1800.0,0.0,True,{}
+S_rubric,rubric,1000,1024000,,"[""O_critic_0"", ""O_critic_1"", ""O_critic_2""]",0,3,text,,3000.0,0.0,True,{}
+S_style_guide,style_guide,1000,1024000,,"[""O_expert_draft""]",0,0,text,,0.0,0.0,True,{}
+S_draft,intermediate_summary,251,257024,O_expert_draft,"[""O_critic_0"", ""O_critic_1"", ""O_critic_2"", ""O_revise""]",0,4,output,,1882.5,0.0,False,"{""dynamic_hot_candidate"": false}"
+S_critic_lens_0,unique_context,349,357376,,"[""O_critic_0""]",0,1,inline,,0.0,0.0,True,{}
+S_critic_0_feedback,critic_feedback,219,224256,O_critic_0,"[""O_revise""]",1,4,output,,0.0,0.0,False,"{""dynamic_hot_candidate"": false}"
+S_critic_lens_1,unique_context,396,405504,,"[""O_critic_1""]",0,2,inline,,0.0,0.0,True,{}
+S_critic_1_feedback,critic_feedback,238,243712,O_critic_1,"[""O_revise""]",2,4,output,,0.0,0.0,False,"{""dynamic_hot_candidate"": false}"
+S_critic_lens_2,unique_context,451,461824,,"[""O_critic_2""]",0,3,inline,,0.0,0.0,True,{}
+S_critic_2_feedback,critic_feedback,279,285696,O_critic_2,"[""O_revise""]",3,4,output,,0.0,0.0,False,"{""dynamic_hot_candidate"": false}"
+S_revised_answer,output,230,235520,O_revise,[],4,4,output,,0.0,0.0,True,"{""dynamic_hot_candidate"": false}"

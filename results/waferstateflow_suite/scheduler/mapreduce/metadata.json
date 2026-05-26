@@ -1,0 +1,4 @@
+{
+  "experiment": "scheduler_comparison",
+  "workflow": "mapreduce"
+}

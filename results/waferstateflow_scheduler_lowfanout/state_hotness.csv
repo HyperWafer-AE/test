@@ -1,0 +1,12 @@
+state_id,kind,token_size,kv_size_bytes,consumer_count,producer,token_weighted_state_fanout,static_hotness,dynamic_hotness,dynamic_hot_candidate,lifetime_start,lifetime_end,rank,hotness,cumulative_hotness,cumulative_hotness_fraction
+S_task,task,68,69632,4,,204,469.2,0.0,False,0,3,1,469.2,469.2,0.33999999999999997
+S_rubric,rubric,66,67584,4,,198,455.4,0.0,False,0,3,2,455.4,924.5999999999999,0.6699999999999999
+S_global_context,global_context,66,67584,4,,198,455.4,0.0,False,0,3,3,455.4,1380.0,1.0
+S_running_summary_0,intermediate_summary,293,300032,1,O_refine_0,0,0.0,0.0,False,0,1,4,0.0,1380.0,1.0
+S_running_summary_1,intermediate_summary,285,291840,1,O_refine_1,0,0.0,0.0,False,1,2,5,0.0,1380.0,1.0
+S_running_summary_3,intermediate_summary,260,266240,0,O_refine_3,0,0.0,0.0,False,3,3,6,0.0,1380.0,1.0
+S_chunk_3,document,244,249856,1,,0,0.0,0.0,False,0,3,7,0.0,1380.0,1.0
+S_chunk_0,document,230,235520,1,,0,0.0,0.0,False,0,0,8,0.0,1380.0,1.0
+S_running_summary_2,intermediate_summary,206,210944,1,O_refine_2,0,0.0,0.0,True,2,3,9,0.0,1380.0,1.0
+S_chunk_1,document,199,203776,1,,0,0.0,0.0,False,0,1,10,0.0,1380.0,1.0
+S_chunk_2,document,175,179200,1,,0,0.0,0.0,False,0,2,11,0.0,1380.0,1.0

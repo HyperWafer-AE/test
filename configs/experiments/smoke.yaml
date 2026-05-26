@@ -1,5 +1,0 @@
-seed: 7
-engine: synthetic
-workloads: [debate]
-num_jobs: 2
-wafer_config: configs/wafer/toy_smoke.yaml

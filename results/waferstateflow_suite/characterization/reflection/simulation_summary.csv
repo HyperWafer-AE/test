@@ -1,0 +1,2 @@
+workflow,total_prompt_tokens,unique_state_tokens,input_redundancy_ratio,duplicate_materialization_bytes,dynamic_hot_state_count,dynamic_hot_token_weighted_cost,top_state_share,h1_supported,h2_supported
+reflection,13936,6183,2.2539220443150576,31012,0,0,1.0,True,True

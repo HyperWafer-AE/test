@@ -1,0 +1,55 @@
+wave_id,baseline,scheduler,seed_state_id,operator_ids,region_ids,start_time,end_time,batch_size,materialization_bytes,movement_byte_hop,benefit,wait_penalty
+0,flat_sequential,flat_sequential,,"[""O_planner""]","[""R_0_0""]",0.0,4.8500032015,1,9600,9600,0.0,0.0
+1,flat_sequential,flat_sequential,,"[""O_coder_0""]","[""R_0_0""]",4.8500032015,10.900006403374999,1,12000,12000,0.0,0.0
+2,flat_sequential,flat_sequential,,"[""O_coder_1""]","[""R_0_0""]",10.900006403374999,17.0700096052875,1,12240,12240,0.0,0.0
+3,flat_sequential,flat_sequential,,"[""O_coder_2""]","[""R_0_0""]",17.0700096052875,23.432012807259998,1,12624,12624,0.0,0.0
+4,flat_sequential,flat_sequential,,"[""O_coder_3""]","[""R_0_0""]",23.432012807259998,29.496016009139375,1,12028,12028,0.0,0.0
+5,flat_sequential,flat_sequential,,"[""O_tester_0""]","[""R_0_0""]",29.496016009139375,34.78401921077625,1,10476,10476,0.0,0.0
+6,flat_sequential,flat_sequential,,"[""O_tester_1""]","[""R_0_0""]",34.78401921077625,40.08402241241687,1,10500,10500,0.0,0.0
+7,flat_sequential,flat_sequential,,"[""O_tester_2""]","[""R_0_0""]",40.08402241241687,45.480025614087495,1,10692,10692,0.0,0.0
+8,flat_sequential,flat_sequential,,"[""O_tester_3""]","[""R_0_0""]",45.480025614087495,50.880028815759374,1,10700,10700,0.0,0.0
+9,flat_sequential,flat_sequential,,"[""O_debugger_0""]","[""R_0_0""]",50.880028815759374,55.062032017050626,1,8264,8264,0.0,0.0
+10,flat_sequential,flat_sequential,,"[""O_debugger_1""]","[""R_0_0""]",55.062032017050626,59.26003521834688,1,8296,8296,0.0,0.0
+11,flat_sequential,flat_sequential,,"[""O_debugger_2""]","[""R_0_0""]",59.26003521834688,63.43403841963563,1,8248,8248,0.0,0.0
+12,flat_sequential,flat_sequential,,"[""O_debugger_3""]","[""R_0_0""]",63.43403841963563,67.77004162097501,1,8572,8572,0.0,0.0
+13,flat_sequential,flat_sequential,,"[""O_reviewer""]","[""R_0_0""]",67.77004162097501,74.67604482311751,1,13712,13712,0.0,0.0
+0,request_parallel_gpu_like,request_parallel_gpu_like,,"[""O_planner""]","[""R_0_0""]",0.0,4.8500032015,1,9600,9600,1.0,0.0
+1,request_parallel_gpu_like,request_parallel_gpu_like,,"[""O_coder_0"", ""O_coder_1"", ""O_coder_2"", ""O_coder_3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",4.8500032015,11.212006408139375,4,42492,42492,4.0,0.0
+2,request_parallel_gpu_like,request_parallel_gpu_like,,"[""O_tester_0"", ""O_tester_1"", ""O_tester_2"", ""O_tester_3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",11.212006408139375,16.612009610759376,4,16768,16768,4.0,0.0
+3,request_parallel_gpu_like,request_parallel_gpu_like,,"[""O_debugger_0"", ""O_debugger_1"", ""O_debugger_2"", ""O_debugger_3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",16.612009610759376,20.948012811355,4,3812,3812,4.0,0.0
+4,request_parallel_gpu_like,request_parallel_gpu_like,,"[""O_reviewer""]","[""R_0_0""]",20.948012811355,27.8540160119975,1,4112,4112,1.0,0.0
+0,prefix_cache_like,prefix_cache_like,,"[""O_planner""]","[""R_0_0""]",0.0,4.8500032015,1,9600,9600,1.0,0.0
+1,prefix_cache_like,prefix_cache_like,,"[""O_coder_0"", ""O_coder_1"", ""O_coder_2"", ""O_coder_3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",4.8500032015,11.212006403639375,4,13692,13692,4.0,0.0
+2,prefix_cache_like,prefix_cache_like,,"[""O_tester_0"", ""O_tester_1"", ""O_tester_2"", ""O_tester_3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",11.212006403639375,16.612009606259377,4,16768,16768,4.0,0.0
+3,prefix_cache_like,prefix_cache_like,,"[""O_debugger_0"", ""O_debugger_1"", ""O_debugger_2"", ""O_debugger_3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",16.612009606259377,20.948012807475003,4,7780,7780,4.0,0.0
+4,prefix_cache_like,prefix_cache_like,,"[""O_reviewer""]","[""R_0_0""]",20.948012807475003,27.854016008617503,1,7312,7312,1.0,0.0
+0,helium_like_operator_schedule,operator_centric,,"[""O_planner""]","[""R_0_0""]",0.0,4.8500032015,1,9600,9600,1.0,0.0
+1,helium_like_operator_schedule,operator_centric,,"[""O_coder_0"", ""O_coder_1"", ""O_coder_2"", ""O_coder_3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",4.8500032015,10.265206403168749,4,10680,10680,4.0,0.0
+2,helium_like_operator_schedule,operator_centric,,"[""O_tester_0"", ""O_tester_1"", ""O_tester_2"", ""O_tester_3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",10.265206403168749,14.86270960428875,4,7168,7168,4.0,0.0
+3,helium_like_operator_schedule,operator_centric,,"[""O_debugger_0"", ""O_debugger_1"", ""O_debugger_2"", ""O_debugger_3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",14.86270960428875,18.555812804884376,4,3812,3812,4.0,0.0
+4,helium_like_operator_schedule,operator_centric,,"[""O_reviewer""]","[""R_0_0""]",18.555812804884376,25.461816005526877,1,4112,4112,1.0,0.0
+0,kvflow_like_future_eviction,operator_centric,,"[""O_planner""]","[""R_0_0""]",0.0,4.8500032015,1,9600,9600,1.0,0.0
+1,kvflow_like_future_eviction,operator_centric,,"[""O_coder_0"", ""O_coder_1"", ""O_coder_2"", ""O_coder_3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",4.8500032015,10.265206403168749,4,10680,10680,4.0,0.0
+2,kvflow_like_future_eviction,operator_centric,,"[""O_tester_0"", ""O_tester_1"", ""O_tester_2"", ""O_tester_3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",10.265206403168749,14.86270960428875,4,7168,7168,4.0,0.0
+3,kvflow_like_future_eviction,operator_centric,,"[""O_debugger_0"", ""O_debugger_1"", ""O_debugger_2"", ""O_debugger_3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",14.86270960428875,18.555812804884376,4,3812,3812,4.0,0.0
+4,kvflow_like_future_eviction,operator_centric,,"[""O_reviewer""]","[""R_0_0""]",18.555812804884376,25.461816005526877,1,4112,4112,1.0,0.0
+0,wafer_request_centric,wafer_request_centric,,"[""O_planner""]","[""R_0_0""]",0.0,4.85,1,9600,0,1.0,0.0
+1,wafer_request_centric,wafer_request_centric,,"[""O_coder_0"", ""O_coder_1"", ""O_coder_2"", ""O_coder_3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",4.85,11.212032536319999,4,42492,187752448,4.0,0.0
+2,wafer_request_centric,wafer_request_centric,,"[""O_tester_0"", ""O_tester_1"", ""O_tester_2"", ""O_tester_3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",11.212032536319999,16.61206116608,4,16768,162750464,4.0,0.0
+3,wafer_request_centric,wafer_request_centric,,"[""O_debugger_0"", ""O_debugger_1"", ""O_debugger_2"", ""O_debugger_3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",16.61206116608,20.9480844064,4,3812,128258048,4.0,0.0
+4,wafer_request_centric,wafer_request_centric,,"[""O_reviewer""]","[""R_0_0""]",20.9480844064,27.8540844064,1,4112,0,1.0,0.0
+0,replicate_all_hot_states,replicate_all_hot_states,,"[""O_planner""]","[""R_0_0""]",0.0,4.85,1,9600,0,1.0,0.0
+1,replicate_all_hot_states,replicate_all_hot_states,,"[""O_coder_0"", ""O_coder_1"", ""O_coder_2"", ""O_coder_3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",4.85,11.21202485632,4,13692,138600448,4.0,0.0
+2,replicate_all_hot_states,replicate_all_hot_states,,"[""O_tester_0"", ""O_tester_1"", ""O_tester_2"", ""O_tester_3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",11.21202485632,16.612045806079998,4,7168,113598464,4.0,0.0
+3,replicate_all_hot_states,replicate_all_hot_states,,"[""O_debugger_0"", ""O_debugger_1"", ""O_debugger_2"", ""O_debugger_3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",16.612045806079998,20.948069046399997,4,7780,128258048,4.0,0.0
+4,replicate_all_hot_states,replicate_all_hot_states,,"[""O_reviewer""]","[""R_0_0""]",20.948069046399997,27.854069046399996,1,4112,0,1.0,0.0
+0,single_pin_hot_state,single_pin_hot_state,,"[""O_planner""]","[""R_0_0""]",0.0,4.85,1,9600,0,1.0,0.0
+1,single_pin_hot_state,single_pin_hot_state,,"[""O_coder_0"", ""O_coder_1"", ""O_coder_2"", ""O_coder_3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",4.85,11.212032536319999,4,13692,187752448,4.0,0.0
+2,single_pin_hot_state,single_pin_hot_state,,"[""O_tester_0"", ""O_tester_1"", ""O_tester_2"", ""O_tester_3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",11.212032536319999,16.61206116608,4,7168,162750464,4.0,0.0
+3,single_pin_hot_state,single_pin_hot_state,,"[""O_debugger_0"", ""O_debugger_1"", ""O_debugger_2"", ""O_debugger_3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",16.61206116608,20.9480844064,4,7780,128258048,4.0,0.0
+4,single_pin_hot_state,single_pin_hot_state,,"[""O_reviewer""]","[""R_0_0""]",20.9480844064,27.8540844064,1,4112,0,1.0,0.0
+0,WaferStateFlow,WaferStateFlow,,"[""O_planner""]","[""R_0_0""]",0.0,4.85,1,9600,0,0.0,0.0
+1,WaferStateFlow,WaferStateFlow,S_task,"[""O_coder_0"", ""O_coder_1"", ""O_coder_2"", ""O_coder_3""]","[""R_0_0"", ""R_0_0"", ""R_0_0"", ""R_0_0""]",4.85,9.44464,4,10680,0,100142.6,19.4
+2,WaferStateFlow,WaferStateFlow,S_task,"[""O_tester_0"", ""O_tester_1"", ""O_tester_2"", ""O_tester_3""]","[""R_0_0"", ""R_0_0"", ""R_0_0"", ""R_0_0""]",9.44464,13.34664,4,7168,0,100124.22144,37.77856
+3,WaferStateFlow,WaferStateFlow,S_task,"[""O_debugger_0"", ""O_debugger_1"", ""O_debugger_2"", ""O_debugger_3""]","[""R_0_0"", ""R_0_0"", ""R_0_0"", ""R_0_0""]",13.34664,16.48256,4,7780,0,100108.61344,53.38656
+4,WaferStateFlow,WaferStateFlow,,"[""O_reviewer""]","[""R_0_0""]",16.48256,23.38856,1,4112,0,0.0,4.0

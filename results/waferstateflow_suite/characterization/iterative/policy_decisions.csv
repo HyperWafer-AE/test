@@ -1,0 +1,20 @@
+state_id,policy,expected_saved_cost,materialization_cost,storage_cost,movement_cost,contention_cost,reason
+S_task,replicate,50462.552,42.688,13.660160000000001,27.320320000000002,54.640640000000005,small hot state with broad fanout
+S_rubric,replicate,50424.724,42.656,13.649920000000002,27.299840000000003,54.599680000000006,small hot state with broad fanout
+S_global_context,replicate,50424.724,42.656,13.649920000000002,27.299840000000003,54.599680000000006,small hot state with broad fanout
+S_chunk_0,inline,0.0,3.56,9.1136,18.2272,4.5568,low fanout or low hotness
+S_running_summary_0,inline,0.0,0.8320000000000001,2.1299200000000003,4.2598400000000005,1.0649600000000001,low fanout or low hotness
+S_chunk_1,inline,0.0,3.172,8.120320000000001,16.240640000000003,4.060160000000001,low fanout or low hotness
+S_running_summary_1,inline,0.0,1.1400000000000001,2.9184,5.8368,1.4592,low fanout or low hotness
+S_chunk_2,inline,0.0,3.2680000000000002,8.36608,16.73216,4.18304,low fanout or low hotness
+S_running_summary_2,inline,0.0,0.9,2.3040000000000003,4.6080000000000005,1.1520000000000001,low fanout or low hotness
+S_chunk_3,inline,0.0,2.472,6.328320000000001,12.656640000000001,3.1641600000000003,low fanout or low hotness
+S_running_summary_3,inline,0.0,0.868,2.22208,4.44416,1.11104,low fanout or low hotness
+S_chunk_4,inline,0.0,3.068,7.854080000000001,15.708160000000001,3.9270400000000003,low fanout or low hotness
+S_running_summary_4,inline,0.0,1.196,3.06176,6.12352,1.53088,low fanout or low hotness
+S_chunk_5,inline,0.0,3.196,8.18176,16.36352,4.09088,low fanout or low hotness
+S_running_summary_5,inline,0.0,1.26,3.2256000000000005,6.451200000000001,1.6128000000000002,low fanout or low hotness
+S_chunk_6,inline,0.0,3.504,8.97024,17.94048,4.48512,low fanout or low hotness
+S_running_summary_6,inline,0.0,0.756,1.9353600000000002,3.8707200000000004,0.9676800000000001,low fanout or low hotness
+S_chunk_7,inline,0.0,3.096,7.92576,15.85152,3.96288,low fanout or low hotness
+S_running_summary_7,inline,0.0,0.744,1.90464,3.80928,0.0,low fanout or low hotness

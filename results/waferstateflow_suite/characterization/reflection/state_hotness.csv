@@ -1,0 +1,13 @@
+state_id,kind,token_size,kv_size_bytes,consumer_count,producer,token_weighted_state_fanout,static_hotness,dynamic_hotness,dynamic_hot_candidate,lifetime_start,lifetime_end,rank,hotness,cumulative_hotness,cumulative_hotness_fraction
+S_task,task,1000,1024000,5,,4000,13200.0,0.0,False,0,4,1,13200.0,13200.0,0.6639004149377593
+S_rubric,rubric,1000,1024000,3,,2000,3000.0,0.0,False,0,3,2,3000.0,16200.0,0.8147868728781592
+S_draft,intermediate_summary,251,257024,4,O_expert_draft,753,1882.5,0.0,False,0,4,3,1882.5,18082.5,0.90946812523576
+S_document,document,1000,1024000,2,,1000,1800.0,0.0,False,0,4,4,1800.0,19882.5,1.0
+S_style_guide,style_guide,1000,1024000,1,,0,0.0,0.0,False,0,0,5,0.0,19882.5,1.0
+S_critic_lens_2,unique_context,451,461824,1,,0,0.0,0.0,False,0,3,6,0.0,19882.5,1.0
+S_critic_lens_1,unique_context,396,405504,1,,0,0.0,0.0,False,0,2,7,0.0,19882.5,1.0
+S_critic_lens_0,unique_context,349,357376,1,,0,0.0,0.0,False,0,1,8,0.0,19882.5,1.0
+S_critic_2_feedback,critic_feedback,279,285696,1,O_critic_2,0,0.0,0.0,False,3,4,9,0.0,19882.5,1.0
+S_critic_1_feedback,critic_feedback,238,243712,1,O_critic_1,0,0.0,0.0,False,2,4,10,0.0,19882.5,1.0
+S_revised_answer,output,230,235520,0,O_revise,0,0.0,0.0,False,4,4,11,0.0,19882.5,1.0
+S_critic_0_feedback,critic_feedback,219,224256,1,O_critic_0,0,0.0,0.0,False,1,4,12,0.0,19882.5,1.0

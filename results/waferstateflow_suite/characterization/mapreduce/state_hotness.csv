@@ -1,0 +1,14 @@
+state_id,kind,token_size,kv_size_bytes,consumer_count,producer,token_weighted_state_fanout,static_hotness,dynamic_hotness,dynamic_hot_candidate,lifetime_start,lifetime_end,rank,hotness,cumulative_hotness,cumulative_hotness_fraction
+S_task,task,1000,1024000,5,,4000,12000.0,0.0,False,0,4,1,12000.0,12000.0,0.4
+S_rubric,rubric,1000,1024000,5,,4000,12000.0,0.0,False,0,4,2,12000.0,24000.0,0.8
+S_document,document,1000,1024000,4,,3000,6000.0,0.0,False,0,3,3,6000.0,30000.0,1.0
+S_tool_schema,tool_schema,1000,1024000,0,,0,0.0,0.0,False,0,0,4,0.0,30000.0,1.0
+S_unique_expert_0,unique_context,445,455680,1,,0,0.0,0.0,False,0,0,5,0.0,30000.0,1.0
+S_unique_expert_2,unique_context,408,417792,1,,0,0.0,0.0,False,0,2,6,0.0,30000.0,1.0
+S_unique_expert_1,unique_context,396,405504,1,,0,0.0,0.0,False,0,1,7,0.0,30000.0,1.0
+S_unique_expert_3,unique_context,309,316416,1,,0,0.0,0.0,False,0,3,8,0.0,30000.0,1.0
+S_expert_1_summary,intermediate_summary,285,291840,1,O_expert_1,0,0.0,0.0,False,1,4,9,0.0,30000.0,1.0
+S_final_summary,output,251,257024,0,O_summarizer,0,0.0,0.0,False,4,4,10,0.0,30000.0,1.0
+S_expert_2_summary,intermediate_summary,225,230400,1,O_expert_2,0,0.0,0.0,False,2,4,11,0.0,30000.0,1.0
+S_expert_3_summary,intermediate_summary,217,222208,1,O_expert_3,0,0.0,0.0,False,3,4,12,0.0,30000.0,1.0
+S_expert_0_summary,intermediate_summary,208,212992,1,O_expert_0,0,0.0,0.0,False,0,4,13,0.0,30000.0,1.0

@@ -1,0 +1,6 @@
+op_id,kind,role,input_states,output_states,deps,estimated_input_tokens,estimated_output_tokens,phase_profile,deterministic,criticality,ready_time,metadata
+O_expert_draft,llm,expert,"[""S_task"", ""S_document"", ""S_style_guide""]","[""S_draft""]",[],3000,0,prefill_heavy,False,1.6,0,{}
+O_critic_0,llm,critic_0,"[""S_task"", ""S_rubric"", ""S_draft"", ""S_critic_lens_0""]","[""S_critic_0_feedback""]",[],2600,0,prefill_heavy,False,1.0,0,{}
+O_critic_1,llm,critic_1,"[""S_task"", ""S_rubric"", ""S_draft"", ""S_critic_lens_1""]","[""S_critic_1_feedback""]",[],2647,0,prefill_heavy,False,1.0,0,{}
+O_critic_2,llm,critic_2,"[""S_task"", ""S_rubric"", ""S_draft"", ""S_critic_lens_2""]","[""S_critic_2_feedback""]",[],2702,0,prefill_heavy,False,1.0,0,{}
+O_revise,llm,reviser,"[""S_task"", ""S_document"", ""S_draft"", ""S_critic_0_feedback"", ""S_critic_1_feedback"", ""S_critic_2_feedback""]","[""S_revised_answer""]",[],2987,0,prefill_heavy,False,2.0,0,{}

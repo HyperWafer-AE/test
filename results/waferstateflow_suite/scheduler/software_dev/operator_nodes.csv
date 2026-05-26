@@ -1,0 +1,15 @@
+op_id,kind,role,input_states,output_states,deps,estimated_input_tokens,estimated_output_tokens,phase_profile,deterministic,criticality,ready_time,metadata
+O_planner,llm,planner,"[""S_task"", ""S_repo_context"", ""S_coding_standards""]","[""S_plan""]",[],2400,0,prefill_heavy,False,1.8,0,{}
+O_coder_0,llm,coder,"[""S_task"", ""S_repo_context"", ""S_tool_schema"", ""S_plan"", ""S_feature_slice_0""]","[""S_code_0""]",[],3000,0,prefill_heavy,False,1.2,0,{}
+O_tester_0,llm,tester,"[""S_task"", ""S_test_plan"", ""S_repo_context"", ""S_code_0""]","[""S_test_result_0""]",[],2619,0,prefill_heavy,False,1.0,0,{}
+O_debugger_0,llm,debugger,"[""S_task"", ""S_repo_context"", ""S_code_0"", ""S_test_result_0""]","[""S_fixed_code_0""]",[],2066,0,prefill_heavy,False,1.5,0,{}
+O_coder_1,llm,coder,"[""S_task"", ""S_repo_context"", ""S_tool_schema"", ""S_plan"", ""S_feature_slice_1""]","[""S_code_1""]",[],3060,0,prefill_heavy,False,1.2,0,{}
+O_tester_1,llm,tester,"[""S_task"", ""S_test_plan"", ""S_repo_context"", ""S_code_1""]","[""S_test_result_1""]",[],2625,0,prefill_heavy,False,1.0,0,{}
+O_debugger_1,llm,debugger,"[""S_task"", ""S_repo_context"", ""S_code_1"", ""S_test_result_1""]","[""S_fixed_code_1""]",[],2074,0,prefill_heavy,False,1.5,0,{}
+O_coder_2,llm,coder,"[""S_task"", ""S_repo_context"", ""S_tool_schema"", ""S_plan"", ""S_feature_slice_2""]","[""S_code_2""]",[],3156,0,prefill_heavy,False,1.2,0,{}
+O_tester_2,llm,tester,"[""S_task"", ""S_test_plan"", ""S_repo_context"", ""S_code_2""]","[""S_test_result_2""]",[],2673,0,prefill_heavy,False,1.0,0,{}
+O_debugger_2,llm,debugger,"[""S_task"", ""S_repo_context"", ""S_code_2"", ""S_test_result_2""]","[""S_fixed_code_2""]",[],2062,0,prefill_heavy,False,1.5,0,{}
+O_coder_3,llm,coder,"[""S_task"", ""S_repo_context"", ""S_tool_schema"", ""S_plan"", ""S_feature_slice_3""]","[""S_code_3""]",[],3007,0,prefill_heavy,False,1.2,0,{}
+O_tester_3,llm,tester,"[""S_task"", ""S_test_plan"", ""S_repo_context"", ""S_code_3""]","[""S_test_result_3""]",[],2675,0,prefill_heavy,False,1.0,0,{}
+O_debugger_3,llm,debugger,"[""S_task"", ""S_repo_context"", ""S_code_3"", ""S_test_result_3""]","[""S_fixed_code_3""]",[],2143,0,prefill_heavy,False,1.5,0,{}
+O_reviewer,llm,reviewer,"[""S_task"", ""S_repo_context"", ""S_coding_standards"", ""S_fixed_code_0"", ""S_fixed_code_1"", ""S_fixed_code_2"", ""S_fixed_code_3""]","[""S_reviewed_patch""]",[],3428,0,prefill_heavy,False,2.2,0,{}

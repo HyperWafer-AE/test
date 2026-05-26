@@ -1,0 +1,10 @@
+baseline,workflow_latency,state_materialization_bytes,state_movement_byte_hop,max_link_utilization,region_memory_pressure,critical_path_wait,average_wave_batch_size,wave_count,duplicate_state_materialization_bytes,notes
+flat_sequential,84.53803522738627,175272,175272,1.0798393853661177e-11,0.0,0.0,1.0,11,131220,sequential flat prompt materialization; no cache or parallelism
+request_parallel_gpu_like,26.064016016136257,103272,103272,2.063668928330159e-11,0.066192626953125,0.0,2.2,5,131220,ready requests assigned to worker-local caches
+prefix_cache_like,26.06401601363625,87272,87272,1.7439433218152497e-11,0.0,0.0,2.2,5,131220,only exact root prefix-like states are globally reused
+helium_like_operator_schedule,23.11861600688313,44052,44052,9.924361386152585e-12,0.0,0.0,2.2,5,131220,operator-centric wave with per-wave unique-state reuse
+kvflow_like_future_eviction,23.11861600688313,44052,44052,9.924361386152585e-12,0.0,0.0,2.2,5,131220,future-aware cache admits highest token-weighted fanout states
+wafer_request_centric,26.06410743088,103272,626117632,1.2511571102065673e-07,0.0308990478515625,0.0,2.2,5,131220,wafer backend without state-centric wave formation
+replicate_all_hot_states,26.064013974879998,44052,48479232,9.687533172877777e-09,0.029937744140625,0.0,2.2,5,131220,ablation that blindly replicates hot states
+single_pin_hot_state,26.06410743088,44052,626117632,1.2511571102065673e-07,0.0308990478515625,0.0,2.2,5,131220,ablation that pins hot states centrally and exposes hotspots
+WaferStateFlow,20.56593397488,44052,48479232,1.2277390382970598e-08,0.029937744140625,30.403227669760003,2.2,5,131220,hot-state-seeded wave scheduling with policy-driven placement

@@ -1,0 +1,5858 @@
+{
+  "edges": [
+    {
+      "dst": "O_analyst_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_role_instruction",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_0",
+      "token_size": 445
+    },
+    {
+      "dst": "O_researcher_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_tool_schema",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_0",
+      "token_size": 445
+    },
+    {
+      "dst": "S_analyst_0_view",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_analyst_0",
+      "token_size": 208
+    },
+    {
+      "dst": "S_research_0_evidence",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_researcher_0",
+      "token_size": 219
+    },
+    {
+      "dst": "O_trader_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_analyst_0_view",
+      "token_size": 208
+    },
+    {
+      "dst": "O_trader_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_research_0_evidence",
+      "token_size": 219
+    },
+    {
+      "dst": "S_trade_0",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_trader_0",
+      "token_size": 247
+    },
+    {
+      "dst": "O_risk_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_policy",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_0",
+      "token_size": 247
+    },
+    {
+      "dst": "S_risk_0",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_risk_0",
+      "token_size": 210
+    },
+    {
+      "dst": "O_analyst_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_role_instruction",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_1",
+      "token_size": 409
+    },
+    {
+      "dst": "O_researcher_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_tool_schema",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_1",
+      "token_size": 409
+    },
+    {
+      "dst": "S_analyst_1_view",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_analyst_1",
+      "token_size": 225
+    },
+    {
+      "dst": "S_research_1_evidence",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_researcher_1",
+      "token_size": 249
+    },
+    {
+      "dst": "O_trader_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_analyst_1_view",
+      "token_size": 225
+    },
+    {
+      "dst": "O_trader_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_research_1_evidence",
+      "token_size": 249
+    },
+    {
+      "dst": "S_trade_1",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_trader_1",
+      "token_size": 249
+    },
+    {
+      "dst": "O_risk_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_policy",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_1",
+      "token_size": 249
+    },
+    {
+      "dst": "S_risk_1",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_risk_1",
+      "token_size": 315
+    },
+    {
+      "dst": "O_analyst_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_role_instruction",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_2",
+      "token_size": 438
+    },
+    {
+      "dst": "O_researcher_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_tool_schema",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_2",
+      "token_size": 438
+    },
+    {
+      "dst": "S_analyst_2_view",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_analyst_2",
+      "token_size": 189
+    },
+    {
+      "dst": "S_research_2_evidence",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_researcher_2",
+      "token_size": 286
+    },
+    {
+      "dst": "O_trader_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_analyst_2_view",
+      "token_size": 189
+    },
+    {
+      "dst": "O_trader_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_research_2_evidence",
+      "token_size": 286
+    },
+    {
+      "dst": "S_trade_2",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_trader_2",
+      "token_size": 222
+    },
+    {
+      "dst": "O_risk_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_policy",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_2",
+      "token_size": 222
+    },
+    {
+      "dst": "S_risk_2",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_risk_2",
+      "token_size": 212
+    },
+    {
+      "dst": "O_analyst_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_role_instruction",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_3",
+      "token_size": 426
+    },
+    {
+      "dst": "O_researcher_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_tool_schema",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_3",
+      "token_size": 426
+    },
+    {
+      "dst": "S_analyst_3_view",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_analyst_3",
+      "token_size": 283
+    },
+    {
+      "dst": "S_research_3_evidence",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_researcher_3",
+      "token_size": 242
+    },
+    {
+      "dst": "O_trader_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_analyst_3_view",
+      "token_size": 283
+    },
+    {
+      "dst": "O_trader_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_research_3_evidence",
+      "token_size": 242
+    },
+    {
+      "dst": "S_trade_3",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_trader_3",
+      "token_size": 262
+    },
+    {
+      "dst": "O_risk_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_policy",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_3",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_3",
+      "token_size": 262
+    },
+    {
+      "dst": "S_risk_3",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_risk_3",
+      "token_size": 214
+    },
+    {
+      "dst": "O_analyst_4",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_4",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_4",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_role_instruction",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_4",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_4",
+      "token_size": 390
+    },
+    {
+      "dst": "O_researcher_4",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_4",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_4",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_tool_schema",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_4",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_4",
+      "token_size": 390
+    },
+    {
+      "dst": "S_analyst_4_view",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_analyst_4",
+      "token_size": 220
+    },
+    {
+      "dst": "S_research_4_evidence",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_researcher_4",
+      "token_size": 284
+    },
+    {
+      "dst": "O_trader_4",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_4",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_4",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_analyst_4_view",
+      "token_size": 220
+    },
+    {
+      "dst": "O_trader_4",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_research_4_evidence",
+      "token_size": 284
+    },
+    {
+      "dst": "S_trade_4",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_trader_4",
+      "token_size": 250
+    },
+    {
+      "dst": "O_risk_4",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_4",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_policy",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_4",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_4",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_4",
+      "token_size": 250
+    },
+    {
+      "dst": "S_risk_4",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_risk_4",
+      "token_size": 222
+    },
+    {
+      "dst": "O_analyst_5",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_5",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_5",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_role_instruction",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_5",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_5",
+      "token_size": 486
+    },
+    {
+      "dst": "O_researcher_5",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_5",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_5",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_tool_schema",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_5",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_5",
+      "token_size": 486
+    },
+    {
+      "dst": "S_analyst_5_view",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_analyst_5",
+      "token_size": 229
+    },
+    {
+      "dst": "S_research_5_evidence",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_researcher_5",
+      "token_size": 240
+    },
+    {
+      "dst": "O_trader_5",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_5",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_5",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_analyst_5_view",
+      "token_size": 229
+    },
+    {
+      "dst": "O_trader_5",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_research_5_evidence",
+      "token_size": 240
+    },
+    {
+      "dst": "S_trade_5",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_trader_5",
+      "token_size": 238
+    },
+    {
+      "dst": "O_risk_5",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_5",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_policy",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_5",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_5",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_5",
+      "token_size": 238
+    },
+    {
+      "dst": "S_risk_5",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_risk_5",
+      "token_size": 253
+    },
+    {
+      "dst": "O_analyst_6",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_6",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_6",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_role_instruction",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_6",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_6",
+      "token_size": 288
+    },
+    {
+      "dst": "O_researcher_6",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_6",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_6",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_tool_schema",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_6",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_6",
+      "token_size": 288
+    },
+    {
+      "dst": "S_analyst_6_view",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_analyst_6",
+      "token_size": 246
+    },
+    {
+      "dst": "S_research_6_evidence",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_researcher_6",
+      "token_size": 239
+    },
+    {
+      "dst": "O_trader_6",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_6",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_6",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_analyst_6_view",
+      "token_size": 246
+    },
+    {
+      "dst": "O_trader_6",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_research_6_evidence",
+      "token_size": 239
+    },
+    {
+      "dst": "S_trade_6",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_trader_6",
+      "token_size": 213
+    },
+    {
+      "dst": "O_risk_6",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_6",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_policy",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_6",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_6",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_6",
+      "token_size": 213
+    },
+    {
+      "dst": "S_risk_6",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_risk_6",
+      "token_size": 289
+    },
+    {
+      "dst": "O_analyst_7",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_7",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_7",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_role_instruction",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_7",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_7",
+      "token_size": 385
+    },
+    {
+      "dst": "O_researcher_7",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_7",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_7",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_tool_schema",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_7",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_7",
+      "token_size": 385
+    },
+    {
+      "dst": "S_analyst_7_view",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_analyst_7",
+      "token_size": 211
+    },
+    {
+      "dst": "S_research_7_evidence",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_researcher_7",
+      "token_size": 263
+    },
+    {
+      "dst": "O_trader_7",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_7",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_7",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_analyst_7_view",
+      "token_size": 211
+    },
+    {
+      "dst": "O_trader_7",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_research_7_evidence",
+      "token_size": 263
+    },
+    {
+      "dst": "S_trade_7",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_trader_7",
+      "token_size": 245
+    },
+    {
+      "dst": "O_risk_7",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_7",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_policy",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_7",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_7",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_7",
+      "token_size": 245
+    },
+    {
+      "dst": "S_risk_7",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_risk_7",
+      "token_size": 268
+    },
+    {
+      "dst": "O_analyst_8",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_8",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_8",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_role_instruction",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_8",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_8",
+      "token_size": 346
+    },
+    {
+      "dst": "O_researcher_8",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_8",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_8",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_tool_schema",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_8",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_8",
+      "token_size": 346
+    },
+    {
+      "dst": "S_analyst_8_view",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_analyst_8",
+      "token_size": 221
+    },
+    {
+      "dst": "S_research_8_evidence",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_researcher_8",
+      "token_size": 252
+    },
+    {
+      "dst": "O_trader_8",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_8",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_8",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_analyst_8_view",
+      "token_size": 221
+    },
+    {
+      "dst": "O_trader_8",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_research_8_evidence",
+      "token_size": 252
+    },
+    {
+      "dst": "S_trade_8",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_trader_8",
+      "token_size": 188
+    },
+    {
+      "dst": "O_risk_8",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_8",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_policy",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_8",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_8",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_8",
+      "token_size": 188
+    },
+    {
+      "dst": "S_risk_8",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_risk_8",
+      "token_size": 304
+    },
+    {
+      "dst": "O_analyst_9",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_9",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_9",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_role_instruction",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_9",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_9",
+      "token_size": 335
+    },
+    {
+      "dst": "O_researcher_9",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_9",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_9",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_tool_schema",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_9",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_9",
+      "token_size": 335
+    },
+    {
+      "dst": "S_analyst_9_view",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_analyst_9",
+      "token_size": 213
+    },
+    {
+      "dst": "S_research_9_evidence",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_researcher_9",
+      "token_size": 279
+    },
+    {
+      "dst": "O_trader_9",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_9",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_9",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_analyst_9_view",
+      "token_size": 213
+    },
+    {
+      "dst": "O_trader_9",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_research_9_evidence",
+      "token_size": 279
+    },
+    {
+      "dst": "S_trade_9",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_trader_9",
+      "token_size": 287
+    },
+    {
+      "dst": "O_risk_9",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_9",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_policy",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_9",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_9",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_9",
+      "token_size": 287
+    },
+    {
+      "dst": "S_risk_9",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_risk_9",
+      "token_size": 198
+    },
+    {
+      "dst": "O_analyst_10",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_10",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_10",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_role_instruction",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_10",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_10",
+      "token_size": 460
+    },
+    {
+      "dst": "O_researcher_10",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_10",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_10",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_tool_schema",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_10",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_10",
+      "token_size": 460
+    },
+    {
+      "dst": "S_analyst_10_view",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_analyst_10",
+      "token_size": 237
+    },
+    {
+      "dst": "S_research_10_evidence",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_researcher_10",
+      "token_size": 316
+    },
+    {
+      "dst": "O_trader_10",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_10",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_10",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_analyst_10_view",
+      "token_size": 237
+    },
+    {
+      "dst": "O_trader_10",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_research_10_evidence",
+      "token_size": 316
+    },
+    {
+      "dst": "S_trade_10",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_trader_10",
+      "token_size": 248
+    },
+    {
+      "dst": "O_risk_10",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_10",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_policy",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_10",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_10",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_10",
+      "token_size": 248
+    },
+    {
+      "dst": "S_risk_10",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_risk_10",
+      "token_size": 223
+    },
+    {
+      "dst": "O_analyst_11",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_11",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_11",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_role_instruction",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_11",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_11",
+      "token_size": 363
+    },
+    {
+      "dst": "O_researcher_11",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_11",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_11",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_tool_schema",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_11",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_11",
+      "token_size": 363
+    },
+    {
+      "dst": "S_analyst_11_view",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_analyst_11",
+      "token_size": 262
+    },
+    {
+      "dst": "S_research_11_evidence",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_researcher_11",
+      "token_size": 231
+    },
+    {
+      "dst": "O_trader_11",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_11",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_11",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_analyst_11_view",
+      "token_size": 262
+    },
+    {
+      "dst": "O_trader_11",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_research_11_evidence",
+      "token_size": 231
+    },
+    {
+      "dst": "S_trade_11",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_trader_11",
+      "token_size": 259
+    },
+    {
+      "dst": "O_risk_11",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_11",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_policy",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_11",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_11",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_11",
+      "token_size": 259
+    },
+    {
+      "dst": "S_risk_11",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_risk_11",
+      "token_size": 302
+    },
+    {
+      "dst": "O_analyst_12",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_12",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_12",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_role_instruction",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_12",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_12",
+      "token_size": 408
+    },
+    {
+      "dst": "O_researcher_12",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_12",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_12",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_tool_schema",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_12",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_12",
+      "token_size": 408
+    },
+    {
+      "dst": "S_analyst_12_view",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_analyst_12",
+      "token_size": 237
+    },
+    {
+      "dst": "S_research_12_evidence",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_researcher_12",
+      "token_size": 287
+    },
+    {
+      "dst": "O_trader_12",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_12",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_12",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_analyst_12_view",
+      "token_size": 237
+    },
+    {
+      "dst": "O_trader_12",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_research_12_evidence",
+      "token_size": 287
+    },
+    {
+      "dst": "S_trade_12",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_trader_12",
+      "token_size": 260
+    },
+    {
+      "dst": "O_risk_12",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_12",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_policy",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_12",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_12",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_12",
+      "token_size": 260
+    },
+    {
+      "dst": "S_risk_12",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_risk_12",
+      "token_size": 247
+    },
+    {
+      "dst": "O_analyst_13",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_13",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_13",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_role_instruction",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_13",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_13",
+      "token_size": 389
+    },
+    {
+      "dst": "O_researcher_13",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_13",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_13",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_tool_schema",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_13",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_13",
+      "token_size": 389
+    },
+    {
+      "dst": "S_analyst_13_view",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_analyst_13",
+      "token_size": 219
+    },
+    {
+      "dst": "S_research_13_evidence",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_researcher_13",
+      "token_size": 225
+    },
+    {
+      "dst": "O_trader_13",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_13",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_13",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_analyst_13_view",
+      "token_size": 219
+    },
+    {
+      "dst": "O_trader_13",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_research_13_evidence",
+      "token_size": 225
+    },
+    {
+      "dst": "S_trade_13",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_trader_13",
+      "token_size": 258
+    },
+    {
+      "dst": "O_risk_13",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_13",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_policy",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_13",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_13",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_13",
+      "token_size": 258
+    },
+    {
+      "dst": "S_risk_13",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_risk_13",
+      "token_size": 249
+    },
+    {
+      "dst": "O_analyst_14",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_14",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_14",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_role_instruction",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_14",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_14",
+      "token_size": 429
+    },
+    {
+      "dst": "O_researcher_14",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_14",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_14",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_tool_schema",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_14",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_14",
+      "token_size": 429
+    },
+    {
+      "dst": "S_analyst_14_view",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_analyst_14",
+      "token_size": 245
+    },
+    {
+      "dst": "S_research_14_evidence",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_researcher_14",
+      "token_size": 272
+    },
+    {
+      "dst": "O_trader_14",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_14",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_14",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_analyst_14_view",
+      "token_size": 245
+    },
+    {
+      "dst": "O_trader_14",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_research_14_evidence",
+      "token_size": 272
+    },
+    {
+      "dst": "S_trade_14",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_trader_14",
+      "token_size": 183
+    },
+    {
+      "dst": "O_risk_14",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_14",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_policy",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_14",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_14",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_14",
+      "token_size": 183
+    },
+    {
+      "dst": "S_risk_14",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_risk_14",
+      "token_size": 268
+    },
+    {
+      "dst": "O_analyst_15",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_15",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_15",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_role_instruction",
+      "token_size": 800
+    },
+    {
+      "dst": "O_analyst_15",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_15",
+      "token_size": 422
+    },
+    {
+      "dst": "O_researcher_15",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_15",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_15",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_tool_schema",
+      "token_size": 800
+    },
+    {
+      "dst": "O_researcher_15",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_signal_15",
+      "token_size": 422
+    },
+    {
+      "dst": "S_analyst_15_view",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_analyst_15",
+      "token_size": 233
+    },
+    {
+      "dst": "S_research_15_evidence",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_researcher_15",
+      "token_size": 227
+    },
+    {
+      "dst": "O_trader_15",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_15",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_trader_15",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_analyst_15_view",
+      "token_size": 233
+    },
+    {
+      "dst": "O_trader_15",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_research_15_evidence",
+      "token_size": 227
+    },
+    {
+      "dst": "S_trade_15",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_trader_15",
+      "token_size": 263
+    },
+    {
+      "dst": "O_risk_15",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_15",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_policy",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_15",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_risk_15",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_15",
+      "token_size": 263
+    },
+    {
+      "dst": "S_risk_15",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_risk_15",
+      "token_size": 253
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 800
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_market_context",
+      "token_size": 800
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_policy",
+      "token_size": 800
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_0",
+      "token_size": 247
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_0",
+      "token_size": 210
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_1",
+      "token_size": 249
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_1",
+      "token_size": 315
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_2",
+      "token_size": 222
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_2",
+      "token_size": 212
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_3",
+      "token_size": 262
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_3",
+      "token_size": 214
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_4",
+      "token_size": 250
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_4",
+      "token_size": 222
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_5",
+      "token_size": 238
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_5",
+      "token_size": 253
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_6",
+      "token_size": 213
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_6",
+      "token_size": 289
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_7",
+      "token_size": 245
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_7",
+      "token_size": 268
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_8",
+      "token_size": 188
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_8",
+      "token_size": 304
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_9",
+      "token_size": 287
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_9",
+      "token_size": 198
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_10",
+      "token_size": 248
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_10",
+      "token_size": 223
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_11",
+      "token_size": 259
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_11",
+      "token_size": 302
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_12",
+      "token_size": 260
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_12",
+      "token_size": 247
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_13",
+      "token_size": 258
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_13",
+      "token_size": 249
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_14",
+      "token_size": 183
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_14",
+      "token_size": 268
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_trade_15",
+      "token_size": 263
+    },
+    {
+      "dst": "O_manager",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_risk_15",
+      "token_size": 253
+    },
+    {
+      "dst": "S_portfolio_decision",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_manager",
+      "token_size": 219
+    }
+  ],
+  "graph_id": "trading",
+  "metadata": {
+    "config": {
+      "batch_size": 16,
+      "dynamic_hot_state_probability": 0.25,
+      "num_agents": 4,
+      "num_branches": 4,
+      "num_rounds": 2,
+      "output_token_mean": 250,
+      "seed": 0,
+      "shared_state_size": 4000,
+      "unique_state_size": 400
+    },
+    "workflow": "trading"
+  },
+  "operators": [
+    {
+      "criticality": 1.1,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2845,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_role_instruction",
+        "S_market_signal_0"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_analyst_0",
+      "output_states": [
+        "S_analyst_0_view"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "analyst"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2845,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_tool_schema",
+        "S_market_signal_0"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_researcher_0",
+      "output_states": [
+        "S_research_0_evidence"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "researcher"
+    },
+    {
+      "criticality": 1.5,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2027,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_analyst_0_view",
+        "S_research_0_evidence"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_trader_0",
+      "output_states": [
+        "S_trade_0"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "trader"
+    },
+    {
+      "criticality": 1.7,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2647,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_risk_policy",
+        "S_market_context",
+        "S_trade_0"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_risk_0",
+      "output_states": [
+        "S_risk_0"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "risk"
+    },
+    {
+      "criticality": 1.1,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2809,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_role_instruction",
+        "S_market_signal_1"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_analyst_1",
+      "output_states": [
+        "S_analyst_1_view"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "analyst"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2809,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_tool_schema",
+        "S_market_signal_1"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_researcher_1",
+      "output_states": [
+        "S_research_1_evidence"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "researcher"
+    },
+    {
+      "criticality": 1.5,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2074,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_analyst_1_view",
+        "S_research_1_evidence"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_trader_1",
+      "output_states": [
+        "S_trade_1"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "trader"
+    },
+    {
+      "criticality": 1.7,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2649,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_risk_policy",
+        "S_market_context",
+        "S_trade_1"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_risk_1",
+      "output_states": [
+        "S_risk_1"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "risk"
+    },
+    {
+      "criticality": 1.1,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2838,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_role_instruction",
+        "S_market_signal_2"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_analyst_2",
+      "output_states": [
+        "S_analyst_2_view"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "analyst"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2838,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_tool_schema",
+        "S_market_signal_2"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_researcher_2",
+      "output_states": [
+        "S_research_2_evidence"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "researcher"
+    },
+    {
+      "criticality": 1.5,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2075,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_analyst_2_view",
+        "S_research_2_evidence"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_trader_2",
+      "output_states": [
+        "S_trade_2"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "trader"
+    },
+    {
+      "criticality": 1.7,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2622,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_risk_policy",
+        "S_market_context",
+        "S_trade_2"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_risk_2",
+      "output_states": [
+        "S_risk_2"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "risk"
+    },
+    {
+      "criticality": 1.1,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2826,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_role_instruction",
+        "S_market_signal_3"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_analyst_3",
+      "output_states": [
+        "S_analyst_3_view"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "analyst"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2826,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_tool_schema",
+        "S_market_signal_3"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_researcher_3",
+      "output_states": [
+        "S_research_3_evidence"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "researcher"
+    },
+    {
+      "criticality": 1.5,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2125,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_analyst_3_view",
+        "S_research_3_evidence"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_trader_3",
+      "output_states": [
+        "S_trade_3"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "trader"
+    },
+    {
+      "criticality": 1.7,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2662,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_risk_policy",
+        "S_market_context",
+        "S_trade_3"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_risk_3",
+      "output_states": [
+        "S_risk_3"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "risk"
+    },
+    {
+      "criticality": 1.1,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2790,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_role_instruction",
+        "S_market_signal_4"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_analyst_4",
+      "output_states": [
+        "S_analyst_4_view"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "analyst"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2790,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_tool_schema",
+        "S_market_signal_4"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_researcher_4",
+      "output_states": [
+        "S_research_4_evidence"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "researcher"
+    },
+    {
+      "criticality": 1.5,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2104,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_analyst_4_view",
+        "S_research_4_evidence"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_trader_4",
+      "output_states": [
+        "S_trade_4"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "trader"
+    },
+    {
+      "criticality": 1.7,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2650,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_risk_policy",
+        "S_market_context",
+        "S_trade_4"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_risk_4",
+      "output_states": [
+        "S_risk_4"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "risk"
+    },
+    {
+      "criticality": 1.1,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2886,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_role_instruction",
+        "S_market_signal_5"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_analyst_5",
+      "output_states": [
+        "S_analyst_5_view"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "analyst"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2886,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_tool_schema",
+        "S_market_signal_5"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_researcher_5",
+      "output_states": [
+        "S_research_5_evidence"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "researcher"
+    },
+    {
+      "criticality": 1.5,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2069,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_analyst_5_view",
+        "S_research_5_evidence"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_trader_5",
+      "output_states": [
+        "S_trade_5"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "trader"
+    },
+    {
+      "criticality": 1.7,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2638,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_risk_policy",
+        "S_market_context",
+        "S_trade_5"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_risk_5",
+      "output_states": [
+        "S_risk_5"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "risk"
+    },
+    {
+      "criticality": 1.1,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2688,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_role_instruction",
+        "S_market_signal_6"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_analyst_6",
+      "output_states": [
+        "S_analyst_6_view"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "analyst"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2688,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_tool_schema",
+        "S_market_signal_6"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_researcher_6",
+      "output_states": [
+        "S_research_6_evidence"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "researcher"
+    },
+    {
+      "criticality": 1.5,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2085,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_analyst_6_view",
+        "S_research_6_evidence"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_trader_6",
+      "output_states": [
+        "S_trade_6"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "trader"
+    },
+    {
+      "criticality": 1.7,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2613,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_risk_policy",
+        "S_market_context",
+        "S_trade_6"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_risk_6",
+      "output_states": [
+        "S_risk_6"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "risk"
+    },
+    {
+      "criticality": 1.1,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2785,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_role_instruction",
+        "S_market_signal_7"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_analyst_7",
+      "output_states": [
+        "S_analyst_7_view"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "analyst"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2785,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_tool_schema",
+        "S_market_signal_7"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_researcher_7",
+      "output_states": [
+        "S_research_7_evidence"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "researcher"
+    },
+    {
+      "criticality": 1.5,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2074,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_analyst_7_view",
+        "S_research_7_evidence"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_trader_7",
+      "output_states": [
+        "S_trade_7"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "trader"
+    },
+    {
+      "criticality": 1.7,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2645,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_risk_policy",
+        "S_market_context",
+        "S_trade_7"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_risk_7",
+      "output_states": [
+        "S_risk_7"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "risk"
+    },
+    {
+      "criticality": 1.1,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2746,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_role_instruction",
+        "S_market_signal_8"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_analyst_8",
+      "output_states": [
+        "S_analyst_8_view"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "analyst"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2746,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_tool_schema",
+        "S_market_signal_8"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_researcher_8",
+      "output_states": [
+        "S_research_8_evidence"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "researcher"
+    },
+    {
+      "criticality": 1.5,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2073,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_analyst_8_view",
+        "S_research_8_evidence"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_trader_8",
+      "output_states": [
+        "S_trade_8"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "trader"
+    },
+    {
+      "criticality": 1.7,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2588,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_risk_policy",
+        "S_market_context",
+        "S_trade_8"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_risk_8",
+      "output_states": [
+        "S_risk_8"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "risk"
+    },
+    {
+      "criticality": 1.1,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2735,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_role_instruction",
+        "S_market_signal_9"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_analyst_9",
+      "output_states": [
+        "S_analyst_9_view"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "analyst"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2735,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_tool_schema",
+        "S_market_signal_9"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_researcher_9",
+      "output_states": [
+        "S_research_9_evidence"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "researcher"
+    },
+    {
+      "criticality": 1.5,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2092,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_analyst_9_view",
+        "S_research_9_evidence"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_trader_9",
+      "output_states": [
+        "S_trade_9"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "trader"
+    },
+    {
+      "criticality": 1.7,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2687,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_risk_policy",
+        "S_market_context",
+        "S_trade_9"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_risk_9",
+      "output_states": [
+        "S_risk_9"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "risk"
+    },
+    {
+      "criticality": 1.1,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2860,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_role_instruction",
+        "S_market_signal_10"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_analyst_10",
+      "output_states": [
+        "S_analyst_10_view"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "analyst"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2860,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_tool_schema",
+        "S_market_signal_10"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_researcher_10",
+      "output_states": [
+        "S_research_10_evidence"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "researcher"
+    },
+    {
+      "criticality": 1.5,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2153,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_analyst_10_view",
+        "S_research_10_evidence"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_trader_10",
+      "output_states": [
+        "S_trade_10"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "trader"
+    },
+    {
+      "criticality": 1.7,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2648,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_risk_policy",
+        "S_market_context",
+        "S_trade_10"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_risk_10",
+      "output_states": [
+        "S_risk_10"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "risk"
+    },
+    {
+      "criticality": 1.1,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2763,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_role_instruction",
+        "S_market_signal_11"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_analyst_11",
+      "output_states": [
+        "S_analyst_11_view"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "analyst"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2763,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_tool_schema",
+        "S_market_signal_11"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_researcher_11",
+      "output_states": [
+        "S_research_11_evidence"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "researcher"
+    },
+    {
+      "criticality": 1.5,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2093,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_analyst_11_view",
+        "S_research_11_evidence"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_trader_11",
+      "output_states": [
+        "S_trade_11"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "trader"
+    },
+    {
+      "criticality": 1.7,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2659,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_risk_policy",
+        "S_market_context",
+        "S_trade_11"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_risk_11",
+      "output_states": [
+        "S_risk_11"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "risk"
+    },
+    {
+      "criticality": 1.1,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2808,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_role_instruction",
+        "S_market_signal_12"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_analyst_12",
+      "output_states": [
+        "S_analyst_12_view"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "analyst"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2808,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_tool_schema",
+        "S_market_signal_12"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_researcher_12",
+      "output_states": [
+        "S_research_12_evidence"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "researcher"
+    },
+    {
+      "criticality": 1.5,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2124,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_analyst_12_view",
+        "S_research_12_evidence"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_trader_12",
+      "output_states": [
+        "S_trade_12"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "trader"
+    },
+    {
+      "criticality": 1.7,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2660,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_risk_policy",
+        "S_market_context",
+        "S_trade_12"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_risk_12",
+      "output_states": [
+        "S_risk_12"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "risk"
+    },
+    {
+      "criticality": 1.1,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2789,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_role_instruction",
+        "S_market_signal_13"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_analyst_13",
+      "output_states": [
+        "S_analyst_13_view"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "analyst"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2789,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_tool_schema",
+        "S_market_signal_13"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_researcher_13",
+      "output_states": [
+        "S_research_13_evidence"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "researcher"
+    },
+    {
+      "criticality": 1.5,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2044,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_analyst_13_view",
+        "S_research_13_evidence"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_trader_13",
+      "output_states": [
+        "S_trade_13"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "trader"
+    },
+    {
+      "criticality": 1.7,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2658,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_risk_policy",
+        "S_market_context",
+        "S_trade_13"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_risk_13",
+      "output_states": [
+        "S_risk_13"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "risk"
+    },
+    {
+      "criticality": 1.1,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2829,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_role_instruction",
+        "S_market_signal_14"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_analyst_14",
+      "output_states": [
+        "S_analyst_14_view"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "analyst"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2829,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_tool_schema",
+        "S_market_signal_14"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_researcher_14",
+      "output_states": [
+        "S_research_14_evidence"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "researcher"
+    },
+    {
+      "criticality": 1.5,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2117,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_analyst_14_view",
+        "S_research_14_evidence"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_trader_14",
+      "output_states": [
+        "S_trade_14"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "trader"
+    },
+    {
+      "criticality": 1.7,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2583,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_risk_policy",
+        "S_market_context",
+        "S_trade_14"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_risk_14",
+      "output_states": [
+        "S_risk_14"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "risk"
+    },
+    {
+      "criticality": 1.1,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2822,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_role_instruction",
+        "S_market_signal_15"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_analyst_15",
+      "output_states": [
+        "S_analyst_15_view"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "analyst"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2822,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_tool_schema",
+        "S_market_signal_15"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_researcher_15",
+      "output_states": [
+        "S_research_15_evidence"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "researcher"
+    },
+    {
+      "criticality": 1.5,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2060,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_analyst_15_view",
+        "S_research_15_evidence"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_trader_15",
+      "output_states": [
+        "S_trade_15"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "trader"
+    },
+    {
+      "criticality": 1.7,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2663,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_risk_policy",
+        "S_market_context",
+        "S_trade_15"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_risk_15",
+      "output_states": [
+        "S_risk_15"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "risk"
+    },
+    {
+      "criticality": 2.4,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 10299,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_market_context",
+        "S_risk_policy",
+        "S_trade_0",
+        "S_risk_0",
+        "S_trade_1",
+        "S_risk_1",
+        "S_trade_2",
+        "S_risk_2",
+        "S_trade_3",
+        "S_risk_3",
+        "S_trade_4",
+        "S_risk_4",
+        "S_trade_5",
+        "S_risk_5",
+        "S_trade_6",
+        "S_risk_6",
+        "S_trade_7",
+        "S_risk_7",
+        "S_trade_8",
+        "S_risk_8",
+        "S_trade_9",
+        "S_risk_9",
+        "S_trade_10",
+        "S_risk_10",
+        "S_trade_11",
+        "S_risk_11",
+        "S_trade_12",
+        "S_risk_12",
+        "S_trade_13",
+        "S_risk_13",
+        "S_trade_14",
+        "S_risk_14",
+        "S_trade_15",
+        "S_risk_15"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_manager",
+      "output_states": [
+        "S_portfolio_decision"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "manager"
+    }
+  ],
+  "states": [
+    {
+      "consumers": [
+        "O_analyst_0",
+        "O_researcher_0",
+        "O_trader_0",
+        "O_risk_0",
+        "O_analyst_1",
+        "O_researcher_1",
+        "O_trader_1",
+        "O_risk_1",
+        "O_analyst_2",
+        "O_researcher_2",
+        "O_trader_2",
+        "O_risk_2",
+        "O_analyst_3",
+        "O_researcher_3",
+        "O_trader_3",
+        "O_risk_3",
+        "O_analyst_4",
+        "O_researcher_4",
+        "O_trader_4",
+        "O_risk_4",
+        "O_analyst_5",
+        "O_researcher_5",
+        "O_trader_5",
+        "O_risk_5",
+        "O_analyst_6",
+        "O_researcher_6",
+        "O_trader_6",
+        "O_risk_6",
+        "O_analyst_7",
+        "O_researcher_7",
+        "O_trader_7",
+        "O_risk_7",
+        "O_analyst_8",
+        "O_researcher_8",
+        "O_trader_8",
+        "O_risk_8",
+        "O_analyst_9",
+        "O_researcher_9",
+        "O_trader_9",
+        "O_risk_9",
+        "O_analyst_10",
+        "O_researcher_10",
+        "O_trader_10",
+        "O_risk_10",
+        "O_analyst_11",
+        "O_researcher_11",
+        "O_trader_11",
+        "O_risk_11",
+        "O_analyst_12",
+        "O_researcher_12",
+        "O_trader_12",
+        "O_risk_12",
+        "O_analyst_13",
+        "O_researcher_13",
+        "O_trader_13",
+        "O_risk_13",
+        "O_analyst_14",
+        "O_researcher_14",
+        "O_trader_14",
+        "O_risk_14",
+        "O_analyst_15",
+        "O_researcher_15",
+        "O_trader_15",
+        "O_risk_15",
+        "O_manager"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 1555.8941361167338,
+      "kind": "task",
+      "kv_size_bytes": 819200,
+      "lifetime_end": 64,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "text",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_task",
+      "static_hotness": 2232320.0,
+      "token_size": 800
+    },
+    {
+      "consumers": [
+        "O_analyst_0",
+        "O_researcher_0",
+        "O_trader_0",
+        "O_risk_0",
+        "O_analyst_1",
+        "O_researcher_1",
+        "O_trader_1",
+        "O_risk_1",
+        "O_analyst_2",
+        "O_researcher_2",
+        "O_trader_2",
+        "O_risk_2",
+        "O_analyst_3",
+        "O_researcher_3",
+        "O_trader_3",
+        "O_risk_3",
+        "O_analyst_4",
+        "O_researcher_4",
+        "O_trader_4",
+        "O_risk_4",
+        "O_analyst_5",
+        "O_researcher_5",
+        "O_trader_5",
+        "O_risk_5",
+        "O_analyst_6",
+        "O_researcher_6",
+        "O_trader_6",
+        "O_risk_6",
+        "O_analyst_7",
+        "O_researcher_7",
+        "O_trader_7",
+        "O_risk_7",
+        "O_analyst_8",
+        "O_researcher_8",
+        "O_trader_8",
+        "O_risk_8",
+        "O_analyst_9",
+        "O_researcher_9",
+        "O_trader_9",
+        "O_risk_9",
+        "O_analyst_10",
+        "O_researcher_10",
+        "O_trader_10",
+        "O_risk_10",
+        "O_analyst_11",
+        "O_researcher_11",
+        "O_trader_11",
+        "O_risk_11",
+        "O_analyst_12",
+        "O_researcher_12",
+        "O_trader_12",
+        "O_risk_12",
+        "O_analyst_13",
+        "O_researcher_13",
+        "O_trader_13",
+        "O_risk_13",
+        "O_analyst_14",
+        "O_researcher_14",
+        "O_trader_14",
+        "O_risk_14",
+        "O_analyst_15",
+        "O_researcher_15",
+        "O_trader_15",
+        "O_risk_15",
+        "O_manager"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 1555.8941361167338,
+      "kind": "market_context",
+      "kv_size_bytes": 819200,
+      "lifetime_end": 64,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "text",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_market_context",
+      "static_hotness": 2232320.0,
+      "token_size": 800
+    },
+    {
+      "consumers": [
+        "O_risk_0",
+        "O_risk_1",
+        "O_risk_2",
+        "O_risk_3",
+        "O_risk_4",
+        "O_risk_5",
+        "O_risk_6",
+        "O_risk_7",
+        "O_risk_8",
+        "O_risk_9",
+        "O_risk_10",
+        "O_risk_11",
+        "O_risk_12",
+        "O_risk_13",
+        "O_risk_14",
+        "O_risk_15",
+        "O_manager"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 1556.1294404017267,
+      "kind": "risk_policy",
+      "kv_size_bytes": 819200,
+      "lifetime_end": 64,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "text",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_risk_policy",
+      "static_hotness": 189440.0,
+      "token_size": 800
+    },
+    {
+      "consumers": [
+        "O_researcher_0",
+        "O_researcher_1",
+        "O_researcher_2",
+        "O_researcher_3",
+        "O_researcher_4",
+        "O_researcher_5",
+        "O_researcher_6",
+        "O_researcher_7",
+        "O_researcher_8",
+        "O_researcher_9",
+        "O_researcher_10",
+        "O_researcher_11",
+        "O_researcher_12",
+        "O_researcher_13",
+        "O_researcher_14",
+        "O_researcher_15"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 800.0,
+      "kind": "tool_schema",
+      "kv_size_bytes": 819200,
+      "lifetime_end": 31,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "text",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_tool_schema",
+      "static_hotness": 96000.0,
+      "token_size": 800
+    },
+    {
+      "consumers": [
+        "O_analyst_0",
+        "O_analyst_1",
+        "O_analyst_2",
+        "O_analyst_3",
+        "O_analyst_4",
+        "O_analyst_5",
+        "O_analyst_6",
+        "O_analyst_7",
+        "O_analyst_8",
+        "O_analyst_9",
+        "O_analyst_10",
+        "O_analyst_11",
+        "O_analyst_12",
+        "O_analyst_13",
+        "O_analyst_14",
+        "O_analyst_15"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 880.0,
+      "kind": "role_instruction",
+      "kv_size_bytes": 819200,
+      "lifetime_end": 15,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "text",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_role_instruction",
+      "static_hotness": 105600.00000000001,
+      "token_size": 800
+    },
+    {
+      "consumers": [
+        "O_analyst_0",
+        "O_researcher_0"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 462.3318852391086,
+      "kind": "retrieval",
+      "kv_size_bytes": 455680,
+      "lifetime_end": 16,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_market_signal_0",
+      "static_hotness": 467.25,
+      "token_size": 445
+    },
+    {
+      "consumers": [
+        "O_trader_0"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 305.5378831945781,
+      "kind": "intermediate_summary",
+      "kv_size_bytes": 212992,
+      "lifetime_end": 32,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_analyst_0",
+      "state_id": "S_analyst_0_view",
+      "static_hotness": 0.0,
+      "token_size": 208
+    },
+    {
+      "consumers": [
+        "O_trader_0"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 321.69613663275294,
+      "kind": "retrieval_result",
+      "kv_size_bytes": 224256,
+      "lifetime_end": 32,
+      "lifetime_start": 16,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_researcher_0",
+      "state_id": "S_research_0_evidence",
+      "static_hotness": 0.0,
+      "token_size": 219
+    },
+    {
+      "consumers": [
+        "O_risk_0",
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 524.4627964326394,
+      "kind": "planner_output",
+      "kv_size_bytes": 252928,
+      "lifetime_end": 64,
+      "lifetime_start": 32,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_trader_0",
+      "state_id": "S_trade_0",
+      "static_hotness": 506.34999999999997,
+      "token_size": 247
+    },
+    {
+      "consumers": [
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 493.5611959297031,
+      "kind": "critic_feedback",
+      "kv_size_bytes": 215040,
+      "lifetime_end": 64,
+      "lifetime_start": 48,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_risk_0",
+      "state_id": "S_risk_0",
+      "static_hotness": 0.0,
+      "token_size": 210
+    },
+    {
+      "consumers": [
+        "O_analyst_1",
+        "O_researcher_1"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 424.92975519729305,
+      "kind": "retrieval",
+      "kv_size_bytes": 418816,
+      "lifetime_end": 17,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_market_signal_1",
+      "static_hotness": 429.45000000000005,
+      "token_size": 409
+    },
+    {
+      "consumers": [
+        "O_trader_1"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 330.50972941721193,
+      "kind": "intermediate_summary",
+      "kv_size_bytes": 230400,
+      "lifetime_end": 33,
+      "lifetime_start": 1,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_analyst_1",
+      "state_id": "S_analyst_1_view",
+      "static_hotness": 0.0,
+      "token_size": 225
+    },
+    {
+      "consumers": [
+        "O_trader_1"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 365.7641005550479,
+      "kind": "retrieval_result",
+      "kv_size_bytes": 254976,
+      "lifetime_end": 33,
+      "lifetime_start": 17,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_researcher_1",
+      "state_id": "S_research_1_evidence",
+      "static_hotness": 0.0,
+      "token_size": 249
+    },
+    {
+      "consumers": [
+        "O_risk_1",
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 528.7094587519322,
+      "kind": "planner_output",
+      "kv_size_bytes": 254976,
+      "lifetime_end": 64,
+      "lifetime_start": 33,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_trader_1",
+      "state_id": "S_trade_1",
+      "static_hotness": 510.44999999999993,
+      "token_size": 249
+    },
+    {
+      "consumers": [
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 740.3417938945546,
+      "kind": "critic_feedback",
+      "kv_size_bytes": 322560,
+      "lifetime_end": 64,
+      "lifetime_start": 49,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_risk_1",
+      "state_id": "S_risk_1",
+      "static_hotness": 0.0,
+      "token_size": 315
+    },
+    {
+      "consumers": [
+        "O_analyst_2",
+        "O_researcher_2"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 455.0592488420889,
+      "kind": "retrieval",
+      "kv_size_bytes": 448512,
+      "lifetime_end": 24,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_market_signal_2",
+      "static_hotness": 459.90000000000003,
+      "token_size": 438
+    },
+    {
+      "consumers": [
+        "O_trader_2"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 277.628172710458,
+      "kind": "intermediate_summary",
+      "kv_size_bytes": 193536,
+      "lifetime_end": 40,
+      "lifetime_start": 8,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_analyst_2",
+      "state_id": "S_analyst_2_view",
+      "static_hotness": 0.0,
+      "token_size": 189
+    },
+    {
+      "consumers": [
+        "O_trader_2"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 420.1145893925449,
+      "kind": "retrieval_result",
+      "kv_size_bytes": 292864,
+      "lifetime_end": 40,
+      "lifetime_start": 24,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_researcher_2",
+      "state_id": "S_research_2_evidence",
+      "static_hotness": 0.0,
+      "token_size": 286
+    },
+    {
+      "consumers": [
+        "O_risk_2",
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 471.3795174414816,
+      "kind": "planner_output",
+      "kv_size_bytes": 227328,
+      "lifetime_end": 64,
+      "lifetime_start": 40,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_trader_2",
+      "state_id": "S_trade_2",
+      "static_hotness": 455.09999999999997,
+      "token_size": 222
+    },
+    {
+      "consumers": [
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 498.2617787480812,
+      "kind": "critic_feedback",
+      "kv_size_bytes": 217088,
+      "lifetime_end": 64,
+      "lifetime_start": 56,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": true
+      },
+      "producer": "O_risk_2",
+      "state_id": "S_risk_2",
+      "static_hotness": 0.0,
+      "token_size": 212
+    },
+    {
+      "consumers": [
+        "O_analyst_3",
+        "O_researcher_3"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 442.5918721614837,
+      "kind": "retrieval",
+      "kv_size_bytes": 436224,
+      "lifetime_end": 25,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_market_signal_3",
+      "static_hotness": 447.3,
+      "token_size": 426
+    },
+    {
+      "consumers": [
+        "O_trader_3"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 415.7077930003154,
+      "kind": "intermediate_summary",
+      "kv_size_bytes": 289792,
+      "lifetime_end": 41,
+      "lifetime_start": 9,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_analyst_3",
+      "state_id": "S_analyst_3_view",
+      "static_hotness": 0.0,
+      "token_size": 283
+    },
+    {
+      "consumers": [
+        "O_trader_3"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 355.4815756398457,
+      "kind": "retrieval_result",
+      "kv_size_bytes": 247808,
+      "lifetime_end": 41,
+      "lifetime_start": 25,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_researcher_3",
+      "state_id": "S_research_3_evidence",
+      "static_hotness": 0.0,
+      "token_size": 242
+    },
+    {
+      "consumers": [
+        "O_risk_3",
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 556.3127638273342,
+      "kind": "planner_output",
+      "kv_size_bytes": 268288,
+      "lifetime_end": 64,
+      "lifetime_start": 41,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_trader_3",
+      "state_id": "S_trade_3",
+      "static_hotness": 537.0999999999999,
+      "token_size": 262
+    },
+    {
+      "consumers": [
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 502.9623615664594,
+      "kind": "critic_feedback",
+      "kv_size_bytes": 219136,
+      "lifetime_end": 64,
+      "lifetime_start": 57,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": true
+      },
+      "producer": "O_risk_3",
+      "state_id": "S_risk_3",
+      "static_hotness": 0.0,
+      "token_size": 214
+    },
+    {
+      "consumers": [
+        "O_analyst_4",
+        "O_researcher_4"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 405.1897421196682,
+      "kind": "retrieval",
+      "kv_size_bytes": 399360,
+      "lifetime_end": 26,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_market_signal_4",
+      "static_hotness": 409.5,
+      "token_size": 390
+    },
+    {
+      "consumers": [
+        "O_trader_4"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 323.16506876349604,
+      "kind": "intermediate_summary",
+      "kv_size_bytes": 225280,
+      "lifetime_end": 42,
+      "lifetime_start": 10,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_analyst_4",
+      "state_id": "S_analyst_4_view",
+      "static_hotness": 0.0,
+      "token_size": 220
+    },
+    {
+      "consumers": [
+        "O_trader_4"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 417.17672513105856,
+      "kind": "retrieval_result",
+      "kv_size_bytes": 290816,
+      "lifetime_end": 42,
+      "lifetime_start": 26,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_researcher_4",
+      "state_id": "S_research_4_evidence",
+      "static_hotness": 0.0,
+      "token_size": 284
+    },
+    {
+      "consumers": [
+        "O_risk_4",
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 530.8327899115784,
+      "kind": "planner_output",
+      "kv_size_bytes": 256000,
+      "lifetime_end": 64,
+      "lifetime_start": 42,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_trader_4",
+      "state_id": "S_trade_4",
+      "static_hotness": 512.5,
+      "token_size": 250
+    },
+    {
+      "consumers": [
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 521.7646928399718,
+      "kind": "critic_feedback",
+      "kv_size_bytes": 227328,
+      "lifetime_end": 64,
+      "lifetime_start": 58,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": true
+      },
+      "producer": "O_risk_4",
+      "state_id": "S_risk_4",
+      "static_hotness": 0.0,
+      "token_size": 222
+    },
+    {
+      "consumers": [
+        "O_analyst_5",
+        "O_researcher_5"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 504.9287555645095,
+      "kind": "retrieval",
+      "kv_size_bytes": 497664,
+      "lifetime_end": 27,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_market_signal_5",
+      "static_hotness": 510.3,
+      "token_size": 486
+    },
+    {
+      "consumers": [
+        "O_trader_5"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 336.38545794018455,
+      "kind": "intermediate_summary",
+      "kv_size_bytes": 234496,
+      "lifetime_end": 43,
+      "lifetime_start": 11,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": true
+      },
+      "producer": "O_analyst_5",
+      "state_id": "S_analyst_5_view",
+      "static_hotness": 0.0,
+      "token_size": 229
+    },
+    {
+      "consumers": [
+        "O_trader_5"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 352.5437113783594,
+      "kind": "retrieval_result",
+      "kv_size_bytes": 245760,
+      "lifetime_end": 43,
+      "lifetime_start": 27,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_researcher_5",
+      "state_id": "S_research_5_evidence",
+      "static_hotness": 0.0,
+      "token_size": 240
+    },
+    {
+      "consumers": [
+        "O_risk_5",
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 505.35281599582265,
+      "kind": "planner_output",
+      "kv_size_bytes": 243712,
+      "lifetime_end": 64,
+      "lifetime_start": 43,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_trader_5",
+      "state_id": "S_trade_5",
+      "static_hotness": 487.9,
+      "token_size": 238
+    },
+    {
+      "consumers": [
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 594.6237265248327,
+      "kind": "critic_feedback",
+      "kv_size_bytes": 259072,
+      "lifetime_end": 64,
+      "lifetime_start": 59,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_risk_5",
+      "state_id": "S_risk_5",
+      "static_hotness": 0.0,
+      "token_size": 253
+    },
+    {
+      "consumers": [
+        "O_analyst_6",
+        "O_researcher_6"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 299.2170403345242,
+      "kind": "retrieval",
+      "kv_size_bytes": 294912,
+      "lifetime_end": 28,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_market_signal_6",
+      "static_hotness": 302.40000000000003,
+      "token_size": 288
+    },
+    {
+      "consumers": [
+        "O_trader_6"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 361.35730416281837,
+      "kind": "intermediate_summary",
+      "kv_size_bytes": 251904,
+      "lifetime_end": 44,
+      "lifetime_start": 12,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": true
+      },
+      "producer": "O_analyst_6",
+      "state_id": "S_analyst_6_view",
+      "static_hotness": 0.0,
+      "token_size": 246
+    },
+    {
+      "consumers": [
+        "O_trader_6"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 351.0747792476162,
+      "kind": "retrieval_result",
+      "kv_size_bytes": 244736,
+      "lifetime_end": 44,
+      "lifetime_start": 28,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_researcher_6",
+      "state_id": "S_research_6_evidence",
+      "static_hotness": 0.0,
+      "token_size": 239
+    },
+    {
+      "consumers": [
+        "O_risk_6",
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 452.2695370046648,
+      "kind": "planner_output",
+      "kv_size_bytes": 218112,
+      "lifetime_end": 64,
+      "lifetime_start": 44,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_trader_6",
+      "state_id": "S_trade_6",
+      "static_hotness": 436.65,
+      "token_size": 213
+    },
+    {
+      "consumers": [
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 679.2342172556391,
+      "kind": "critic_feedback",
+      "kv_size_bytes": 295936,
+      "lifetime_end": 64,
+      "lifetime_start": 60,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_risk_6",
+      "state_id": "S_risk_6",
+      "static_hotness": 0.0,
+      "token_size": 289
+    },
+    {
+      "consumers": [
+        "O_analyst_7",
+        "O_researcher_7"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 399.99500183608274,
+      "kind": "retrieval",
+      "kv_size_bytes": 394240,
+      "lifetime_end": 29,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_market_signal_7",
+      "static_hotness": 404.25,
+      "token_size": 385
+    },
+    {
+      "consumers": [
+        "O_trader_7"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 309.94467958680764,
+      "kind": "intermediate_summary",
+      "kv_size_bytes": 216064,
+      "lifetime_end": 45,
+      "lifetime_start": 13,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_analyst_7",
+      "state_id": "S_analyst_7_view",
+      "static_hotness": 0.0,
+      "token_size": 211
+    },
+    {
+      "consumers": [
+        "O_trader_7"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 386.3291503854522,
+      "kind": "retrieval_result",
+      "kv_size_bytes": 269312,
+      "lifetime_end": 45,
+      "lifetime_start": 29,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_researcher_7",
+      "state_id": "S_research_7_evidence",
+      "static_hotness": 0.0,
+      "token_size": 263
+    },
+    {
+      "consumers": [
+        "O_risk_7",
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 520.2161341133468,
+      "kind": "planner_output",
+      "kv_size_bytes": 250880,
+      "lifetime_end": 64,
+      "lifetime_start": 45,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_trader_7",
+      "state_id": "S_trade_7",
+      "static_hotness": 502.24999999999994,
+      "token_size": 245
+    },
+    {
+      "consumers": [
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 629.8780976626688,
+      "kind": "critic_feedback",
+      "kv_size_bytes": 274432,
+      "lifetime_end": 64,
+      "lifetime_start": 61,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": true
+      },
+      "producer": "O_risk_7",
+      "state_id": "S_risk_7",
+      "static_hotness": 0.0,
+      "token_size": 268
+    },
+    {
+      "consumers": [
+        "O_analyst_8",
+        "O_researcher_8"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 359.4760276241159,
+      "kind": "retrieval",
+      "kv_size_bytes": 354304,
+      "lifetime_end": 30,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_market_signal_8",
+      "static_hotness": 363.3,
+      "token_size": 346
+    },
+    {
+      "consumers": [
+        "O_trader_8"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 324.63400089423925,
+      "kind": "intermediate_summary",
+      "kv_size_bytes": 226304,
+      "lifetime_end": 46,
+      "lifetime_start": 14,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_analyst_8",
+      "state_id": "S_analyst_8_view",
+      "static_hotness": 0.0,
+      "token_size": 221
+    },
+    {
+      "consumers": [
+        "O_trader_8"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 370.1708969472773,
+      "kind": "retrieval_result",
+      "kv_size_bytes": 258048,
+      "lifetime_end": 46,
+      "lifetime_start": 30,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": true
+      },
+      "producer": "O_researcher_8",
+      "state_id": "S_research_8_evidence",
+      "static_hotness": 0.0,
+      "token_size": 252
+    },
+    {
+      "consumers": [
+        "O_risk_8",
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 399.186258013507,
+      "kind": "planner_output",
+      "kv_size_bytes": 192512,
+      "lifetime_end": 64,
+      "lifetime_start": 46,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_trader_8",
+      "state_id": "S_trade_8",
+      "static_hotness": 385.4,
+      "token_size": 188
+    },
+    {
+      "consumers": [
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 714.488588393475,
+      "kind": "critic_feedback",
+      "kv_size_bytes": 311296,
+      "lifetime_end": 64,
+      "lifetime_start": 62,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_risk_8",
+      "state_id": "S_risk_8",
+      "static_hotness": 0.0,
+      "token_size": 304
+    },
+    {
+      "consumers": [
+        "O_analyst_9",
+        "O_researcher_9"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 348.04759900022776,
+      "kind": "retrieval",
+      "kv_size_bytes": 343040,
+      "lifetime_end": 31,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_market_signal_9",
+      "static_hotness": 351.75,
+      "token_size": 335
+    },
+    {
+      "consumers": [
+        "O_trader_9"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 312.88254384829395,
+      "kind": "intermediate_summary",
+      "kv_size_bytes": 218112,
+      "lifetime_end": 47,
+      "lifetime_start": 15,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_analyst_9",
+      "state_id": "S_analyst_9_view",
+      "static_hotness": 0.0,
+      "token_size": 213
+    },
+    {
+      "consumers": [
+        "O_trader_9"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 409.8320644773428,
+      "kind": "retrieval_result",
+      "kv_size_bytes": 285696,
+      "lifetime_end": 47,
+      "lifetime_start": 31,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_researcher_9",
+      "state_id": "S_research_9_evidence",
+      "static_hotness": 0.0,
+      "token_size": 279
+    },
+    {
+      "consumers": [
+        "O_risk_9",
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 609.396042818492,
+      "kind": "planner_output",
+      "kv_size_bytes": 293888,
+      "lifetime_end": 64,
+      "lifetime_start": 47,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_trader_9",
+      "state_id": "S_trade_9",
+      "static_hotness": 588.3499999999999,
+      "token_size": 287
+    },
+    {
+      "consumers": [
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 465.3576990194344,
+      "kind": "critic_feedback",
+      "kv_size_bytes": 202752,
+      "lifetime_end": 64,
+      "lifetime_start": 63,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_risk_9",
+      "state_id": "S_risk_9",
+      "static_hotness": 0.0,
+      "token_size": 198
+    },
+    {
+      "consumers": [
+        "O_analyst_10",
+        "O_researcher_10"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 477.9161060898651,
+      "kind": "retrieval",
+      "kv_size_bytes": 471040,
+      "lifetime_end": 18,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_market_signal_10",
+      "static_hotness": 483.0,
+      "token_size": 460
+    },
+    {
+      "consumers": [
+        "O_trader_10"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 348.1369149861299,
+      "kind": "intermediate_summary",
+      "kv_size_bytes": 242688,
+      "lifetime_end": 34,
+      "lifetime_start": 2,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_analyst_10",
+      "state_id": "S_analyst_10_view",
+      "static_hotness": 0.0,
+      "token_size": 237
+    },
+    {
+      "consumers": [
+        "O_trader_10"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 464.1825533148398,
+      "kind": "retrieval_result",
+      "kv_size_bytes": 323584,
+      "lifetime_end": 34,
+      "lifetime_start": 18,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_researcher_10",
+      "state_id": "S_research_10_evidence",
+      "static_hotness": 0.0,
+      "token_size": 316
+    },
+    {
+      "consumers": [
+        "O_risk_10",
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 526.5861275922857,
+      "kind": "planner_output",
+      "kv_size_bytes": 253952,
+      "lifetime_end": 64,
+      "lifetime_start": 34,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_trader_10",
+      "state_id": "S_trade_10",
+      "static_hotness": 508.4,
+      "token_size": 248
+    },
+    {
+      "consumers": [
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 524.1149842491609,
+      "kind": "critic_feedback",
+      "kv_size_bytes": 228352,
+      "lifetime_end": 64,
+      "lifetime_start": 50,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": true
+      },
+      "producer": "O_risk_10",
+      "state_id": "S_risk_10",
+      "static_hotness": 0.0,
+      "token_size": 223
+    },
+    {
+      "consumers": [
+        "O_analyst_11",
+        "O_researcher_11"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 377.13814458830655,
+      "kind": "retrieval",
+      "kv_size_bytes": 371712,
+      "lifetime_end": 19,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_market_signal_11",
+      "static_hotness": 381.15000000000003,
+      "token_size": 363
+    },
+    {
+      "consumers": [
+        "O_trader_11"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 384.86021825470897,
+      "kind": "intermediate_summary",
+      "kv_size_bytes": 268288,
+      "lifetime_end": 35,
+      "lifetime_start": 3,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_analyst_11",
+      "state_id": "S_analyst_11_view",
+      "static_hotness": 0.0,
+      "token_size": 262
+    },
+    {
+      "consumers": [
+        "O_trader_11"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 339.3233222016709,
+      "kind": "retrieval_result",
+      "kv_size_bytes": 236544,
+      "lifetime_end": 35,
+      "lifetime_start": 19,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_researcher_11",
+      "state_id": "S_research_11_evidence",
+      "static_hotness": 0.0,
+      "token_size": 231
+    },
+    {
+      "consumers": [
+        "O_risk_11",
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 549.9427703483952,
+      "kind": "planner_output",
+      "kv_size_bytes": 265216,
+      "lifetime_end": 64,
+      "lifetime_start": 35,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": true
+      },
+      "producer": "O_trader_11",
+      "state_id": "S_trade_11",
+      "static_hotness": 530.9499999999999,
+      "token_size": 259
+    },
+    {
+      "consumers": [
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 709.7880055750969,
+      "kind": "critic_feedback",
+      "kv_size_bytes": 309248,
+      "lifetime_end": 64,
+      "lifetime_start": 51,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_risk_11",
+      "state_id": "S_risk_11",
+      "static_hotness": 0.0,
+      "token_size": 302
+    },
+    {
+      "consumers": [
+        "O_analyst_12",
+        "O_researcher_12"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 423.89080714057593,
+      "kind": "retrieval",
+      "kv_size_bytes": 417792,
+      "lifetime_end": 20,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_market_signal_12",
+      "static_hotness": 428.40000000000003,
+      "token_size": 408
+    },
+    {
+      "consumers": [
+        "O_trader_12"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 348.1369149861299,
+      "kind": "intermediate_summary",
+      "kv_size_bytes": 242688,
+      "lifetime_end": 36,
+      "lifetime_start": 4,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": true
+      },
+      "producer": "O_analyst_12",
+      "state_id": "S_analyst_12_view",
+      "static_hotness": 0.0,
+      "token_size": 237
+    },
+    {
+      "consumers": [
+        "O_trader_12"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 421.583521523288,
+      "kind": "retrieval_result",
+      "kv_size_bytes": 293888,
+      "lifetime_end": 36,
+      "lifetime_start": 20,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_researcher_12",
+      "state_id": "S_research_12_evidence",
+      "static_hotness": 0.0,
+      "token_size": 287
+    },
+    {
+      "consumers": [
+        "O_risk_12",
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 552.0661015080416,
+      "kind": "planner_output",
+      "kv_size_bytes": 266240,
+      "lifetime_end": 64,
+      "lifetime_start": 36,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_trader_12",
+      "state_id": "S_trade_12",
+      "static_hotness": 533.0,
+      "token_size": 260
+    },
+    {
+      "consumers": [
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 580.5219780696984,
+      "kind": "critic_feedback",
+      "kv_size_bytes": 252928,
+      "lifetime_end": 64,
+      "lifetime_start": 52,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_risk_12",
+      "state_id": "S_risk_12",
+      "static_hotness": 0.0,
+      "token_size": 247
+    },
+    {
+      "consumers": [
+        "O_analyst_13",
+        "O_researcher_13"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 404.1507940629511,
+      "kind": "retrieval",
+      "kv_size_bytes": 398336,
+      "lifetime_end": 21,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_market_signal_13",
+      "static_hotness": 408.45000000000005,
+      "token_size": 389
+    },
+    {
+      "consumers": [
+        "O_trader_13"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 321.69613663275294,
+      "kind": "intermediate_summary",
+      "kv_size_bytes": 224256,
+      "lifetime_end": 37,
+      "lifetime_start": 5,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_analyst_13",
+      "state_id": "S_analyst_13_view",
+      "static_hotness": 0.0,
+      "token_size": 219
+    },
+    {
+      "consumers": [
+        "O_trader_13"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 330.50972941721193,
+      "kind": "retrieval_result",
+      "kv_size_bytes": 230400,
+      "lifetime_end": 37,
+      "lifetime_start": 21,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_researcher_13",
+      "state_id": "S_research_13_evidence",
+      "static_hotness": 0.0,
+      "token_size": 225
+    },
+    {
+      "consumers": [
+        "O_risk_13",
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 547.8194391887489,
+      "kind": "planner_output",
+      "kv_size_bytes": 264192,
+      "lifetime_end": 64,
+      "lifetime_start": 37,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_trader_13",
+      "state_id": "S_trade_13",
+      "static_hotness": 528.9,
+      "token_size": 258
+    },
+    {
+      "consumers": [
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 585.2225608880766,
+      "kind": "critic_feedback",
+      "kv_size_bytes": 254976,
+      "lifetime_end": 64,
+      "lifetime_start": 53,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": true
+      },
+      "producer": "O_risk_13",
+      "state_id": "S_risk_13",
+      "static_hotness": 0.0,
+      "token_size": 249
+    },
+    {
+      "consumers": [
+        "O_analyst_14",
+        "O_researcher_14"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 445.70871633163495,
+      "kind": "retrieval",
+      "kv_size_bytes": 439296,
+      "lifetime_end": 22,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_market_signal_14",
+      "static_hotness": 450.45000000000005,
+      "token_size": 429
+    },
+    {
+      "consumers": [
+        "O_trader_14"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 359.8883720320752,
+      "kind": "intermediate_summary",
+      "kv_size_bytes": 250880,
+      "lifetime_end": 38,
+      "lifetime_start": 6,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": true
+      },
+      "producer": "O_analyst_14",
+      "state_id": "S_analyst_14_view",
+      "static_hotness": 0.0,
+      "token_size": 245
+    },
+    {
+      "consumers": [
+        "O_trader_14"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 399.5495395621406,
+      "kind": "retrieval_result",
+      "kv_size_bytes": 278528,
+      "lifetime_end": 38,
+      "lifetime_start": 22,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": true
+      },
+      "producer": "O_researcher_14",
+      "state_id": "S_research_14_evidence",
+      "static_hotness": 0.0,
+      "token_size": 272
+    },
+    {
+      "consumers": [
+        "O_risk_14",
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 388.5696022152754,
+      "kind": "planner_output",
+      "kv_size_bytes": 187392,
+      "lifetime_end": 64,
+      "lifetime_start": 38,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": true
+      },
+      "producer": "O_trader_14",
+      "state_id": "S_trade_14",
+      "static_hotness": 375.15,
+      "token_size": 183
+    },
+    {
+      "consumers": [
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 629.8780976626688,
+      "kind": "critic_feedback",
+      "kv_size_bytes": 274432,
+      "lifetime_end": 64,
+      "lifetime_start": 54,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_risk_14",
+      "state_id": "S_risk_14",
+      "static_hotness": 0.0,
+      "token_size": 268
+    },
+    {
+      "consumers": [
+        "O_analyst_15",
+        "O_researcher_15"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 438.4360799346153,
+      "kind": "retrieval",
+      "kv_size_bytes": 432128,
+      "lifetime_end": 23,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_market_signal_15",
+      "static_hotness": 443.1,
+      "token_size": 422
+    },
+    {
+      "consumers": [
+        "O_trader_15"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 342.26118646315723,
+      "kind": "intermediate_summary",
+      "kv_size_bytes": 238592,
+      "lifetime_end": 39,
+      "lifetime_start": 7,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": true
+      },
+      "producer": "O_analyst_15",
+      "state_id": "S_analyst_15_view",
+      "static_hotness": 0.0,
+      "token_size": 233
+    },
+    {
+      "consumers": [
+        "O_trader_15"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 333.44759367869824,
+      "kind": "retrieval_result",
+      "kv_size_bytes": 232448,
+      "lifetime_end": 39,
+      "lifetime_start": 23,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": true
+      },
+      "producer": "O_researcher_15",
+      "state_id": "S_research_15_evidence",
+      "static_hotness": 0.0,
+      "token_size": 227
+    },
+    {
+      "consumers": [
+        "O_risk_15",
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 558.4360949869804,
+      "kind": "planner_output",
+      "kv_size_bytes": 269312,
+      "lifetime_end": 64,
+      "lifetime_start": 39,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_trader_15",
+      "state_id": "S_trade_15",
+      "static_hotness": 539.15,
+      "token_size": 263
+    },
+    {
+      "consumers": [
+        "O_manager"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 594.6237265248327,
+      "kind": "critic_feedback",
+      "kv_size_bytes": 259072,
+      "lifetime_end": 64,
+      "lifetime_start": 55,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_risk_15",
+      "state_id": "S_risk_15",
+      "static_hotness": 0.0,
+      "token_size": 253
+    },
+    {
+      "consumers": [],
+      "deterministic": true,
+      "dynamic_hotness": 0.0,
+      "kind": "output",
+      "kv_size_bytes": 224256,
+      "lifetime_end": 64,
+      "lifetime_start": 64,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": true
+      },
+      "producer": "O_manager",
+      "state_id": "S_portfolio_decision",
+      "static_hotness": 0.0,
+      "token_size": 219
+    }
+  ]
+}

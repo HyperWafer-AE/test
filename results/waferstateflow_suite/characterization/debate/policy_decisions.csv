@@ -1,0 +1,24 @@
+state_id,policy,expected_saved_cost,materialization_cost,storage_cost,movement_cost,contention_cost,reason
+S_task,replicate,40832.0,36.0,10.24,20.48,40.96,small hot state with broad fanout
+S_document,replicate,28028.0,32.0,10.24,20.48,40.96,small hot state with broad fanout
+S_rubric,replicate,40832.0,36.0,10.24,20.48,40.96,small hot state with broad fanout
+S_role_instruction,replicate,28028.0,32.0,10.24,20.48,40.96,small hot state with broad fanout
+S_round_0_stance_0,inline,0.0,1.78,4.5568,9.1136,2.2784,low fanout or low hotness
+S_debate_r0_a0,inline,0.0,0.8320000000000001,2.1299200000000003,4.2598400000000005,1.0649600000000001,low fanout or low hotness
+S_round_0_stance_1,inline,0.0,1.584,4.05504,8.11008,2.02752,low fanout or low hotness
+S_debate_r0_a1,inline,0.0,1.1400000000000001,2.9184,5.8368,1.4592,low fanout or low hotness
+S_round_0_stance_2,inline,0.0,1.6320000000000001,4.17792,8.35584,2.08896,low fanout or low hotness
+S_debate_r0_a2,inline,0.0,0.9,2.3040000000000003,4.6080000000000005,1.1520000000000001,low fanout or low hotness
+S_round_0_stance_3,inline,0.0,1.236,3.1641600000000003,6.328320000000001,1.5820800000000002,low fanout or low hotness
+S_debate_r0_a3,inline,0.0,0.868,2.22208,4.44416,1.11104,low fanout or low hotness
+S_transcript_r0,replicate,5621.22,14.96,9.5744,19.1488,19.1488,small hot state with broad fanout
+S_round_1_stance_0,inline,0.0,1.532,3.9219200000000005,7.843840000000001,1.9609600000000003,low fanout or low hotness
+S_debate_r1_a0,inline,0.0,1.196,3.06176,6.12352,1.53088,low fanout or low hotness
+S_round_1_stance_1,inline,0.0,1.596,4.0857600000000005,8.171520000000001,2.0428800000000003,low fanout or low hotness
+S_debate_r1_a1,inline,0.0,1.26,3.2256000000000005,6.451200000000001,1.6128000000000002,low fanout or low hotness
+S_round_1_stance_2,inline,0.0,1.752,4.48512,8.97024,2.24256,low fanout or low hotness
+S_debate_r1_a2,inline,0.0,0.756,1.9353600000000002,3.8707200000000004,0.9676800000000001,low fanout or low hotness
+S_round_1_stance_3,inline,0.0,1.548,3.96288,7.92576,1.98144,low fanout or low hotness
+S_debate_r1_a3,inline,0.0,0.744,1.90464,3.80928,0.95232,low fanout or low hotness
+S_transcript_r1,inline,0.0,3.956,10.127360000000001,20.254720000000002,5.063680000000001,low fanout or low hotness
+S_verdict,inline,0.0,1.1,2.8160000000000003,5.632000000000001,0.0,low fanout or low hotness

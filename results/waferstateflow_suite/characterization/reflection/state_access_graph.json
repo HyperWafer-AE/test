@@ -1,0 +1,550 @@
+{
+  "edges": [
+    {
+      "dst": "O_expert_draft",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_expert_draft",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_document",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_expert_draft",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_style_guide",
+      "token_size": 1000
+    },
+    {
+      "dst": "S_draft",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_expert_draft",
+      "token_size": 251
+    },
+    {
+      "dst": "O_critic_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_critic_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_rubric",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_critic_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_draft",
+      "token_size": 251
+    },
+    {
+      "dst": "O_critic_0",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_critic_lens_0",
+      "token_size": 349
+    },
+    {
+      "dst": "S_critic_0_feedback",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_critic_0",
+      "token_size": 219
+    },
+    {
+      "dst": "O_critic_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_critic_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_rubric",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_critic_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_draft",
+      "token_size": 251
+    },
+    {
+      "dst": "O_critic_1",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_critic_lens_1",
+      "token_size": 396
+    },
+    {
+      "dst": "S_critic_1_feedback",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_critic_1",
+      "token_size": 238
+    },
+    {
+      "dst": "O_critic_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_critic_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_rubric",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_critic_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_draft",
+      "token_size": 251
+    },
+    {
+      "dst": "O_critic_2",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_critic_lens_2",
+      "token_size": 451
+    },
+    {
+      "dst": "S_critic_2_feedback",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_critic_2",
+      "token_size": 279
+    },
+    {
+      "dst": "O_revise",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_task",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_revise",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_document",
+      "token_size": 1000
+    },
+    {
+      "dst": "O_revise",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_draft",
+      "token_size": 251
+    },
+    {
+      "dst": "O_revise",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_critic_0_feedback",
+      "token_size": 219
+    },
+    {
+      "dst": "O_revise",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_critic_1_feedback",
+      "token_size": 238
+    },
+    {
+      "dst": "O_revise",
+      "edge_type": "consume",
+      "metadata": {},
+      "src": "S_critic_2_feedback",
+      "token_size": 279
+    },
+    {
+      "dst": "S_revised_answer",
+      "edge_type": "produce",
+      "metadata": {},
+      "src": "O_revise",
+      "token_size": 230
+    }
+  ],
+  "graph_id": "reflection",
+  "metadata": {
+    "config": {
+      "batch_size": 8,
+      "dynamic_hot_state_probability": 0.25,
+      "num_agents": 4,
+      "num_branches": 4,
+      "num_rounds": 2,
+      "output_token_mean": 250,
+      "seed": 0,
+      "shared_state_size": 4000,
+      "unique_state_size": 400
+    },
+    "workflow": "reflection"
+  },
+  "operators": [
+    {
+      "criticality": 1.6,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 3000,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_document",
+        "S_style_guide"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_expert_draft",
+      "output_states": [
+        "S_draft"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "expert"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2600,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_rubric",
+        "S_draft",
+        "S_critic_lens_0"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_critic_0",
+      "output_states": [
+        "S_critic_0_feedback"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "critic_0"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2647,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_rubric",
+        "S_draft",
+        "S_critic_lens_1"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_critic_1",
+      "output_states": [
+        "S_critic_1_feedback"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "critic_1"
+    },
+    {
+      "criticality": 1.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2702,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_rubric",
+        "S_draft",
+        "S_critic_lens_2"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_critic_2",
+      "output_states": [
+        "S_critic_2_feedback"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "critic_2"
+    },
+    {
+      "criticality": 2.0,
+      "deps": [],
+      "deterministic": false,
+      "estimated_input_tokens": 2987,
+      "estimated_output_tokens": 0,
+      "input_states": [
+        "S_task",
+        "S_document",
+        "S_draft",
+        "S_critic_0_feedback",
+        "S_critic_1_feedback",
+        "S_critic_2_feedback"
+      ],
+      "kind": "llm",
+      "metadata": {},
+      "op_id": "O_revise",
+      "output_states": [
+        "S_revised_answer"
+      ],
+      "phase_profile": "prefill_heavy",
+      "ready_time": 0,
+      "role": "reviser"
+    }
+  ],
+  "states": [
+    {
+      "consumers": [
+        "O_expert_draft",
+        "O_critic_0",
+        "O_critic_1",
+        "O_critic_2",
+        "O_revise"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 0.0,
+      "kind": "task",
+      "kv_size_bytes": 1024000,
+      "lifetime_end": 4,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "text",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_task",
+      "static_hotness": 13200.0,
+      "token_size": 1000
+    },
+    {
+      "consumers": [
+        "O_expert_draft",
+        "O_revise"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 0.0,
+      "kind": "document",
+      "kv_size_bytes": 1024000,
+      "lifetime_end": 4,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "text",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_document",
+      "static_hotness": 1800.0,
+      "token_size": 1000
+    },
+    {
+      "consumers": [
+        "O_critic_0",
+        "O_critic_1",
+        "O_critic_2"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 0.0,
+      "kind": "rubric",
+      "kv_size_bytes": 1024000,
+      "lifetime_end": 3,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "text",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_rubric",
+      "static_hotness": 3000.0,
+      "token_size": 1000
+    },
+    {
+      "consumers": [
+        "O_expert_draft"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 0.0,
+      "kind": "style_guide",
+      "kv_size_bytes": 1024000,
+      "lifetime_end": 0,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "text",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_style_guide",
+      "static_hotness": 0.0,
+      "token_size": 1000
+    },
+    {
+      "consumers": [
+        "O_critic_0",
+        "O_critic_1",
+        "O_critic_2",
+        "O_revise"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 0.0,
+      "kind": "intermediate_summary",
+      "kv_size_bytes": 257024,
+      "lifetime_end": 4,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_expert_draft",
+      "state_id": "S_draft",
+      "static_hotness": 1882.5,
+      "token_size": 251
+    },
+    {
+      "consumers": [
+        "O_critic_0"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 0.0,
+      "kind": "unique_context",
+      "kv_size_bytes": 357376,
+      "lifetime_end": 1,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_critic_lens_0",
+      "static_hotness": 0.0,
+      "token_size": 349
+    },
+    {
+      "consumers": [
+        "O_revise"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 0.0,
+      "kind": "critic_feedback",
+      "kv_size_bytes": 224256,
+      "lifetime_end": 4,
+      "lifetime_start": 1,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_critic_0",
+      "state_id": "S_critic_0_feedback",
+      "static_hotness": 0.0,
+      "token_size": 219
+    },
+    {
+      "consumers": [
+        "O_critic_1"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 0.0,
+      "kind": "unique_context",
+      "kv_size_bytes": 405504,
+      "lifetime_end": 2,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_critic_lens_1",
+      "static_hotness": 0.0,
+      "token_size": 396
+    },
+    {
+      "consumers": [
+        "O_revise"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 0.0,
+      "kind": "critic_feedback",
+      "kv_size_bytes": 243712,
+      "lifetime_end": 4,
+      "lifetime_start": 2,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_critic_1",
+      "state_id": "S_critic_1_feedback",
+      "static_hotness": 0.0,
+      "token_size": 238
+    },
+    {
+      "consumers": [
+        "O_critic_2"
+      ],
+      "deterministic": true,
+      "dynamic_hotness": 0.0,
+      "kind": "unique_context",
+      "kv_size_bytes": 461824,
+      "lifetime_end": 3,
+      "lifetime_start": 0,
+      "location": null,
+      "materialized_form": "inline",
+      "metadata": {},
+      "producer": null,
+      "state_id": "S_critic_lens_2",
+      "static_hotness": 0.0,
+      "token_size": 451
+    },
+    {
+      "consumers": [
+        "O_revise"
+      ],
+      "deterministic": false,
+      "dynamic_hotness": 0.0,
+      "kind": "critic_feedback",
+      "kv_size_bytes": 285696,
+      "lifetime_end": 4,
+      "lifetime_start": 3,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_critic_2",
+      "state_id": "S_critic_2_feedback",
+      "static_hotness": 0.0,
+      "token_size": 279
+    },
+    {
+      "consumers": [],
+      "deterministic": true,
+      "dynamic_hotness": 0.0,
+      "kind": "output",
+      "kv_size_bytes": 235520,
+      "lifetime_end": 4,
+      "lifetime_start": 4,
+      "location": null,
+      "materialized_form": "output",
+      "metadata": {
+        "dynamic_hot_candidate": false
+      },
+      "producer": "O_revise",
+      "state_id": "S_revised_answer",
+      "static_hotness": 0.0,
+      "token_size": 230
+    }
+  ]
+}

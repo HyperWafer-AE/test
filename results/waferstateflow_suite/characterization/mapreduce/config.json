@@ -1,0 +1,27 @@
+{
+  "batch_size": 8,
+  "dynamic_hot_state_probability": 0.25,
+  "mesh": "16x16",
+  "mode": "both",
+  "num_agents": 4,
+  "num_branches": 4,
+  "num_rounds": 2,
+  "out": "results/waferstateflow_suite",
+  "output_token_mean": 250,
+  "resolved_workflows": [
+    "mapreduce",
+    "debate",
+    "reflection",
+    "iterative",
+    "parallel_chains",
+    "trading",
+    "software_dev"
+  ],
+  "seed": 0,
+  "shared_state_size": 4000,
+  "state_policy": "dynamic",
+  "unique_state_size": 400,
+  "worker_count": 8,
+  "workflow": "mapreduce",
+  "workflows": "all"
+}

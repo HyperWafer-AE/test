@@ -1,0 +1,30 @@
+{
+  "baselines": [
+    "request_parallel_gpu_like",
+    "helium_like_operator_schedule",
+    "wafer_request_centric",
+    "WaferStateFlow"
+  ],
+  "branch_widths": [
+    1,
+    2,
+    8
+  ],
+  "memory_caps": [
+    67108864,
+    268435456
+  ],
+  "meshes": [
+    "8x8",
+    "16x16",
+    "32x32"
+  ],
+  "seed": 0,
+  "shared_sizes": [
+    200,
+    1000,
+    4000,
+    12000
+  ],
+  "workflow": "trading"
+}

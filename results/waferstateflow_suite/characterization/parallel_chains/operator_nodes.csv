@@ -1,0 +1,10 @@
+op_id,kind,role,input_states,output_states,deps,estimated_input_tokens,estimated_output_tokens,phase_profile,deterministic,criticality,ready_time,metadata
+O_chain_0_0,llm,chain_0_worker,"[""S_task"", ""S_document"", ""S_rubric"", ""S_chain_0_context""]","[""S_chain_0_0_out""]",[],3445,0,prefill_heavy,False,1.0,0,{}
+O_chain_0_1,llm,chain_0_worker,"[""S_task"", ""S_document"", ""S_rubric"", ""S_chain_0_context"", ""S_chain_0_0_out""]","[""S_chain_0_1_out""]",[],3653,0,prefill_heavy,False,1.15,0,{}
+O_chain_1_0,llm,chain_1_worker,"[""S_task"", ""S_document"", ""S_rubric"", ""S_chain_1_context""]","[""S_chain_1_0_out""]",[],3396,0,prefill_heavy,False,1.0,0,{}
+O_chain_1_1,llm,chain_1_worker,"[""S_task"", ""S_document"", ""S_rubric"", ""S_chain_1_context"", ""S_chain_1_0_out""]","[""S_chain_1_1_out""]",[],3634,0,prefill_heavy,False,1.15,0,{}
+O_chain_2_0,llm,chain_2_worker,"[""S_task"", ""S_document"", ""S_rubric"", ""S_chain_2_context""]","[""S_chain_2_0_out""]",[],3447,0,prefill_heavy,False,1.0,0,{}
+O_chain_2_1,llm,chain_2_worker,"[""S_task"", ""S_document"", ""S_rubric"", ""S_chain_2_context"", ""S_chain_2_0_out""]","[""S_chain_2_1_out""]",[],3677,0,prefill_heavy,False,1.15,0,{}
+O_chain_3_0,llm,chain_3_worker,"[""S_task"", ""S_document"", ""S_rubric"", ""S_chain_3_context""]","[""S_chain_3_0_out""]",[],3375,0,prefill_heavy,False,1.0,0,{}
+O_chain_3_1,llm,chain_3_worker,"[""S_task"", ""S_document"", ""S_rubric"", ""S_chain_3_context"", ""S_chain_3_0_out""]","[""S_chain_3_1_out""]",[],3679,0,prefill_heavy,False,1.15,0,{}
+O_writer,llm,writer,"[""S_task"", ""S_rubric"", ""S_chain_0_1_out"", ""S_chain_1_1_out"", ""S_chain_2_1_out"", ""S_chain_3_1_out""]","[""S_parallel_report""]",[],2978,0,prefill_heavy,False,2.0,0,{}

@@ -1,3 +1,0 @@
-seed: 13
-wafer_config: configs/wafer/wse_like.yaml
-baselines: [wafer_naive, kvflow_like, continuum_like, waferagent_full]
