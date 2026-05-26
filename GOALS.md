@@ -287,3 +287,37 @@ as a promising backend mechanism.
   - Ran `python -m pytest tests -q`; result: 33 passed.
 - Next action: If continuing, prototype FlowMorph-v1 frontier morphing on the
   frontier-positive workflows before considering any wafer scheduling.
+
+### G14: FlowMorph-v1 frontier-aware scheduler prototype
+- Status: done
+- Evidence:
+  - Added `flowmorph/schedulers.py` with abstract-resource schedulers:
+    `fixed_worker_pool`, `static_full_resource`, `static_split_resource`,
+    `always_parallel`, `always_consolidated`, and
+    `frontier_aware_morphing`.
+  - `frontier_aware_morphing` uses parallel mode for wide frontiers,
+    consolidated fast-lane mode for narrow ready sets with critical operators,
+    and falls back to `fixed_worker_pool` when the characterization says the
+    frontier opportunity is weak.
+  - Added `flowmorph.experiments.run_scheduler_comparison`; it characterizes
+    PhaseDAG inputs, runs only `frontier_only`/`frontier_and_phase` workflows,
+    and keeps `iterative` as a negative control.
+  - Added scheduler outputs:
+    - `results/flowmorph_scheduler/scheduler_summary.csv`
+    - `results/flowmorph_scheduler/scheduler_trace.csv`
+    - `results/flowmorph_scheduler/workflow_selection.csv`
+    - `results/flowmorph_scheduler/report.md`
+  - Output metrics include workflow latency, worker idle fraction, critical
+    path delay, mode switch count, wide-stage utilization, and narrow-stage
+    latency.
+  - Re-ran `python -m flowmorph.experiments.run_scheduler_comparison
+    --workflows all --batch-size 8 --seed 0 --out results/flowmorph_scheduler`.
+  - Default selection result: 6 frontier-positive workflows selected plus
+    `iterative` as the weak-frontier negative control.
+  - The report states this is an abstract worker-resource scheduler prototype,
+    does not implement wafer-specific placement, and makes no wafer
+    performance claims.
+  - Ran `python -m pytest tests/test_flowmorph.py -q`; result: 11 passed.
+  - Ran `python -m pytest tests -q`; result: 37 passed.
+- Next action: If continuing, audit whether the abstract speedup assumptions
+  are too favorable to consolidated mode before claiming FlowMorph-v1 benefit.

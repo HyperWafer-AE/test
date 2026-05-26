@@ -1,0 +1,40 @@
+{
+  "base_local_tool_cost": 0.1,
+  "batch_size": 8,
+  "decode_cost_per_token": 0.006,
+  "dynamic_hot_state_probability": 0.25,
+  "frontier_cv_threshold": 0.35,
+  "local_cost_per_token": 0.0005,
+  "num_agents": 4,
+  "num_branches": 4,
+  "num_rounds": 2,
+  "out": "results/flowmorph_scheduler",
+  "output_token_mean": 250,
+  "parallel_slack_threshold": 2.0,
+  "phase_variation_threshold": 0.25,
+  "prefill_cost_per_token": 0.002,
+  "resolved_schedulers": [
+    "fixed_worker_pool",
+    "static_full_resource",
+    "always_parallel",
+    "always_consolidated",
+    "static_split_resource",
+    "frontier_aware_morphing"
+  ],
+  "resolved_workflows": [
+    "mapreduce",
+    "debate",
+    "reflection",
+    "iterative",
+    "parallel_chains",
+    "trading",
+    "software_dev"
+  ],
+  "schedulers": "fixed_worker_pool,static_full_resource,always_parallel,always_consolidated,static_split_resource,frontier_aware_morphing",
+  "seed": 0,
+  "shared_state_size": 4000,
+  "split_consolidated_workers": 4,
+  "unique_state_size": 400,
+  "worker_count": 8,
+  "workflows": "all"
+}

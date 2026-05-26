@@ -3,7 +3,9 @@ import csv
 from flowmorph.analyzer import FlowMorphConfig, characterize_phase_irregularity
 from flowmorph.converters import phase_dag_from_workflow_name
 from flowmorph.experiments.run_characterization import main as flowmorph_main
+from flowmorph.experiments.run_scheduler_comparison import main as scheduler_main
 from flowmorph.ir import PhaseDAG, PhaseOperator
+from flowmorph.schedulers import FrontierSchedulerConfig, run_scheduler
 
 
 def test_phase_dag_topology_and_critical_path():
@@ -164,3 +166,113 @@ def test_flowmorph_characterization_outputs_all_required_files(tmp_path):
         "parallel_slack",
     ]:
         assert column in fieldnames
+
+
+def test_frontier_aware_scheduler_uses_parallel_and_fast_lane_modes():
+    dag = PhaseDAG("frontier_scheduler")
+    for i in range(4):
+        dag.add_operator(PhaseOperator(f"W{i}", prefill_cost=4.0, decode_cost=1.0))
+    dag.add_operator(
+        PhaseOperator(
+            "join",
+            dependencies=[f"W{i}" for i in range(4)],
+            prefill_cost=8.0,
+            decode_cost=2.0,
+        )
+    )
+
+    result = run_scheduler(
+        dag,
+        "frontier_aware_morphing",
+        FrontierSchedulerConfig(
+            worker_count=4,
+            frontier_cv_threshold=0.1,
+            parallel_slack_threshold=1.1,
+            phase_variation_threshold=10.0,
+        ),
+    )
+    modes = {row["mode"] for row in result["schedule_rows"]}
+    assert "parallel" in modes
+    assert "consolidated_fast_lane" in modes
+    assert result["summary"]["mode_switch_count"] >= 1
+    assert result["summary"]["wide_stage_utilization"] > 0
+
+
+def test_frontier_aware_scheduler_falls_back_on_weak_frontier():
+    dag = PhaseDAG("weak_chain")
+    for i in range(4):
+        dag.add_operator(
+            PhaseOperator(
+                f"O{i}",
+                dependencies=[f"O{i - 1}"] if i else [],
+                prefill_cost=1.0,
+                decode_cost=1.0,
+            )
+        )
+    config = FrontierSchedulerConfig(worker_count=4)
+    fixed = run_scheduler(dag, "fixed_worker_pool", config)
+    morphing = run_scheduler(dag, "frontier_aware_morphing", config)
+    assert morphing["summary"]["policy"] == "fallback_fixed_worker_pool"
+    assert morphing["summary"]["workflow_latency"] == fixed["summary"]["workflow_latency"]
+
+
+def test_static_full_resource_alias_is_available():
+    dag = PhaseDAG("static_full")
+    dag.add_operator(PhaseOperator("A", prefill_cost=2.0))
+    dag.add_operator(PhaseOperator("B", prefill_cost=2.0))
+    static_full = run_scheduler(dag, "static_full_resource", FrontierSchedulerConfig(worker_count=2))
+    always_parallel = run_scheduler(dag, "always_parallel", FrontierSchedulerConfig(worker_count=2))
+    assert static_full["summary"]["scheduler"] == "static_full_resource"
+    assert static_full["summary"]["workflow_latency"] == always_parallel["summary"]["workflow_latency"]
+
+
+def test_flowmorph_scheduler_comparison_outputs_required_artifacts(tmp_path):
+    out = tmp_path / "scheduler"
+    scheduler_main(
+        [
+            "--workflows",
+            "mapreduce,iterative",
+            "--schedulers",
+            "fixed_worker_pool,always_parallel,always_consolidated,static_split_resource,frontier_aware_morphing",
+            "--batch-size",
+            "4",
+            "--seed",
+            "0",
+            "--out",
+            str(out),
+        ]
+    )
+    for filename in [
+        "metadata.json",
+        "config.json",
+        "scheduler_summary.csv",
+        "scheduler_trace.csv",
+        "workflow_selection.csv",
+        "report.md",
+    ]:
+        assert (out / filename).exists(), filename
+    report = (out / "report.md").read_text(encoding="utf-8")
+    assert "does not implement wafer-specific placement" in report
+    assert "makes no wafer performance claims" in report
+    with (out / "workflow_selection.csv").open(newline="", encoding="utf-8") as f:
+        selection = list(csv.DictReader(f))
+    reasons = {row["workflow"]: row["selection_reason"] for row in selection}
+    assert reasons["mapreduce"] == "frontier_positive"
+    assert reasons["iterative"] == "negative_control"
+    with (out / "scheduler_summary.csv").open(newline="", encoding="utf-8") as f:
+        summary_rows = list(csv.DictReader(f))
+    required_metrics = {
+        "workflow_latency",
+        "worker_idle_fraction",
+        "critical_path_delay",
+        "mode_switch_count",
+        "wide_stage_utilization",
+        "narrow_stage_latency",
+    }
+    assert required_metrics.issubset(summary_rows[0])
+    assert {
+        "fixed_worker_pool",
+        "always_parallel",
+        "always_consolidated",
+        "frontier_aware_morphing",
+    }.issubset({row["scheduler"] for row in summary_rows})

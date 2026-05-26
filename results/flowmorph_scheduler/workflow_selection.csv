@@ -1,0 +1,8 @@
+workflow,opportunity_taxonomy,selected,selection_reason
+mapreduce,frontier_only,yes,frontier_positive
+debate,frontier_and_phase,yes,frontier_positive
+reflection,frontier_only,yes,frontier_positive
+iterative,weak,yes,negative_control
+parallel_chains,frontier_only,yes,frontier_positive
+trading,frontier_only,yes,frontier_positive
+software_dev,frontier_only,yes,frontier_positive

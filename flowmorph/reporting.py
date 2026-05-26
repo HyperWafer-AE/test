@@ -46,6 +46,23 @@ def write_flowmorph_report(
     _write_figures(out / "figures", summaries)
 
 
+def write_flowmorph_scheduler_report(
+    out_dir: str | Path,
+    summaries: list[dict[str, Any]],
+    schedule_rows: list[dict[str, Any]],
+    selection_rows: list[dict[str, Any]],
+    config: dict[str, Any],
+) -> None:
+    out = Path(out_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    write_json(out / "metadata.json", {"experiment": "flowmorph_v1_scheduler_comparison"})
+    write_json(out / "config.json", config)
+    write_csv(out / "scheduler_summary.csv", summaries)
+    write_csv(out / "scheduler_trace.csv", schedule_rows)
+    write_csv(out / "workflow_selection.csv", selection_rows)
+    _write_scheduler_markdown_report(out / "report.md", summaries, selection_rows)
+
+
 def _write_markdown_report(path: Path, summaries: list[dict[str, Any]]) -> None:
     frontier_candidates = [
         row for row in summaries
@@ -129,6 +146,75 @@ def _write_markdown_report(path: Path, summaries: list[dict[str, Any]]) -> None:
             "All workflows expose frontier-aware morphing opportunity in this synthetic run. The next step "
             "would still be a non-wafer FlowMorph scheduler prototype and real trace validation."
         )
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _write_scheduler_markdown_report(
+    path: Path,
+    summaries: list[dict[str, Any]],
+    selection_rows: list[dict[str, Any]],
+) -> None:
+    selected = [row for row in selection_rows if row["selected"] == "yes"]
+    positive = [
+        row for row in selected
+        if row["selection_reason"] == "frontier_positive"
+    ]
+    control = [
+        row for row in selected
+        if row["selection_reason"] == "negative_control"
+    ]
+    lines = [
+        "# FlowMorph-v1 Frontier Scheduler Prototype",
+        "",
+        "## Executive Summary",
+        "",
+        "This experiment uses an abstract worker-resource model over PhaseDAG inputs. "
+        "It does not implement wafer-specific placement and makes no wafer performance claims.",
+        "",
+        f"Selected frontier-positive workflows: {len(positive)}. Negative controls: {len(control)}.",
+        "",
+        "## Workflow Selection",
+        "",
+        "| workflow | taxonomy | selected | reason |",
+        "| --- | --- | --- | --- |",
+    ]
+    for row in sorted(selection_rows, key=lambda item: str(item["workflow"])):
+        lines.append(
+            f"| `{row['workflow']}` | {row['opportunity_taxonomy']} | "
+            f"{row['selected']} | {row['selection_reason']} |"
+        )
+    lines.extend(
+        [
+            "",
+            "## Scheduler Metrics",
+            "",
+            "| workflow | scheduler | policy | taxonomy | latency | idle | critical path delay | mode switches | wide utilization | narrow latency |",
+            "| --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |",
+        ]
+    )
+    for row in sorted(summaries, key=lambda item: (str(item["workflow"]), str(item["scheduler"]))):
+        lines.append(
+            f"| `{row['workflow']}` | {row['scheduler']} | {row['policy']} | "
+            f"{row['opportunity_taxonomy']} | "
+            f"{float(row['workflow_latency']):.3f} | "
+            f"{float(row['worker_idle_fraction']):.2f} | "
+            f"{float(row['critical_path_delay']):.3f} | "
+            f"{int(row['mode_switch_count'])} | "
+            f"{float(row['wide_stage_utilization']):.2f} | "
+            f"{float(row['narrow_stage_latency']):.3f} |"
+        )
+    lines.extend(
+        [
+            "",
+            "## Interpretation Rules",
+            "",
+            "- `frontier_aware_morphing` uses parallel mode on wide frontiers.",
+            "- It uses consolidated fast-lane mode for narrow ready sets with critical operators.",
+            "- Weak-frontier workflows fall back to `fixed_worker_pool`; `iterative` is kept as a negative control.",
+            "- Baselines include `fixed_worker_pool`, `static_full_resource`, `static_split_resource`, `always_parallel`, and `always_consolidated`.",
+            "- These results are scheduler-prototype evidence only, not wafer placement or wafer speedup evidence.",
+        ]
+    )
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
