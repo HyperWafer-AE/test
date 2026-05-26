@@ -37,6 +37,7 @@ def main(argv: list[str] | None = None) -> None:
     summary_rows = []
     wave_rows = []
     policy_rows = []
+    access_rows = []
     last_graph = None
     last_analysis = None
 
@@ -75,6 +76,11 @@ def main(argv: list[str] | None = None) -> None:
                 wave["dynamic_hot_state_probability"] = probability
                 wave["state_policy"] = state_policy
                 wave_rows.append(wave)
+            for event in run.state_access_events:
+                event = dict(event)
+                event["dynamic_hot_state_probability"] = probability
+                event["state_policy"] = state_policy
+                access_rows.append(event)
             for decision in run.policy_decisions:
                 prow = decision.to_row()
                 prow["dynamic_hot_state_probability"] = probability
@@ -89,6 +95,7 @@ def main(argv: list[str] | None = None) -> None:
     write_csv(out / "state_hotness.csv", last_analysis["state_hotness"])
     write_csv(out / "policy_decisions.csv", policy_rows)
     write_csv(out / "wave_schedule.csv", wave_rows)
+    write_csv(out / "state_access_events.csv", access_rows)
     write_csv(out / "simulation_summary.csv", summary_rows)
     _write_report(out / "report.md", summary_rows)
     _write_figures(out / "figures", summary_rows)

@@ -595,13 +595,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "task",
+      "kv_cacheable": true,
       "kv_size_bytes": 1024000,
       "lifetime_end": 8,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "text",
       "metadata": {},
+      "prefix_compatible": true,
       "producer": null,
+      "prompt_position": 0,
       "state_id": "S_task",
       "static_hotness": 42400.0,
       "token_size": 1000
@@ -620,13 +623,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "document",
+      "kv_cacheable": true,
       "kv_size_bytes": 1024000,
       "lifetime_end": 7,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "text",
       "metadata": {},
+      "prefix_compatible": true,
       "producer": null,
+      "prompt_position": 1,
       "state_id": "S_document",
       "static_hotness": 30100.0,
       "token_size": 1000
@@ -646,13 +652,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "rubric",
+      "kv_cacheable": true,
       "kv_size_bytes": 1024000,
       "lifetime_end": 8,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "text",
       "metadata": {},
+      "prefix_compatible": true,
       "producer": null,
+      "prompt_position": 2,
       "state_id": "S_rubric",
       "static_hotness": 42400.0,
       "token_size": 1000
@@ -662,13 +671,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "tool_schema",
+      "kv_cacheable": true,
       "kv_size_bytes": 1024000,
       "lifetime_end": 0,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "text",
       "metadata": {},
+      "prefix_compatible": true,
       "producer": null,
+      "prompt_position": 3,
       "state_id": "S_tool_schema",
       "static_hotness": 0.0,
       "token_size": 1000
@@ -681,13 +693,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "unique_context",
+      "kv_cacheable": false,
       "kv_size_bytes": 455680,
       "lifetime_end": 4,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "inline",
       "metadata": {},
+      "prefix_compatible": false,
       "producer": null,
+      "prompt_position": null,
       "state_id": "S_chain_0_context",
       "static_hotness": 478.375,
       "token_size": 445
@@ -699,6 +714,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "intermediate_summary",
+      "kv_cacheable": false,
       "kv_size_bytes": 212992,
       "lifetime_end": 4,
       "lifetime_start": 0,
@@ -707,7 +723,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_chain_0_0",
+      "prompt_position": null,
       "state_id": "S_chain_0_0_out",
       "static_hotness": 0.0,
       "token_size": 208
@@ -719,6 +737,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "intermediate_summary",
+      "kv_cacheable": false,
       "kv_size_bytes": 224256,
       "lifetime_end": 8,
       "lifetime_start": 4,
@@ -727,7 +746,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_chain_0_1",
+      "prompt_position": null,
       "state_id": "S_chain_0_1_out",
       "static_hotness": 0.0,
       "token_size": 219
@@ -740,13 +761,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "unique_context",
+      "kv_cacheable": false,
       "kv_size_bytes": 405504,
       "lifetime_end": 5,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "inline",
       "metadata": {},
+      "prefix_compatible": false,
       "producer": null,
+      "prompt_position": null,
       "state_id": "S_chain_1_context",
       "static_hotness": 425.7,
       "token_size": 396
@@ -758,6 +782,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "intermediate_summary",
+      "kv_cacheable": false,
       "kv_size_bytes": 243712,
       "lifetime_end": 5,
       "lifetime_start": 1,
@@ -766,7 +791,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_chain_1_0",
+      "prompt_position": null,
       "state_id": "S_chain_1_0_out",
       "static_hotness": 0.0,
       "token_size": 238
@@ -778,6 +805,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "intermediate_summary",
+      "kv_cacheable": false,
       "kv_size_bytes": 288768,
       "lifetime_end": 8,
       "lifetime_start": 5,
@@ -786,7 +814,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_chain_1_1",
+      "prompt_position": null,
       "state_id": "S_chain_1_1_out",
       "static_hotness": 0.0,
       "token_size": 282
@@ -799,13 +829,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "unique_context",
+      "kv_cacheable": false,
       "kv_size_bytes": 457728,
       "lifetime_end": 6,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "inline",
       "metadata": {},
+      "prefix_compatible": false,
       "producer": null,
+      "prompt_position": null,
       "state_id": "S_chain_2_context",
       "static_hotness": 480.525,
       "token_size": 447
@@ -817,6 +850,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "intermediate_summary",
+      "kv_cacheable": false,
       "kv_size_bytes": 235520,
       "lifetime_end": 6,
       "lifetime_start": 2,
@@ -825,7 +859,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_chain_2_0",
+      "prompt_position": null,
       "state_id": "S_chain_2_0_out",
       "static_hotness": 0.0,
       "token_size": 230
@@ -837,6 +873,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "intermediate_summary",
+      "kv_cacheable": false,
       "kv_size_bytes": 238592,
       "lifetime_end": 8,
       "lifetime_start": 6,
@@ -845,7 +882,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_chain_2_1",
+      "prompt_position": null,
       "state_id": "S_chain_2_1_out",
       "static_hotness": 0.0,
       "token_size": 233
@@ -858,13 +897,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "unique_context",
+      "kv_cacheable": false,
       "kv_size_bytes": 384000,
       "lifetime_end": 7,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "inline",
       "metadata": {},
+      "prefix_compatible": false,
       "producer": null,
+      "prompt_position": null,
       "state_id": "S_chain_3_context",
       "static_hotness": 403.125,
       "token_size": 375
@@ -876,6 +918,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "intermediate_summary",
+      "kv_cacheable": false,
       "kv_size_bytes": 311296,
       "lifetime_end": 7,
       "lifetime_start": 3,
@@ -884,7 +927,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_chain_3_0",
+      "prompt_position": null,
       "state_id": "S_chain_3_0_out",
       "static_hotness": 0.0,
       "token_size": 304
@@ -896,6 +941,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "intermediate_summary",
+      "kv_cacheable": false,
       "kv_size_bytes": 249856,
       "lifetime_end": 8,
       "lifetime_start": 7,
@@ -904,7 +950,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_chain_3_1",
+      "prompt_position": null,
       "state_id": "S_chain_3_1_out",
       "static_hotness": 0.0,
       "token_size": 244
@@ -914,6 +962,7 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "output",
+      "kv_cacheable": false,
       "kv_size_bytes": 246784,
       "lifetime_end": 8,
       "lifetime_start": 8,
@@ -922,7 +971,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_writer",
+      "prompt_position": null,
       "state_id": "S_parallel_report",
       "static_hotness": 0.0,
       "token_size": 241

@@ -1,87 +1,87 @@
-state_id,kind,token_size,kv_size_bytes,producer,consumers,lifetime_start,lifetime_end,materialized_form,location,static_hotness,dynamic_hotness,deterministic,metadata
-S_task,task,800,819200,,"[""O_analyst_0"", ""O_researcher_0"", ""O_trader_0"", ""O_risk_0"", ""O_analyst_1"", ""O_researcher_1"", ""O_trader_1"", ""O_risk_1"", ""O_analyst_2"", ""O_researcher_2"", ""O_trader_2"", ""O_risk_2"", ""O_analyst_3"", ""O_researcher_3"", ""O_trader_3"", ""O_risk_3"", ""O_analyst_4"", ""O_researcher_4"", ""O_trader_4"", ""O_risk_4"", ""O_analyst_5"", ""O_researcher_5"", ""O_trader_5"", ""O_risk_5"", ""O_analyst_6"", ""O_researcher_6"", ""O_trader_6"", ""O_risk_6"", ""O_analyst_7"", ""O_researcher_7"", ""O_trader_7"", ""O_risk_7"", ""O_analyst_8"", ""O_researcher_8"", ""O_trader_8"", ""O_risk_8"", ""O_analyst_9"", ""O_researcher_9"", ""O_trader_9"", ""O_risk_9"", ""O_analyst_10"", ""O_researcher_10"", ""O_trader_10"", ""O_risk_10"", ""O_analyst_11"", ""O_researcher_11"", ""O_trader_11"", ""O_risk_11"", ""O_analyst_12"", ""O_researcher_12"", ""O_trader_12"", ""O_risk_12"", ""O_analyst_13"", ""O_researcher_13"", ""O_trader_13"", ""O_risk_13"", ""O_analyst_14"", ""O_researcher_14"", ""O_trader_14"", ""O_risk_14"", ""O_analyst_15"", ""O_researcher_15"", ""O_trader_15"", ""O_risk_15"", ""O_manager""]",0,64,text,,2232320.0,1555.8941361167338,True,{}
-S_market_context,market_context,800,819200,,"[""O_analyst_0"", ""O_researcher_0"", ""O_trader_0"", ""O_risk_0"", ""O_analyst_1"", ""O_researcher_1"", ""O_trader_1"", ""O_risk_1"", ""O_analyst_2"", ""O_researcher_2"", ""O_trader_2"", ""O_risk_2"", ""O_analyst_3"", ""O_researcher_3"", ""O_trader_3"", ""O_risk_3"", ""O_analyst_4"", ""O_researcher_4"", ""O_trader_4"", ""O_risk_4"", ""O_analyst_5"", ""O_researcher_5"", ""O_trader_5"", ""O_risk_5"", ""O_analyst_6"", ""O_researcher_6"", ""O_trader_6"", ""O_risk_6"", ""O_analyst_7"", ""O_researcher_7"", ""O_trader_7"", ""O_risk_7"", ""O_analyst_8"", ""O_researcher_8"", ""O_trader_8"", ""O_risk_8"", ""O_analyst_9"", ""O_researcher_9"", ""O_trader_9"", ""O_risk_9"", ""O_analyst_10"", ""O_researcher_10"", ""O_trader_10"", ""O_risk_10"", ""O_analyst_11"", ""O_researcher_11"", ""O_trader_11"", ""O_risk_11"", ""O_analyst_12"", ""O_researcher_12"", ""O_trader_12"", ""O_risk_12"", ""O_analyst_13"", ""O_researcher_13"", ""O_trader_13"", ""O_risk_13"", ""O_analyst_14"", ""O_researcher_14"", ""O_trader_14"", ""O_risk_14"", ""O_analyst_15"", ""O_researcher_15"", ""O_trader_15"", ""O_risk_15"", ""O_manager""]",0,64,text,,2232320.0,1555.8941361167338,True,{}
-S_risk_policy,risk_policy,800,819200,,"[""O_risk_0"", ""O_risk_1"", ""O_risk_2"", ""O_risk_3"", ""O_risk_4"", ""O_risk_5"", ""O_risk_6"", ""O_risk_7"", ""O_risk_8"", ""O_risk_9"", ""O_risk_10"", ""O_risk_11"", ""O_risk_12"", ""O_risk_13"", ""O_risk_14"", ""O_risk_15"", ""O_manager""]",0,64,text,,189440.0,1556.12876260441,True,{}
-S_tool_schema,tool_schema,800,819200,,"[""O_researcher_0"", ""O_researcher_1"", ""O_researcher_2"", ""O_researcher_3"", ""O_researcher_4"", ""O_researcher_5"", ""O_researcher_6"", ""O_researcher_7"", ""O_researcher_8"", ""O_researcher_9"", ""O_researcher_10"", ""O_researcher_11"", ""O_researcher_12"", ""O_researcher_13"", ""O_researcher_14"", ""O_researcher_15""]",0,31,text,,96000.0,799.9991752593522,True,{}
-S_role_instruction,role_instruction,800,819200,,"[""O_analyst_0"", ""O_analyst_1"", ""O_analyst_2"", ""O_analyst_3"", ""O_analyst_4"", ""O_analyst_5"", ""O_analyst_6"", ""O_analyst_7"", ""O_analyst_8"", ""O_analyst_9"", ""O_analyst_10"", ""O_analyst_11"", ""O_analyst_12"", ""O_analyst_13"", ""O_analyst_14"", ""O_analyst_15""]",0,15,text,,105600.00000000001,879.9990927852874,True,{}
-S_market_signal_0,retrieval,445,455680,,"[""O_analyst_0"", ""O_researcher_0""]",0,16,inline,,467.25,379.96575312500005,True,{}
-S_analyst_0_view,intermediate_summary,208,212992,O_analyst_0,"[""O_trader_0""]",0,32,output,,0.0,180.17999999999998,False,"{""dynamic_hot_candidate"": true}"
-S_research_0_evidence,retrieval_result,219,224256,O_researcher_0,"[""O_trader_0""]",16,32,output,,0.0,189.70875,False,"{""dynamic_hot_candidate"": true}"
-S_trade_0,planner_output,247,252928,O_trader_0,"[""O_risk_0"", ""O_manager""]",32,64,output,,506.34999999999997,431.02781312499997,False,"{""dynamic_hot_candidate"": false}"
-S_risk_0,critic_feedback,210,215040,O_risk_0,"[""O_manager""]",48,64,output,,0.0,291.05999999999995,False,"{""dynamic_hot_candidate"": true}"
-S_market_signal_1,retrieval,409,418816,,"[""O_analyst_1"", ""O_researcher_1""]",0,17,inline,,429.45000000000005,349.226950625,True,{}
-S_analyst_1_view,intermediate_summary,225,230400,O_analyst_1,"[""O_trader_1""]",1,33,output,,0.0,194.90625,False,"{""dynamic_hot_candidate"": false}"
-S_research_1_evidence,retrieval_result,249,254976,O_researcher_1,"[""O_trader_1""]",17,33,output,,0.0,215.69625,False,"{""dynamic_hot_candidate"": false}"
-S_trade_1,planner_output,249,254976,O_trader_1,"[""O_risk_1"", ""O_manager""]",33,64,output,,510.44999999999993,434.517916875,False,"{""dynamic_hot_candidate"": true}"
-S_risk_1,critic_feedback,315,322560,O_risk_1,"[""O_manager""]",49,64,output,,0.0,436.5899999999999,False,"{""dynamic_hot_candidate"": false}"
-S_market_signal_2,retrieval,438,448512,,"[""O_analyst_2"", ""O_researcher_2""]",0,24,inline,,459.90000000000003,373.98876375,True,{}
-S_analyst_2_view,intermediate_summary,189,193536,O_analyst_2,"[""O_trader_2""]",8,40,output,,0.0,163.72125,False,"{""dynamic_hot_candidate"": true}"
-S_research_2_evidence,retrieval_result,286,292864,O_researcher_2,"[""O_trader_2""]",24,40,output,,0.0,247.74749999999995,False,"{""dynamic_hot_candidate"": true}"
-S_trade_2,planner_output,222,227328,O_trader_2,"[""O_risk_2"", ""O_manager""]",40,64,output,,455.09999999999997,387.40151624999993,False,"{""dynamic_hot_candidate"": true}"
-S_risk_2,critic_feedback,212,217088,O_risk_2,"[""O_manager""]",56,64,output,,0.0,293.832,False,"{""dynamic_hot_candidate"": true}"
-S_market_signal_3,retrieval,426,436224,,"[""O_analyst_3"", ""O_researcher_3""]",0,25,inline,,447.3,363.74249625,True,{}
-S_analyst_3_view,intermediate_summary,283,289792,O_analyst_3,"[""O_trader_3""]",9,41,output,,0.0,245.14874999999998,False,"{""dynamic_hot_candidate"": false}"
-S_research_3_evidence,retrieval_result,242,247808,O_researcher_3,"[""O_trader_3""]",25,41,output,,0.0,209.6325,False,"{""dynamic_hot_candidate"": false}"
-S_trade_3,planner_output,262,268288,O_trader_3,"[""O_risk_3"", ""O_manager""]",41,64,output,,537.0999999999999,457.20359125,False,"{""dynamic_hot_candidate"": true}"
-S_risk_3,critic_feedback,214,219136,O_risk_3,"[""O_manager""]",57,64,output,,0.0,296.604,False,"{""dynamic_hot_candidate"": true}"
-S_market_signal_4,retrieval,390,399360,,"[""O_analyst_4"", ""O_researcher_4""]",0,26,inline,,409.5,333.00369375,True,{}
-S_analyst_4_view,intermediate_summary,220,225280,O_analyst_4,"[""O_trader_4""]",10,42,output,,0.0,190.575,False,"{""dynamic_hot_candidate"": false}"
-S_research_4_evidence,retrieval_result,284,290816,O_researcher_4,"[""O_trader_4""]",26,42,output,,0.0,246.015,False,"{""dynamic_hot_candidate"": true}"
-S_trade_4,planner_output,250,256000,O_trader_4,"[""O_risk_4"", ""O_manager""]",42,64,output,,512.5,436.26296875,False,"{""dynamic_hot_candidate"": false}"
-S_risk_4,critic_feedback,222,227328,O_risk_4,"[""O_manager""]",58,64,output,,0.0,307.69199999999995,False,"{""dynamic_hot_candidate"": true}"
-S_market_signal_5,retrieval,486,497664,,"[""O_analyst_5"", ""O_researcher_5""]",0,27,inline,,510.3,414.97383375,True,{}
-S_analyst_5_view,intermediate_summary,229,234496,O_analyst_5,"[""O_trader_5""]",11,43,output,,0.0,198.37124999999997,False,"{""dynamic_hot_candidate"": true}"
-S_research_5_evidence,retrieval_result,240,245760,O_researcher_5,"[""O_trader_5""]",27,43,output,,0.0,207.89999999999998,False,"{""dynamic_hot_candidate"": false}"
-S_trade_5,planner_output,238,243712,O_trader_5,"[""O_risk_5"", ""O_manager""]",43,64,output,,487.9,415.3223462499999,False,"{""dynamic_hot_candidate"": false}"
-S_risk_5,critic_feedback,253,259072,O_risk_5,"[""O_manager""]",59,64,output,,0.0,350.6579999999999,False,"{""dynamic_hot_candidate"": true}"
-S_market_signal_6,retrieval,288,294912,,"[""O_analyst_6"", ""O_researcher_6""]",0,28,inline,,302.40000000000003,245.91042,True,{}
-S_analyst_6_view,intermediate_summary,246,251904,O_analyst_6,"[""O_trader_6""]",12,44,output,,0.0,213.09750000000003,False,"{""dynamic_hot_candidate"": true}"
-S_research_6_evidence,retrieval_result,239,244736,O_researcher_6,"[""O_trader_6""]",28,44,output,,0.0,207.03375,False,"{""dynamic_hot_candidate"": true}"
-S_trade_6,planner_output,213,218112,O_trader_6,"[""O_risk_6"", ""O_manager""]",44,64,output,,436.65,371.6960493749999,False,"{""dynamic_hot_candidate"": false}"
-S_risk_6,critic_feedback,289,295936,O_risk_6,"[""O_manager""]",60,64,output,,0.0,400.554,False,"{""dynamic_hot_candidate"": true}"
-S_market_signal_7,retrieval,385,394240,,"[""O_analyst_7"", ""O_researcher_7""]",0,29,inline,,404.25,328.734415625,True,{}
-S_analyst_7_view,intermediate_summary,211,216064,O_analyst_7,"[""O_trader_7""]",13,45,output,,0.0,182.77875,False,"{""dynamic_hot_candidate"": true}"
-S_research_7_evidence,retrieval_result,263,269312,O_researcher_7,"[""O_trader_7""]",29,45,output,,0.0,227.82375,False,"{""dynamic_hot_candidate"": true}"
-S_trade_7,planner_output,245,250880,O_trader_7,"[""O_risk_7"", ""O_manager""]",45,64,output,,502.24999999999994,427.53770937499996,False,"{""dynamic_hot_candidate"": true}"
-S_risk_7,critic_feedback,268,274432,O_risk_7,"[""O_manager""]",61,64,output,,0.0,371.4479999999999,False,"{""dynamic_hot_candidate"": true}"
-S_market_signal_8,retrieval,346,354304,,"[""O_analyst_8"", ""O_researcher_8""]",0,30,inline,,363.3,295.43404625000005,True,{}
-S_analyst_8_view,intermediate_summary,221,226304,O_analyst_8,"[""O_trader_8""]",14,46,output,,0.0,191.44124999999997,False,"{""dynamic_hot_candidate"": true}"
-S_research_8_evidence,retrieval_result,252,258048,O_researcher_8,"[""O_trader_8""]",30,46,output,,0.0,218.29499999999996,False,"{""dynamic_hot_candidate"": true}"
-S_trade_8,planner_output,188,192512,O_trader_8,"[""O_risk_8"", ""O_manager""]",46,64,output,,385.4,328.06975249999994,False,"{""dynamic_hot_candidate"": false}"
-S_risk_8,critic_feedback,304,311296,O_risk_8,"[""O_manager""]",62,64,output,,0.0,421.344,False,"{""dynamic_hot_candidate"": false}"
-S_market_signal_9,retrieval,335,343040,,"[""O_analyst_9"", ""O_researcher_9""]",0,31,inline,,351.75,286.04163437500006,True,{}
-S_analyst_9_view,intermediate_summary,213,218112,O_analyst_9,"[""O_trader_9""]",15,47,output,,0.0,184.51125,False,"{""dynamic_hot_candidate"": true}"
-S_research_9_evidence,retrieval_result,279,285696,O_researcher_9,"[""O_trader_9""]",31,47,output,,0.0,241.68374999999997,False,"{""dynamic_hot_candidate"": true}"
-S_trade_9,planner_output,287,293888,O_trader_9,"[""O_risk_9"", ""O_manager""]",47,64,output,,588.3499999999999,500.8298881249999,False,"{""dynamic_hot_candidate"": false}"
-S_risk_9,critic_feedback,198,202752,O_risk_9,"[""O_manager""]",63,64,output,,0.0,274.428,False,"{""dynamic_hot_candidate"": true}"
-S_market_signal_10,retrieval,460,471040,,"[""O_analyst_10"", ""O_researcher_10""]",0,18,inline,,483.0,392.77358749999996,True,{}
-S_analyst_10_view,intermediate_summary,237,242688,O_analyst_10,"[""O_trader_10""]",2,34,output,,0.0,205.30124999999998,False,"{""dynamic_hot_candidate"": true}"
-S_research_10_evidence,retrieval_result,316,323584,O_researcher_10,"[""O_trader_10""]",18,34,output,,0.0,273.73499999999996,False,"{""dynamic_hot_candidate"": true}"
-S_trade_10,planner_output,248,253952,O_trader_10,"[""O_risk_10"", ""O_manager""]",34,64,output,,508.4,432.7728649999999,False,"{""dynamic_hot_candidate"": false}"
-S_risk_10,critic_feedback,223,228352,O_risk_10,"[""O_manager""]",50,64,output,,0.0,309.078,False,"{""dynamic_hot_candidate"": true}"
-S_market_signal_11,retrieval,363,371712,,"[""O_analyst_11"", ""O_researcher_11""]",0,19,inline,,381.15000000000003,309.949591875,True,{}
-S_analyst_11_view,intermediate_summary,262,268288,O_analyst_11,"[""O_trader_11""]",3,35,output,,0.0,226.95749999999998,False,"{""dynamic_hot_candidate"": true}"
-S_research_11_evidence,retrieval_result,231,236544,O_researcher_11,"[""O_trader_11""]",19,35,output,,0.0,200.10375,False,"{""dynamic_hot_candidate"": true}"
-S_trade_11,planner_output,259,265216,O_trader_11,"[""O_risk_11"", ""O_manager""]",35,64,output,,530.9499999999999,451.968435625,False,"{""dynamic_hot_candidate"": true}"
-S_risk_11,critic_feedback,302,309248,O_risk_11,"[""O_manager""]",51,64,output,,0.0,418.572,False,"{""dynamic_hot_candidate"": true}"
-S_market_signal_12,retrieval,408,417792,,"[""O_analyst_12"", ""O_researcher_12""]",0,20,inline,,428.40000000000003,348.373095,True,{}
-S_analyst_12_view,intermediate_summary,237,242688,O_analyst_12,"[""O_trader_12""]",4,36,output,,0.0,205.30124999999998,False,"{""dynamic_hot_candidate"": true}"
-S_research_12_evidence,retrieval_result,287,293888,O_researcher_12,"[""O_trader_12""]",20,36,output,,0.0,248.61374999999998,False,"{""dynamic_hot_candidate"": true}"
-S_trade_12,planner_output,260,266240,O_trader_12,"[""O_risk_12"", ""O_manager""]",36,64,output,,533.0,453.7134875,False,"{""dynamic_hot_candidate"": false}"
-S_risk_12,critic_feedback,247,252928,O_risk_12,"[""O_manager""]",52,64,output,,0.0,342.3419999999999,False,"{""dynamic_hot_candidate"": true}"
-S_market_signal_13,retrieval,389,398336,,"[""O_analyst_13"", ""O_researcher_13""]",0,21,inline,,408.45000000000005,332.149838125,True,{}
-S_analyst_13_view,intermediate_summary,219,224256,O_analyst_13,"[""O_trader_13""]",5,37,output,,0.0,189.70875,False,"{""dynamic_hot_candidate"": true}"
-S_research_13_evidence,retrieval_result,225,230400,O_researcher_13,"[""O_trader_13""]",21,37,output,,0.0,194.90625,False,"{""dynamic_hot_candidate"": true}"
-S_trade_13,planner_output,258,264192,O_trader_13,"[""O_risk_13"", ""O_manager""]",37,64,output,,528.9,450.2233837499999,False,"{""dynamic_hot_candidate"": true}"
-S_risk_13,critic_feedback,249,254976,O_risk_13,"[""O_manager""]",53,64,output,,0.0,345.11400000000003,False,"{""dynamic_hot_candidate"": true}"
-S_market_signal_14,retrieval,429,439296,,"[""O_analyst_14"", ""O_researcher_14""]",0,22,inline,,450.45000000000005,366.30406312499997,True,{}
-S_analyst_14_view,intermediate_summary,245,250880,O_analyst_14,"[""O_trader_14""]",6,38,output,,0.0,212.23125,False,"{""dynamic_hot_candidate"": true}"
-S_research_14_evidence,retrieval_result,272,278528,O_researcher_14,"[""O_trader_14""]",22,38,output,,0.0,235.61999999999998,False,"{""dynamic_hot_candidate"": true}"
-S_trade_14,planner_output,183,187392,O_trader_14,"[""O_risk_14"", ""O_manager""]",38,64,output,,375.15,319.344493125,False,"{""dynamic_hot_candidate"": true}"
-S_risk_14,critic_feedback,268,274432,O_risk_14,"[""O_manager""]",54,64,output,,0.0,371.4479999999999,False,"{""dynamic_hot_candidate"": true}"
-S_market_signal_15,retrieval,422,432128,,"[""O_analyst_15"", ""O_researcher_15""]",0,23,inline,,443.1,360.32707374999995,True,{}
-S_analyst_15_view,intermediate_summary,233,238592,O_analyst_15,"[""O_trader_15""]",7,39,output,,0.0,201.83624999999998,False,"{""dynamic_hot_candidate"": true}"
-S_research_15_evidence,retrieval_result,227,232448,O_researcher_15,"[""O_trader_15""]",23,39,output,,0.0,196.63875000000002,False,"{""dynamic_hot_candidate"": true}"
-S_trade_15,planner_output,263,269312,O_trader_15,"[""O_risk_15"", ""O_manager""]",39,64,output,,539.15,458.9486431249999,False,"{""dynamic_hot_candidate"": true}"
-S_risk_15,critic_feedback,253,259072,O_risk_15,"[""O_manager""]",55,64,output,,0.0,350.6579999999999,False,"{""dynamic_hot_candidate"": false}"
-S_portfolio_decision,output,219,224256,O_manager,[],64,64,output,,0.0,0.0,True,"{""dynamic_hot_candidate"": true}"
+state_id,kind,token_size,kv_size_bytes,producer,consumers,lifetime_start,lifetime_end,materialized_form,location,prefix_compatible,kv_cacheable,prompt_position,static_hotness,dynamic_hotness,deterministic,metadata
+S_task,task,800,819200,,"[""O_analyst_0"", ""O_researcher_0"", ""O_trader_0"", ""O_risk_0"", ""O_analyst_1"", ""O_researcher_1"", ""O_trader_1"", ""O_risk_1"", ""O_analyst_2"", ""O_researcher_2"", ""O_trader_2"", ""O_risk_2"", ""O_analyst_3"", ""O_researcher_3"", ""O_trader_3"", ""O_risk_3"", ""O_analyst_4"", ""O_researcher_4"", ""O_trader_4"", ""O_risk_4"", ""O_analyst_5"", ""O_researcher_5"", ""O_trader_5"", ""O_risk_5"", ""O_analyst_6"", ""O_researcher_6"", ""O_trader_6"", ""O_risk_6"", ""O_analyst_7"", ""O_researcher_7"", ""O_trader_7"", ""O_risk_7"", ""O_analyst_8"", ""O_researcher_8"", ""O_trader_8"", ""O_risk_8"", ""O_analyst_9"", ""O_researcher_9"", ""O_trader_9"", ""O_risk_9"", ""O_analyst_10"", ""O_researcher_10"", ""O_trader_10"", ""O_risk_10"", ""O_analyst_11"", ""O_researcher_11"", ""O_trader_11"", ""O_risk_11"", ""O_analyst_12"", ""O_researcher_12"", ""O_trader_12"", ""O_risk_12"", ""O_analyst_13"", ""O_researcher_13"", ""O_trader_13"", ""O_risk_13"", ""O_analyst_14"", ""O_researcher_14"", ""O_trader_14"", ""O_risk_14"", ""O_analyst_15"", ""O_researcher_15"", ""O_trader_15"", ""O_risk_15"", ""O_manager""]",0,64,text,,True,True,0,2232320.0,1555.8941361167338,True,{}
+S_market_context,market_context,800,819200,,"[""O_analyst_0"", ""O_researcher_0"", ""O_trader_0"", ""O_risk_0"", ""O_analyst_1"", ""O_researcher_1"", ""O_trader_1"", ""O_risk_1"", ""O_analyst_2"", ""O_researcher_2"", ""O_trader_2"", ""O_risk_2"", ""O_analyst_3"", ""O_researcher_3"", ""O_trader_3"", ""O_risk_3"", ""O_analyst_4"", ""O_researcher_4"", ""O_trader_4"", ""O_risk_4"", ""O_analyst_5"", ""O_researcher_5"", ""O_trader_5"", ""O_risk_5"", ""O_analyst_6"", ""O_researcher_6"", ""O_trader_6"", ""O_risk_6"", ""O_analyst_7"", ""O_researcher_7"", ""O_trader_7"", ""O_risk_7"", ""O_analyst_8"", ""O_researcher_8"", ""O_trader_8"", ""O_risk_8"", ""O_analyst_9"", ""O_researcher_9"", ""O_trader_9"", ""O_risk_9"", ""O_analyst_10"", ""O_researcher_10"", ""O_trader_10"", ""O_risk_10"", ""O_analyst_11"", ""O_researcher_11"", ""O_trader_11"", ""O_risk_11"", ""O_analyst_12"", ""O_researcher_12"", ""O_trader_12"", ""O_risk_12"", ""O_analyst_13"", ""O_researcher_13"", ""O_trader_13"", ""O_risk_13"", ""O_analyst_14"", ""O_researcher_14"", ""O_trader_14"", ""O_risk_14"", ""O_analyst_15"", ""O_researcher_15"", ""O_trader_15"", ""O_risk_15"", ""O_manager""]",0,64,text,,True,True,1,2232320.0,1555.8941361167338,True,{}
+S_risk_policy,risk_policy,800,819200,,"[""O_risk_0"", ""O_risk_1"", ""O_risk_2"", ""O_risk_3"", ""O_risk_4"", ""O_risk_5"", ""O_risk_6"", ""O_risk_7"", ""O_risk_8"", ""O_risk_9"", ""O_risk_10"", ""O_risk_11"", ""O_risk_12"", ""O_risk_13"", ""O_risk_14"", ""O_risk_15"", ""O_manager""]",0,64,text,,True,True,2,189440.0,1556.12876260441,True,{}
+S_tool_schema,tool_schema,800,819200,,"[""O_researcher_0"", ""O_researcher_1"", ""O_researcher_2"", ""O_researcher_3"", ""O_researcher_4"", ""O_researcher_5"", ""O_researcher_6"", ""O_researcher_7"", ""O_researcher_8"", ""O_researcher_9"", ""O_researcher_10"", ""O_researcher_11"", ""O_researcher_12"", ""O_researcher_13"", ""O_researcher_14"", ""O_researcher_15""]",0,31,text,,True,True,3,96000.0,799.9991752593522,True,{}
+S_role_instruction,role_instruction,800,819200,,"[""O_analyst_0"", ""O_analyst_1"", ""O_analyst_2"", ""O_analyst_3"", ""O_analyst_4"", ""O_analyst_5"", ""O_analyst_6"", ""O_analyst_7"", ""O_analyst_8"", ""O_analyst_9"", ""O_analyst_10"", ""O_analyst_11"", ""O_analyst_12"", ""O_analyst_13"", ""O_analyst_14"", ""O_analyst_15""]",0,15,text,,True,True,4,105600.00000000001,879.9990927852874,True,{}
+S_market_signal_0,retrieval,445,455680,,"[""O_analyst_0"", ""O_researcher_0""]",0,16,inline,,False,False,,467.25,379.96575312500005,True,{}
+S_analyst_0_view,intermediate_summary,208,212992,O_analyst_0,"[""O_trader_0""]",0,32,output,,False,False,,0.0,180.17999999999998,False,"{""dynamic_hot_candidate"": true}"
+S_research_0_evidence,retrieval_result,219,224256,O_researcher_0,"[""O_trader_0""]",16,32,output,,False,False,,0.0,189.70875,False,"{""dynamic_hot_candidate"": true}"
+S_trade_0,planner_output,247,252928,O_trader_0,"[""O_risk_0"", ""O_manager""]",32,64,output,,False,False,,506.34999999999997,431.02781312499997,False,"{""dynamic_hot_candidate"": false}"
+S_risk_0,critic_feedback,210,215040,O_risk_0,"[""O_manager""]",48,64,output,,False,False,,0.0,291.05999999999995,False,"{""dynamic_hot_candidate"": true}"
+S_market_signal_1,retrieval,409,418816,,"[""O_analyst_1"", ""O_researcher_1""]",0,17,inline,,False,False,,429.45000000000005,349.226950625,True,{}
+S_analyst_1_view,intermediate_summary,225,230400,O_analyst_1,"[""O_trader_1""]",1,33,output,,False,False,,0.0,194.90625,False,"{""dynamic_hot_candidate"": false}"
+S_research_1_evidence,retrieval_result,249,254976,O_researcher_1,"[""O_trader_1""]",17,33,output,,False,False,,0.0,215.69625,False,"{""dynamic_hot_candidate"": false}"
+S_trade_1,planner_output,249,254976,O_trader_1,"[""O_risk_1"", ""O_manager""]",33,64,output,,False,False,,510.44999999999993,434.517916875,False,"{""dynamic_hot_candidate"": true}"
+S_risk_1,critic_feedback,315,322560,O_risk_1,"[""O_manager""]",49,64,output,,False,False,,0.0,436.5899999999999,False,"{""dynamic_hot_candidate"": false}"
+S_market_signal_2,retrieval,438,448512,,"[""O_analyst_2"", ""O_researcher_2""]",0,24,inline,,False,False,,459.90000000000003,373.98876375,True,{}
+S_analyst_2_view,intermediate_summary,189,193536,O_analyst_2,"[""O_trader_2""]",8,40,output,,False,False,,0.0,163.72125,False,"{""dynamic_hot_candidate"": true}"
+S_research_2_evidence,retrieval_result,286,292864,O_researcher_2,"[""O_trader_2""]",24,40,output,,False,False,,0.0,247.74749999999995,False,"{""dynamic_hot_candidate"": true}"
+S_trade_2,planner_output,222,227328,O_trader_2,"[""O_risk_2"", ""O_manager""]",40,64,output,,False,False,,455.09999999999997,387.40151624999993,False,"{""dynamic_hot_candidate"": true}"
+S_risk_2,critic_feedback,212,217088,O_risk_2,"[""O_manager""]",56,64,output,,False,False,,0.0,293.832,False,"{""dynamic_hot_candidate"": true}"
+S_market_signal_3,retrieval,426,436224,,"[""O_analyst_3"", ""O_researcher_3""]",0,25,inline,,False,False,,447.3,363.74249625,True,{}
+S_analyst_3_view,intermediate_summary,283,289792,O_analyst_3,"[""O_trader_3""]",9,41,output,,False,False,,0.0,245.14874999999998,False,"{""dynamic_hot_candidate"": false}"
+S_research_3_evidence,retrieval_result,242,247808,O_researcher_3,"[""O_trader_3""]",25,41,output,,False,False,,0.0,209.6325,False,"{""dynamic_hot_candidate"": false}"
+S_trade_3,planner_output,262,268288,O_trader_3,"[""O_risk_3"", ""O_manager""]",41,64,output,,False,False,,537.0999999999999,457.20359125,False,"{""dynamic_hot_candidate"": true}"
+S_risk_3,critic_feedback,214,219136,O_risk_3,"[""O_manager""]",57,64,output,,False,False,,0.0,296.604,False,"{""dynamic_hot_candidate"": true}"
+S_market_signal_4,retrieval,390,399360,,"[""O_analyst_4"", ""O_researcher_4""]",0,26,inline,,False,False,,409.5,333.00369375,True,{}
+S_analyst_4_view,intermediate_summary,220,225280,O_analyst_4,"[""O_trader_4""]",10,42,output,,False,False,,0.0,190.575,False,"{""dynamic_hot_candidate"": false}"
+S_research_4_evidence,retrieval_result,284,290816,O_researcher_4,"[""O_trader_4""]",26,42,output,,False,False,,0.0,246.015,False,"{""dynamic_hot_candidate"": true}"
+S_trade_4,planner_output,250,256000,O_trader_4,"[""O_risk_4"", ""O_manager""]",42,64,output,,False,False,,512.5,436.26296875,False,"{""dynamic_hot_candidate"": false}"
+S_risk_4,critic_feedback,222,227328,O_risk_4,"[""O_manager""]",58,64,output,,False,False,,0.0,307.69199999999995,False,"{""dynamic_hot_candidate"": true}"
+S_market_signal_5,retrieval,486,497664,,"[""O_analyst_5"", ""O_researcher_5""]",0,27,inline,,False,False,,510.3,414.97383375,True,{}
+S_analyst_5_view,intermediate_summary,229,234496,O_analyst_5,"[""O_trader_5""]",11,43,output,,False,False,,0.0,198.37124999999997,False,"{""dynamic_hot_candidate"": true}"
+S_research_5_evidence,retrieval_result,240,245760,O_researcher_5,"[""O_trader_5""]",27,43,output,,False,False,,0.0,207.89999999999998,False,"{""dynamic_hot_candidate"": false}"
+S_trade_5,planner_output,238,243712,O_trader_5,"[""O_risk_5"", ""O_manager""]",43,64,output,,False,False,,487.9,415.3223462499999,False,"{""dynamic_hot_candidate"": false}"
+S_risk_5,critic_feedback,253,259072,O_risk_5,"[""O_manager""]",59,64,output,,False,False,,0.0,350.6579999999999,False,"{""dynamic_hot_candidate"": true}"
+S_market_signal_6,retrieval,288,294912,,"[""O_analyst_6"", ""O_researcher_6""]",0,28,inline,,False,False,,302.40000000000003,245.91042,True,{}
+S_analyst_6_view,intermediate_summary,246,251904,O_analyst_6,"[""O_trader_6""]",12,44,output,,False,False,,0.0,213.09750000000003,False,"{""dynamic_hot_candidate"": true}"
+S_research_6_evidence,retrieval_result,239,244736,O_researcher_6,"[""O_trader_6""]",28,44,output,,False,False,,0.0,207.03375,False,"{""dynamic_hot_candidate"": true}"
+S_trade_6,planner_output,213,218112,O_trader_6,"[""O_risk_6"", ""O_manager""]",44,64,output,,False,False,,436.65,371.6960493749999,False,"{""dynamic_hot_candidate"": false}"
+S_risk_6,critic_feedback,289,295936,O_risk_6,"[""O_manager""]",60,64,output,,False,False,,0.0,400.554,False,"{""dynamic_hot_candidate"": true}"
+S_market_signal_7,retrieval,385,394240,,"[""O_analyst_7"", ""O_researcher_7""]",0,29,inline,,False,False,,404.25,328.734415625,True,{}
+S_analyst_7_view,intermediate_summary,211,216064,O_analyst_7,"[""O_trader_7""]",13,45,output,,False,False,,0.0,182.77875,False,"{""dynamic_hot_candidate"": true}"
+S_research_7_evidence,retrieval_result,263,269312,O_researcher_7,"[""O_trader_7""]",29,45,output,,False,False,,0.0,227.82375,False,"{""dynamic_hot_candidate"": true}"
+S_trade_7,planner_output,245,250880,O_trader_7,"[""O_risk_7"", ""O_manager""]",45,64,output,,False,False,,502.24999999999994,427.53770937499996,False,"{""dynamic_hot_candidate"": true}"
+S_risk_7,critic_feedback,268,274432,O_risk_7,"[""O_manager""]",61,64,output,,False,False,,0.0,371.4479999999999,False,"{""dynamic_hot_candidate"": true}"
+S_market_signal_8,retrieval,346,354304,,"[""O_analyst_8"", ""O_researcher_8""]",0,30,inline,,False,False,,363.3,295.43404625000005,True,{}
+S_analyst_8_view,intermediate_summary,221,226304,O_analyst_8,"[""O_trader_8""]",14,46,output,,False,False,,0.0,191.44124999999997,False,"{""dynamic_hot_candidate"": true}"
+S_research_8_evidence,retrieval_result,252,258048,O_researcher_8,"[""O_trader_8""]",30,46,output,,False,False,,0.0,218.29499999999996,False,"{""dynamic_hot_candidate"": true}"
+S_trade_8,planner_output,188,192512,O_trader_8,"[""O_risk_8"", ""O_manager""]",46,64,output,,False,False,,385.4,328.06975249999994,False,"{""dynamic_hot_candidate"": false}"
+S_risk_8,critic_feedback,304,311296,O_risk_8,"[""O_manager""]",62,64,output,,False,False,,0.0,421.344,False,"{""dynamic_hot_candidate"": false}"
+S_market_signal_9,retrieval,335,343040,,"[""O_analyst_9"", ""O_researcher_9""]",0,31,inline,,False,False,,351.75,286.04163437500006,True,{}
+S_analyst_9_view,intermediate_summary,213,218112,O_analyst_9,"[""O_trader_9""]",15,47,output,,False,False,,0.0,184.51125,False,"{""dynamic_hot_candidate"": true}"
+S_research_9_evidence,retrieval_result,279,285696,O_researcher_9,"[""O_trader_9""]",31,47,output,,False,False,,0.0,241.68374999999997,False,"{""dynamic_hot_candidate"": true}"
+S_trade_9,planner_output,287,293888,O_trader_9,"[""O_risk_9"", ""O_manager""]",47,64,output,,False,False,,588.3499999999999,500.8298881249999,False,"{""dynamic_hot_candidate"": false}"
+S_risk_9,critic_feedback,198,202752,O_risk_9,"[""O_manager""]",63,64,output,,False,False,,0.0,274.428,False,"{""dynamic_hot_candidate"": true}"
+S_market_signal_10,retrieval,460,471040,,"[""O_analyst_10"", ""O_researcher_10""]",0,18,inline,,False,False,,483.0,392.77358749999996,True,{}
+S_analyst_10_view,intermediate_summary,237,242688,O_analyst_10,"[""O_trader_10""]",2,34,output,,False,False,,0.0,205.30124999999998,False,"{""dynamic_hot_candidate"": true}"
+S_research_10_evidence,retrieval_result,316,323584,O_researcher_10,"[""O_trader_10""]",18,34,output,,False,False,,0.0,273.73499999999996,False,"{""dynamic_hot_candidate"": true}"
+S_trade_10,planner_output,248,253952,O_trader_10,"[""O_risk_10"", ""O_manager""]",34,64,output,,False,False,,508.4,432.7728649999999,False,"{""dynamic_hot_candidate"": false}"
+S_risk_10,critic_feedback,223,228352,O_risk_10,"[""O_manager""]",50,64,output,,False,False,,0.0,309.078,False,"{""dynamic_hot_candidate"": true}"
+S_market_signal_11,retrieval,363,371712,,"[""O_analyst_11"", ""O_researcher_11""]",0,19,inline,,False,False,,381.15000000000003,309.949591875,True,{}
+S_analyst_11_view,intermediate_summary,262,268288,O_analyst_11,"[""O_trader_11""]",3,35,output,,False,False,,0.0,226.95749999999998,False,"{""dynamic_hot_candidate"": true}"
+S_research_11_evidence,retrieval_result,231,236544,O_researcher_11,"[""O_trader_11""]",19,35,output,,False,False,,0.0,200.10375,False,"{""dynamic_hot_candidate"": true}"
+S_trade_11,planner_output,259,265216,O_trader_11,"[""O_risk_11"", ""O_manager""]",35,64,output,,False,False,,530.9499999999999,451.968435625,False,"{""dynamic_hot_candidate"": true}"
+S_risk_11,critic_feedback,302,309248,O_risk_11,"[""O_manager""]",51,64,output,,False,False,,0.0,418.572,False,"{""dynamic_hot_candidate"": true}"
+S_market_signal_12,retrieval,408,417792,,"[""O_analyst_12"", ""O_researcher_12""]",0,20,inline,,False,False,,428.40000000000003,348.373095,True,{}
+S_analyst_12_view,intermediate_summary,237,242688,O_analyst_12,"[""O_trader_12""]",4,36,output,,False,False,,0.0,205.30124999999998,False,"{""dynamic_hot_candidate"": true}"
+S_research_12_evidence,retrieval_result,287,293888,O_researcher_12,"[""O_trader_12""]",20,36,output,,False,False,,0.0,248.61374999999998,False,"{""dynamic_hot_candidate"": true}"
+S_trade_12,planner_output,260,266240,O_trader_12,"[""O_risk_12"", ""O_manager""]",36,64,output,,False,False,,533.0,453.7134875,False,"{""dynamic_hot_candidate"": false}"
+S_risk_12,critic_feedback,247,252928,O_risk_12,"[""O_manager""]",52,64,output,,False,False,,0.0,342.3419999999999,False,"{""dynamic_hot_candidate"": true}"
+S_market_signal_13,retrieval,389,398336,,"[""O_analyst_13"", ""O_researcher_13""]",0,21,inline,,False,False,,408.45000000000005,332.149838125,True,{}
+S_analyst_13_view,intermediate_summary,219,224256,O_analyst_13,"[""O_trader_13""]",5,37,output,,False,False,,0.0,189.70875,False,"{""dynamic_hot_candidate"": true}"
+S_research_13_evidence,retrieval_result,225,230400,O_researcher_13,"[""O_trader_13""]",21,37,output,,False,False,,0.0,194.90625,False,"{""dynamic_hot_candidate"": true}"
+S_trade_13,planner_output,258,264192,O_trader_13,"[""O_risk_13"", ""O_manager""]",37,64,output,,False,False,,528.9,450.2233837499999,False,"{""dynamic_hot_candidate"": true}"
+S_risk_13,critic_feedback,249,254976,O_risk_13,"[""O_manager""]",53,64,output,,False,False,,0.0,345.11400000000003,False,"{""dynamic_hot_candidate"": true}"
+S_market_signal_14,retrieval,429,439296,,"[""O_analyst_14"", ""O_researcher_14""]",0,22,inline,,False,False,,450.45000000000005,366.30406312499997,True,{}
+S_analyst_14_view,intermediate_summary,245,250880,O_analyst_14,"[""O_trader_14""]",6,38,output,,False,False,,0.0,212.23125,False,"{""dynamic_hot_candidate"": true}"
+S_research_14_evidence,retrieval_result,272,278528,O_researcher_14,"[""O_trader_14""]",22,38,output,,False,False,,0.0,235.61999999999998,False,"{""dynamic_hot_candidate"": true}"
+S_trade_14,planner_output,183,187392,O_trader_14,"[""O_risk_14"", ""O_manager""]",38,64,output,,False,False,,375.15,319.344493125,False,"{""dynamic_hot_candidate"": true}"
+S_risk_14,critic_feedback,268,274432,O_risk_14,"[""O_manager""]",54,64,output,,False,False,,0.0,371.4479999999999,False,"{""dynamic_hot_candidate"": true}"
+S_market_signal_15,retrieval,422,432128,,"[""O_analyst_15"", ""O_researcher_15""]",0,23,inline,,False,False,,443.1,360.32707374999995,True,{}
+S_analyst_15_view,intermediate_summary,233,238592,O_analyst_15,"[""O_trader_15""]",7,39,output,,False,False,,0.0,201.83624999999998,False,"{""dynamic_hot_candidate"": true}"
+S_research_15_evidence,retrieval_result,227,232448,O_researcher_15,"[""O_trader_15""]",23,39,output,,False,False,,0.0,196.63875000000002,False,"{""dynamic_hot_candidate"": true}"
+S_trade_15,planner_output,263,269312,O_trader_15,"[""O_risk_15"", ""O_manager""]",39,64,output,,False,False,,539.15,458.9486431249999,False,"{""dynamic_hot_candidate"": true}"
+S_risk_15,critic_feedback,253,259072,O_risk_15,"[""O_manager""]",55,64,output,,False,False,,0.0,350.6579999999999,False,"{""dynamic_hot_candidate"": false}"
+S_portfolio_decision,output,219,224256,O_manager,[],64,64,output,,False,False,,0.0,0.0,True,"{""dynamic_hot_candidate"": true}"

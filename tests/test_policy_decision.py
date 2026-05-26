@@ -28,3 +28,22 @@ def test_memory_pressure_prevents_blind_replication():
     cfg = PolicyConfig(memory_pressure_critical=0.9)
     decision = decide_state_policy(_state(1000, 8, 12000), memory_pressure=0.96, config=cfg)
     assert decision.policy in {"pin", "shard"}
+
+
+def test_cache_kv_requires_prefix_compatibility():
+    state = _state(3000, 2, 10000)
+    state.materialized_form = "text"
+    state.kv_size_bytes = state.token_size * 1024
+    state.kv_cacheable = True
+    state.prefix_compatible = True
+    assert decide_state_policy(state).policy == "cache_kv"
+
+
+def test_non_prefix_intermediate_output_cannot_cache_kv():
+    state = _state(3000, 2, 10000)
+    state.kind = "output"
+    state.materialized_form = "output"
+    state.kv_size_bytes = state.token_size * 1024
+    state.kv_cacheable = True
+    state.prefix_compatible = False
+    assert decide_state_policy(state).policy != "cache_kv"

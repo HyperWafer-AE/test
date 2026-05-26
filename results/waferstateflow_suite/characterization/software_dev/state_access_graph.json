@@ -885,13 +885,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "task",
+      "kv_cacheable": true,
       "kv_size_bytes": 819200,
       "lifetime_end": 13,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "text",
       "metadata": {},
+      "prefix_compatible": true,
       "producer": null,
+      "prompt_position": 0,
       "state_id": "S_task",
       "static_hotness": 97760.0,
       "token_size": 800
@@ -916,13 +919,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "repo_context",
+      "kv_cacheable": true,
       "kv_size_bytes": 819200,
       "lifetime_end": 13,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "text",
       "metadata": {},
+      "prefix_compatible": true,
       "producer": null,
+      "prompt_position": 1,
       "state_id": "S_repo_context",
       "static_hotness": 97760.0,
       "token_size": 800
@@ -935,13 +941,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "coding_standards",
+      "kv_cacheable": true,
       "kv_size_bytes": 819200,
       "lifetime_end": 13,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "text",
       "metadata": {},
+      "prefix_compatible": true,
       "producer": null,
+      "prompt_position": 2,
       "state_id": "S_coding_standards",
       "static_hotness": 1600.0,
       "token_size": 800
@@ -956,13 +965,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "tool_schema",
+      "kv_cacheable": true,
       "kv_size_bytes": 819200,
       "lifetime_end": 4,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "text",
       "metadata": {},
+      "prefix_compatible": true,
       "producer": null,
+      "prompt_position": 3,
       "state_id": "S_tool_schema",
       "static_hotness": 5760.0,
       "token_size": 800
@@ -977,13 +989,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "test_plan",
+      "kv_cacheable": true,
       "kv_size_bytes": 819200,
       "lifetime_end": 8,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "text",
       "metadata": {},
+      "prefix_compatible": true,
       "producer": null,
+      "prompt_position": 4,
       "state_id": "S_test_plan",
       "static_hotness": 4800.0,
       "token_size": 800
@@ -998,6 +1013,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "planner_output",
+      "kv_cacheable": false,
       "kv_size_bytes": 257024,
       "lifetime_end": 4,
       "lifetime_start": 0,
@@ -1006,7 +1022,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_planner",
+      "prompt_position": null,
       "state_id": "S_plan",
       "static_hotness": 1807.2,
       "token_size": 251
@@ -1018,13 +1036,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "unique_context",
+      "kv_cacheable": false,
       "kv_size_bytes": 357376,
       "lifetime_end": 1,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "inline",
       "metadata": {},
+      "prefix_compatible": false,
       "producer": null,
+      "prompt_position": null,
       "state_id": "S_feature_slice_0",
       "static_hotness": 0.0,
       "token_size": 349
@@ -1037,6 +1058,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "output",
+      "kv_cacheable": false,
       "kv_size_bytes": 224256,
       "lifetime_end": 9,
       "lifetime_start": 1,
@@ -1045,7 +1067,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_coder_0",
+      "prompt_position": null,
       "state_id": "S_code_0",
       "static_hotness": 273.75,
       "token_size": 219
@@ -1057,6 +1081,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "critic_feedback",
+      "kv_cacheable": false,
       "kv_size_bytes": 252928,
       "lifetime_end": 9,
       "lifetime_start": 5,
@@ -1065,7 +1090,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_tester_0",
+      "prompt_position": null,
       "state_id": "S_test_result_0",
       "static_hotness": 0.0,
       "token_size": 247
@@ -1077,6 +1104,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "output",
+      "kv_cacheable": false,
       "kv_size_bytes": 215040,
       "lifetime_end": 13,
       "lifetime_start": 9,
@@ -1085,7 +1113,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_debugger_0",
+      "prompt_position": null,
       "state_id": "S_fixed_code_0",
       "static_hotness": 0.0,
       "token_size": 210
@@ -1097,13 +1127,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "unique_context",
+      "kv_cacheable": false,
       "kv_size_bytes": 418816,
       "lifetime_end": 2,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "inline",
       "metadata": {},
+      "prefix_compatible": false,
       "producer": null,
+      "prompt_position": null,
       "state_id": "S_feature_slice_1",
       "static_hotness": 0.0,
       "token_size": 409
@@ -1116,6 +1149,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "output",
+      "kv_cacheable": false,
       "kv_size_bytes": 230400,
       "lifetime_end": 10,
       "lifetime_start": 2,
@@ -1124,7 +1158,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_coder_1",
+      "prompt_position": null,
       "state_id": "S_code_1",
       "static_hotness": 281.25,
       "token_size": 225
@@ -1136,6 +1172,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "critic_feedback",
+      "kv_cacheable": false,
       "kv_size_bytes": 254976,
       "lifetime_end": 10,
       "lifetime_start": 6,
@@ -1144,7 +1181,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_tester_1",
+      "prompt_position": null,
       "state_id": "S_test_result_1",
       "static_hotness": 0.0,
       "token_size": 249
@@ -1156,6 +1195,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "output",
+      "kv_cacheable": false,
       "kv_size_bytes": 254976,
       "lifetime_end": 13,
       "lifetime_start": 10,
@@ -1164,7 +1204,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_debugger_1",
+      "prompt_position": null,
       "state_id": "S_fixed_code_1",
       "static_hotness": 0.0,
       "token_size": 249
@@ -1176,13 +1218,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "unique_context",
+      "kv_cacheable": false,
       "kv_size_bytes": 517120,
       "lifetime_end": 3,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "inline",
       "metadata": {},
+      "prefix_compatible": false,
       "producer": null,
+      "prompt_position": null,
       "state_id": "S_feature_slice_2",
       "static_hotness": 0.0,
       "token_size": 505
@@ -1195,6 +1240,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "output",
+      "kv_cacheable": false,
       "kv_size_bytes": 279552,
       "lifetime_end": 11,
       "lifetime_start": 3,
@@ -1203,7 +1249,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_coder_2",
+      "prompt_position": null,
       "state_id": "S_code_2",
       "static_hotness": 341.25,
       "token_size": 273
@@ -1215,6 +1263,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "critic_feedback",
+      "kv_cacheable": false,
       "kv_size_bytes": 193536,
       "lifetime_end": 11,
       "lifetime_start": 7,
@@ -1223,7 +1272,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_tester_2",
+      "prompt_position": null,
       "state_id": "S_test_result_2",
       "static_hotness": 0.0,
       "token_size": 189
@@ -1235,6 +1286,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "output",
+      "kv_cacheable": false,
       "kv_size_bytes": 292864,
       "lifetime_end": 13,
       "lifetime_start": 11,
@@ -1243,7 +1295,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_debugger_2",
+      "prompt_position": null,
       "state_id": "S_fixed_code_2",
       "static_hotness": 0.0,
       "token_size": 286
@@ -1255,13 +1309,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "unique_context",
+      "kv_cacheable": false,
       "kv_size_bytes": 364544,
       "lifetime_end": 4,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "inline",
       "metadata": {},
+      "prefix_compatible": false,
       "producer": null,
+      "prompt_position": null,
       "state_id": "S_feature_slice_3",
       "static_hotness": 0.0,
       "token_size": 356
@@ -1274,6 +1331,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "output",
+      "kv_cacheable": false,
       "kv_size_bytes": 281600,
       "lifetime_end": 12,
       "lifetime_start": 4,
@@ -1282,7 +1340,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_coder_3",
+      "prompt_position": null,
       "state_id": "S_code_3",
       "static_hotness": 343.75,
       "token_size": 275
@@ -1294,6 +1354,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "critic_feedback",
+      "kv_cacheable": false,
       "kv_size_bytes": 274432,
       "lifetime_end": 12,
       "lifetime_start": 8,
@@ -1302,7 +1363,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_tester_3",
+      "prompt_position": null,
       "state_id": "S_test_result_3",
       "static_hotness": 0.0,
       "token_size": 268
@@ -1314,6 +1377,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "output",
+      "kv_cacheable": false,
       "kv_size_bytes": 289792,
       "lifetime_end": 13,
       "lifetime_start": 12,
@@ -1322,7 +1386,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_debugger_3",
+      "prompt_position": null,
       "state_id": "S_fixed_code_3",
       "static_hotness": 0.0,
       "token_size": 283
@@ -1332,6 +1398,7 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "output",
+      "kv_cacheable": false,
       "kv_size_bytes": 247808,
       "lifetime_end": 13,
       "lifetime_start": 13,
@@ -1340,7 +1407,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_reviewer",
+      "prompt_position": null,
       "state_id": "S_reviewed_patch",
       "static_hotness": 0.0,
       "token_size": 242

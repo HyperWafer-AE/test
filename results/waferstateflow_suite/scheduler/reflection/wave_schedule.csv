@@ -1,30 +1,30 @@
-wave_id,baseline,scheduler,seed_state_id,operator_ids,region_ids,start_time,end_time,batch_size,materialization_bytes,movement_byte_hop,benefit,wait_penalty
-0,flat_sequential,flat_sequential,,"[""O_expert_draft""]","[""R_0_0""]",0.0,6.050003201875,1,12000,12000,0.0,0.0
-1,flat_sequential,flat_sequential,,"[""O_critic_0""]","[""R_0_0""]",6.050003201875,11.3000064035,1,10400,10400,0.0,0.0
-2,flat_sequential,flat_sequential,,"[""O_critic_1""]","[""R_0_0""]",11.3000064035,16.644009605154373,1,10588,10588,0.0,0.0
-3,flat_sequential,flat_sequential,,"[""O_critic_2""]","[""R_0_0""]",16.644009605154373,22.098012806843123,1,10808,10808,0.0,0.0
-4,flat_sequential,flat_sequential,,"[""O_revise""]","[""R_0_0""]",22.098012806843123,28.12201600871,1,11948,11948,0.0,0.0
-0,request_parallel_gpu_like,request_parallel_gpu_like,,"[""O_expert_draft""]","[""R_0_0""]",0.0,6.050003201875,1,12000,12000,1.0,0.0
-1,request_parallel_gpu_like,request_parallel_gpu_like,,"[""O_critic_0"", ""O_critic_1"", ""O_critic_2""]","[""R_0_0"", ""R_0_15"", ""R_15_0""]",6.050003201875,11.504006406218124,3,27796,27796,3.0,0.0
-2,request_parallel_gpu_like,request_parallel_gpu_like,,"[""O_revise""]","[""R_0_0""]",11.504006406218124,17.528009606678125,1,2944,2944,1.0,0.0
-0,prefix_cache_like,prefix_cache_like,,"[""O_expert_draft""]","[""R_0_0""]",0.0,6.050003201875,1,12000,12000,1.0,0.0
-1,prefix_cache_like,prefix_cache_like,,"[""O_critic_0"", ""O_critic_1"", ""O_critic_2""]","[""R_0_0"", ""R_0_15"", ""R_15_0""]",6.050003201875,11.504006404968123,3,19796,19796,3.0,0.0
-2,prefix_cache_like,prefix_cache_like,,"[""O_revise""]","[""R_0_0""]",11.504006404968123,17.528009605584998,1,3948,3948,1.0,0.0
-0,helium_like_operator_schedule,operator_centric,,"[""O_expert_draft""]","[""R_0_0""]",0.0,6.050003201875,1,12000,12000,1.0,0.0
-1,helium_like_operator_schedule,operator_centric,,"[""O_critic_0"", ""O_critic_1"", ""O_critic_2""]","[""R_0_0"", ""R_0_15"", ""R_15_0""]",6.050003201875,10.693406403404374,3,9788,9788,3.0,0.0
-2,helium_like_operator_schedule,operator_centric,,"[""O_revise""]","[""R_0_0""]",10.693406403404374,16.717409603864375,1,2944,2944,1.0,0.0
-0,kvflow_like_future_eviction,operator_centric,,"[""O_expert_draft""]","[""R_0_0""]",0.0,6.050003201875,1,12000,12000,1.0,0.0
-1,kvflow_like_future_eviction,operator_centric,,"[""O_critic_0"", ""O_critic_1"", ""O_critic_2""]","[""R_0_0"", ""R_0_15"", ""R_15_0""]",6.050003201875,10.693406403404374,3,9788,9788,3.0,0.0
-2,kvflow_like_future_eviction,operator_centric,,"[""O_revise""]","[""R_0_0""]",10.693406403404374,16.717409603864375,1,2944,2944,1.0,0.0
-0,wafer_request_centric,wafer_request_centric,,"[""O_expert_draft""]","[""R_0_0""]",0.0,6.05,1,12000,0,1.0,0.0
-1,wafer_request_centric,wafer_request_centric,,"[""O_critic_0"", ""O_critic_1"", ""O_critic_2""]","[""R_0_0"", ""R_0_15"", ""R_15_0""]",6.05,11.504018597599998,3,27796,98544640,3.0,0.0
-2,wafer_request_centric,wafer_request_centric,,"[""O_revise""]","[""R_0_0""]",11.504018597599998,17.5280221992,1,2944,2570240,1.0,0.0
-0,replicate_all_hot_states,replicate_all_hot_states,,"[""O_expert_draft""]","[""R_0_0""]",0.0,6.05,1,12000,0,1.0,0.0
-1,replicate_all_hot_states,replicate_all_hot_states,,"[""O_critic_0"", ""O_critic_1"", ""O_critic_2""]","[""R_0_0"", ""R_0_15"", ""R_15_0""]",6.05,11.5040121976,3,11796,57584640,3.0,0.0
-2,replicate_all_hot_states,replicate_all_hot_states,,"[""O_revise""]","[""R_0_0""]",11.5040121976,17.5280157992,1,3948,2570240,1.0,0.0
-0,single_pin_hot_state,single_pin_hot_state,,"[""O_expert_draft""]","[""R_0_0""]",0.0,6.05,1,12000,0,1.0,0.0
-1,single_pin_hot_state,single_pin_hot_state,,"[""O_critic_0"", ""O_critic_1"", ""O_critic_2""]","[""R_0_0"", ""R_0_15"", ""R_15_0""]",6.05,11.504018597599998,3,11796,98544640,3.0,0.0
-2,single_pin_hot_state,single_pin_hot_state,,"[""O_revise""]","[""R_0_0""]",11.504018597599998,17.5280221992,1,3948,2570240,1.0,0.0
-0,WaferStateFlow,WaferStateFlow,,"[""O_expert_draft""]","[""R_0_0""]",0.0,6.05,1,12000,0,0.0,0.0
-1,WaferStateFlow,WaferStateFlow,S_task,"[""O_critic_0"", ""O_critic_1"", ""O_critic_2""]","[""R_0_0"", ""R_0_0"", ""R_0_0""]",6.05,9.990879999999999,3,9788,0,15183.35,18.15
-2,WaferStateFlow,WaferStateFlow,,"[""O_revise""]","[""R_0_0""]",9.990879999999999,16.014879999999998,1,2944,0,0.0,4.0
+wave_id,baseline,scheduler,seed_state_id,operator_ids,region_ids,start_time,end_time,batch_size,materialization_bytes,movement_byte_hop,max_link_load_delta,benefit,wait_penalty
+0,flat_sequential,flat_sequential,,"[""O_expert_draft""]","[""R_0_0""]",0.0,6.050003201875,1,12000,12000,0,0.0,0.0
+1,flat_sequential,flat_sequential,,"[""O_critic_0""]","[""R_0_0""]",6.050003201875,11.3000064035,1,10400,10400,0,0.0,0.0
+2,flat_sequential,flat_sequential,,"[""O_critic_1""]","[""R_0_0""]",11.3000064035,16.644009605154373,1,10588,10588,0,0.0,0.0
+3,flat_sequential,flat_sequential,,"[""O_critic_2""]","[""R_0_0""]",16.644009605154373,22.098012806843123,1,10808,10808,0,0.0,0.0
+4,flat_sequential,flat_sequential,,"[""O_revise""]","[""R_0_0""]",22.098012806843123,28.12201600871,1,11948,11948,0,0.0,0.0
+0,request_parallel_gpu_like,request_parallel_gpu_like,,"[""O_expert_draft""]","[""R_0_0""]",0.0,6.050003201875,1,12000,12000,0,1.0,0.0
+1,request_parallel_gpu_like,request_parallel_gpu_like,,"[""O_critic_0"", ""O_critic_1"", ""O_critic_2""]","[""R_0_0"", ""R_0_15"", ""R_15_0""]",6.050003201875,11.504006406218124,3,27796,27796,0,3.0,0.0
+2,request_parallel_gpu_like,request_parallel_gpu_like,,"[""O_revise""]","[""R_0_0""]",11.504006406218124,17.528009606678125,1,2944,2944,0,1.0,0.0
+0,prefix_cache_like,prefix_cache_like,,"[""O_expert_draft""]","[""R_0_0""]",0.0,6.050003201875,1,12000,12000,0,1.0,0.0
+1,prefix_cache_like,prefix_cache_like,,"[""O_critic_0"", ""O_critic_1"", ""O_critic_2""]","[""R_0_0"", ""R_0_15"", ""R_15_0""]",6.050003201875,11.504006403718124,3,11796,11796,0,3.0,0.0
+2,prefix_cache_like,prefix_cache_like,,"[""O_revise""]","[""R_0_0""]",11.504006403718124,17.528009604334997,1,3948,3948,0,1.0,0.0
+0,helium_like_operator_schedule,helium_like_operator_schedule,,"[""O_expert_draft""]","[""R_0_0""]",0.0,6.050003201875,1,12000,12000,0,1.0,0.0
+1,helium_like_operator_schedule,helium_like_operator_schedule,,"[""O_critic_0"", ""O_critic_1"", ""O_critic_2""]","[""R_0_0"", ""R_0_15"", ""R_15_0""]",6.050003201875,11.504006403404375,3,9788,9788,0,3.0,0.0
+2,helium_like_operator_schedule,helium_like_operator_schedule,,"[""O_revise""]","[""R_0_0""]",11.504006403404375,17.528009603864376,1,2944,2944,0,1.0,0.0
+0,kvflow_like_future_eviction,operator_centric,,"[""O_expert_draft""]","[""R_0_0""]",0.0,6.050003201875,1,12000,12000,0,1.0,0.0
+1,kvflow_like_future_eviction,operator_centric,,"[""O_critic_0"", ""O_critic_1"", ""O_critic_2""]","[""R_0_0"", ""R_0_15"", ""R_15_0""]",6.050003201875,11.504006403404375,3,9788,9788,0,3.0,0.0
+2,kvflow_like_future_eviction,operator_centric,,"[""O_revise""]","[""R_0_0""]",11.504006403404375,17.528009603864376,1,2944,2944,0,1.0,0.0
+0,wafer_request_centric,wafer_request_centric,,"[""O_expert_draft""]","[""R_0_0""]",0.0,6.05,1,12000,0,0,1.0,0.0
+1,wafer_request_centric,wafer_request_centric,,"[""O_critic_0"", ""O_critic_1"", ""O_critic_2""]","[""R_0_0"", ""R_0_15"", ""R_15_0""]",6.05,11.504018597599998,3,27796,98544640,3324928,3.0,0.0
+2,wafer_request_centric,wafer_request_centric,,"[""O_revise""]","[""R_0_0""]",11.504018597599998,17.5280221992,1,2944,2570240,257024,1.0,0.0
+0,replicate_all_hot_states,replicate_all_hot_states,,"[""O_expert_draft""]","[""R_0_0""]",0.0,6.05,1,12000,0,0,1.0,0.0
+1,replicate_all_hot_states,replicate_all_hot_states,,"[""O_critic_0"", ""O_critic_1"", ""O_critic_2""]","[""R_0_0"", ""R_0_15"", ""R_15_0""]",6.05,11.5040121976,3,11796,57584640,1686528,3.0,0.0
+2,replicate_all_hot_states,replicate_all_hot_states,,"[""O_revise""]","[""R_0_0""]",11.5040121976,17.5280157992,1,3948,2570240,257024,1.0,0.0
+0,single_pin_hot_state,single_pin_hot_state,,"[""O_expert_draft""]","[""R_0_0""]",0.0,6.05,1,12000,0,0,1.0,0.0
+1,single_pin_hot_state,single_pin_hot_state,,"[""O_critic_0"", ""O_critic_1"", ""O_critic_2""]","[""R_0_0"", ""R_0_15"", ""R_15_0""]",6.05,11.504018597599998,3,11796,98544640,3324928,3.0,0.0
+2,single_pin_hot_state,single_pin_hot_state,,"[""O_revise""]","[""R_0_0""]",11.504018597599998,17.5280221992,1,3948,2570240,257024,1.0,0.0
+0,WaferStateFlow,WaferStateFlow,,"[""O_expert_draft""]","[""R_0_0""]",0.0,6.05,1,12000,0,0,0.0,0.0
+1,WaferStateFlow,WaferStateFlow,S_task,"[""O_critic_0"", ""O_critic_1"", ""O_critic_2""]","[""R_0_0"", ""R_0_0"", ""R_0_0""]",6.05,11.504,3,11796,0,0,15183.35,18.15
+2,WaferStateFlow,WaferStateFlow,,"[""O_revise""]","[""R_0_0""]",11.504,17.528,1,3948,0,0,0.0,4.0

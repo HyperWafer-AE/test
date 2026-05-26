@@ -3,9 +3,7 @@
 from __future__ import annotations
 
 import json
-import math
-from dataclasses import asdict, dataclass
-from typing import Any
+from dataclasses import asdict, dataclass, field
 
 from .hotness import HotnessTracker, initialize_static_hotness
 from .ir import OperatorNode, StateAccessGraph, StateNode
@@ -28,11 +26,17 @@ BASELINES = (
 
 
 @dataclass(frozen=True)
-class SimulationConfig:
-    worker_count: int = 8
+class BackendProfile:
     prefill_time_per_token: float = 0.002
     decode_time_per_token: float = 0.006
     local_op_time: float = 0.1
+    batch_prefill_multiplier: float = 1.0
+
+
+@dataclass(frozen=True)
+class SimulationConfig:
+    worker_count: int = 8
+    backend_profile: BackendProfile = field(default_factory=BackendProfile)
     wave_launch_overhead: float = 0.05
     gpu_worker_cache_bytes: int = 128 * 1024 * 1024
     global_cache_bytes: int = 512 * 1024 * 1024
@@ -46,6 +50,9 @@ class SimulationResult:
     state_materialization_bytes: int
     state_movement_byte_hop: int
     max_link_utilization: float
+    max_link_load: int
+    p95_link_load: float
+    hotspot_region: str
     region_memory_pressure: float
     critical_path_wait: float
     average_wave_batch_size: float
@@ -62,6 +69,7 @@ class SimulationRun:
     result: SimulationResult
     wave_schedule: list[dict[str, object]]
     policy_decisions: list[PolicyDecision]
+    state_access_events: list[dict[str, object]]
 
 
 def run_all_baselines(
@@ -97,7 +105,6 @@ def simulate_workflow(
     policy_by_state = {decision.state_id: decision for decision in policies}
     worker_regions = _worker_regions(topo, cfg.worker_count)
     hot_state_ids = _hot_state_ids(graph)
-    kvflow_cached = _choose_kvflow_cache(graph, cfg.global_cache_bytes)
 
     scheduler = _scheduler_for_baseline(baseline, cfg)
     completed: set[str] = set()
@@ -107,6 +114,8 @@ def simulate_workflow(
     wave_sizes: list[int] = []
     materialization_bytes = 0
     movement_byte_hop = 0
+    link_loads: dict[tuple[str, str], int] = {}
+    state_access_events: list[dict[str, object]] = []
     critical_wait = 0.0
     worker_caches: dict[str, set[str]] = {region: set() for region in worker_regions}
     global_cache: set[str] = set()
@@ -128,18 +137,26 @@ def simulate_workflow(
 
         wave_mat = 0
         wave_move = 0
+        wave_link_load_start = dict(link_loads)
         for op_id, region in zip(selected, selected_regions):
             op = graph.operators[op_id]
             for state_id in op.input_states:
                 state = graph.states[state_id]
+                hotness_before = state.dynamic_hotness
+                policy_before = policy_by_state[state_id].policy
                 tracker.observe_access(state_id, op)
+                if baseline == "WaferStateFlow" and state_policy == "dynamic":
+                    policy_by_state[state_id] = decide_state_policy(
+                        state,
+                        hotness=tracker.dynamic_hotness.get(state_id, 0.0),
+                        memory_pressure=_memory_pressure(region_memory_used, topo),
+                    )
                 charge, cache_note = _materialization_charge(
                     baseline,
                     state,
                     region,
                     worker_caches,
                     global_cache,
-                    kvflow_cached,
                     hot_state_ids,
                     policy_by_state,
                     wave.seed_state_id,
@@ -158,13 +175,34 @@ def simulate_workflow(
                     region_memory_used,
                 )
                 if _uses_wafer_movement(baseline):
-                    wave_move += topo.movement_byte_hop(state, placement, region)
+                    state_move = topo.add_state_transfer(link_loads, state, placement, region)
+                    wave_move += state_move
                 elif charge > 0:
+                    state_move = charge
                     wave_move += charge
+                else:
+                    state_move = 0
                 if cache_note == "global":
-                    global_cache.add(state_id)
+                    _admit_global_cache(baseline, state_id, global_cache, graph, cfg, completed)
                 elif cache_note == "worker":
                     worker_caches[region].add(state_id)
+                state_access_events.append(
+                    {
+                        "baseline": baseline,
+                        "wave_id": len(wave_rows),
+                        "time": current_time,
+                        "operator_id": op_id,
+                        "state_id": state_id,
+                        "region_id": region,
+                        "policy_before": policy_before,
+                        "policy_after": policy_by_state[state_id].policy,
+                        "dynamic_hotness_before": hotness_before,
+                        "dynamic_hotness_after": state.dynamic_hotness,
+                        "materialization_bytes": int(charge),
+                        "movement_byte_hop": int(state_move),
+                        "cache_hit": bool(charge == 0),
+                    }
+                )
 
         op_times = [_operator_time(graph.operators[op_id], baseline, len(selected), cfg) for op_id in selected]
         movement_time = _movement_time(wave_move, topo)
@@ -195,6 +233,7 @@ def simulate_workflow(
                 "batch_size": len(selected),
                 "materialization_bytes": int(wave_mat),
                 "movement_byte_hop": int(wave_move),
+                "max_link_load_delta": int(_max_link_delta(wave_link_load_start, link_loads)),
                 "benefit": wave.benefit,
                 "wait_penalty": wave.wait_penalty,
             }
@@ -217,12 +256,18 @@ def simulate_workflow(
             default=0.0,
         )
 
+    link_summary = topo.link_load_summary(link_loads)
     result = SimulationResult(
         baseline=baseline,
         workflow_latency=current_time,
         state_materialization_bytes=materialization_bytes,
         state_movement_byte_hop=movement_byte_hop,
-        max_link_utilization=_max_link_utilization(movement_byte_hop, topo, max(current_time, 1e-9)),
+        max_link_utilization=_max_link_utilization(
+            int(link_summary["max_link_load"]), topo, max(current_time, 1e-9)
+        ),
+        max_link_load=int(link_summary["max_link_load"]),
+        p95_link_load=float(link_summary["p95_link_load"]),
+        hotspot_region=str(link_summary["hotspot_region"]),
         region_memory_pressure=region_pressure,
         critical_path_wait=critical_wait,
         average_wave_batch_size=sum(wave_sizes) / len(wave_sizes) if wave_sizes else 0.0,
@@ -230,7 +275,7 @@ def simulate_workflow(
         duplicate_state_materialization_bytes=duplicate_bytes,
         notes=_baseline_note(baseline),
     )
-    return SimulationRun(result, wave_rows, policies)
+    return SimulationRun(result, wave_rows, list(policy_by_state.values()), state_access_events)
 
 
 def _scheduler_for_baseline(baseline: str, cfg: SimulationConfig):
@@ -260,18 +305,30 @@ def _next_wave_for_baseline(
     }:
         selected = tuple(ready[:8])
         return Wave(len(completed), baseline, selected, None, float(len(selected)), 0.0)
+    if baseline == "helium_like_operator_schedule":
+        groups: dict[tuple[str, ...], list[str]] = {}
+        for op_id in ready:
+            template = tuple(
+                state_id
+                for state_id in graph.operators[op_id].input_states
+                if graph.states[state_id].prefix_compatible
+            )
+            groups.setdefault(template, []).append(op_id)
+        selected = max(groups.values(), key=lambda op_ids: (len(op_ids), -ready.index(op_ids[0])))
+        selected = selected[:8]
+        return Wave(len(completed), baseline, tuple(selected), None, float(len(selected)), 0.0)
     return scheduler.next_wave(graph, completed, current_time)
 
 
 def _operator_time(op: OperatorNode, baseline: str, batch_size: int, cfg: SimulationConfig) -> float:
     if op.kind != "llm":
-        return cfg.local_op_time
-    prefill = op.estimated_input_tokens * cfg.prefill_time_per_token
-    decode = op.estimated_output_tokens * cfg.decode_time_per_token
-    if baseline == "WaferStateFlow" and batch_size > 1:
-        prefill *= 0.72
-    elif baseline in {"helium_like_operator_schedule", "kvflow_like_future_eviction"} and batch_size > 1:
-        prefill *= 0.85
+        return cfg.backend_profile.local_op_time
+    prefill = (
+        op.estimated_input_tokens
+        * cfg.backend_profile.prefill_time_per_token
+        * cfg.backend_profile.batch_prefill_multiplier
+    )
+    decode = op.estimated_output_tokens * cfg.backend_profile.decode_time_per_token
     return prefill + decode
 
 
@@ -281,7 +338,6 @@ def _materialization_charge(
     region: str,
     worker_caches: dict[str, set[str]],
     global_cache: set[str],
-    kvflow_cached: set[str],
     hot_state_ids: set[str],
     policy_by_state: dict[str, PolicyDecision],
     seed_state_id: str | None,
@@ -296,14 +352,7 @@ def _materialization_charge(
             return 0, "worker"
         return size, "worker"
     if baseline == "prefix_cache_like":
-        is_prefix_like = state.producer is None and state.kind in {
-            "task",
-            "document",
-            "market_context",
-            "repo_context",
-            "role_instruction",
-            "tool_schema",
-        }
+        is_prefix_like = state.producer is None and state.prefix_compatible
         if is_prefix_like and state.state_id in global_cache:
             return 0, "global"
         return size, "global" if is_prefix_like else ""
@@ -312,9 +361,11 @@ def _materialization_charge(
             return 0, "global"
         return size if state.state_id in _unique_inputs_for_wave(wave_ops, graph) else 0, "global"
     if baseline == "kvflow_like_future_eviction":
-        if state.state_id in kvflow_cached and state.state_id in global_cache:
+        if state.state_id in global_cache:
             return 0, "global"
-        return size, "global" if state.state_id in kvflow_cached else ""
+        if len(state.consumers) > 1:
+            return size, "global"
+        return size, ""
     if baseline == "replicate_all_hot_states":
         if state.state_id in hot_state_ids and state.state_id in global_cache:
             return 0, "global"
@@ -367,10 +418,8 @@ def _placement_for_state(
         policy = "inline"
     placement = topology.place_state(state, policy, selected_regions)
     placements[state.state_id] = placement
-    per_region = math.ceil(state.materialized_size_bytes / max(1, len(placement.regions)))
-    for region in placement.regions:
-        multiplier = 1 if policy == "shard" else len(placement.regions)
-        region_memory_used[region] = region_memory_used.get(region, 0) + per_region * multiplier
+    for region, bytes_ in topology.placement_region_memory_bytes(state, policy, placement.regions).items():
+        region_memory_used[region] = region_memory_used.get(region, 0) + bytes_
     return placement
 
 
@@ -423,11 +472,7 @@ def _decide_policies(
     for state in graph.states.values():
         hotness = state.static_hotness
         if state.metadata.get("dynamic_hot_candidate"):
-            if state_policy == "static":
-                hotness = min(hotness, state.token_size * 0.1)
-            elif state_policy == "dynamic":
-                observed_runtime_value = state.token_size * max(1, len(state.consumers) - 1) * 10.0
-                hotness = max(hotness, state.dynamic_hotness, observed_runtime_value)
+            hotness = min(hotness, state.token_size * 0.1)
         decision = decide_state_policy(state, hotness=hotness, memory_pressure=0.0)
         decisions.append(decision)
     return decisions
@@ -443,22 +488,6 @@ def _hot_state_ids(graph: StateAccessGraph) -> set[str]:
     return {state.state_id for state in rows[:cutoff] if len(state.consumers) > 1}
 
 
-def _choose_kvflow_cache(graph: StateAccessGraph, capacity_bytes: int) -> set[str]:
-    cached: set[str] = set()
-    used = 0
-    for state in sorted(
-        graph.states.values(),
-        key=lambda item: item.materialized_size_bytes * max(0, len(item.consumers) - 1),
-        reverse=True,
-    ):
-        if len(state.consumers) <= 1:
-            continue
-        if used + state.materialized_size_bytes <= capacity_bytes:
-            cached.add(state.state_id)
-            used += state.materialized_size_bytes
-    return cached
-
-
 def _movement_time(byte_hop: int, topology: WaferTopology) -> float:
     if byte_hop <= 0:
         return 0.0
@@ -467,10 +496,57 @@ def _movement_time(byte_hop: int, topology: WaferTopology) -> float:
     return bytes_moved / topology.link_bandwidth_bytes + topology.hop_latency * avg_hops
 
 
-def _max_link_utilization(byte_hop: int, topology: WaferTopology, latency: float) -> float:
-    links = max(1, 2 * topology.mesh_x * (topology.mesh_y - 1) + 2 * topology.mesh_y * (topology.mesh_x - 1))
+def _max_link_utilization(max_link_load: int, topology: WaferTopology, latency: float) -> float:
     byte_seconds_capacity = topology.link_bandwidth_bytes * latency
-    return min(1.0, (byte_hop / links) / max(1.0, byte_seconds_capacity))
+    return min(1.0, max_link_load / max(1.0, byte_seconds_capacity))
+
+
+def _memory_pressure(region_memory_used: dict[str, int], topology: WaferTopology) -> float:
+    return max(region_memory_used.values(), default=0) / max(1, topology.region_memory_capacity)
+
+
+def _max_link_delta(
+    before: dict[tuple[str, str], int],
+    after: dict[tuple[str, str], int],
+) -> int:
+    return max((after.get(link, 0) - before.get(link, 0) for link in after), default=0)
+
+
+def _admit_global_cache(
+    baseline: str,
+    state_id: str,
+    global_cache: set[str],
+    graph: StateAccessGraph,
+    config: SimulationConfig,
+    completed: set[str],
+) -> None:
+    if baseline != "kvflow_like_future_eviction":
+        global_cache.add(state_id)
+        return
+
+    candidates = set(global_cache)
+    candidates.add(state_id)
+    ordered = sorted(
+        candidates,
+        key=lambda sid: (
+            _future_access_count(graph, sid, completed) * graph.states[sid].materialized_size_bytes,
+            graph.states[sid].materialized_size_bytes,
+        ),
+        reverse=True,
+    )
+    global_cache.clear()
+    used = 0
+    for sid in ordered:
+        size = graph.states[sid].materialized_size_bytes
+        if _future_access_count(graph, sid, completed) <= 0:
+            continue
+        if used + size <= config.global_cache_bytes:
+            global_cache.add(sid)
+            used += size
+
+
+def _future_access_count(graph: StateAccessGraph, state_id: str, completed: set[str]) -> int:
+    return sum(1 for op_id in graph.states[state_id].consumers if op_id not in completed)
 
 
 def _uses_wafer_movement(baseline: str) -> bool:
@@ -484,14 +560,14 @@ def _uses_wafer_movement(baseline: str) -> bool:
 
 def _baseline_note(baseline: str) -> str:
     notes = {
-        "flat_sequential": "sequential flat prompt materialization; no cache or parallelism",
-        "request_parallel_gpu_like": "ready requests assigned to worker-local caches",
-        "prefix_cache_like": "only exact root prefix-like states are globally reused",
-        "helium_like_operator_schedule": "operator-centric wave with per-wave unique-state reuse",
-        "kvflow_like_future_eviction": "future-aware cache admits highest token-weighted fanout states",
-        "wafer_request_centric": "wafer backend without state-centric wave formation",
-        "replicate_all_hot_states": "ablation that blindly replicates hot states",
-        "single_pin_hot_state": "ablation that pins hot states centrally and exposes hotspots",
-        "WaferStateFlow": "hot-state-seeded wave scheduling with policy-driven placement",
+        "flat_sequential": "approximate: sequential flat prompt materialization; no cache or parallelism",
+        "request_parallel_gpu_like": "approximate: ready requests assigned to worker-local caches",
+        "prefix_cache_like": "approximate: only exact root prefix-compatible states are globally reused",
+        "helium_like_operator_schedule": "approximate: groups ready operators by shared prefix/state template",
+        "kvflow_like_future_eviction": "approximate: future-use cache admission/eviction under capacity",
+        "wafer_request_centric": "approximate: wafer backend without state-centric wave formation",
+        "replicate_all_hot_states": "ablation: blindly replicates hot states",
+        "single_pin_hot_state": "ablation: pins hot states centrally and exposes hotspots",
+        "WaferStateFlow": "approximate: hot-state-seeded wave scheduling with policy-driven placement",
     }
     return notes[baseline]

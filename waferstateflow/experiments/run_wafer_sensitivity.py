@@ -31,6 +31,7 @@ def main(argv: list[str] | None = None) -> None:
     rows = []
     wave_rows = []
     policy_rows = []
+    access_rows = []
     last_graph = None
     last_analysis = None
 
@@ -83,6 +84,17 @@ def main(argv: list[str] | None = None) -> None:
                                 }
                             )
                             wave_rows.append(wave)
+                        for event in run.state_access_events:
+                            event = dict(event)
+                            event.update(
+                                {
+                                    "mesh": mesh,
+                                    "region_memory_capacity": memory_cap,
+                                    "shared_state_size": shared_size,
+                                    "branch_width": branches,
+                                }
+                            )
+                            access_rows.append(event)
                         for decision in run.policy_decisions:
                             prow = decision.to_row()
                             prow.update(
@@ -115,6 +127,7 @@ def main(argv: list[str] | None = None) -> None:
     write_csv(out / "state_hotness.csv", last_analysis["state_hotness"])
     write_csv(out / "policy_decisions.csv", policy_rows)
     write_csv(out / "wave_schedule.csv", wave_rows)
+    write_csv(out / "state_access_events.csv", access_rows)
     write_csv(out / "simulation_summary.csv", rows)
     _write_report(out / "report.md", rows)
     _write_figures(out / "figures", rows)

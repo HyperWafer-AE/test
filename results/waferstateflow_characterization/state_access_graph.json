@@ -4043,13 +4043,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "task",
+      "kv_cacheable": true,
       "kv_size_bytes": 819200,
       "lifetime_end": 64,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "text",
       "metadata": {},
+      "prefix_compatible": true,
       "producer": null,
+      "prompt_position": 0,
       "state_id": "S_task",
       "static_hotness": 2232320.0,
       "token_size": 800
@@ -4125,13 +4128,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "market_context",
+      "kv_cacheable": true,
       "kv_size_bytes": 819200,
       "lifetime_end": 64,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "text",
       "metadata": {},
+      "prefix_compatible": true,
       "producer": null,
+      "prompt_position": 1,
       "state_id": "S_market_context",
       "static_hotness": 2232320.0,
       "token_size": 800
@@ -4159,13 +4165,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "risk_policy",
+      "kv_cacheable": true,
       "kv_size_bytes": 819200,
       "lifetime_end": 64,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "text",
       "metadata": {},
+      "prefix_compatible": true,
       "producer": null,
+      "prompt_position": 2,
       "state_id": "S_risk_policy",
       "static_hotness": 189440.0,
       "token_size": 800
@@ -4192,13 +4201,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "tool_schema",
+      "kv_cacheable": true,
       "kv_size_bytes": 819200,
       "lifetime_end": 31,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "text",
       "metadata": {},
+      "prefix_compatible": true,
       "producer": null,
+      "prompt_position": 3,
       "state_id": "S_tool_schema",
       "static_hotness": 96000.0,
       "token_size": 800
@@ -4225,13 +4237,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "role_instruction",
+      "kv_cacheable": true,
       "kv_size_bytes": 819200,
       "lifetime_end": 15,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "text",
       "metadata": {},
+      "prefix_compatible": true,
       "producer": null,
+      "prompt_position": 4,
       "state_id": "S_role_instruction",
       "static_hotness": 105600.00000000001,
       "token_size": 800
@@ -4244,13 +4259,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "retrieval",
+      "kv_cacheable": false,
       "kv_size_bytes": 455680,
       "lifetime_end": 16,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "inline",
       "metadata": {},
+      "prefix_compatible": false,
       "producer": null,
+      "prompt_position": null,
       "state_id": "S_market_signal_0",
       "static_hotness": 467.25,
       "token_size": 445
@@ -4262,6 +4280,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "intermediate_summary",
+      "kv_cacheable": false,
       "kv_size_bytes": 212992,
       "lifetime_end": 32,
       "lifetime_start": 0,
@@ -4270,7 +4289,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_analyst_0",
+      "prompt_position": null,
       "state_id": "S_analyst_0_view",
       "static_hotness": 0.0,
       "token_size": 208
@@ -4282,6 +4303,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "retrieval_result",
+      "kv_cacheable": false,
       "kv_size_bytes": 224256,
       "lifetime_end": 32,
       "lifetime_start": 16,
@@ -4290,7 +4312,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_researcher_0",
+      "prompt_position": null,
       "state_id": "S_research_0_evidence",
       "static_hotness": 0.0,
       "token_size": 219
@@ -4303,6 +4327,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "planner_output",
+      "kv_cacheable": false,
       "kv_size_bytes": 252928,
       "lifetime_end": 64,
       "lifetime_start": 32,
@@ -4311,7 +4336,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_trader_0",
+      "prompt_position": null,
       "state_id": "S_trade_0",
       "static_hotness": 506.34999999999997,
       "token_size": 247
@@ -4323,6 +4350,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "critic_feedback",
+      "kv_cacheable": false,
       "kv_size_bytes": 215040,
       "lifetime_end": 64,
       "lifetime_start": 48,
@@ -4331,7 +4359,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_risk_0",
+      "prompt_position": null,
       "state_id": "S_risk_0",
       "static_hotness": 0.0,
       "token_size": 210
@@ -4344,13 +4374,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "retrieval",
+      "kv_cacheable": false,
       "kv_size_bytes": 418816,
       "lifetime_end": 17,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "inline",
       "metadata": {},
+      "prefix_compatible": false,
       "producer": null,
+      "prompt_position": null,
       "state_id": "S_market_signal_1",
       "static_hotness": 429.45000000000005,
       "token_size": 409
@@ -4362,6 +4395,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "intermediate_summary",
+      "kv_cacheable": false,
       "kv_size_bytes": 230400,
       "lifetime_end": 33,
       "lifetime_start": 1,
@@ -4370,7 +4404,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_analyst_1",
+      "prompt_position": null,
       "state_id": "S_analyst_1_view",
       "static_hotness": 0.0,
       "token_size": 225
@@ -4382,6 +4418,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "retrieval_result",
+      "kv_cacheable": false,
       "kv_size_bytes": 254976,
       "lifetime_end": 33,
       "lifetime_start": 17,
@@ -4390,7 +4427,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_researcher_1",
+      "prompt_position": null,
       "state_id": "S_research_1_evidence",
       "static_hotness": 0.0,
       "token_size": 249
@@ -4403,6 +4442,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "planner_output",
+      "kv_cacheable": false,
       "kv_size_bytes": 254976,
       "lifetime_end": 64,
       "lifetime_start": 33,
@@ -4411,7 +4451,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_trader_1",
+      "prompt_position": null,
       "state_id": "S_trade_1",
       "static_hotness": 510.44999999999993,
       "token_size": 249
@@ -4423,6 +4465,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "critic_feedback",
+      "kv_cacheable": false,
       "kv_size_bytes": 322560,
       "lifetime_end": 64,
       "lifetime_start": 49,
@@ -4431,7 +4474,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_risk_1",
+      "prompt_position": null,
       "state_id": "S_risk_1",
       "static_hotness": 0.0,
       "token_size": 315
@@ -4444,13 +4489,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "retrieval",
+      "kv_cacheable": false,
       "kv_size_bytes": 448512,
       "lifetime_end": 24,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "inline",
       "metadata": {},
+      "prefix_compatible": false,
       "producer": null,
+      "prompt_position": null,
       "state_id": "S_market_signal_2",
       "static_hotness": 459.90000000000003,
       "token_size": 438
@@ -4462,6 +4510,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "intermediate_summary",
+      "kv_cacheable": false,
       "kv_size_bytes": 193536,
       "lifetime_end": 40,
       "lifetime_start": 8,
@@ -4470,7 +4519,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_analyst_2",
+      "prompt_position": null,
       "state_id": "S_analyst_2_view",
       "static_hotness": 0.0,
       "token_size": 189
@@ -4482,6 +4533,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "retrieval_result",
+      "kv_cacheable": false,
       "kv_size_bytes": 292864,
       "lifetime_end": 40,
       "lifetime_start": 24,
@@ -4490,7 +4542,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_researcher_2",
+      "prompt_position": null,
       "state_id": "S_research_2_evidence",
       "static_hotness": 0.0,
       "token_size": 286
@@ -4503,6 +4557,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "planner_output",
+      "kv_cacheable": false,
       "kv_size_bytes": 227328,
       "lifetime_end": 64,
       "lifetime_start": 40,
@@ -4511,7 +4566,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_trader_2",
+      "prompt_position": null,
       "state_id": "S_trade_2",
       "static_hotness": 455.09999999999997,
       "token_size": 222
@@ -4523,6 +4580,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "critic_feedback",
+      "kv_cacheable": false,
       "kv_size_bytes": 217088,
       "lifetime_end": 64,
       "lifetime_start": 56,
@@ -4531,7 +4589,9 @@
       "metadata": {
         "dynamic_hot_candidate": true
       },
+      "prefix_compatible": false,
       "producer": "O_risk_2",
+      "prompt_position": null,
       "state_id": "S_risk_2",
       "static_hotness": 0.0,
       "token_size": 212
@@ -4544,13 +4604,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "retrieval",
+      "kv_cacheable": false,
       "kv_size_bytes": 436224,
       "lifetime_end": 25,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "inline",
       "metadata": {},
+      "prefix_compatible": false,
       "producer": null,
+      "prompt_position": null,
       "state_id": "S_market_signal_3",
       "static_hotness": 447.3,
       "token_size": 426
@@ -4562,6 +4625,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "intermediate_summary",
+      "kv_cacheable": false,
       "kv_size_bytes": 289792,
       "lifetime_end": 41,
       "lifetime_start": 9,
@@ -4570,7 +4634,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_analyst_3",
+      "prompt_position": null,
       "state_id": "S_analyst_3_view",
       "static_hotness": 0.0,
       "token_size": 283
@@ -4582,6 +4648,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "retrieval_result",
+      "kv_cacheable": false,
       "kv_size_bytes": 247808,
       "lifetime_end": 41,
       "lifetime_start": 25,
@@ -4590,7 +4657,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_researcher_3",
+      "prompt_position": null,
       "state_id": "S_research_3_evidence",
       "static_hotness": 0.0,
       "token_size": 242
@@ -4603,6 +4672,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "planner_output",
+      "kv_cacheable": false,
       "kv_size_bytes": 268288,
       "lifetime_end": 64,
       "lifetime_start": 41,
@@ -4611,7 +4681,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_trader_3",
+      "prompt_position": null,
       "state_id": "S_trade_3",
       "static_hotness": 537.0999999999999,
       "token_size": 262
@@ -4623,6 +4695,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "critic_feedback",
+      "kv_cacheable": false,
       "kv_size_bytes": 219136,
       "lifetime_end": 64,
       "lifetime_start": 57,
@@ -4631,7 +4704,9 @@
       "metadata": {
         "dynamic_hot_candidate": true
       },
+      "prefix_compatible": false,
       "producer": "O_risk_3",
+      "prompt_position": null,
       "state_id": "S_risk_3",
       "static_hotness": 0.0,
       "token_size": 214
@@ -4644,13 +4719,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "retrieval",
+      "kv_cacheable": false,
       "kv_size_bytes": 399360,
       "lifetime_end": 26,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "inline",
       "metadata": {},
+      "prefix_compatible": false,
       "producer": null,
+      "prompt_position": null,
       "state_id": "S_market_signal_4",
       "static_hotness": 409.5,
       "token_size": 390
@@ -4662,6 +4740,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "intermediate_summary",
+      "kv_cacheable": false,
       "kv_size_bytes": 225280,
       "lifetime_end": 42,
       "lifetime_start": 10,
@@ -4670,7 +4749,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_analyst_4",
+      "prompt_position": null,
       "state_id": "S_analyst_4_view",
       "static_hotness": 0.0,
       "token_size": 220
@@ -4682,6 +4763,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "retrieval_result",
+      "kv_cacheable": false,
       "kv_size_bytes": 290816,
       "lifetime_end": 42,
       "lifetime_start": 26,
@@ -4690,7 +4772,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_researcher_4",
+      "prompt_position": null,
       "state_id": "S_research_4_evidence",
       "static_hotness": 0.0,
       "token_size": 284
@@ -4703,6 +4787,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "planner_output",
+      "kv_cacheable": false,
       "kv_size_bytes": 256000,
       "lifetime_end": 64,
       "lifetime_start": 42,
@@ -4711,7 +4796,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_trader_4",
+      "prompt_position": null,
       "state_id": "S_trade_4",
       "static_hotness": 512.5,
       "token_size": 250
@@ -4723,6 +4810,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "critic_feedback",
+      "kv_cacheable": false,
       "kv_size_bytes": 227328,
       "lifetime_end": 64,
       "lifetime_start": 58,
@@ -4731,7 +4819,9 @@
       "metadata": {
         "dynamic_hot_candidate": true
       },
+      "prefix_compatible": false,
       "producer": "O_risk_4",
+      "prompt_position": null,
       "state_id": "S_risk_4",
       "static_hotness": 0.0,
       "token_size": 222
@@ -4744,13 +4834,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "retrieval",
+      "kv_cacheable": false,
       "kv_size_bytes": 497664,
       "lifetime_end": 27,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "inline",
       "metadata": {},
+      "prefix_compatible": false,
       "producer": null,
+      "prompt_position": null,
       "state_id": "S_market_signal_5",
       "static_hotness": 510.3,
       "token_size": 486
@@ -4762,6 +4855,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "intermediate_summary",
+      "kv_cacheable": false,
       "kv_size_bytes": 234496,
       "lifetime_end": 43,
       "lifetime_start": 11,
@@ -4770,7 +4864,9 @@
       "metadata": {
         "dynamic_hot_candidate": true
       },
+      "prefix_compatible": false,
       "producer": "O_analyst_5",
+      "prompt_position": null,
       "state_id": "S_analyst_5_view",
       "static_hotness": 0.0,
       "token_size": 229
@@ -4782,6 +4878,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "retrieval_result",
+      "kv_cacheable": false,
       "kv_size_bytes": 245760,
       "lifetime_end": 43,
       "lifetime_start": 27,
@@ -4790,7 +4887,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_researcher_5",
+      "prompt_position": null,
       "state_id": "S_research_5_evidence",
       "static_hotness": 0.0,
       "token_size": 240
@@ -4803,6 +4902,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "planner_output",
+      "kv_cacheable": false,
       "kv_size_bytes": 243712,
       "lifetime_end": 64,
       "lifetime_start": 43,
@@ -4811,7 +4911,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_trader_5",
+      "prompt_position": null,
       "state_id": "S_trade_5",
       "static_hotness": 487.9,
       "token_size": 238
@@ -4823,6 +4925,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "critic_feedback",
+      "kv_cacheable": false,
       "kv_size_bytes": 259072,
       "lifetime_end": 64,
       "lifetime_start": 59,
@@ -4831,7 +4934,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_risk_5",
+      "prompt_position": null,
       "state_id": "S_risk_5",
       "static_hotness": 0.0,
       "token_size": 253
@@ -4844,13 +4949,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "retrieval",
+      "kv_cacheable": false,
       "kv_size_bytes": 294912,
       "lifetime_end": 28,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "inline",
       "metadata": {},
+      "prefix_compatible": false,
       "producer": null,
+      "prompt_position": null,
       "state_id": "S_market_signal_6",
       "static_hotness": 302.40000000000003,
       "token_size": 288
@@ -4862,6 +4970,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "intermediate_summary",
+      "kv_cacheable": false,
       "kv_size_bytes": 251904,
       "lifetime_end": 44,
       "lifetime_start": 12,
@@ -4870,7 +4979,9 @@
       "metadata": {
         "dynamic_hot_candidate": true
       },
+      "prefix_compatible": false,
       "producer": "O_analyst_6",
+      "prompt_position": null,
       "state_id": "S_analyst_6_view",
       "static_hotness": 0.0,
       "token_size": 246
@@ -4882,6 +4993,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "retrieval_result",
+      "kv_cacheable": false,
       "kv_size_bytes": 244736,
       "lifetime_end": 44,
       "lifetime_start": 28,
@@ -4890,7 +5002,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_researcher_6",
+      "prompt_position": null,
       "state_id": "S_research_6_evidence",
       "static_hotness": 0.0,
       "token_size": 239
@@ -4903,6 +5017,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "planner_output",
+      "kv_cacheable": false,
       "kv_size_bytes": 218112,
       "lifetime_end": 64,
       "lifetime_start": 44,
@@ -4911,7 +5026,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_trader_6",
+      "prompt_position": null,
       "state_id": "S_trade_6",
       "static_hotness": 436.65,
       "token_size": 213
@@ -4923,6 +5040,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "critic_feedback",
+      "kv_cacheable": false,
       "kv_size_bytes": 295936,
       "lifetime_end": 64,
       "lifetime_start": 60,
@@ -4931,7 +5049,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_risk_6",
+      "prompt_position": null,
       "state_id": "S_risk_6",
       "static_hotness": 0.0,
       "token_size": 289
@@ -4944,13 +5064,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "retrieval",
+      "kv_cacheable": false,
       "kv_size_bytes": 394240,
       "lifetime_end": 29,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "inline",
       "metadata": {},
+      "prefix_compatible": false,
       "producer": null,
+      "prompt_position": null,
       "state_id": "S_market_signal_7",
       "static_hotness": 404.25,
       "token_size": 385
@@ -4962,6 +5085,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "intermediate_summary",
+      "kv_cacheable": false,
       "kv_size_bytes": 216064,
       "lifetime_end": 45,
       "lifetime_start": 13,
@@ -4970,7 +5094,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_analyst_7",
+      "prompt_position": null,
       "state_id": "S_analyst_7_view",
       "static_hotness": 0.0,
       "token_size": 211
@@ -4982,6 +5108,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "retrieval_result",
+      "kv_cacheable": false,
       "kv_size_bytes": 269312,
       "lifetime_end": 45,
       "lifetime_start": 29,
@@ -4990,7 +5117,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_researcher_7",
+      "prompt_position": null,
       "state_id": "S_research_7_evidence",
       "static_hotness": 0.0,
       "token_size": 263
@@ -5003,6 +5132,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "planner_output",
+      "kv_cacheable": false,
       "kv_size_bytes": 250880,
       "lifetime_end": 64,
       "lifetime_start": 45,
@@ -5011,7 +5141,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_trader_7",
+      "prompt_position": null,
       "state_id": "S_trade_7",
       "static_hotness": 502.24999999999994,
       "token_size": 245
@@ -5023,6 +5155,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "critic_feedback",
+      "kv_cacheable": false,
       "kv_size_bytes": 274432,
       "lifetime_end": 64,
       "lifetime_start": 61,
@@ -5031,7 +5164,9 @@
       "metadata": {
         "dynamic_hot_candidate": true
       },
+      "prefix_compatible": false,
       "producer": "O_risk_7",
+      "prompt_position": null,
       "state_id": "S_risk_7",
       "static_hotness": 0.0,
       "token_size": 268
@@ -5044,13 +5179,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "retrieval",
+      "kv_cacheable": false,
       "kv_size_bytes": 354304,
       "lifetime_end": 30,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "inline",
       "metadata": {},
+      "prefix_compatible": false,
       "producer": null,
+      "prompt_position": null,
       "state_id": "S_market_signal_8",
       "static_hotness": 363.3,
       "token_size": 346
@@ -5062,6 +5200,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "intermediate_summary",
+      "kv_cacheable": false,
       "kv_size_bytes": 226304,
       "lifetime_end": 46,
       "lifetime_start": 14,
@@ -5070,7 +5209,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_analyst_8",
+      "prompt_position": null,
       "state_id": "S_analyst_8_view",
       "static_hotness": 0.0,
       "token_size": 221
@@ -5082,6 +5223,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "retrieval_result",
+      "kv_cacheable": false,
       "kv_size_bytes": 258048,
       "lifetime_end": 46,
       "lifetime_start": 30,
@@ -5090,7 +5232,9 @@
       "metadata": {
         "dynamic_hot_candidate": true
       },
+      "prefix_compatible": false,
       "producer": "O_researcher_8",
+      "prompt_position": null,
       "state_id": "S_research_8_evidence",
       "static_hotness": 0.0,
       "token_size": 252
@@ -5103,6 +5247,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "planner_output",
+      "kv_cacheable": false,
       "kv_size_bytes": 192512,
       "lifetime_end": 64,
       "lifetime_start": 46,
@@ -5111,7 +5256,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_trader_8",
+      "prompt_position": null,
       "state_id": "S_trade_8",
       "static_hotness": 385.4,
       "token_size": 188
@@ -5123,6 +5270,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "critic_feedback",
+      "kv_cacheable": false,
       "kv_size_bytes": 311296,
       "lifetime_end": 64,
       "lifetime_start": 62,
@@ -5131,7 +5279,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_risk_8",
+      "prompt_position": null,
       "state_id": "S_risk_8",
       "static_hotness": 0.0,
       "token_size": 304
@@ -5144,13 +5294,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "retrieval",
+      "kv_cacheable": false,
       "kv_size_bytes": 343040,
       "lifetime_end": 31,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "inline",
       "metadata": {},
+      "prefix_compatible": false,
       "producer": null,
+      "prompt_position": null,
       "state_id": "S_market_signal_9",
       "static_hotness": 351.75,
       "token_size": 335
@@ -5162,6 +5315,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "intermediate_summary",
+      "kv_cacheable": false,
       "kv_size_bytes": 218112,
       "lifetime_end": 47,
       "lifetime_start": 15,
@@ -5170,7 +5324,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_analyst_9",
+      "prompt_position": null,
       "state_id": "S_analyst_9_view",
       "static_hotness": 0.0,
       "token_size": 213
@@ -5182,6 +5338,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "retrieval_result",
+      "kv_cacheable": false,
       "kv_size_bytes": 285696,
       "lifetime_end": 47,
       "lifetime_start": 31,
@@ -5190,7 +5347,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_researcher_9",
+      "prompt_position": null,
       "state_id": "S_research_9_evidence",
       "static_hotness": 0.0,
       "token_size": 279
@@ -5203,6 +5362,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "planner_output",
+      "kv_cacheable": false,
       "kv_size_bytes": 293888,
       "lifetime_end": 64,
       "lifetime_start": 47,
@@ -5211,7 +5371,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_trader_9",
+      "prompt_position": null,
       "state_id": "S_trade_9",
       "static_hotness": 588.3499999999999,
       "token_size": 287
@@ -5223,6 +5385,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "critic_feedback",
+      "kv_cacheable": false,
       "kv_size_bytes": 202752,
       "lifetime_end": 64,
       "lifetime_start": 63,
@@ -5231,7 +5394,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_risk_9",
+      "prompt_position": null,
       "state_id": "S_risk_9",
       "static_hotness": 0.0,
       "token_size": 198
@@ -5244,13 +5409,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "retrieval",
+      "kv_cacheable": false,
       "kv_size_bytes": 471040,
       "lifetime_end": 18,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "inline",
       "metadata": {},
+      "prefix_compatible": false,
       "producer": null,
+      "prompt_position": null,
       "state_id": "S_market_signal_10",
       "static_hotness": 483.0,
       "token_size": 460
@@ -5262,6 +5430,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "intermediate_summary",
+      "kv_cacheable": false,
       "kv_size_bytes": 242688,
       "lifetime_end": 34,
       "lifetime_start": 2,
@@ -5270,7 +5439,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_analyst_10",
+      "prompt_position": null,
       "state_id": "S_analyst_10_view",
       "static_hotness": 0.0,
       "token_size": 237
@@ -5282,6 +5453,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "retrieval_result",
+      "kv_cacheable": false,
       "kv_size_bytes": 323584,
       "lifetime_end": 34,
       "lifetime_start": 18,
@@ -5290,7 +5462,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_researcher_10",
+      "prompt_position": null,
       "state_id": "S_research_10_evidence",
       "static_hotness": 0.0,
       "token_size": 316
@@ -5303,6 +5477,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "planner_output",
+      "kv_cacheable": false,
       "kv_size_bytes": 253952,
       "lifetime_end": 64,
       "lifetime_start": 34,
@@ -5311,7 +5486,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_trader_10",
+      "prompt_position": null,
       "state_id": "S_trade_10",
       "static_hotness": 508.4,
       "token_size": 248
@@ -5323,6 +5500,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "critic_feedback",
+      "kv_cacheable": false,
       "kv_size_bytes": 228352,
       "lifetime_end": 64,
       "lifetime_start": 50,
@@ -5331,7 +5509,9 @@
       "metadata": {
         "dynamic_hot_candidate": true
       },
+      "prefix_compatible": false,
       "producer": "O_risk_10",
+      "prompt_position": null,
       "state_id": "S_risk_10",
       "static_hotness": 0.0,
       "token_size": 223
@@ -5344,13 +5524,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "retrieval",
+      "kv_cacheable": false,
       "kv_size_bytes": 371712,
       "lifetime_end": 19,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "inline",
       "metadata": {},
+      "prefix_compatible": false,
       "producer": null,
+      "prompt_position": null,
       "state_id": "S_market_signal_11",
       "static_hotness": 381.15000000000003,
       "token_size": 363
@@ -5362,6 +5545,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "intermediate_summary",
+      "kv_cacheable": false,
       "kv_size_bytes": 268288,
       "lifetime_end": 35,
       "lifetime_start": 3,
@@ -5370,7 +5554,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_analyst_11",
+      "prompt_position": null,
       "state_id": "S_analyst_11_view",
       "static_hotness": 0.0,
       "token_size": 262
@@ -5382,6 +5568,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "retrieval_result",
+      "kv_cacheable": false,
       "kv_size_bytes": 236544,
       "lifetime_end": 35,
       "lifetime_start": 19,
@@ -5390,7 +5577,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_researcher_11",
+      "prompt_position": null,
       "state_id": "S_research_11_evidence",
       "static_hotness": 0.0,
       "token_size": 231
@@ -5403,6 +5592,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "planner_output",
+      "kv_cacheable": false,
       "kv_size_bytes": 265216,
       "lifetime_end": 64,
       "lifetime_start": 35,
@@ -5411,7 +5601,9 @@
       "metadata": {
         "dynamic_hot_candidate": true
       },
+      "prefix_compatible": false,
       "producer": "O_trader_11",
+      "prompt_position": null,
       "state_id": "S_trade_11",
       "static_hotness": 530.9499999999999,
       "token_size": 259
@@ -5423,6 +5615,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "critic_feedback",
+      "kv_cacheable": false,
       "kv_size_bytes": 309248,
       "lifetime_end": 64,
       "lifetime_start": 51,
@@ -5431,7 +5624,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_risk_11",
+      "prompt_position": null,
       "state_id": "S_risk_11",
       "static_hotness": 0.0,
       "token_size": 302
@@ -5444,13 +5639,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "retrieval",
+      "kv_cacheable": false,
       "kv_size_bytes": 417792,
       "lifetime_end": 20,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "inline",
       "metadata": {},
+      "prefix_compatible": false,
       "producer": null,
+      "prompt_position": null,
       "state_id": "S_market_signal_12",
       "static_hotness": 428.40000000000003,
       "token_size": 408
@@ -5462,6 +5660,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "intermediate_summary",
+      "kv_cacheable": false,
       "kv_size_bytes": 242688,
       "lifetime_end": 36,
       "lifetime_start": 4,
@@ -5470,7 +5669,9 @@
       "metadata": {
         "dynamic_hot_candidate": true
       },
+      "prefix_compatible": false,
       "producer": "O_analyst_12",
+      "prompt_position": null,
       "state_id": "S_analyst_12_view",
       "static_hotness": 0.0,
       "token_size": 237
@@ -5482,6 +5683,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "retrieval_result",
+      "kv_cacheable": false,
       "kv_size_bytes": 293888,
       "lifetime_end": 36,
       "lifetime_start": 20,
@@ -5490,7 +5692,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_researcher_12",
+      "prompt_position": null,
       "state_id": "S_research_12_evidence",
       "static_hotness": 0.0,
       "token_size": 287
@@ -5503,6 +5707,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "planner_output",
+      "kv_cacheable": false,
       "kv_size_bytes": 266240,
       "lifetime_end": 64,
       "lifetime_start": 36,
@@ -5511,7 +5716,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_trader_12",
+      "prompt_position": null,
       "state_id": "S_trade_12",
       "static_hotness": 533.0,
       "token_size": 260
@@ -5523,6 +5730,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "critic_feedback",
+      "kv_cacheable": false,
       "kv_size_bytes": 252928,
       "lifetime_end": 64,
       "lifetime_start": 52,
@@ -5531,7 +5739,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_risk_12",
+      "prompt_position": null,
       "state_id": "S_risk_12",
       "static_hotness": 0.0,
       "token_size": 247
@@ -5544,13 +5754,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "retrieval",
+      "kv_cacheable": false,
       "kv_size_bytes": 398336,
       "lifetime_end": 21,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "inline",
       "metadata": {},
+      "prefix_compatible": false,
       "producer": null,
+      "prompt_position": null,
       "state_id": "S_market_signal_13",
       "static_hotness": 408.45000000000005,
       "token_size": 389
@@ -5562,6 +5775,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "intermediate_summary",
+      "kv_cacheable": false,
       "kv_size_bytes": 224256,
       "lifetime_end": 37,
       "lifetime_start": 5,
@@ -5570,7 +5784,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_analyst_13",
+      "prompt_position": null,
       "state_id": "S_analyst_13_view",
       "static_hotness": 0.0,
       "token_size": 219
@@ -5582,6 +5798,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "retrieval_result",
+      "kv_cacheable": false,
       "kv_size_bytes": 230400,
       "lifetime_end": 37,
       "lifetime_start": 21,
@@ -5590,7 +5807,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_researcher_13",
+      "prompt_position": null,
       "state_id": "S_research_13_evidence",
       "static_hotness": 0.0,
       "token_size": 225
@@ -5603,6 +5822,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "planner_output",
+      "kv_cacheable": false,
       "kv_size_bytes": 264192,
       "lifetime_end": 64,
       "lifetime_start": 37,
@@ -5611,7 +5831,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_trader_13",
+      "prompt_position": null,
       "state_id": "S_trade_13",
       "static_hotness": 528.9,
       "token_size": 258
@@ -5623,6 +5845,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "critic_feedback",
+      "kv_cacheable": false,
       "kv_size_bytes": 254976,
       "lifetime_end": 64,
       "lifetime_start": 53,
@@ -5631,7 +5854,9 @@
       "metadata": {
         "dynamic_hot_candidate": true
       },
+      "prefix_compatible": false,
       "producer": "O_risk_13",
+      "prompt_position": null,
       "state_id": "S_risk_13",
       "static_hotness": 0.0,
       "token_size": 249
@@ -5644,13 +5869,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "retrieval",
+      "kv_cacheable": false,
       "kv_size_bytes": 439296,
       "lifetime_end": 22,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "inline",
       "metadata": {},
+      "prefix_compatible": false,
       "producer": null,
+      "prompt_position": null,
       "state_id": "S_market_signal_14",
       "static_hotness": 450.45000000000005,
       "token_size": 429
@@ -5662,6 +5890,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "intermediate_summary",
+      "kv_cacheable": false,
       "kv_size_bytes": 250880,
       "lifetime_end": 38,
       "lifetime_start": 6,
@@ -5670,7 +5899,9 @@
       "metadata": {
         "dynamic_hot_candidate": true
       },
+      "prefix_compatible": false,
       "producer": "O_analyst_14",
+      "prompt_position": null,
       "state_id": "S_analyst_14_view",
       "static_hotness": 0.0,
       "token_size": 245
@@ -5682,6 +5913,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "retrieval_result",
+      "kv_cacheable": false,
       "kv_size_bytes": 278528,
       "lifetime_end": 38,
       "lifetime_start": 22,
@@ -5690,7 +5922,9 @@
       "metadata": {
         "dynamic_hot_candidate": true
       },
+      "prefix_compatible": false,
       "producer": "O_researcher_14",
+      "prompt_position": null,
       "state_id": "S_research_14_evidence",
       "static_hotness": 0.0,
       "token_size": 272
@@ -5703,6 +5937,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "planner_output",
+      "kv_cacheable": false,
       "kv_size_bytes": 187392,
       "lifetime_end": 64,
       "lifetime_start": 38,
@@ -5711,7 +5946,9 @@
       "metadata": {
         "dynamic_hot_candidate": true
       },
+      "prefix_compatible": false,
       "producer": "O_trader_14",
+      "prompt_position": null,
       "state_id": "S_trade_14",
       "static_hotness": 375.15,
       "token_size": 183
@@ -5723,6 +5960,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "critic_feedback",
+      "kv_cacheable": false,
       "kv_size_bytes": 274432,
       "lifetime_end": 64,
       "lifetime_start": 54,
@@ -5731,7 +5969,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_risk_14",
+      "prompt_position": null,
       "state_id": "S_risk_14",
       "static_hotness": 0.0,
       "token_size": 268
@@ -5744,13 +5984,16 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "retrieval",
+      "kv_cacheable": false,
       "kv_size_bytes": 432128,
       "lifetime_end": 23,
       "lifetime_start": 0,
       "location": null,
       "materialized_form": "inline",
       "metadata": {},
+      "prefix_compatible": false,
       "producer": null,
+      "prompt_position": null,
       "state_id": "S_market_signal_15",
       "static_hotness": 443.1,
       "token_size": 422
@@ -5762,6 +6005,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "intermediate_summary",
+      "kv_cacheable": false,
       "kv_size_bytes": 238592,
       "lifetime_end": 39,
       "lifetime_start": 7,
@@ -5770,7 +6014,9 @@
       "metadata": {
         "dynamic_hot_candidate": true
       },
+      "prefix_compatible": false,
       "producer": "O_analyst_15",
+      "prompt_position": null,
       "state_id": "S_analyst_15_view",
       "static_hotness": 0.0,
       "token_size": 233
@@ -5782,6 +6028,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "retrieval_result",
+      "kv_cacheable": false,
       "kv_size_bytes": 232448,
       "lifetime_end": 39,
       "lifetime_start": 23,
@@ -5790,7 +6037,9 @@
       "metadata": {
         "dynamic_hot_candidate": true
       },
+      "prefix_compatible": false,
       "producer": "O_researcher_15",
+      "prompt_position": null,
       "state_id": "S_research_15_evidence",
       "static_hotness": 0.0,
       "token_size": 227
@@ -5803,6 +6052,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "planner_output",
+      "kv_cacheable": false,
       "kv_size_bytes": 269312,
       "lifetime_end": 64,
       "lifetime_start": 39,
@@ -5811,7 +6061,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_trader_15",
+      "prompt_position": null,
       "state_id": "S_trade_15",
       "static_hotness": 539.15,
       "token_size": 263
@@ -5823,6 +6075,7 @@
       "deterministic": false,
       "dynamic_hotness": 0.0,
       "kind": "critic_feedback",
+      "kv_cacheable": false,
       "kv_size_bytes": 259072,
       "lifetime_end": 64,
       "lifetime_start": 55,
@@ -5831,7 +6084,9 @@
       "metadata": {
         "dynamic_hot_candidate": false
       },
+      "prefix_compatible": false,
       "producer": "O_risk_15",
+      "prompt_position": null,
       "state_id": "S_risk_15",
       "static_hotness": 0.0,
       "token_size": 253
@@ -5841,6 +6096,7 @@
       "deterministic": true,
       "dynamic_hotness": 0.0,
       "kind": "output",
+      "kv_cacheable": false,
       "kv_size_bytes": 224256,
       "lifetime_end": 64,
       "lifetime_start": 64,
@@ -5849,7 +6105,9 @@
       "metadata": {
         "dynamic_hot_candidate": true
       },
+      "prefix_compatible": false,
       "producer": "O_manager",
+      "prompt_position": null,
       "state_id": "S_portfolio_decision",
       "static_hotness": 0.0,
       "token_size": 219

@@ -26,6 +26,9 @@ class StateNode:
     lifetime_end: float | int = 0
     materialized_form: str = "inline"
     location: Optional[str] = None
+    prefix_compatible: bool = False
+    kv_cacheable: bool = False
+    prompt_position: Optional[int] = None
     static_hotness: float = 0.0
     dynamic_hotness: float = 0.0
     deterministic: bool = True

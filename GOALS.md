@@ -154,3 +154,44 @@ as a promising backend mechanism.
     `wafer_request_centric` no worse than WaferStateFlow.
 - Next action: Next useful iteration is trace ingestion or calibration, not more
   synthetic scaffolding.
+
+### G10: Credibility hardening and correctness fixes
+- Status: done
+- Evidence:
+  - Added `README.md` and `CLAIMS.md` documenting that WaferStateFlow is a
+    synthetic problem-discovery prototype, not paper-grade evidence.
+  - Preserved unrelated historical project files; current git status shows only
+    WaferStateFlow-related modifications/untracked docs, not deleted historical
+    files from this pass.
+  - Added `StateNode.prefix_compatible`, `StateNode.kv_cacheable`, and
+    `StateNode.prompt_position`. KV policy now permits `cache_kv` only when both
+    `prefix_compatible` and `kv_cacheable` are true.
+  - Removed baseline-name hardcoded prefill multipliers (`WaferStateFlow=0.72`,
+    `Helium=0.85`) and replaced timing with `BackendProfile`, shared by all
+    baselines.
+  - Fixed placement memory accounting: replicas add one full state per replica
+    region; shards add `ceil(size / shard_count)` per shard region.
+  - Added link-level XY NoC routing and directed link-load accumulation. Reports
+    now include `max_link_load`, `p95_link_load`, and `hotspot_region`; link
+    utilization is computed from the max directed link load.
+  - Removed dynamic hotness injection from static fanout. Dynamic hotness is
+    updated from actual state accesses during simulation. Added
+    `state_access_events.csv`.
+  - Split approximate Helium-like and KVFlow-like behavior: Helium-like groups
+    ready operators by prefix/state template; KVFlow-like uses future-use cache
+    admission/eviction under capacity.
+  - Added tests for KV prefix constraints, scheduler-name-independent operator
+    time, memory accounting, directed XY link loads, state access events, and
+    non-identical Helium/KVFlow behavior.
+  - `python -m pytest tests -q` passed with 24 tests.
+  - Regenerated:
+    - `results/waferstateflow_characterization`
+    - `results/waferstateflow_scheduler`
+    - `results/waferstateflow_scheduler_lowfanout`
+    - `results/waferstateflow_dynamic_hotness`
+    - `results/waferstateflow_sensitivity`
+    - `results/waferstateflow_suite`
+  - Negative results are retained: dynamic hotness sweep reports H3 not
+    supported in this synthetic sweep; sensitivity sweep is mostly won by
+    non-WaferStateFlow baselines after bias removal.
+- Next action: The next credible step is real trace ingestion and calibration.

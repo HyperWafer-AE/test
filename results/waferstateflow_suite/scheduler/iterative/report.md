@@ -22,29 +22,29 @@ Workflow `iterative` redundancy ratio is 3.32. Best simulated scheduler is `wafe
 
 | baseline | modeled behavior |
 | --- | --- |
-| `flat_sequential` | sequential flat prompt materialization; no cache or parallelism |
-| `request_parallel_gpu_like` | ready requests assigned to worker-local caches |
-| `prefix_cache_like` | only exact root prefix-like states are globally reused |
-| `helium_like_operator_schedule` | operator-centric wave with per-wave unique-state reuse |
-| `kvflow_like_future_eviction` | future-aware cache admits highest token-weighted fanout states |
-| `wafer_request_centric` | wafer backend without state-centric wave formation |
-| `replicate_all_hot_states` | ablation that blindly replicates hot states |
-| `single_pin_hot_state` | ablation that pins hot states centrally and exposes hotspots |
-| `WaferStateFlow` | hot-state-seeded wave scheduling with policy-driven placement |
+| `flat_sequential` | approximate: sequential flat prompt materialization; no cache or parallelism |
+| `request_parallel_gpu_like` | approximate: ready requests assigned to worker-local caches |
+| `prefix_cache_like` | approximate: only exact root prefix-compatible states are globally reused |
+| `helium_like_operator_schedule` | approximate: groups ready operators by shared prefix/state template |
+| `kvflow_like_future_eviction` | approximate: future-use cache admission/eviction under capacity |
+| `wafer_request_centric` | approximate: wafer backend without state-centric wave formation |
+| `replicate_all_hot_states` | ablation: blindly replicates hot states |
+| `single_pin_hot_state` | ablation: pins hot states centrally and exposes hotspots |
+| `WaferStateFlow` | approximate: hot-state-seeded wave scheduling with policy-driven placement |
 
 ## 5. Results
 
-| baseline | latency | materialization bytes | byte-hop | max link util | memory pressure | crit wait | avg wave |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| `WaferStateFlow` | 80.544 | 48288 | 0 | 0.000 | 0.046 | 0.000 | 1.00 |
-| `flat_sequential` | 80.544 | 160288 | 160288 | 0.000 | 0.000 | 0.000 | 1.00 |
-| `helium_like_operator_schedule` | 80.544 | 48288 | 48288 | 0.000 | 0.000 | 0.000 | 1.00 |
-| `kvflow_like_future_eviction` | 80.544 | 48288 | 48288 | 0.000 | 0.000 | 0.000 | 1.00 |
-| `prefix_cache_like` | 80.544 | 122936 | 122936 | 0.000 | 0.000 | 0.000 | 1.00 |
-| `replicate_all_hot_states` | 80.544 | 48288 | 0 | 0.000 | 0.046 | 0.000 | 1.00 |
-| `request_parallel_gpu_like` | 80.544 | 48288 | 48288 | 0.000 | 0.092 | 0.000 | 1.00 |
-| `single_pin_hot_state` | 80.544 | 48288 | 0 | 0.000 | 0.046 | 0.000 | 1.00 |
-| `wafer_request_centric` | 80.544 | 48288 | 0 | 0.000 | 0.046 | 0.000 | 1.00 |
+| baseline | latency | materialization bytes | byte-hop | max link load | p95 link load | hotspot | max link util | memory pressure | crit wait | avg wave |
+| --- | ---: | ---: | ---: | ---: | ---: | --- | ---: | ---: | ---: | ---: |
+| `WaferStateFlow` | 80.544 | 48288 | 0 | 0 | 0.0 | - | 0.000 | 0.046 | 0.000 | 1.00 |
+| `flat_sequential` | 80.544 | 160288 | 160288 | 0 | 0.0 | - | 0.000 | 0.000 | 0.000 | 1.00 |
+| `helium_like_operator_schedule` | 80.544 | 48288 | 48288 | 0 | 0.0 | - | 0.000 | 0.000 | 0.000 | 1.00 |
+| `kvflow_like_future_eviction` | 80.544 | 48288 | 48288 | 0 | 0.0 | - | 0.000 | 0.000 | 0.000 | 1.00 |
+| `prefix_cache_like` | 80.544 | 48288 | 48288 | 0 | 0.0 | - | 0.000 | 0.000 | 0.000 | 1.00 |
+| `replicate_all_hot_states` | 80.544 | 48288 | 0 | 0 | 0.0 | - | 0.000 | 0.046 | 0.000 | 1.00 |
+| `request_parallel_gpu_like` | 80.544 | 48288 | 48288 | 0 | 0.0 | - | 0.000 | 0.092 | 0.000 | 1.00 |
+| `single_pin_hot_state` | 80.544 | 48288 | 0 | 0 | 0.0 | - | 0.000 | 0.046 | 0.000 | 1.00 |
+| `wafer_request_centric` | 80.544 | 48288 | 0 | 0 | 0.0 | - | 0.000 | 0.046 | 0.000 | 1.00 |
 
 ## 6. Ablations
 

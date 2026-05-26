@@ -62,8 +62,28 @@ def write_characterization_outputs(
             "batch_size",
             "materialization_bytes",
             "movement_byte_hop",
+            "max_link_load_delta",
             "benefit",
             "wait_penalty",
+        ],
+    )
+    write_csv(
+        out / "state_access_events.csv",
+        [],
+        fieldnames=[
+            "baseline",
+            "wave_id",
+            "time",
+            "operator_id",
+            "state_id",
+            "region_id",
+            "policy_before",
+            "policy_after",
+            "dynamic_hotness_before",
+            "dynamic_hotness_after",
+            "materialization_bytes",
+            "movement_byte_hop",
+            "cache_hit",
         ],
     )
     write_csv(out / "simulation_summary.csv", [analysis["summary"]])
@@ -101,6 +121,10 @@ def write_scheduler_outputs(
     for run in runs:
         wave_rows.extend(run.wave_schedule)
     write_csv(out / "wave_schedule.csv", wave_rows)
+    access_rows = []
+    for run in runs:
+        access_rows.extend(run.state_access_events)
+    write_csv(out / "state_access_events.csv", access_rows)
     write_csv(out / "simulation_summary.csv", [run.result.to_row() for run in runs])
     _write_scheduler_report(out / "report.md", analysis, runs)
     _write_scheduler_figures(out / "figures", analysis, runs)
@@ -213,8 +237,8 @@ def _write_scheduler_report(path: Path, analysis: dict[str, Any], runs: list[Sim
             "",
             "## 5. Results",
             "",
-            "| baseline | latency | materialization bytes | byte-hop | max link util | memory pressure | crit wait | avg wave |",
-            "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+            "| baseline | latency | materialization bytes | byte-hop | max link load | p95 link load | hotspot | max link util | memory pressure | crit wait | avg wave |",
+            "| --- | ---: | ---: | ---: | ---: | ---: | --- | ---: | ---: | ---: | ---: |",
         ]
     )
     for run in sorted(runs, key=lambda item: item.result.baseline):
@@ -222,6 +246,7 @@ def _write_scheduler_report(path: Path, analysis: dict[str, Any], runs: list[Sim
         lines.append(
             f"| `{result.baseline}` | {result.workflow_latency:.3f} | "
             f"{result.state_materialization_bytes} | {result.state_movement_byte_hop} | "
+            f"{result.max_link_load} | {result.p95_link_load:.1f} | {result.hotspot_region or '-'} | "
             f"{result.max_link_utilization:.3f} | {result.region_memory_pressure:.3f} | "
             f"{result.critical_path_wait:.3f} | {result.average_wave_batch_size:.2f} |"
         )

@@ -1,10 +1,10 @@
-baseline,workflow_latency,state_materialization_bytes,state_movement_byte_hop,max_link_utilization,region_memory_pressure,critical_path_wait,average_wave_batch_size,wave_count,duplicate_state_materialization_bytes,notes
-flat_sequential,5.064025600760001,9728,9728,2.42061661660821e-12,0.0,0.0,1.0,4,2400,sequential flat prompt materialization; no cache or parallelism
-request_parallel_gpu_like,5.064025600572501,7328,7328,1.823425017183567e-12,0.01397705078125,0.0,1.0,4,2400,ready requests assigned to worker-local caches
-prefix_cache_like,5.06402560069625,8912,8912,2.217571472808794e-12,0.0,0.0,1.0,4,2400,only exact root prefix-like states are globally reused
-helium_like_operator_schedule,5.064025600572501,7328,7328,1.823425017183567e-12,0.0,0.0,1.0,4,2400,operator-centric wave with per-wave unique-state reuse
-kvflow_like_future_eviction,5.064025600572501,7328,7328,1.823425017183567e-12,0.0,0.0,1.0,4,2400,future-aware cache admits highest token-weighted fanout states
-wafer_request_centric,5.064,7328,0,0.0,0.006988525390625,0.0,1.0,4,2400,wafer backend without state-centric wave formation
-replicate_all_hot_states,5.064,8120,0,0.0,0.006988525390625,0.0,1.0,4,2400,ablation that blindly replicates hot states
-single_pin_hot_state,5.064,8120,0,0.0,0.006988525390625,0.0,1.0,4,2400,ablation that pins hot states centrally and exposes hotspots
-WaferStateFlow,5.064,9728,0,0.0,0.006988525390625,0.0,1.0,4,2400,hot-state-seeded wave scheduling with policy-driven placement
+baseline,workflow_latency,state_materialization_bytes,state_movement_byte_hop,max_link_utilization,max_link_load,p95_link_load,hotspot_region,region_memory_pressure,critical_path_wait,average_wave_batch_size,wave_count,duplicate_state_materialization_bytes,notes
+flat_sequential,5.064025600760001,9728,9728,0.0,0,0.0,,0.0,0.0,1.0,4,2400,approximate: sequential flat prompt materialization; no cache or parallelism
+request_parallel_gpu_like,5.064025600572501,7328,7328,0.0,0,0.0,,0.01397705078125,0.0,1.0,4,2400,approximate: ready requests assigned to worker-local caches
+prefix_cache_like,5.064025600572501,7328,7328,0.0,0,0.0,,0.0,0.0,1.0,4,2400,approximate: only exact root prefix-compatible states are globally reused
+helium_like_operator_schedule,5.064025600572501,7328,7328,0.0,0,0.0,,0.0,0.0,1.0,4,2400,approximate: groups ready operators by shared prefix/state template
+kvflow_like_future_eviction,5.064025600572501,7328,7328,0.0,0,0.0,,0.0,0.0,1.0,4,2400,approximate: future-use cache admission/eviction under capacity
+wafer_request_centric,5.064,7328,0,0.0,0,0.0,,0.006988525390625,0.0,1.0,4,2400,approximate: wafer backend without state-centric wave formation
+replicate_all_hot_states,5.064,8120,0,0.0,0,0.0,,0.006988525390625,0.0,1.0,4,2400,ablation: blindly replicates hot states
+single_pin_hot_state,5.064,8120,0,0.0,0,0.0,,0.006988525390625,0.0,1.0,4,2400,ablation: pins hot states centrally and exposes hotspots
+WaferStateFlow,5.064,9728,0,0.0,0,0.0,,0.006988525390625,0.0,1.0,4,2400,approximate: hot-state-seeded wave scheduling with policy-driven placement

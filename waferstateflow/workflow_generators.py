@@ -307,7 +307,16 @@ def _base_graph(name: str, config: WorkflowConfig, shared_kinds: tuple[str, ...]
     per_state = max(1, config.shared_state_size // max(1, len(shared_kinds)))
     for idx, kind in enumerate(shared_kinds):
         tokens = per_state + (config.shared_state_size % len(shared_kinds) if idx == 0 else 0)
-        _add_state(graph, f"S_{kind}", kind, tokens, materialized_form="text")
+        _add_state(
+            graph,
+            f"S_{kind}",
+            kind,
+            tokens,
+            materialized_form="text",
+            prefix_compatible=True,
+            kv_cacheable=True,
+            prompt_position=idx,
+        )
     return graph
 
 
@@ -320,6 +329,9 @@ def _add_state(
     materialized_form: str = "inline",
     deterministic: bool = True,
     metadata: dict[str, object] | None = None,
+    prefix_compatible: bool = False,
+    kv_cacheable: bool = False,
+    prompt_position: int | None = None,
 ) -> StateNode:
     state = StateNode(
         state_id=state_id,
@@ -328,6 +340,9 @@ def _add_state(
         kv_size_bytes=_kv_bytes(token_size) if kv_size_bytes is None else kv_size_bytes,
         materialized_form=materialized_form,
         deterministic=deterministic,
+        prefix_compatible=prefix_compatible,
+        kv_cacheable=kv_cacheable,
+        prompt_position=prompt_position,
         metadata=metadata or {},
     )
     graph.add_state(state)

@@ -138,7 +138,12 @@ def decide_state_policy(
             "large hot state should avoid full replication",
         )
 
-    if state.materialized_form in {"inline", "text", "output"} and state.kv_size_bytes > state.text_size_bytes:
+    if (
+        state.materialized_form in {"inline", "text", "output"}
+        and state.kv_size_bytes > state.text_size_bytes
+        and state.kv_cacheable
+        and state.prefix_compatible
+    ):
         return _decision(
             state,
             "cache_kv",

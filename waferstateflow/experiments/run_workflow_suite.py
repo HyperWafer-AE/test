@@ -51,6 +51,7 @@ def main(argv: list[str] | None = None) -> None:
 
     characterization_rows = []
     scheduler_rows = []
+    suite_access_rows = []
     topology = WaferTopology.from_mesh(args.mesh)
     sim_config = SimulationConfig(worker_count=args.worker_count)
 
@@ -93,6 +94,10 @@ def main(argv: list[str] | None = None) -> None:
                 row = run.result.to_row()
                 row["workflow"] = workflow
                 scheduler_rows.append(row)
+                for event in run.state_access_events:
+                    event = dict(event)
+                    event["workflow"] = workflow
+                    suite_access_rows.append(event)
             write_scheduler_outputs(
                 graph,
                 analysis,
@@ -103,6 +108,7 @@ def main(argv: list[str] | None = None) -> None:
 
     write_csv(out / "characterization_summary.csv", characterization_rows)
     write_csv(out / "scheduler_summary.csv", scheduler_rows)
+    write_csv(out / "state_access_events.csv", suite_access_rows)
     _write_suite_report(out / "report.md", characterization_rows, scheduler_rows)
     _write_suite_figures(out / "figures", characterization_rows, scheduler_rows)
 

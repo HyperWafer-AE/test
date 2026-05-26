@@ -1,1 +1,1 @@
-wave_id,baseline,scheduler,seed_state_id,operator_ids,region_ids,start_time,end_time,batch_size,materialization_bytes,movement_byte_hop,benefit,wait_penalty
+wave_id,baseline,scheduler,seed_state_id,operator_ids,region_ids,start_time,end_time,batch_size,materialization_bytes,movement_byte_hop,max_link_load_delta,benefit,wait_penalty

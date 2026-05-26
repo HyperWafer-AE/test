@@ -14,6 +14,7 @@ REQUIRED_EXPERIMENT_FILES = {
     "state_hotness.csv",
     "policy_decisions.csv",
     "wave_schedule.csv",
+    "state_access_events.csv",
     "simulation_summary.csv",
     "report.md",
 }
@@ -98,6 +99,7 @@ def test_workflow_suite_writes_aggregate_and_per_workflow_outputs(tmp_path):
         out / "config.json",
         out / "characterization_summary.csv",
         out / "scheduler_summary.csv",
+        out / "state_access_events.csv",
         out / "report.md",
         out / "figures" / "suite_redundancy.png",
     ]:

@@ -1,52 +1,52 @@
-wave_id,baseline,scheduler,seed_state_id,operator_ids,region_ids,start_time,end_time,batch_size,materialization_bytes,movement_byte_hop,benefit,wait_penalty
-0,flat_sequential,flat_sequential,,"[""O_debate_r0_a0""]","[""R_0_0""]",0.0,8.940003202778126,1,17780,17780,0.0,0.0
-1,flat_sequential,flat_sequential,,"[""O_debate_r0_a1""]","[""R_0_0""]",8.940003202778126,17.782006405525628,1,17584,17584,0.0,0.0
-2,flat_sequential,flat_sequential,,"[""O_debate_r0_a2""]","[""R_0_0""]",17.782006405525628,26.64800960828063,1,17632,17632,0.0,0.0
-3,flat_sequential,flat_sequential,,"[""O_debate_r0_a3""]","[""R_0_0""]",26.64800960828063,35.31601281097376,1,17236,17236,0.0,0.0
-4,flat_sequential,flat_sequential,,"[""O_transcript_r0""]","[""R_0_0""]",35.31601281097376,35.46601601155813,1,3740,3740,0.0,0.0
-5,flat_sequential,flat_sequential,,"[""O_debate_r1_a0""]","[""R_0_0""]",35.46601601155813,46.15201921488188,1,21272,21272,0.0,0.0
-6,flat_sequential,flat_sequential,,"[""O_debate_r1_a1""]","[""R_0_0""]",46.15201921488188,56.87002241821563,1,21336,21336,0.0,0.0
-7,flat_sequential,flat_sequential,,"[""O_debate_r1_a2""]","[""R_0_0""]",56.87002241821563,67.66602562157377,1,21492,21492,0.0,0.0
-8,flat_sequential,flat_sequential,,"[""O_debate_r1_a3""]","[""R_0_0""]",67.66602562157377,78.36002882490001,1,21288,21288,0.0,0.0
-9,flat_sequential,flat_sequential,,"[""O_transcript_r1""]","[""R_0_0""]",78.36002882490001,78.51003202551814,1,3956,3956,0.0,0.0
-10,flat_sequential,flat_sequential,,"[""O_judge""]","[""R_0_0""]",78.51003202551814,84.53803522738627,1,11956,11956,0.0,0.0
-0,request_parallel_gpu_like,request_parallel_gpu_like,,"[""O_debate_r0_a0"", ""O_debate_r0_a1"", ""O_debate_r0_a2"", ""O_debate_r0_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",0.0,8.940003210973751,4,70232,70232,4.0,0.0
-1,request_parallel_gpu_like,request_parallel_gpu_like,,"[""O_transcript_r0""]","[""R_0_0""]",8.940003210973751,9.090006411558127,1,3740,3740,1.0,0.0
-2,request_parallel_gpu_like,request_parallel_gpu_like,,"[""O_debate_r1_a0"", ""O_debate_r1_a1"", ""O_debate_r1_a2"", ""O_debate_r1_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",9.090006411558127,19.886009614900004,4,21388,21388,4.0,0.0
-3,request_parallel_gpu_like,request_parallel_gpu_like,,"[""O_transcript_r1""]","[""R_0_0""]",19.886009614900004,20.03601281551813,1,3956,3956,1.0,0.0
-4,request_parallel_gpu_like,request_parallel_gpu_like,,"[""O_judge""]","[""R_0_0""]",20.03601281551813,26.064016016136257,1,3956,3956,1.0,0.0
-0,prefix_cache_like,prefix_cache_like,,"[""O_debate_r0_a0"", ""O_debate_r0_a1"", ""O_debate_r0_a2"", ""O_debate_r0_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",0.0,8.940003205348752,4,34232,34232,4.0,0.0
-1,prefix_cache_like,prefix_cache_like,,"[""O_transcript_r0""]","[""R_0_0""]",8.940003205348752,9.090006405933128,1,3740,3740,1.0,0.0
-2,prefix_cache_like,prefix_cache_like,,"[""O_debate_r1_a0"", ""O_debate_r1_a1"", ""O_debate_r1_a2"", ""O_debate_r1_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",9.090006405933128,19.886009611775002,4,37388,37388,4.0,0.0
-3,prefix_cache_like,prefix_cache_like,,"[""O_transcript_r1""]","[""R_0_0""]",19.886009611775002,20.03601281239313,1,3956,3956,1.0,0.0
-4,prefix_cache_like,prefix_cache_like,,"[""O_judge""]","[""R_0_0""]",20.03601281239313,26.06401601363625,1,7956,7956,1.0,0.0
-0,helium_like_operator_schedule,operator_centric,,"[""O_debate_r0_a0"", ""O_debate_r0_a1"", ""O_debate_r0_a2"", ""O_debate_r0_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",0.0,7.606503203473751,4,22232,22232,4.0,0.0
-1,helium_like_operator_schedule,operator_centric,,"[""O_transcript_r0""]","[""R_0_0""]",7.606503203473751,7.7565064040581255,1,3740,3740,1.0,0.0
-2,helium_like_operator_schedule,operator_centric,,"[""O_debate_r1_a0"", ""O_debate_r1_a1"", ""O_debate_r1_a2"", ""O_debate_r1_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",7.7565064040581255,16.940609605646877,4,10168,10168,4.0,0.0
-3,helium_like_operator_schedule,operator_centric,,"[""O_transcript_r1""]","[""R_0_0""]",16.940609605646877,17.090612806265003,1,3956,3956,1.0,0.0
-4,helium_like_operator_schedule,operator_centric,,"[""O_judge""]","[""R_0_0""]",17.090612806265003,23.11861600688313,1,3956,3956,1.0,0.0
-0,kvflow_like_future_eviction,operator_centric,,"[""O_debate_r0_a0"", ""O_debate_r0_a1"", ""O_debate_r0_a2"", ""O_debate_r0_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",0.0,7.606503203473751,4,22232,22232,4.0,0.0
-1,kvflow_like_future_eviction,operator_centric,,"[""O_transcript_r0""]","[""R_0_0""]",7.606503203473751,7.7565064040581255,1,3740,3740,1.0,0.0
-2,kvflow_like_future_eviction,operator_centric,,"[""O_debate_r1_a0"", ""O_debate_r1_a1"", ""O_debate_r1_a2"", ""O_debate_r1_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",7.7565064040581255,16.940609605646877,4,10168,10168,4.0,0.0
-3,kvflow_like_future_eviction,operator_centric,,"[""O_transcript_r1""]","[""R_0_0""]",16.940609605646877,17.090612806265003,1,3956,3956,1.0,0.0
-4,kvflow_like_future_eviction,operator_centric,,"[""O_judge""]","[""R_0_0""]",17.090612806265003,23.11861600688313,1,3956,3956,1.0,0.0
-0,wafer_request_centric,wafer_request_centric,,"[""O_debate_r0_a0"", ""O_debate_r0_a1"", ""O_debate_r0_a2"", ""O_debate_r0_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",0.0,8.940045317440001,4,70232,269551616,4.0,0.0
-1,wafer_request_centric,wafer_request_centric,,"[""O_transcript_r0""]","[""R_0_0""]",8.940045317440001,9.090045317440001,1,3740,0,1.0,0.0
-2,wafer_request_centric,wafer_request_centric,,"[""O_debate_r1_a0"", ""O_debate_r1_a1"", ""O_debate_r1_a2"", ""O_debate_r1_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",9.090045317440001,19.886099750880003,4,21388,327894016,4.0,0.0
-3,wafer_request_centric,wafer_request_centric,,"[""O_transcript_r1""]","[""R_0_0""]",19.886099750880003,20.036099750880002,1,3956,0,1.0,0.0
-4,wafer_request_centric,wafer_request_centric,,"[""O_judge""]","[""R_0_0""]",20.036099750880002,26.06410743088,1,3956,28672000,1.0,0.0
-0,replicate_all_hot_states,replicate_all_hot_states,,"[""O_debate_r0_a0"", ""O_debate_r0_a1"", ""O_debate_r0_a2"", ""O_debate_r0_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",0.0,8.940006917440002,4,22232,23791616,4.0,0.0
-1,replicate_all_hot_states,replicate_all_hot_states,,"[""O_transcript_r0""]","[""R_0_0""]",8.940006917440002,9.090006917440002,1,3740,0,1.0,0.0
-2,replicate_all_hot_states,replicate_all_hot_states,,"[""O_debate_r1_a0"", ""O_debate_r1_a1"", ""O_debate_r1_a2"", ""O_debate_r1_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",9.090006917440002,19.88601397488,4,10168,24687616,4.0,0.0
-3,replicate_all_hot_states,replicate_all_hot_states,,"[""O_transcript_r1""]","[""R_0_0""]",19.88601397488,20.03601397488,1,3956,0,1.0,0.0
-4,replicate_all_hot_states,replicate_all_hot_states,,"[""O_judge""]","[""R_0_0""]",20.03601397488,26.064013974879998,1,3956,0,1.0,0.0
-0,single_pin_hot_state,single_pin_hot_state,,"[""O_debate_r0_a0"", ""O_debate_r0_a1"", ""O_debate_r0_a2"", ""O_debate_r0_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",0.0,8.940045317440001,4,22232,269551616,4.0,0.0
-1,single_pin_hot_state,single_pin_hot_state,,"[""O_transcript_r0""]","[""R_0_0""]",8.940045317440001,9.090045317440001,1,3740,0,1.0,0.0
-2,single_pin_hot_state,single_pin_hot_state,,"[""O_debate_r1_a0"", ""O_debate_r1_a1"", ""O_debate_r1_a2"", ""O_debate_r1_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",9.090045317440001,19.886099750880003,4,10168,327894016,4.0,0.0
-3,single_pin_hot_state,single_pin_hot_state,,"[""O_transcript_r1""]","[""R_0_0""]",19.886099750880003,20.036099750880002,1,3956,0,1.0,0.0
-4,single_pin_hot_state,single_pin_hot_state,,"[""O_judge""]","[""R_0_0""]",20.036099750880002,26.06410743088,1,3956,28672000,1.0,0.0
-0,WaferStateFlow,WaferStateFlow,S_task,"[""O_debate_r0_a0"", ""O_debate_r0_a1"", ""O_debate_r0_a2"", ""O_debate_r0_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",0.0,6.4508069174400005,4,22232,23791616,43802.0,0.0
-1,WaferStateFlow,WaferStateFlow,,"[""O_transcript_r0""]","[""R_0_0""]",6.4508069174400005,6.600806917440001,1,3740,0,0.0,0.0
-2,WaferStateFlow,WaferStateFlow,S_task,"[""O_debate_r1_a0"", ""O_debate_r1_a1"", ""O_debate_r1_a2"", ""O_debate_r1_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",6.600806917440001,14.387933974880001,4,10168,24687616,43775.59677233024,26.403227669760003
-3,WaferStateFlow,WaferStateFlow,,"[""O_transcript_r1""]","[""R_0_0""]",14.387933974880001,14.537933974880001,1,3956,0,0.0,0.0
-4,WaferStateFlow,WaferStateFlow,,"[""O_judge""]","[""R_0_0""]",14.537933974880001,20.56593397488,1,3956,0,0.0,4.0
+wave_id,baseline,scheduler,seed_state_id,operator_ids,region_ids,start_time,end_time,batch_size,materialization_bytes,movement_byte_hop,max_link_load_delta,benefit,wait_penalty
+0,flat_sequential,flat_sequential,,"[""O_debate_r0_a0""]","[""R_0_0""]",0.0,8.940003202778126,1,17780,17780,0,0.0,0.0
+1,flat_sequential,flat_sequential,,"[""O_debate_r0_a1""]","[""R_0_0""]",8.940003202778126,17.782006405525628,1,17584,17584,0,0.0,0.0
+2,flat_sequential,flat_sequential,,"[""O_debate_r0_a2""]","[""R_0_0""]",17.782006405525628,26.64800960828063,1,17632,17632,0,0.0,0.0
+3,flat_sequential,flat_sequential,,"[""O_debate_r0_a3""]","[""R_0_0""]",26.64800960828063,35.31601281097376,1,17236,17236,0,0.0,0.0
+4,flat_sequential,flat_sequential,,"[""O_transcript_r0""]","[""R_0_0""]",35.31601281097376,35.46601601155813,1,3740,3740,0,0.0,0.0
+5,flat_sequential,flat_sequential,,"[""O_debate_r1_a0""]","[""R_0_0""]",35.46601601155813,46.15201921488188,1,21272,21272,0,0.0,0.0
+6,flat_sequential,flat_sequential,,"[""O_debate_r1_a1""]","[""R_0_0""]",46.15201921488188,56.87002241821563,1,21336,21336,0,0.0,0.0
+7,flat_sequential,flat_sequential,,"[""O_debate_r1_a2""]","[""R_0_0""]",56.87002241821563,67.66602562157377,1,21492,21492,0,0.0,0.0
+8,flat_sequential,flat_sequential,,"[""O_debate_r1_a3""]","[""R_0_0""]",67.66602562157377,78.36002882490001,1,21288,21288,0,0.0,0.0
+9,flat_sequential,flat_sequential,,"[""O_transcript_r1""]","[""R_0_0""]",78.36002882490001,78.51003202551814,1,3956,3956,0,0.0,0.0
+10,flat_sequential,flat_sequential,,"[""O_judge""]","[""R_0_0""]",78.51003202551814,84.53803522738627,1,11956,11956,0,0.0,0.0
+0,request_parallel_gpu_like,request_parallel_gpu_like,,"[""O_debate_r0_a0"", ""O_debate_r0_a1"", ""O_debate_r0_a2"", ""O_debate_r0_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",0.0,8.940003210973751,4,70232,70232,0,4.0,0.0
+1,request_parallel_gpu_like,request_parallel_gpu_like,,"[""O_transcript_r0""]","[""R_0_0""]",8.940003210973751,9.090006411558127,1,3740,3740,0,1.0,0.0
+2,request_parallel_gpu_like,request_parallel_gpu_like,,"[""O_debate_r1_a0"", ""O_debate_r1_a1"", ""O_debate_r1_a2"", ""O_debate_r1_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",9.090006411558127,19.886009614900004,4,21388,21388,0,4.0,0.0
+3,request_parallel_gpu_like,request_parallel_gpu_like,,"[""O_transcript_r1""]","[""R_0_0""]",19.886009614900004,20.03601281551813,1,3956,3956,0,1.0,0.0
+4,request_parallel_gpu_like,request_parallel_gpu_like,,"[""O_judge""]","[""R_0_0""]",20.03601281551813,26.064016016136257,1,3956,3956,0,1.0,0.0
+0,prefix_cache_like,prefix_cache_like,,"[""O_debate_r0_a0"", ""O_debate_r0_a1"", ""O_debate_r0_a2"", ""O_debate_r0_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",0.0,8.94000320347375,4,22232,22232,0,4.0,0.0
+1,prefix_cache_like,prefix_cache_like,,"[""O_transcript_r0""]","[""R_0_0""]",8.94000320347375,9.090006404058126,1,3740,3740,0,1.0,0.0
+2,prefix_cache_like,prefix_cache_like,,"[""O_debate_r1_a0"", ""O_debate_r1_a1"", ""O_debate_r1_a2"", ""O_debate_r1_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",9.090006404058126,19.886009607400002,4,21388,21388,0,4.0,0.0
+3,prefix_cache_like,prefix_cache_like,,"[""O_transcript_r1""]","[""R_0_0""]",19.886009607400002,20.03601280801813,1,3956,3956,0,1.0,0.0
+4,prefix_cache_like,prefix_cache_like,,"[""O_judge""]","[""R_0_0""]",20.03601280801813,26.06401600863625,1,3956,3956,0,1.0,0.0
+0,helium_like_operator_schedule,helium_like_operator_schedule,,"[""O_debate_r0_a0"", ""O_debate_r0_a1"", ""O_debate_r0_a2"", ""O_debate_r0_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",0.0,8.94000320347375,4,22232,22232,0,4.0,0.0
+1,helium_like_operator_schedule,helium_like_operator_schedule,,"[""O_transcript_r0""]","[""R_0_0""]",8.94000320347375,9.090006404058126,1,3740,3740,0,1.0,0.0
+2,helium_like_operator_schedule,helium_like_operator_schedule,,"[""O_debate_r1_a0"", ""O_debate_r1_a1"", ""O_debate_r1_a2"", ""O_debate_r1_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",9.090006404058126,19.886009605646876,4,10168,10168,0,4.0,0.0
+3,helium_like_operator_schedule,helium_like_operator_schedule,,"[""O_transcript_r1""]","[""R_0_0""]",19.886009605646876,20.036012806265003,1,3956,3956,0,1.0,0.0
+4,helium_like_operator_schedule,helium_like_operator_schedule,,"[""O_judge""]","[""R_0_0""]",20.036012806265003,26.06401600688313,1,3956,3956,0,1.0,0.0
+0,kvflow_like_future_eviction,operator_centric,,"[""O_debate_r0_a0"", ""O_debate_r0_a1"", ""O_debate_r0_a2"", ""O_debate_r0_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",0.0,8.94000320347375,4,22232,22232,0,4.0,0.0
+1,kvflow_like_future_eviction,operator_centric,,"[""O_transcript_r0""]","[""R_0_0""]",8.94000320347375,9.090006404058126,1,3740,3740,0,1.0,0.0
+2,kvflow_like_future_eviction,operator_centric,,"[""O_debate_r1_a0"", ""O_debate_r1_a1"", ""O_debate_r1_a2"", ""O_debate_r1_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",9.090006404058126,19.886009605646876,4,10168,10168,0,4.0,0.0
+3,kvflow_like_future_eviction,operator_centric,,"[""O_transcript_r1""]","[""R_0_0""]",19.886009605646876,20.036012806265003,1,3956,3956,0,1.0,0.0
+4,kvflow_like_future_eviction,operator_centric,,"[""O_judge""]","[""R_0_0""]",20.036012806265003,26.06401600688313,1,3956,3956,0,1.0,0.0
+0,wafer_request_centric,wafer_request_centric,,"[""O_debate_r0_a0"", ""O_debate_r0_a1"", ""O_debate_r0_a2"", ""O_debate_r0_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",0.0,8.940045317440001,4,70232,269551616,9053184,4.0,0.0
+1,wafer_request_centric,wafer_request_centric,,"[""O_transcript_r0""]","[""R_0_0""]",8.940045317440001,9.090045317440001,1,3740,0,0,1.0,0.0
+2,wafer_request_centric,wafer_request_centric,,"[""O_debate_r1_a0"", ""O_debate_r1_a1"", ""O_debate_r1_a2"", ""O_debate_r1_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",9.090045317440001,19.886099750880003,4,21388,327894016,10951680,4.0,0.0
+3,wafer_request_centric,wafer_request_centric,,"[""O_transcript_r1""]","[""R_0_0""]",19.886099750880003,20.036099750880002,1,3956,0,0,1.0,0.0
+4,wafer_request_centric,wafer_request_centric,,"[""O_judge""]","[""R_0_0""]",20.036099750880002,26.06410743088,1,3956,28672000,2048000,1.0,0.0
+0,replicate_all_hot_states,replicate_all_hot_states,,"[""O_debate_r0_a0"", ""O_debate_r0_a1"", ""O_debate_r0_a2"", ""O_debate_r0_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",0.0,8.940006917440002,4,22232,23791616,861184,4.0,0.0
+1,replicate_all_hot_states,replicate_all_hot_states,,"[""O_transcript_r0""]","[""R_0_0""]",8.940006917440002,9.090006917440002,1,3740,0,0,1.0,0.0
+2,replicate_all_hot_states,replicate_all_hot_states,,"[""O_debate_r1_a0"", ""O_debate_r1_a1"", ""O_debate_r1_a2"", ""O_debate_r1_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",9.090006917440002,19.88601397488,4,10168,24687616,844800,4.0,0.0
+3,replicate_all_hot_states,replicate_all_hot_states,,"[""O_transcript_r1""]","[""R_0_0""]",19.88601397488,20.03601397488,1,3956,0,0,1.0,0.0
+4,replicate_all_hot_states,replicate_all_hot_states,,"[""O_judge""]","[""R_0_0""]",20.03601397488,26.064013974879998,1,3956,0,0,1.0,0.0
+0,single_pin_hot_state,single_pin_hot_state,,"[""O_debate_r0_a0"", ""O_debate_r0_a1"", ""O_debate_r0_a2"", ""O_debate_r0_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",0.0,8.940045317440001,4,22232,269551616,9053184,4.0,0.0
+1,single_pin_hot_state,single_pin_hot_state,,"[""O_transcript_r0""]","[""R_0_0""]",8.940045317440001,9.090045317440001,1,3740,0,0,1.0,0.0
+2,single_pin_hot_state,single_pin_hot_state,,"[""O_debate_r1_a0"", ""O_debate_r1_a1"", ""O_debate_r1_a2"", ""O_debate_r1_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",9.090045317440001,19.886099750880003,4,10168,327894016,10951680,4.0,0.0
+3,single_pin_hot_state,single_pin_hot_state,,"[""O_transcript_r1""]","[""R_0_0""]",19.886099750880003,20.036099750880002,1,3956,0,0,1.0,0.0
+4,single_pin_hot_state,single_pin_hot_state,,"[""O_judge""]","[""R_0_0""]",20.036099750880002,26.06410743088,1,3956,28672000,2048000,1.0,0.0
+0,WaferStateFlow,WaferStateFlow,S_task,"[""O_debate_r0_a0"", ""O_debate_r0_a1"", ""O_debate_r0_a2"", ""O_debate_r0_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",0.0,8.940006917440002,4,22232,23791616,861184,43802.0,0.0
+1,WaferStateFlow,WaferStateFlow,,"[""O_transcript_r0""]","[""R_0_0""]",8.940006917440002,9.090006917440002,1,3740,0,0,0.0,0.0
+2,WaferStateFlow,WaferStateFlow,S_task,"[""O_debate_r1_a0"", ""O_debate_r1_a1"", ""O_debate_r1_a2"", ""O_debate_r1_a3""]","[""R_0_0"", ""R_0_15"", ""R_15_0"", ""R_15_15""]",9.090006917440002,19.88601397488,4,10168,24687616,844800,43765.63997233024,36.36002766976001
+3,WaferStateFlow,WaferStateFlow,,"[""O_transcript_r1""]","[""R_0_0""]",19.88601397488,20.03601397488,1,3956,0,0,0.0,0.0
+4,WaferStateFlow,WaferStateFlow,,"[""O_judge""]","[""R_0_0""]",20.03601397488,26.064013974879998,1,3956,0,0,0.0,4.0

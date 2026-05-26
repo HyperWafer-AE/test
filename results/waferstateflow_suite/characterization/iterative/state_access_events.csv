@@ -1,0 +1,1 @@
+baseline,wave_id,time,operator_id,state_id,region_id,policy_before,policy_after,dynamic_hotness_before,dynamic_hotness_after,materialization_bytes,movement_byte_hop,cache_hit

@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-Swept 72 mesh/memory/state-size/branch-width cases. Win counts: {'wafer_request_centric': 6, 'request_parallel_gpu_like': 6, 'WaferStateFlow': 60}.
+Swept 72 mesh/memory/state-size/branch-width cases. Win counts: {'wafer_request_centric': 24, 'request_parallel_gpu_like': 20, 'helium_like_operator_schedule': 22, 'WaferStateFlow': 6}.
 
 ## Failure Cases
 

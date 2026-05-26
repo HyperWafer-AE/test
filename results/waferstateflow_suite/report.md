@@ -20,17 +20,17 @@ Characterized 7 workflows and collected 63 scheduler rows.
 
 | workflow | winner | latency | WaferStateFlow latency |
 | --- | --- | ---: | ---: |
-| `debate` | `WaferStateFlow` | 20.566 | 20.566 |
+| `debate` | `replicate_all_hot_states` | 26.064 | 26.064 |
 | `iterative` | `wafer_request_centric` | 80.544 | 80.544 |
-| `mapreduce` | `WaferStateFlow` | 10.931 | 10.931 |
-| `parallel_chains` | `WaferStateFlow` | 16.367 | 16.367 |
-| `reflection` | `WaferStateFlow` | 16.015 | 16.015 |
-| `software_dev` | `WaferStateFlow` | 23.389 | 23.389 |
-| `trading` | `WaferStateFlow` | 28.073 | 28.073 |
+| `mapreduce` | `prefix_cache_like` | 12.860 | 12.860 |
+| `parallel_chains` | `helium_like_operator_schedule` | 20.358 | 20.358 |
+| `reflection` | `WaferStateFlow` | 17.528 | 17.528 |
+| `software_dev` | `WaferStateFlow` | 27.854 | 27.854 |
+| `trading` | `helium_like_operator_schedule` | 33.986 | 33.986 |
 
 ## Failure Cases
 
-`iterative` has `wafer_request_centric` no worse than WaferStateFlow in this suite, so the prototype preserves counterexamples and ties instead of forcing WaferStateFlow to win every setting.
+`debate` has `replicate_all_hot_states` no worse than WaferStateFlow in this suite, so the prototype preserves counterexamples and ties instead of forcing WaferStateFlow to win every setting.
 
 ## What This Means for the Paper
 
