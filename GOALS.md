@@ -257,3 +257,33 @@ as a promising backend mechanism.
     conditional rather than assumed broadly useful.
 - Next action: If continuing, prototype a non-wafer FlowMorph scheduler only
   for workflows that pass the irregularity gate, then validate on real traces.
+
+### G13: FlowMorph frontier-aware workflow morphing characterization
+- Status: done
+- Evidence:
+  - Extended FlowMorph from a generic irregularity gate to a frontier-aware
+    taxonomy without adding wafer scheduling or changing workflow generators to
+    force success.
+  - Added opportunity classes: `frontier_only`, `phase_only`,
+    `frontier_and_phase`, and `weak`. Frontier opportunity is triggered by
+    high frontier CV or high `parallel_slack`; phase opportunity is triggered
+    by high phase-mix variation.
+  - Added summary decision columns:
+    `frontier_morphing_opportunity`, `phase_morphing_opportunity`, and
+    `combined_opportunity`.
+  - Added metrics: `width_drop_ratio`, `wide_stage_work_fraction`,
+    `narrow_critical_stage_fraction`, `critical_path_serial_fraction`, and
+    explicit `parallel_slack`.
+  - Updated `results/flowmorph_characterization/report.md` to show separate
+    FlowMorph-v1 and FlowMorph-v2 gates.
+  - Re-ran `python -m flowmorph.experiments.run_characterization --workflows
+    all --batch-size 8 --seed 0 --out results/flowmorph_characterization`.
+  - Default synthetic result: `frontier_only` = 5 workflows,
+    `frontier_and_phase` = 1 workflow, `weak` = 1 workflow. FlowMorph-v1
+    continues because multiple workflows are `frontier_only` or
+    `frontier_and_phase`; FlowMorph-v2 does not continue from this evidence
+    alone because only one workflow is `frontier_and_phase`.
+  - Ran `python -m pytest tests/test_flowmorph.py -q`; result: 7 passed.
+  - Ran `python -m pytest tests -q`; result: 33 passed.
+- Next action: If continuing, prototype FlowMorph-v1 frontier morphing on the
+  frontier-positive workflows before considering any wafer scheduling.

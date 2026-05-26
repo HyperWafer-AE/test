@@ -1,3 +1,5 @@
+import csv
+
 from flowmorph.analyzer import FlowMorphConfig, characterize_phase_irregularity
 from flowmorph.converters import phase_dag_from_workflow_name
 from flowmorph.experiments.run_characterization import main as flowmorph_main
@@ -47,15 +49,70 @@ def test_irregularity_metrics_and_decision_gate_continue_case():
     summary = result["summary"]
     assert summary["frontier_width_cv"] > 0
     assert summary["phase_mix_variation"] > 0
-    assert summary["decision"] == "continue_to_flowmorph_scheduling"
+    assert summary["width_drop_ratio"] > 1
+    assert summary["parallel_slack"] == summary["total_work_to_critical_path_ratio"]
+    assert summary["combined_opportunity"] == "yes"
+    assert summary["opportunity_taxonomy"] == "frontier_and_phase"
+
+
+def test_opportunity_taxonomy_frontier_only_case():
+    dag = PhaseDAG("frontier_only")
+    for i in range(6):
+        dag.add_operator(PhaseOperator(f"W{i}", prefill_cost=1.0, decode_cost=1.0))
+    dag.add_operator(
+        PhaseOperator(
+            "join",
+            dependencies=[f"W{i}" for i in range(6)],
+            prefill_cost=1.0,
+            decode_cost=1.0,
+        )
+    )
+
+    result = characterize_phase_irregularity(
+        dag,
+        FlowMorphConfig(frontier_cv_threshold=0.1, phase_variation_threshold=0.1),
+    )
+    summary = result["summary"]
+    assert summary["frontier_morphing_opportunity"] == "yes"
+    assert summary["phase_morphing_opportunity"] == "no"
+    assert summary["combined_opportunity"] == "no"
+    assert summary["opportunity_taxonomy"] == "frontier_only"
+
+
+def test_opportunity_taxonomy_phase_only_case():
+    dag = PhaseDAG("phase_only")
+    dag.add_operator(PhaseOperator("prefill", prefill_cost=10.0))
+    dag.add_operator(PhaseOperator("decode", dependencies=["prefill"], decode_cost=10.0))
+    dag.add_operator(PhaseOperator("tool", dependencies=["decode"], local_tool_cost=10.0))
+
+    result = characterize_phase_irregularity(
+        dag,
+        FlowMorphConfig(
+            frontier_cv_threshold=0.1,
+            phase_variation_threshold=0.1,
+            parallel_slack_threshold=2.0,
+        ),
+    )
+    summary = result["summary"]
+    assert summary["frontier_morphing_opportunity"] == "no"
+    assert summary["phase_morphing_opportunity"] == "yes"
+    assert summary["combined_opportunity"] == "no"
+    assert summary["opportunity_taxonomy"] == "phase_only"
 
 
 def test_irregularity_metrics_and_decision_gate_weak_case():
     dag = PhaseDAG("stable")
     for i in range(4):
-        dag.add_operator(PhaseOperator(f"O{i}", prefill_cost=1.0, decode_cost=1.0))
+        dag.add_operator(
+            PhaseOperator(
+                f"O{i}",
+                dependencies=[f"O{i - 1}"] if i else [],
+                prefill_cost=1.0,
+                decode_cost=1.0,
+            )
+        )
     result = characterize_phase_irregularity(dag)
-    assert result["summary"]["decision"] == "weak_direction"
+    assert result["summary"]["opportunity_taxonomy"] == "weak"
 
 
 def test_flowmorph_characterization_outputs_all_required_files(tmp_path):
@@ -91,3 +148,19 @@ def test_flowmorph_characterization_outputs_all_required_files(tmp_path):
     report = (out / "report.md").read_text(encoding="utf-8")
     assert "does not make WaferStateFlow claims" in report
     assert "no wafer scheduling" in report
+    assert "FlowMorph-v1 gate" in report
+    assert "frontier_only" in report
+    with (out / "flowmorph_summary.csv").open(newline="", encoding="utf-8") as f:
+        fieldnames = csv.DictReader(f).fieldnames or []
+    for column in [
+        "frontier_morphing_opportunity",
+        "phase_morphing_opportunity",
+        "combined_opportunity",
+        "opportunity_taxonomy",
+        "width_drop_ratio",
+        "wide_stage_work_fraction",
+        "narrow_critical_stage_fraction",
+        "critical_path_serial_fraction",
+        "parallel_slack",
+    ]:
+        assert column in fieldnames

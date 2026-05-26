@@ -16,6 +16,7 @@ class FlowMorphConfig:
     decode_partition_workers: int = 4
     frontier_cv_threshold: float = 0.35
     phase_variation_threshold: float = 0.25
+    parallel_slack_threshold: float = 2.0
 
 
 @dataclass(frozen=True)
@@ -23,15 +24,25 @@ class FlowMorphSummary:
     workflow: str
     operator_count: int
     max_frontier_width: int
+    median_frontier_width: float
     mean_frontier_width: float
     frontier_width_cv: float
+    width_drop_ratio: float
+    wide_stage_work_fraction: float
+    narrow_critical_stage_fraction: float
     mean_phase_mix_entropy: float
     phase_mix_variation: float
     critical_path_length: float
     total_work: float
     total_work_to_critical_path_ratio: float
+    parallel_slack: float
+    critical_path_serial_fraction: float
     fixed_worker_idle_fraction: float
     fixed_prefill_decode_partition_imbalance: float
+    frontier_morphing_opportunity: str
+    phase_morphing_opportunity: str
+    combined_opportunity: str
+    opportunity_taxonomy: str
     decision: str
     decision_reason: str
 
@@ -49,22 +60,39 @@ def characterize_phase_irregularity(
     total_work = dag.total_work()
     phase_variation = _phase_mix_variation(phase_mix_vectors)
     frontier_cv = _coefficient_of_variation(frontier_widths)
-    decision, reason = _decision(frontier_cv, phase_variation, cfg)
+    median_width = _median(frontier_widths)
+    max_width = max(frontier_widths, default=0)
+    width_drop_ratio = max_width / median_width if median_width > 0 else 0.0
+    wide_stage_work_fraction = _wide_stage_work_fraction(timeline, median_width, total_work)
+    narrow_critical_stage_fraction = _narrow_critical_stage_fraction(dag, median_width, critical_path)
+    parallel_slack = total_work / critical_path if critical_path > 0 else 0.0
+    serial_fraction = critical_path / total_work if total_work > 0 else 0.0
+    opportunity = _opportunity_taxonomy(frontier_cv, phase_variation, parallel_slack, cfg)
     summary = FlowMorphSummary(
         workflow=dag.graph_id,
         operator_count=len(dag.operators),
-        max_frontier_width=max(frontier_widths, default=0),
+        max_frontier_width=max_width,
+        median_frontier_width=median_width,
         mean_frontier_width=_mean(frontier_widths),
         frontier_width_cv=frontier_cv,
+        width_drop_ratio=width_drop_ratio,
+        wide_stage_work_fraction=wide_stage_work_fraction,
+        narrow_critical_stage_fraction=narrow_critical_stage_fraction,
         mean_phase_mix_entropy=_mean([float(row["phase_mix_entropy"]) for row in timeline]),
         phase_mix_variation=phase_variation,
         critical_path_length=critical_path,
         total_work=total_work,
-        total_work_to_critical_path_ratio=total_work / critical_path if critical_path > 0 else 0.0,
+        total_work_to_critical_path_ratio=parallel_slack,
+        parallel_slack=parallel_slack,
+        critical_path_serial_fraction=serial_fraction,
         fixed_worker_idle_fraction=_fixed_worker_idle_fraction(dag, cfg.fixed_worker_count),
         fixed_prefill_decode_partition_imbalance=_partition_imbalance(dag, cfg),
-        decision=decision,
-        decision_reason=reason,
+        frontier_morphing_opportunity=opportunity["frontier_morphing_opportunity"],
+        phase_morphing_opportunity=opportunity["phase_morphing_opportunity"],
+        combined_opportunity=opportunity["combined_opportunity"],
+        opportunity_taxonomy=opportunity["opportunity_taxonomy"],
+        decision=opportunity["opportunity_taxonomy"],
+        decision_reason=opportunity["decision_reason"],
     )
     return {
         "summary": asdict(summary),
@@ -138,22 +166,96 @@ def _partition_imbalance(dag: PhaseDAG, config: FlowMorphConfig) -> float:
     return max(0.0, phase_time / ideal - 1.0)
 
 
-def _decision(
+def _opportunity_taxonomy(
     frontier_cv: float,
     phase_variation: float,
+    parallel_slack: float,
     config: FlowMorphConfig,
-) -> tuple[str, str]:
-    frontier_varies = frontier_cv >= config.frontier_cv_threshold
+) -> dict[str, str]:
+    frontier_varies = (
+        frontier_cv >= config.frontier_cv_threshold
+        or parallel_slack >= config.parallel_slack_threshold
+    )
     phase_varies = phase_variation >= config.phase_variation_threshold
     if frontier_varies and phase_varies:
-        return (
-            "continue_to_flowmorph_scheduling",
-            f"frontier_width_cv={frontier_cv:.2f} and phase_mix_variation={phase_variation:.2f} exceed thresholds",
-        )
-    return (
-        "weak_direction",
-        f"frontier_width_cv={frontier_cv:.2f} or phase_mix_variation={phase_variation:.2f} is below threshold",
+        taxonomy = "frontier_and_phase"
+    elif frontier_varies:
+        taxonomy = "frontier_only"
+    elif phase_varies:
+        taxonomy = "phase_only"
+    else:
+        taxonomy = "weak"
+    frontier_reason = (
+        f"frontier_width_cv={frontier_cv:.2f} "
+        f"(threshold {config.frontier_cv_threshold:.2f}) or parallel_slack={parallel_slack:.2f} "
+        f"(threshold {config.parallel_slack_threshold:.2f})"
     )
+    phase_reason = (
+        f"phase_mix_variation={phase_variation:.2f} "
+        f"(threshold {config.phase_variation_threshold:.2f})"
+    )
+    return {
+        "frontier_morphing_opportunity": "yes" if frontier_varies else "no",
+        "phase_morphing_opportunity": "yes" if phase_varies else "no",
+        "combined_opportunity": "yes" if frontier_varies and phase_varies else "no",
+        "opportunity_taxonomy": taxonomy,
+        "decision_reason": f"{taxonomy}: {frontier_reason}; {phase_reason}",
+    }
+
+
+def _wide_stage_work_fraction(
+    timeline: list[dict[str, Any]],
+    median_width: float,
+    total_work: float,
+) -> float:
+    if total_work <= 0:
+        return 0.0
+    wide_work = sum(
+        float(row["total_demand"])
+        for row in timeline
+        if float(row["frontier_width"]) > median_width
+    )
+    return wide_work / total_work
+
+
+def _narrow_critical_stage_fraction(
+    dag: PhaseDAG,
+    median_width: float,
+    critical_path: float,
+) -> float:
+    if critical_path <= 0:
+        return 0.0
+    critical_ops = _critical_path_operator_ids(dag)
+    widths_by_time: dict[float, int] = {}
+    for op in dag.operators.values():
+        ready_time = round(op.earliest_ready_time, 9)
+        widths_by_time[ready_time] = widths_by_time.get(ready_time, 0) + 1
+    narrow_work = 0.0
+    for op_id in critical_ops:
+        op = dag.operators[op_id]
+        ready_time = round(op.earliest_ready_time, 9)
+        if widths_by_time.get(ready_time, 0) <= median_width:
+            narrow_work += op.total_cost
+    return narrow_work / critical_path
+
+
+def _critical_path_operator_ids(dag: PhaseDAG) -> set[str]:
+    best_finish: dict[str, float] = {}
+    predecessor: dict[str, str | None] = {}
+    for op_id in dag.topological_order():
+        op = dag.operators[op_id]
+        best_dep = max(op.dependencies, key=lambda dep: best_finish[dep], default=None)
+        best_start = best_finish[best_dep] if best_dep is not None else 0.0
+        best_finish[op_id] = best_start + op.total_cost
+        predecessor[op_id] = best_dep
+    if not best_finish:
+        return set()
+    current: str | None = max(best_finish, key=best_finish.get)
+    path: set[str] = set()
+    while current is not None:
+        path.add(current)
+        current = predecessor[current]
+    return path
 
 
 def _phase_vector(prefill: float, decode: float, local: float) -> tuple[float, float, float]:
@@ -187,6 +289,16 @@ def _coefficient_of_variation(values: list[int]) -> float:
         return 0.0
     variance = sum((value - mean) ** 2 for value in values) / len(values)
     return math.sqrt(variance) / mean
+
+
+def _median(values: list[int]) -> float:
+    if not values:
+        return 0.0
+    ordered = sorted(values)
+    mid = len(ordered) // 2
+    if len(ordered) % 2:
+        return float(ordered[mid])
+    return (ordered[mid - 1] + ordered[mid]) / 2.0
 
 
 def _mean(values: list[float] | list[int]) -> float:

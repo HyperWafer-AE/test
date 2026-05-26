@@ -30,6 +30,7 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--decode-partition-workers", type=int, default=4)
     parser.add_argument("--frontier-cv-threshold", type=float, default=0.35)
     parser.add_argument("--phase-variation-threshold", type=float, default=0.25)
+    parser.add_argument("--parallel-slack-threshold", type=float, default=2.0)
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--out", default="results/flowmorph_characterization")
     args = parser.parse_args(argv)
@@ -47,6 +48,7 @@ def main(argv: list[str] | None = None) -> None:
         decode_partition_workers=args.decode_partition_workers,
         frontier_cv_threshold=args.frontier_cv_threshold,
         phase_variation_threshold=args.phase_variation_threshold,
+        parallel_slack_threshold=args.parallel_slack_threshold,
     )
     summaries = []
     timeline_rows = []
