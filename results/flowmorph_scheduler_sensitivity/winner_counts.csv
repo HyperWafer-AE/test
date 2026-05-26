@@ -1,0 +1,6 @@
+frontier_status,winner,count
+frontier_positive,always_consolidated,453
+frontier_positive,fixed_worker_pool,196
+frontier_positive,frontier_aware_morphing,685
+frontier_positive,static_split_resource,16
+weak,always_consolidated,225

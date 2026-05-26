@@ -63,6 +63,23 @@ def write_flowmorph_scheduler_report(
     _write_scheduler_markdown_report(out / "report.md", summaries, selection_rows)
 
 
+def write_flowmorph_sensitivity_report(
+    out_dir: str | Path,
+    sensitivity_rows: list[dict[str, Any]],
+    winner_rows: list[dict[str, Any]],
+    regret_rows: list[dict[str, Any]],
+    config: dict[str, Any],
+) -> None:
+    out = Path(out_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    write_json(out / "metadata.json", {"experiment": "flowmorph_scheduler_sensitivity"})
+    write_json(out / "config.json", config)
+    write_csv(out / "sensitivity_summary.csv", sensitivity_rows)
+    write_csv(out / "winner_counts.csv", winner_rows)
+    write_csv(out / "regret_by_workflow.csv", regret_rows)
+    _write_sensitivity_markdown_report(out / "report.md", sensitivity_rows, winner_rows, regret_rows, config)
+
+
 def _write_markdown_report(path: Path, summaries: list[dict[str, Any]]) -> None:
     frontier_candidates = [
         row for row in summaries
@@ -216,6 +233,104 @@ def _write_scheduler_markdown_report(
         ]
     )
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _write_sensitivity_markdown_report(
+    path: Path,
+    sensitivity_rows: list[dict[str, Any]],
+    winner_rows: list[dict[str, Any]],
+    regret_rows: list[dict[str, Any]],
+    config: dict[str, Any],
+) -> None:
+    frontier_rows = [row for row in regret_rows if row["frontier_status"] == "frontier_positive"]
+    robust_rows = [row for row in frontier_rows if row["robust_under_nonzero_overhead"] == "yes"]
+    frontier_count = len(frontier_rows)
+    robust_count = len(robust_rows)
+    continue_gate = frontier_count > 0 and robust_count > frontier_count / 2
+    dominant_static = _dominant_static_winner(winner_rows)
+    if continue_gate:
+        decision = "continue FlowMorph-v1 robustness work"
+    elif dominant_static:
+        decision = f"FlowMorph-v1 is weak: {dominant_static} dominates the sensitivity sweep"
+    else:
+        decision = "FlowMorph-v1 is weak under this sensitivity sweep"
+    lines = [
+        "# FlowMorph-v1 Scheduler Sensitivity",
+        "",
+        "## Executive Summary",
+        "",
+        "This is an abstract scheduler robustness audit before any wafer mapping. "
+        "It does not add wafer placement and makes no wafer performance claims.",
+        "",
+        f"Decision gate: **{decision}**.",
+        f"Robust frontier-positive workflows under nonzero switch overhead: {robust_count}/{frontier_count}.",
+        "",
+        "## Sweep",
+        "",
+        f"- consolidated_speedup_exponent: {config['consolidated_speedup_exponents']}",
+        f"- mode_switch_overhead: {config['mode_switch_overheads']}",
+        f"- worker_count: {config['worker_counts']}",
+        f"- criticality_threshold: {config['criticality_thresholds']}",
+        "- Workflow generators were not tuned to force success.",
+        "- `iterative` is kept as a negative control.",
+        "",
+        "## Regret By Workflow",
+        "",
+        "| workflow | status | cases | mean regret | p95 regret | max regret | nonzero-overhead robust | flowmorph wins | best static wins |",
+        "| --- | --- | ---: | ---: | ---: | ---: | --- | ---: | ---: |",
+    ]
+    for row in sorted(regret_rows, key=lambda item: str(item["workflow"])):
+        lines.append(
+            f"| `{row['workflow']}` | {row['frontier_status']} | "
+            f"{int(row['case_count'])} | "
+            f"{float(row['mean_regret']):.3f} | "
+            f"{float(row['p95_regret']):.3f} | "
+            f"{float(row['max_regret']):.3f} | "
+            f"{row['robust_under_nonzero_overhead']} | "
+            f"{int(row['flowmorph_wins'])} | "
+            f"{int(row['best_static_wins'])} |"
+        )
+    lines.extend(
+        [
+            "",
+            "## Winner Counts",
+            "",
+            "| frontier status | winner | count |",
+            "| --- | --- | ---: |",
+        ]
+    )
+    for row in sorted(winner_rows, key=lambda item: (str(item["frontier_status"]), str(item["winner"]))):
+        lines.append(
+            f"| {row['frontier_status']} | {row['winner']} | {int(row['count'])} |"
+        )
+    lines.extend(
+        [
+            "",
+            "## Interpretation Rules",
+            "",
+            "- `best_static_oracle` is the minimum latency among `fixed_worker_pool`, `always_parallel`, `always_consolidated`, and `static_split_resource`.",
+            "- `regret = FlowMorph latency / best_static_oracle latency - 1`.",
+            "- FlowMorph is considered robust for a frontier-positive workflow only when most nonzero-overhead cases have regret within the configured tolerance.",
+            "- If `always_consolidated` or `static_split_resource` dominates, the report treats FlowMorph-v1 as weak.",
+            "- Negative results are retained; no workflow generators were tuned.",
+        ]
+    )
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _dominant_static_winner(winner_rows: list[dict[str, Any]]) -> str | None:
+    static_counts: dict[str, int] = {}
+    total = 0
+    for row in winner_rows:
+        winner = str(row["winner"])
+        count = int(row["count"])
+        total += count
+        if winner in {"always_consolidated", "static_split_resource"}:
+            static_counts[winner] = static_counts.get(winner, 0) + count
+    if not total:
+        return None
+    winner, count = max(static_counts.items(), key=lambda item: item[1], default=("", 0))
+    return winner if count > total / 2 else None
 
 
 def _write_figures(out_dir: Path, summaries: list[dict[str, Any]]) -> None:

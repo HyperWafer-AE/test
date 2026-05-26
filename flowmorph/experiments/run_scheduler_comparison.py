@@ -33,6 +33,9 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--base-local-tool-cost", type=float, default=0.1)
     parser.add_argument("--worker-count", type=int, default=8)
     parser.add_argument("--split-consolidated-workers", type=int, default=4)
+    parser.add_argument("--consolidated-speedup-exponent", type=float, default=0.55)
+    parser.add_argument("--mode-switch-overhead", type=float, default=0.0)
+    parser.add_argument("--criticality-threshold", type=float, default=0.8)
     parser.add_argument("--frontier-cv-threshold", type=float, default=0.35)
     parser.add_argument("--phase-variation-threshold", type=float, default=0.25)
     parser.add_argument("--parallel-slack-threshold", type=float, default=2.0)
@@ -57,6 +60,9 @@ def main(argv: list[str] | None = None) -> None:
     scheduler_config = FrontierSchedulerConfig(
         worker_count=args.worker_count,
         split_consolidated_workers=args.split_consolidated_workers,
+        consolidated_speedup_exponent=args.consolidated_speedup_exponent,
+        mode_switch_overhead=args.mode_switch_overhead,
+        criticality_threshold=args.criticality_threshold,
         frontier_cv_threshold=args.frontier_cv_threshold,
         phase_variation_threshold=args.phase_variation_threshold,
         parallel_slack_threshold=args.parallel_slack_threshold,

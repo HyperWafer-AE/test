@@ -321,3 +321,39 @@ as a promising backend mechanism.
   - Ran `python -m pytest tests -q`; result: 37 passed.
 - Next action: If continuing, audit whether the abstract speedup assumptions
   are too favorable to consolidated mode before claiming FlowMorph-v1 benefit.
+
+### G15: FlowMorph-v1 scheduler robustness sensitivity
+- Status: done
+- Evidence:
+  - Added `mode_switch_overhead` to `FrontierSchedulerConfig` and applied it
+    inside the scheduler timeline for `frontier_aware_morphing` and
+    `static_split_resource` mode changes.
+  - Added `flowmorph.experiments.run_scheduler_sensitivity`.
+  - The sensitivity sweep covers exactly:
+    - `consolidated_speedup_exponent`: 0.2, 0.35, 0.5, 0.65, 0.8
+    - `mode_switch_overhead`: 0, 0.5, 1, 2, 5
+    - `worker_count`: 4, 8, 16
+    - `criticality_threshold`: 0.8, 1.5, 2.0
+  - Added `best_static_oracle`, defined as the minimum latency among
+    `fixed_worker_pool`, `always_parallel`, `always_consolidated`, and
+    `static_split_resource`.
+  - Generated:
+    - `results/flowmorph_scheduler_sensitivity/report.md`
+    - `results/flowmorph_scheduler_sensitivity/sensitivity_summary.csv`
+    - `results/flowmorph_scheduler_sensitivity/winner_counts.csv`
+    - `results/flowmorph_scheduler_sensitivity/regret_by_workflow.csv`
+  - Re-ran `python -m flowmorph.experiments.run_scheduler_sensitivity
+    --workflows all --batch-size 8 --seed 0 --out
+    results/flowmorph_scheduler_sensitivity`.
+  - Default sensitivity result: 1575 workflow/config cases; 4/6
+    frontier-positive workflows are robust under nonzero switch overhead by the
+    configured regret tolerance, so the report says to continue FlowMorph-v1
+    robustness work. Negative results are retained: `debate` and `reflection`
+    are not robust, and `iterative` remains the weak negative control.
+  - The report explicitly says this is before wafer mapping, does not add wafer
+    placement, and makes no wafer performance claims.
+  - Ran `python -m pytest tests/test_flowmorph.py -q`; result: 13 passed.
+  - Ran `python -m pytest tests -q`; result: 39 passed.
+- Next action: If continuing, calibrate switch overhead and consolidated
+  speedup assumptions against real traces or a measured backend before any
+  wafer mapping claims.

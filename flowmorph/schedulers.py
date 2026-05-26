@@ -37,6 +37,7 @@ class FrontierSchedulerConfig:
     phase_variation_threshold: float = 0.25
     parallel_slack_threshold: float = 2.0
     consolidated_speedup_exponent: float = 0.55
+    mode_switch_overhead: float = 0.0
     split_consolidated_workers: int = 4
     criticality_threshold: float = 0.8
 
@@ -142,7 +143,7 @@ def _simulate(
     finish_times: dict[str, float] = {}
     rows: list[dict[str, Any]] = []
     time = 0.0
-    last_mode: str | None = None
+    last_mode_signature: str | None = None
     mode_switch_count = 0
     wave_id = 0
     while unscheduled or running:
@@ -160,15 +161,17 @@ def _simulate(
                 critical_path=critical_path,
             )
         if actions:
-            wave_mode = actions[0]["mode"]
-            if wave_mode != last_mode:
-                if last_mode is not None:
+            mode_signature = _mode_signature(actions)
+            overhead = 0.0
+            if mode_signature != last_mode_signature:
+                if last_mode_signature is not None:
                     mode_switch_count += 1
-                last_mode = wave_mode
+                    overhead = _mode_switch_overhead(scheduler_name, config)
+                last_mode_signature = mode_signature
+            start = time + overhead
             for action in actions:
                 op = dag.operators[action["op_id"]]
                 dep_ready = max((finish_times[dep] for dep in op.dependencies), default=0.0)
-                start = time
                 duration = action["duration"]
                 finish = start + duration
                 row = {
@@ -178,9 +181,11 @@ def _simulate(
                     "wave_id": wave_id,
                     "op_id": op.op_id,
                     "mode": action["mode"],
+                    "mode_signature": mode_signature,
                     "start_time": start,
                     "finish_time": finish,
                     "duration": duration,
+                    "mode_switch_overhead": overhead,
                     "resource_units": action["resource_units"],
                     "frontier_width": len(ready),
                     "dependency_ready_time": dep_ready,
@@ -349,6 +354,16 @@ def _selector_for(scheduler: str) -> Callable[..., list[dict[str, Any]]]:
     if scheduler == FRONTIER_AWARE_MORPHING:
         return _frontier_morphing_actions
     raise ValueError(f"unknown scheduler {scheduler}")
+
+
+def _mode_signature(actions: list[dict[str, Any]]) -> str:
+    return "+".join(sorted({str(action["mode"]) for action in actions}))
+
+
+def _mode_switch_overhead(scheduler_name: str, config: FrontierSchedulerConfig) -> float:
+    if scheduler_name in {FRONTIER_AWARE_MORPHING, STATIC_SPLIT_RESOURCE}:
+        return max(0.0, config.mode_switch_overhead)
+    return 0.0
 
 
 def _canonical_scheduler_name(name: str) -> str:

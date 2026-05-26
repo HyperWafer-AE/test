@@ -4,6 +4,7 @@ from flowmorph.analyzer import FlowMorphConfig, characterize_phase_irregularity
 from flowmorph.converters import phase_dag_from_workflow_name
 from flowmorph.experiments.run_characterization import main as flowmorph_main
 from flowmorph.experiments.run_scheduler_comparison import main as scheduler_main
+from flowmorph.experiments.run_scheduler_sensitivity import main as sensitivity_main
 from flowmorph.ir import PhaseDAG, PhaseOperator
 from flowmorph.schedulers import FrontierSchedulerConfig, run_scheduler
 
@@ -276,3 +277,89 @@ def test_flowmorph_scheduler_comparison_outputs_required_artifacts(tmp_path):
         "always_consolidated",
         "frontier_aware_morphing",
     }.issubset({row["scheduler"] for row in summary_rows})
+
+
+def test_mode_switch_overhead_affects_morphing_and_static_split():
+    dag = PhaseDAG("overhead")
+    for i in range(4):
+        dag.add_operator(PhaseOperator(f"W{i}", prefill_cost=4.0, decode_cost=1.0))
+    dag.add_operator(
+        PhaseOperator(
+            "join",
+            dependencies=[f"W{i}" for i in range(4)],
+            prefill_cost=8.0,
+            decode_cost=2.0,
+        )
+    )
+    base_config = FrontierSchedulerConfig(
+        worker_count=4,
+        frontier_cv_threshold=0.1,
+        parallel_slack_threshold=1.1,
+        phase_variation_threshold=10.0,
+        mode_switch_overhead=0.0,
+    )
+    overhead_config = FrontierSchedulerConfig(
+        worker_count=4,
+        frontier_cv_threshold=0.1,
+        parallel_slack_threshold=1.1,
+        phase_variation_threshold=10.0,
+        mode_switch_overhead=2.0,
+    )
+    morph_base = run_scheduler(dag, "frontier_aware_morphing", base_config)
+    morph_overhead = run_scheduler(dag, "frontier_aware_morphing", overhead_config)
+    split_base = run_scheduler(dag, "static_split_resource", base_config)
+    split_overhead = run_scheduler(dag, "static_split_resource", overhead_config)
+    assert morph_overhead["summary"]["workflow_latency"] > morph_base["summary"]["workflow_latency"]
+    assert split_overhead["summary"]["workflow_latency"] > split_base["summary"]["workflow_latency"]
+    assert any(row["mode_switch_overhead"] > 0 for row in morph_overhead["schedule_rows"])
+
+
+def test_scheduler_sensitivity_outputs_oracle_regret_artifacts(tmp_path):
+    out = tmp_path / "sensitivity"
+    sensitivity_main(
+        [
+            "--workflows",
+            "mapreduce,iterative",
+            "--consolidated-speedup-exponents",
+            "0.2",
+            "--mode-switch-overheads",
+            "0,1",
+            "--worker-counts",
+            "4",
+            "--criticality-thresholds",
+            "0.8",
+            "--batch-size",
+            "4",
+            "--seed",
+            "0",
+            "--out",
+            str(out),
+        ]
+    )
+    for filename in [
+        "metadata.json",
+        "config.json",
+        "report.md",
+        "sensitivity_summary.csv",
+        "winner_counts.csv",
+        "regret_by_workflow.csv",
+    ]:
+        assert (out / filename).exists(), filename
+    report = (out / "report.md").read_text(encoding="utf-8")
+    assert "does not add wafer placement" in report
+    assert "makes no wafer performance claims" in report
+    assert "best_static_oracle" in report
+    with (out / "sensitivity_summary.csv").open(newline="", encoding="utf-8") as f:
+        rows = list(csv.DictReader(f))
+    required = {
+        "flowmorph_latency",
+        "best_static_latency",
+        "best_static_oracle_latency",
+        "regret",
+        "winner",
+        "mode_switch_count",
+        "frontier_status",
+    }
+    assert required.issubset(rows[0])
+    assert {row["frontier_status"] for row in rows} == {"frontier_positive", "weak"}
+    assert any(row["workflow"] == "iterative" and row["frontier_status"] == "weak" for row in rows)
