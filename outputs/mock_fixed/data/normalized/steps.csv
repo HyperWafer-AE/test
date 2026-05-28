@@ -1,0 +1,55 @@
+trace_id,step_id,role,phase,tool_name,tool_wrapper,semantic_tool,command_string,message_text,message_tokens_est,tool_args_len,observation_text,observation_len_chars,observation_tokens_est,error_flag
+terminalbench:tb_mock_success_1,0,assistant,unknown,list,ls,list,List repository,List repository,4,15,"README.md
+src/parser.py
+tests/test_parser.py",44,11,False
+terminalbench:tb_mock_success_1,1,assistant,explore/read,open,cat,open,Open src/parser.py,Open src/parser.py,5,18,"def parse(x):
+    return x.split(',')
+",38,10,False
+terminalbench:tb_mock_success_1,2,assistant,explore/read,search,grep,search,Search parser tests,Search parser tests,5,19,tests/test_parser.py:12:test_empty,34,9,False
+terminalbench:tb_mock_success_1,3,assistant,unknown,patch,edit,patch,Patch parser empty input,Patch parser empty input,6,24,patched src/parser.py,21,6,False
+terminalbench:tb_mock_success_1,4,assistant,execute/test,run,pytest,run,Run tests,Run tests,3,9,3 passed in 0.21s,17,5,False
+terminalbench:tb_mock_success_1,5,assistant,verify/final,submit,final,submit,Submit answer,Submit answer,4,13,resolved,8,2,False
+terminalbench:tb_mock_fail_loop,0,assistant,unknown,inspect,ls,inspect,Inspect files,Inspect files,4,13,"app.py
+requirements.txt
+tests/test_cli.py",41,11,False
+terminalbench:tb_mock_fail_loop,1,assistant,explore/read,read,cat,read,Read app.py,Read app.py,3,11,"def main():
+    while True:
+        pass
+",41,11,False
+terminalbench:tb_mock_fail_loop,2,assistant,execute/test,run,pytest,run,Run failing tests,Run failing tests,5,17,"FAILED tests/test_cli.py::test_timeout
+AssertionError",53,14,True
+terminalbench:tb_mock_fail_loop,3,assistant,edit/write,try,sed,try,Try quick edit,Try quick edit,4,14,modified app.py,15,4,False
+terminalbench:tb_mock_fail_loop,4,assistant,execute/test,run,pytest,run,Run failing tests again,Run failing tests again,6,23,"FAILED tests/test_cli.py::test_timeout
+AssertionError",53,14,True
+terminalbench:tb_mock_fail_loop,5,assistant,edit/write,try,sed,try,Try second edit,Try second edit,4,15,modified app.py,15,4,False
+terminalbench:tb_mock_fail_loop,6,assistant,execute/test,run,pytest,run,Run failing tests again,Run failing tests again,6,23,"FAILED tests/test_cli.py::test_timeout
+AssertionError",53,14,True
+terminalbench:tb_mock_fail_loop,7,assistant,verify/final,give,final,give,Give up,Give up,2,7,not resolved,12,3,True
+terminalbench:tb_mock_success_2,0,assistant,explore/read,find,find,find,Find python files,Find python files,5,17,"./model.py
+./tests/test_model.py",32,8,False
+terminalbench:tb_mock_success_2,1,assistant,explore/read,read,cat,read,Read tests/test_model.py,Read tests/test_model.py,6,24,"assert output.shape == (2, 3)",29,8,False
+terminalbench:tb_mock_success_2,2,assistant,explore/read,read,cat,read,Read model.py,Read model.py,4,13,"return x.reshape(3, 2)",22,6,False
+terminalbench:tb_mock_success_2,3,assistant,unknown,fix,edit,fix,Fix reshape,Fix reshape,3,11,patched model.py,16,4,False
+terminalbench:tb_mock_success_2,4,assistant,execute/test,run,python,run,Run focused script,Run focused script,5,18,shape ok,8,2,False
+terminalbench:tb_mock_success_2,5,assistant,execute/test,run,pytest,run,Run suite,Run suite,3,9,5 passed,8,2,False
+terminalbench:tb_mock_browser,0,assistant,explore/read,search,search,search,Search docs,Search docs,3,11,Result: API v2 changed status field,35,9,False
+terminalbench:tb_mock_browser,1,assistant,retrieve/browser,fetch,fetch,fetch,Fetch docs,Fetch docs,3,10,"status: completed|failed|pending
+retry_after: integer",53,14,True
+terminalbench:tb_mock_browser,2,assistant,explore/read,read,cat,read,Read client.py,Read client.py,4,14,"class Client:
+    def status(self): ...",39,10,False
+terminalbench:tb_mock_browser,3,assistant,unknown,update,edit,update,Update field parser,Update field parser,5,19,patched client.py,17,5,False
+terminalbench:tb_mock_browser,4,assistant,execute/test,run,pytest,run,Run tests,Run tests,3,9,7 passed,8,2,False
+swe_agent:mock__project-101,0,system,unknown,unknown,,unknown,,You are fixing a bug in a repository.,10,0,,0,0,False
+swe_agent:mock__project-101,1,assistant,explore/read,open,open,open,,open src/cache.py,5,0,"class Cache:
+    def get(self, key): ...",40,10,False
+swe_agent:mock__project-101,2,assistant,explore/read,search,search,search,,search ttl,3,0,tests/test_cache.py: test_ttl_expiry,36,9,False
+swe_agent:mock__project-101,3,assistant,edit/write,edit,edit,edit,,patch ttl handling,5,0,patch applied,13,4,False
+swe_agent:mock__project-101,4,assistant,execute/test,pytest,pytest,pytest,,pytest tests/test_cache.py,7,0,1 passed,8,2,False
+swe_agent:mock__project-202,0,system,unknown,unknown,,unknown,,Autonomous programmer command-line setting.,11,0,,0,0,False
+swe_agent:mock__project-202,1,assistant,explore/read,open,open,open,,open server.py,4,0,"def handler(req):
+    raise RuntimeError('boom')",48,12,True
+swe_agent:mock__project-202,2,assistant,execute/test,pytest,pytest,pytest,,run tests,3,0,"FAILED tests/test_server.py
+RuntimeError: boom",46,12,True
+swe_agent:mock__project-202,3,assistant,edit/write,edit,edit,edit,,patch handler,4,0,patch applied,13,4,False
+swe_agent:mock__project-202,4,assistant,execute/test,pytest,pytest,pytest,,run tests,3,0,"FAILED tests/test_server.py
+AssertionError",42,11,True

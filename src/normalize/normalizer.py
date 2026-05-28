@@ -12,6 +12,15 @@ from typing import Any
 
 import pandas as pd
 
+from src.normalize.command_parser import (
+    classify_phase as classify_phase_command,
+    clean_tool_name,
+    command_has_explicit_write,
+    extract_command_string,
+    extract_tool_wrapper,
+    extract_tool_wrapper_from_value,
+    semantic_tool_from_command,
+)
 from src.normalize.schema import (
     OBJECT_COLUMNS,
     STEP_COLUMNS,
@@ -23,21 +32,6 @@ from src.normalize.schema import (
 
 LOGGER = logging.getLogger(__name__)
 
-EXPLORE_RE = re.compile(
-    r"\b(ls|dir|cat|grep|rg|find|fd|search|open|read|view|inspect|head|tail|less|tree)\b",
-    re.I,
-)
-EDIT_RE = re.compile(
-    r"\b(edit|write|patch|apply_patch|sed|create|modify|replace|insert|delete|touch|mv|cp)\b",
-    re.I,
-)
-EXEC_RE = re.compile(
-    r"\b(bash|sh|run|pytest|test|compile|python|node|npm|yarn|make|cargo|go test|mvn|gradle|unit)\b",
-    re.I,
-)
-RETRIEVE_RE = re.compile(r"\b(browser|browse|fetch|web|url|http|https|wget|curl)\b", re.I)
-VERIFY_RE = re.compile(r"\b(final|submit|answer|verifier|verify|resolved|finish)\b", re.I)
-
 ERROR_RE = re.compile(
     r"(traceback|assertionerror|runtimeerror|exception|failed|error:|exit code [1-9]|timeout|not resolved)",
     re.I,
@@ -45,10 +39,11 @@ ERROR_RE = re.compile(
 TEST_RE = re.compile(r"(pytest|unittest|failed|passed|assertion|test_|::test|tests?/)", re.I)
 URL_RE = re.compile(r"https?://[^\s\]\)\"']+")
 PATH_RE = re.compile(
-    r"(?<![\w.-])((?:\.{1,2}/)?(?:[\w.-]+/)*[\w.-]+\."
-    r"(?:py|js|ts|tsx|jsx|java|go|rs|c|cc|cpp|h|hpp|md|rst|txt|toml|yaml|yml|json|ini|sh|sql|rb|php|css|html|ipynb|cfg))"
+    r"(?<![\w@.-])((?:/|\.{1,2}/)?(?:[\w@+.-]+/)*[\w@+.-]+\."
+    r"(?:html|htm|hpp|cpp|tsx|jsx|ipynb|yaml|json|java|toml|rst|txt|css|csv|log|xml|"
+    r"py|js|ts|go|rs|cc|ini|yml|sql|php|cfg|md|sh|rb|c|h)"
+    r"(?=$|[^\w./-]))"
 )
-FENCED_COMMAND_RE = re.compile(r"```(?:bash|sh|shell|console)?\s*\n(.*?)```", re.I | re.S)
 
 
 def estimate_tokens(text: str | None) -> int:
@@ -161,83 +156,10 @@ def _extract_nested_name(value: Any) -> str | None:
 
 
 def normalize_tool_name(tool: Any, message: str = "") -> str | None:
-    raw = _extract_nested_name(tool) if not isinstance(tool, str) else tool
-    if raw is None:
-        raw = ""
-    raw = raw.strip()
-    if not raw and message:
-        first = message.strip().split(maxsplit=1)[0].strip("$`'\"") if message.strip() else ""
-        if first in {
-            "ls",
-            "cat",
-            "grep",
-            "rg",
-            "find",
-            "sed",
-            "python",
-            "pytest",
-            "bash",
-            "sh",
-            "make",
-            "npm",
-            "curl",
-            "wget",
-        }:
-            raw = first
-    if not raw:
-        return None
-    raw = raw.replace("\n", " ").strip("`'\" ")
-    if len(raw) > 64 and " " in raw:
-        raw = raw.split(maxsplit=1)[0]
-    return raw.lower()[:80]
-
-
-def _extract_fenced_command(message: str) -> str | None:
-    candidates: list[str] = []
-    for block in FENCED_COMMAND_RE.findall(message or ""):
-        lines = [line.strip() for line in block.splitlines() if line.strip()]
-        if lines:
-            candidates.append(lines[-1])
-    if not candidates:
-        return None
-    command = candidates[-1].strip()
-    if command.startswith("$ "):
-        command = command[2:].strip()
-    return command or None
-
-
-def _tool_from_command(command: str | None) -> str | None:
-    if not command:
-        return None
-    first = command.strip().split(maxsplit=1)[0].strip("`'\"")
-    if not first:
-        return None
-    return first.lower()[:80]
-
-
-def classify_phase(tool_name: str | None, message_text: str | None = None) -> str:
-    combined = f"{tool_name or ''} {message_text or ''}"
-    stripped = combined.strip().lower()
-    tool_l = (tool_name or "").lower()
-    if VERIFY_RE.search(stripped):
-        return "verify/final"
-    if any(x in tool_l for x in ("browser", "browse", "fetch", "web")):
-        return "retrieve/browser"
-    if RETRIEVE_RE.search(stripped):
-        return "retrieve/browser"
-    if any(x in tool_l for x in ("edit", "write", "patch", "create", "modify", "replace")):
-        return "edit/write"
-    if EDIT_RE.search(stripped):
-        return "edit/write"
-    if any(x in tool_l for x in ("read", "open", "grep", "find", "search", "glob", "list")):
-        return "explore/read"
-    if EXPLORE_RE.search(stripped):
-        return "explore/read"
-    if any(x in tool_l for x in ("bash", "pytest", "test", "run", "python", "compile")):
-        return "execute/test"
-    if EXEC_RE.search(stripped):
-        return "execute/test"
-    return "unknown"
+    raw = extract_tool_wrapper_from_value(tool)
+    if raw:
+        return raw
+    return clean_tool_name(tool)
 
 
 def _extract_step_fields(raw_step: Any, max_text_chars: int) -> dict[str, Any]:
@@ -245,10 +167,15 @@ def _extract_step_fields(raw_step: Any, max_text_chars: int) -> dict[str, Any]:
         text = _stringify(raw_step, max_text_chars)
         return {
             "role": "unknown",
-            "tool_name": normalize_tool_name(None, text),
+            "tool_wrapper": None,
+            "semantic_tool": semantic_tool_from_command(text),
+            "command_string": text,
+            "tool_name": semantic_tool_from_command(text),
             "message_text": text,
+            "message_text_full": text,
             "tool_args_len": 0,
             "observation_text": "",
+            "observation_text_full": "",
             "observation_len_chars": 0,
         }
 
@@ -272,35 +199,18 @@ def _extract_step_fields(raw_step: Any, max_text_chars: int) -> dict[str, Any]:
     message_text_full = _stringify(message_raw)
     message_text = _stringify(message_raw, max_text_chars)
 
-    tool_raw = _first_value(
-        raw_step,
-        [
-            "tool_name",
-            "tool",
-            "tools",
-            "name",
-            "command",
-            "command_name",
-            "action_name",
-            "tool_call",
-            "tool_calls",
-            "function_call",
-        ],
-    )
-    tool_name = normalize_tool_name(tool_raw, message_text_full)
-    role_text = _stringify(role).lower() if role is not None else ""
-    command_from_message = None
-    if tool_name is None and role_text in {"ai", "assistant", "agent"}:
-        command_from_message = _extract_fenced_command(message_text_full)
-        tool_name = _tool_from_command(command_from_message)
+    tool_wrapper = extract_tool_wrapper(raw_step)
+    command_string = extract_command_string(raw_step, message_text_full)
+    semantic_tool = semantic_tool_from_command(command_string, tool_wrapper)
+    tool_name = semantic_tool
 
     args_raw = _first_value(
         raw_step,
         ["arguments", "args", "input", "tool_input", "command", "action_input", "parameters", "tools"],
     )
     tool_args_len = len(_stringify(args_raw)) if args_raw is not None else 0
-    if tool_args_len == 0 and command_from_message:
-        tool_args_len = len(command_from_message)
+    if tool_args_len == 0 and command_string:
+        tool_args_len = len(command_string)
 
     obs_raw = _first_value(
         raw_step,
@@ -321,6 +231,9 @@ def _extract_step_fields(raw_step: Any, max_text_chars: int) -> dict[str, Any]:
     return {
         "role": _stringify(role)[:64] if role is not None else None,
         "tool_name": tool_name,
+        "tool_wrapper": tool_wrapper,
+        "semantic_tool": semantic_tool,
+        "command_string": command_string,
         "message_text": message_text,
         "message_text_full": message_text_full,
         "tool_args_len": tool_args_len,
@@ -351,7 +264,7 @@ def _hash_text(prefix: str, text: str, length: int = 16) -> str:
     return f"{prefix}:{digest}"
 
 
-def _extract_paths(text: str, limit: int = 6) -> list[str]:
+def _extract_paths(text: str, limit: int = 12) -> list[str]:
     seen: set[str] = set()
     paths: list[str] = []
     for match in PATH_RE.finditer(text or ""):
@@ -378,95 +291,141 @@ def _extract_test_ids(text: str, limit: int = 4) -> list[str]:
     return ids
 
 
-def _access_type_for_phase(phase: str) -> str:
-    if phase == "edit/write":
+def _message_file_access_type(step: Step, command_string: str | None) -> str:
+    if command_has_explicit_write(command_string, step.semantic_tool):
         return "write"
-    if phase == "execute/test":
+    if step.phase == "execute/test":
         return "execute"
-    if phase == "retrieve/browser":
+    if step.phase == "retrieve/browser":
         return "retrieve"
     return "read"
 
 
+def _observation_file_access_type(step: Step, observation: str) -> str:
+    if step.phase == "execute/test" or TEST_RE.search(observation or ""):
+        return "execute_result"
+    if step.phase == "retrieve/browser":
+        return "retrieve_result"
+    return "mention"
+
+
+def _make_object(
+    step: Step,
+    object_type: str,
+    object_id: str,
+    size_chars: int,
+    access_type: str,
+    object_source: str,
+    stable_object: bool,
+) -> ObjectAccess:
+    return ObjectAccess(
+        trace_id=step.trace_id,
+        step_id=step.step_id,
+        object_type=object_type,
+        object_id=object_id,
+        size_chars=size_chars,
+        access_type=access_type,
+        object_source=object_source,
+        stable_object=stable_object,
+        phase=step.phase,
+        tool_name=step.tool_name,
+        tool_wrapper=step.tool_wrapper,
+        semantic_tool=step.semantic_tool,
+    )
+
+
 def infer_object_accesses(step: Step, full_message: str, full_observation: str) -> list[ObjectAccess]:
     accesses: list[ObjectAccess] = []
-    combined = f"{full_message}\n{full_observation}"
-    access_type = _access_type_for_phase(step.phase)
-    tool = step.tool_name or "unknown"
+    message_blob = f"{full_message}\n{step.command_string or ''}"
+    message_paths = set(_extract_paths(message_blob))
+    observation_paths = set(_extract_paths(full_observation))
+    all_paths = sorted(message_paths | observation_paths)
 
-    for path in _extract_paths(combined):
+    for path in all_paths:
+        if path in message_paths and path in observation_paths:
+            source = "both"
+            access_type = (
+                "write"
+                if command_has_explicit_write(step.command_string, step.semantic_tool)
+                else _observation_file_access_type(step, full_observation)
+            )
+        elif path in message_paths:
+            source = "message"
+            access_type = _message_file_access_type(step, step.command_string)
+        else:
+            source = "observation"
+            access_type = _observation_file_access_type(step, full_observation)
         accesses.append(
-            ObjectAccess(
-                trace_id=step.trace_id,
-                step_id=step.step_id,
+            _make_object(
+                step,
                 object_type="file",
                 object_id=f"file:{path}",
-                size_chars=max(step.observation_len_chars, len(path)),
+                size_chars=max(step.observation_len_chars if source != "message" else 0, len(path)),
                 access_type=access_type,
-                phase=step.phase,
-                tool_name=step.tool_name,
+                object_source=source,
+                stable_object=True,
             )
         )
 
     if full_observation:
         obs_type = "observation"
+        obs_access = "read"
         if step.phase == "retrieve/browser":
             obs_type = "browser_page"
+            obs_access = "retrieve_result"
         elif step.phase == "execute/test" or TEST_RE.search(full_observation):
             obs_type = "test_log"
+            obs_access = "execute_result"
         object_id = _hash_text(obs_type, full_observation)
         accesses.append(
-            ObjectAccess(
-                trace_id=step.trace_id,
-                step_id=step.step_id,
-                object_type=obs_type,
-                object_id=object_id,
-                size_chars=step.observation_len_chars,
-                access_type="read",
-                phase=step.phase,
-                tool_name=step.tool_name,
+            _make_object(
+                step,
+                obs_type,
+                object_id,
+                step.observation_len_chars,
+                obs_access,
+                "observation",
+                False,
             )
         )
 
     for test_id in _extract_test_ids(full_observation):
         accesses.append(
-            ObjectAccess(
-                trace_id=step.trace_id,
-                step_id=step.step_id,
-                object_type="test_case",
-                object_id=f"test:{test_id}",
-                size_chars=max(step.observation_len_chars, len(test_id)),
-                access_type="execute",
-                phase=step.phase,
-                tool_name=step.tool_name,
+            _make_object(
+                step,
+                "test_case",
+                f"test:{test_id}",
+                max(step.observation_len_chars, len(test_id)),
+                "execute_result",
+                "observation",
+                True,
             )
         )
 
-    for url in URL_RE.findall(combined):
+    for url in URL_RE.findall(f"{full_message}\n{full_observation}"):
+        source = "both" if url in full_message and url in full_observation else "message" if url in full_message else "observation"
         accesses.append(
-            ObjectAccess(
-                trace_id=step.trace_id,
-                step_id=step.step_id,
-                object_type="browser_page",
-                object_id=f"url:{url[:200]}",
-                size_chars=max(step.observation_len_chars, len(url)),
-                access_type="retrieve",
-                phase=step.phase,
-                tool_name=step.tool_name,
+            _make_object(
+                step,
+                "browser_page",
+                f"url:{url[:200]}",
+                max(step.observation_len_chars if source != "message" else 0, len(url)),
+                "retrieve" if source == "message" else "retrieve_result",
+                source,
+                True,
             )
         )
 
     if step.observation_len_chars >= 2000:
         accesses.append(
-            ObjectAccess(
-                trace_id=step.trace_id,
-                step_id=step.step_id,
-                object_type="large_observation_bucket",
-                object_id=f"large_obs:{step.phase}:{tool}",
-                size_chars=step.observation_len_chars,
-                access_type="read",
-                phase=step.phase,
-                tool_name=step.tool_name,
+            _make_object(
+                step,
+                "large_observation_bucket",
+                f"large_obs:{step.phase}:{step.semantic_tool or 'unknown'}",
+                step.observation_len_chars,
+                "read",
+                "synthetic",
+                False,
             )
         )
 
@@ -551,7 +510,12 @@ def _normalize_one_trace(
     objects: list[ObjectAccess] = []
     for step_id, raw_step in enumerate(raw_step_list):
         fields = _extract_step_fields(raw_step, max_text_chars=max_text_chars)
-        phase = classify_phase(fields["tool_name"], fields["message_text_full"])
+        phase = classify_phase_command(
+            command_string=fields.get("command_string"),
+            semantic_tool=fields.get("semantic_tool"),
+            tool_wrapper=fields.get("tool_wrapper"),
+            message_text=fields["message_text_full"],
+        )
         full_obs = fields.get("observation_text_full", "")
         full_msg = fields.get("message_text_full", "")
         error_flag = bool(ERROR_RE.search(f"{full_msg}\n{full_obs}"))
@@ -570,6 +534,9 @@ def _normalize_one_trace(
             role=fields["role"],
             phase=phase,
             tool_name=fields["tool_name"],
+            tool_wrapper=fields.get("tool_wrapper"),
+            semantic_tool=fields.get("semantic_tool"),
+            command_string=fields.get("command_string"),
             message_text=fields["message_text"],
             message_tokens_est=estimate_tokens(full_msg),
             tool_args_len=fields["tool_args_len"],

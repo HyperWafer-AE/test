@@ -1,0 +1,16 @@
+{
+  "datasets": [
+    "mock"
+  ],
+  "sample_size": 10,
+  "num_traces": 6,
+  "num_steps": 35,
+  "num_object_accesses": 74,
+  "used_mocks": {
+    "mock": true
+  },
+  "strict_real": false,
+  "warnings": [
+    "mock: using bundled TerminalBench/SWE-agent style rows."
+  ]
+}

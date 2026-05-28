@@ -3,7 +3,7 @@
 一条命令复现实验：
 
 ```bash
-python scripts/run_all.py --datasets terminalbench --sample-size 5000 --outdir outputs/run1
+python scripts/run_all.py --datasets terminalbench --sample-size 1500 --strict-real --outdir outputs/terminalbench_1500_fixed
 ```
 
 本项目验证一个核心问题：真实 agent trajectory 是否存在可预测的状态流规律，从而支持未来 Agent-on-Wafer 的 locality-aware runtime 设计。Pipeline 会下载/抽样公开 agent traces，统一成 canonical trace schema，生成统计图、表格和 Markdown 报告。
@@ -21,6 +21,7 @@ python scripts/run_all.py --datasets terminalbench --sample-size 5000 --outdir o
 无网/CI fallback：
 
 - `--offline-mock` 使用内置小样本 mock traces，保证 normalize、analysis、figures、tables、report 全链路可运行。
+- `--strict-real`/`--no-mock-fallback` 禁止真实实验 fallback 到 mock；真实数据加载失败时会直接退出。
 
 ## 安装
 
@@ -43,7 +44,7 @@ pip install -e .
 只跑 TerminalBench，默认 streaming 抽样 5000 条：
 
 ```bash
-python scripts/run_all.py --datasets terminalbench --sample-size 5000 --outdir outputs/run1
+python scripts/run_all.py --datasets terminalbench --sample-size 5000 --strict-real --outdir outputs/run1
 ```
 
 同时跑 TerminalBench 和 SWE-agent：
@@ -66,6 +67,8 @@ python scripts/run_all.py --datasets mock --sample-size 10 --offline-mock --outd
 - `--cache-dir`：HuggingFace cache 目录，默认 `.cache/huggingface`。
 - `--no-streaming`：禁用 HuggingFace streaming。
 - `--offline-mock`：跳过网络，使用内置 mock。
+- `--strict-real`：真实数据集不允许 mock fallback，用于论文/报告实验。
+- `--bootstrap-samples`：fingerprint 指标 bootstrap 次数，默认 `200`。
 
 ## Canonical Schema
 
@@ -78,6 +81,7 @@ python scripts/run_all.py --datasets mock --sample-size 10 --offline-mock --outd
 `data/normalized/steps.csv`：
 
 - `trace_id, step_id, role, phase, tool_name`
+- `tool_wrapper, semantic_tool, command_string`
 - `message_text, message_tokens_est, tool_args_len`
 - `observation_text, observation_len_chars, observation_tokens_est, error_flag`
 
@@ -85,8 +89,11 @@ python scripts/run_all.py --datasets mock --sample-size 10 --offline-mock --outd
 
 - `trace_id, step_id, object_type, object_id`
 - `size_chars, access_type, phase, tool_name`
+- `object_source, stable_object, tool_wrapper, semantic_tool`
 
-Phase 是规则分类，不依赖大模型：
+`tool_name` 保留兼容字段，当前等价于 `semantic_tool`；原始包装器在 `tool_wrapper` 中，例如 `bash_command`、`execute_bash`、`str_replace_editor`。
+
+Phase 是规则分类，不依赖大模型，优先级为 `command_string/semantic_tool`、`tool_wrapper`、最后才是简短 command-like message fallback：
 
 - `explore/read`：`ls/cat/grep/find/search/open/read/view`
 - `edit/write`：`edit/write/patch/sed/create/modify`
@@ -97,32 +104,42 @@ Phase 是规则分类，不依赖大模型：
 
 ## 输出
 
-必须图表：
+核心图表：
 
 - `figures/trajectory_length_cdf.png`
 - `figures/tool_calls_per_trace_cdf.png`
 - `figures/observation_size_cdf.png`
-- `figures/tool_transition_heatmap.png`
+- `figures/wrapper_tool_transition_heatmap.png`
+- `figures/semantic_tool_transition_heatmap.png`
+- `figures/collapsed_semantic_tool_transition_heatmap.png`
 - `figures/phase_transition_heatmap.png`
-- `figures/topk_next_tool_recall.png`
-- `figures/early_fingerprint_predictability.png`
-- `figures/object_reuse_distance_cdf.png`
+- `figures/topk_next_tool_recall_by_view.png`
+- `figures/early_fingerprint_vs_baselines.png`
+- `figures/stable_object_reuse_distance_cdf.png`
+- `figures/synthetic_bucket_reuse_distance_cdf.png`
 - `figures/success_vs_failure_bars.png`
 - `figures/wafer_proxy_movement_reduction.png`
+- `figures/wafer_proxy_strategy_comparison.png`
 
-必须表格：
+核心表格：
 
 - `tables/dataset_summary.csv`
 - `tables/top_tools.csv`
-- `tables/tool_transition_top_pairs.csv`
+- `tables/wrapper_tool_transition_top_pairs.csv`
+- `tables/semantic_tool_transition_top_pairs.csv`
+- `tables/collapsed_semantic_tool_transition_top_pairs.csv`
 - `tables/phase_transition_matrix.csv`
-- `tables/fingerprint_metrics.csv`
+- `tables/transition_recall_by_view.csv`
+- `tables/fingerprint_metrics_by_baseline.csv`
+- `tables/object_reuse_summary.csv`
 - `tables/success_failure_metrics.csv`
 - `tables/wafer_proxy_results.csv`
 
 报告：
 
 - `reports/agent_trace_profile.md`
+- `reports/fix_audit.md`
+- `reports/warnings.log`
 
 报告会逐条判断 H1 到 H5：
 
@@ -154,4 +171,4 @@ data/normalized/
 
 ## 注意
 
-这个 pipeline 是 hypothesis-screening 工具。公开 trace 不是底层硬件 trace，没有真实 KV/MoE expert ID；object locality 当前由文件路径、test id、URL、observation hash 和 large observation bucket 规则估计；wafer simulator 是 proxy model，不能直接作为真实硬件加速结论。
+这个 pipeline 是 hypothesis-screening 工具。公开 trace 不是底层硬件 trace，没有真实 KV/MoE expert ID；stable object locality 只由文件路径、test id、URL 等稳定对象估计，large observation bucket 单独报告为 synthetic bucket；wafer simulator 是 proxy model，不能直接作为真实硬件加速结论。`oracle_island` 只是 co-location 上界，真正可实现趋势应看 `early_fingerprint_island` 和 `capacity_limited_island`。

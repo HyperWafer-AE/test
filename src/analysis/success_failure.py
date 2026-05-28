@@ -32,7 +32,8 @@ def per_trace_metrics(traces_df: pd.DataFrame, steps_df: pd.DataFrame) -> pd.Dat
     for _, trace in traces_df.iterrows():
         trace_id = trace["trace_id"]
         group = grouped_steps.get(trace_id, pd.DataFrame(columns=steps_df.columns))
-        tools = group["tool_name"].fillna("none/unknown") if not group.empty else pd.Series(dtype=str)
+        tool_col = "semantic_tool" if "semantic_tool" in group.columns else "tool_name"
+        tools = group[tool_col].fillna("unknown") if not group.empty else pd.Series(dtype=str)
         phases = group["phase"].fillna("unknown") if not group.empty else pd.Series(dtype=str)
         if len(tools) > 1:
             repeated = float((tools.iloc[1:].to_numpy() == tools.iloc[:-1].to_numpy()).mean())

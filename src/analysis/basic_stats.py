@@ -88,17 +88,18 @@ def dataset_summary_table(traces_df: pd.DataFrame, steps_df: pd.DataFrame) -> pd
 
 def top_tools_table(steps_df: pd.DataFrame, top_n: int = 50) -> pd.DataFrame:
     if steps_df.empty:
-        return pd.DataFrame(columns=["tool_name", "phase", "count", "trace_count", "pct_steps"])
+        return pd.DataFrame(columns=["semantic_tool", "tool_wrapper", "phase", "count", "trace_count", "pct_steps"])
     tmp = steps_df.copy()
-    tmp["tool_name"] = tmp["tool_name"].fillna("none/unknown")
+    tmp["semantic_tool"] = tmp.get("semantic_tool", tmp.get("tool_name")).fillna("unknown").astype(str)
+    tmp["tool_wrapper"] = tmp.get("tool_wrapper", tmp["semantic_tool"]).fillna("unknown").astype(str)
     total = max(len(tmp), 1)
     grouped = (
-        tmp.groupby(["tool_name", "phase"], dropna=False)
+        tmp.groupby(["semantic_tool", "tool_wrapper", "phase"], dropna=False)
         .agg(count=("step_id", "size"), trace_count=("trace_id", "nunique"))
         .reset_index()
     )
     grouped["pct_steps"] = grouped["count"] / total
-    return grouped.sort_values(["count", "tool_name"], ascending=[False, True]).head(top_n)
+    return grouped.sort_values(["count", "semantic_tool"], ascending=[False, True]).head(top_n)
 
 
 def run_basic_stats(

@@ -43,6 +43,9 @@ class Step:
     role: str | None = None
     phase: str = "unknown"
     tool_name: str | None = None
+    tool_wrapper: str | None = None
+    semantic_tool: str | None = None
+    command_string: str | None = None
     message_text: str | None = None
     message_tokens_est: int = 0
     tool_args_len: int = 0
@@ -63,8 +66,12 @@ class ObjectAccess:
     object_id: str
     size_chars: int = 0
     access_type: str = "read"
+    object_source: str = "observation"
+    stable_object: bool = False
     phase: str = "unknown"
     tool_name: str | None = None
+    tool_wrapper: str | None = None
+    semantic_tool: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -92,6 +99,9 @@ STEP_COLUMNS = [
     "role",
     "phase",
     "tool_name",
+    "tool_wrapper",
+    "semantic_tool",
+    "command_string",
     "message_text",
     "message_tokens_est",
     "tool_args_len",
@@ -108,6 +118,10 @@ OBJECT_COLUMNS = [
     "object_id",
     "size_chars",
     "access_type",
+    "object_source",
+    "stable_object",
     "phase",
     "tool_name",
+    "tool_wrapper",
+    "semantic_tool",
 ]
