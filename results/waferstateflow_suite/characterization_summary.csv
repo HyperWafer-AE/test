@@ -1,8 +1,0 @@
-workflow,total_prompt_tokens,unique_state_tokens,input_redundancy_ratio,duplicate_materialization_bytes,dynamic_hot_state_count,dynamic_hot_token_weighted_cost,top_state_share,h1_supported,h2_supported
-mapreduce,16493,5493,3.0025486983433463,44000,0,0,1.0,True,True
-debate,43818,11013,3.9787523835467176,131220,0,0,1.0,True,True
-reflection,13936,6183,2.2539220443150576,31012,0,0,1.0,True,True
-iterative,40072,12072,3.3194168323392974,112000,0,0,1.0,True,True
-parallel_chains,31284,6621,4.724966017217943,98652,0,0,0.9999999999999999,True,True
-trading,89002,15009,5.929908721433806,295972,0,0,0.996166103652088,True,True
-software_dev,36988,8843,4.182743412868936,112580,0,0,1.0,True,True

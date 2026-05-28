@@ -1,6 +1,0 @@
-op_id,kind,role,input_states,output_states,deps,estimated_input_tokens,estimated_output_tokens,phase_profile,deterministic,criticality,ready_time,metadata
-O_expert_0,llm,expert_0,"[""S_task"", ""S_document"", ""S_rubric"", ""S_unique_expert_0""]","[""S_expert_0_summary""]",[],3445,0,prefill_heavy,False,1.0,0,{}
-O_expert_1,llm,expert_1,"[""S_task"", ""S_document"", ""S_rubric"", ""S_unique_expert_1""]","[""S_expert_1_summary""]",[],3396,0,prefill_heavy,False,1.0,0,{}
-O_expert_2,llm,expert_2,"[""S_task"", ""S_document"", ""S_rubric"", ""S_unique_expert_2""]","[""S_expert_2_summary""]",[],3408,0,prefill_heavy,False,1.0,0,{}
-O_expert_3,llm,expert_3,"[""S_task"", ""S_document"", ""S_rubric"", ""S_unique_expert_3""]","[""S_expert_3_summary""]",[],3309,0,prefill_heavy,False,1.0,0,{}
-O_summarizer,llm,summarizer,"[""S_task"", ""S_rubric"", ""S_expert_0_summary"", ""S_expert_1_summary"", ""S_expert_2_summary"", ""S_expert_3_summary""]","[""S_final_summary""]",[],2935,0,prefill_heavy,False,2.0,0,{}

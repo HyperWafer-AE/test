@@ -1,2 +1,0 @@
-workflow,total_prompt_tokens,unique_state_tokens,input_redundancy_ratio,duplicate_materialization_bytes,dynamic_hot_state_count,dynamic_hot_token_weighted_cost,top_state_share,h1_supported,h2_supported
-mapreduce,16493,5493,3.0025486983433463,44000,0,0,1.0,True,True

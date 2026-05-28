@@ -1,2 +1,0 @@
-workflow,total_prompt_tokens,unique_state_tokens,input_redundancy_ratio,duplicate_materialization_bytes,dynamic_hot_state_count,dynamic_hot_token_weighted_cost,top_state_share,h1_supported,h2_supported
-trading,89002,15009,5.929908721433806,295972,0,0,0.996166103652088,True,True

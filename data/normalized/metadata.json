@@ -1,0 +1,12 @@
+{
+  "datasets": [
+    "terminalbench"
+  ],
+  "sample_size": 100,
+  "num_traces": 100,
+  "num_steps": 5095,
+  "num_object_accesses": 8958,
+  "used_mocks": {
+    "terminalbench": false
+  }
+}

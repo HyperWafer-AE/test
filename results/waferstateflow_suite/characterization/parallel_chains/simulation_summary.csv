@@ -1,2 +1,0 @@
-workflow,total_prompt_tokens,unique_state_tokens,input_redundancy_ratio,duplicate_materialization_bytes,dynamic_hot_state_count,dynamic_hot_token_weighted_cost,top_state_share,h1_supported,h2_supported
-parallel_chains,31284,6621,4.724966017217943,98652,0,0,0.9999999999999999,True,True

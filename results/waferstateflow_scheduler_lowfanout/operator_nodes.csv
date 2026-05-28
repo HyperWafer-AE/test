@@ -1,5 +1,0 @@
-op_id,kind,role,input_states,output_states,deps,estimated_input_tokens,estimated_output_tokens,phase_profile,deterministic,criticality,ready_time,metadata
-O_refine_0,llm,iterative_refiner,"[""S_task"", ""S_rubric"", ""S_global_context"", ""S_chunk_0""]","[""S_running_summary_0""]",[],430,0,prefill_heavy,False,1.0,0,{}
-O_refine_1,llm,iterative_refiner,"[""S_task"", ""S_rubric"", ""S_global_context"", ""S_chunk_1"", ""S_running_summary_0""]","[""S_running_summary_1""]",[],692,0,prefill_heavy,False,1.1,0,{}
-O_refine_2,llm,iterative_refiner,"[""S_task"", ""S_rubric"", ""S_global_context"", ""S_chunk_2"", ""S_running_summary_1""]","[""S_running_summary_2""]",[],660,0,prefill_heavy,False,1.2,0,{}
-O_refine_3,llm,iterative_refiner,"[""S_task"", ""S_rubric"", ""S_global_context"", ""S_chunk_3"", ""S_running_summary_2""]","[""S_running_summary_3""]",[],650,0,prefill_heavy,False,1.3,0,{}

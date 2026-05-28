@@ -1,0 +1,12 @@
+{
+  "datasets": [
+    "swe_agent"
+  ],
+  "sample_size": 20,
+  "num_traces": 20,
+  "num_steps": 401,
+  "num_object_accesses": 1691,
+  "used_mocks": {
+    "swe_agent": false
+  }
+}
