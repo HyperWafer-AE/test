@@ -1,2 +1,0 @@
-dataset,num_traces,num_steps,success_rate,median_steps,mean_steps,median_obs_chars_per_trace,mean_obs_chars_per_trace
-swe_agent,20,401,0.35,14.0,20.05,48147.0,66686.2

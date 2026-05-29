@@ -1,0 +1,2 @@
+dataset,num_traces,num_steps,num_tool_action_steps,num_object_accesses,used_mock,strict_real,skipped_rows,unknown_rate,artifact_rate,command_parse_success_rate,source,profile_mode
+terminalbench,1500,81593,48402,80790,False,True,0,0.3655828318605763,0.3645165639209246,0.6568578186854265,datasets_server_cache,skeleton_existence

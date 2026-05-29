@@ -1,0 +1,7 @@
+hypothesis,verdict
+H1 Tool/Phase Skeleton,supported
+H2 Cross-task Motifs,supported
+H3 Data Dependency,supported
+H4 Object Working Set,supported
+H5 Early Skeleton Matching,supported
+H6 Failure-loop Skeleton,supported

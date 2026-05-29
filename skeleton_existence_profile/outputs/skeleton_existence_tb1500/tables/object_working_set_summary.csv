@@ -1,0 +1,4 @@
+granularity,accesses,unique_objects,top10pct_access_coverage,median_reuse_distance
+exact_object_id,57546,1987,0.8861953915128766,1.0
+path_prefix,71869,1913,0.9117839402245753,1.0
+object_type,80388,4,0.7158531124048365,1.0

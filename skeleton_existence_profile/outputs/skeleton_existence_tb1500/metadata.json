@@ -1,0 +1,15 @@
+{
+  "dataset": "terminalbench",
+  "num_traces": 1500,
+  "num_steps": 81593,
+  "num_tool_action_steps": 48402,
+  "num_object_accesses": 80790,
+  "used_mock": false,
+  "strict_real": true,
+  "skipped_rows": 0,
+  "unknown_rate": 0.3655828318605763,
+  "artifact_rate": 0.3645165639209246,
+  "command_parse_success_rate": 0.6568578186854265,
+  "source": "datasets_server_cache",
+  "profile_mode": "skeleton_existence"
+}

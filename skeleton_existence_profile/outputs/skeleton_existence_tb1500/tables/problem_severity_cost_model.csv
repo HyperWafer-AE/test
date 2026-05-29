@@ -1,0 +1,7 @@
+strategy,estimated_cost,reduction_vs_independent
+independent_call,208094650.5,0.0
+session_affinity,207865132.9,229517.6
+skeleton_oracle_upper_bound,150743202.675,57351447.825
+skeleton_predicted,189653467.75794366,18441182.74205634
+wrong_prediction_stress,207899560.54,195089.96
+object_type_only,207876608.78,218041.72

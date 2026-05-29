@@ -1,7 +1,0 @@
-trace_id,dataset,task_id,model,agent_or_harness,success,reward,resolved,duration_s,input_tokens,output_tokens,cache_tokens,total_steps
-terminalbench:tb_mock_success_1,terminalbench,fix-parser-edge-case,gpt-5-mini,codex,True,1.0,True,135.0,1480.0,460.0,0.0,6
-terminalbench:tb_mock_fail_loop,terminalbench,repair-cli-timeout,claude-sonnet,openhands,False,0.0,False,160.0,1640.0,530.0,0.0,8
-terminalbench:tb_mock_success_2,terminalbench,numpy-shape-bug,qwen-coder,mini-swe-agent,True,1.0,True,135.0,1480.0,460.0,0.0,6
-terminalbench:tb_mock_browser,terminalbench,api-docs-update,gpt-5-codex,factory-droid,True,1.0,True,122.5,1400.0,425.0,0.0,5
-swe_agent:mock__project-101,swe_agent,mock__project-101,swe-agent-llama-70b,SWE-agent,True,1.0,True,,,,,5
-swe_agent:mock__project-202,swe_agent,mock__project-202,swe-agent-mixtral,SWE-agent,False,0.0,False,,,,,5

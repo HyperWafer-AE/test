@@ -1,0 +1,4 @@
+dependency_type,count,traces,median_distance,dependency_rate_per_trace
+error_file_to_read_or_edit,53,20,3.0,0.035333333333333335
+file_path_from_output_to_next_arg,46044,815,5.0,30.696
+url_from_search_to_open,1355,52,5.0,0.9033333333333333

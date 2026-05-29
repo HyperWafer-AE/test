@@ -1,3 +1,0 @@
-reuse_class,object_accesses,unique_objects,reuse_events,median_reuse_distance,short_reuse_fraction_le3
-stable,37945,4503,25524,1.0,0.7906676069581571
-synthetic,38281,19457,6592,2.0,0.6344053398058253

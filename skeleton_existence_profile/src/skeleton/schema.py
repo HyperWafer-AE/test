@@ -1,0 +1,72 @@
+from __future__ import annotations
+
+TRACE_COLUMNS = [
+    "trace_id",
+    "dataset",
+    "task_id",
+    "harness",
+    "agent_scaffold",
+    "model",
+    "success",
+    "reward",
+    "resolved",
+    "total_steps",
+    "tool_action_steps",
+    "duration",
+    "input_tokens",
+    "output_tokens",
+]
+
+STEP_COLUMNS = [
+    "trace_id",
+    "step_id",
+    "role",
+    "raw_tool_name",
+    "tool_wrapper",
+    "semantic_tool",
+    "semantic_tool_clean",
+    "command_string",
+    "phase",
+    "phase_clean",
+    "phase_source",
+    "is_tool_action",
+    "is_no_tool_step",
+    "command_artifact_flag",
+    "observation_len_chars",
+    "message_len_chars",
+    "error_flag",
+    "timestamp",
+]
+
+OBJECT_COLUMNS = [
+    "trace_id",
+    "step_id",
+    "object_id",
+    "object_type",
+    "object_source",
+    "object_version",
+    "object_size",
+    "access_type",
+    "stable_object",
+    "actionable_object",
+    "object_path",
+    "object_dir",
+    "object_prefix",
+    "object_extension",
+    "content_hash",
+    "error_signature",
+    "derived_from_tool",
+    "derived_from_observation",
+]
+
+DEPENDENCY_COLUMNS = [
+    "trace_id",
+    "src_step_id",
+    "dst_step_id",
+    "dependency_type",
+    "src_tool",
+    "dst_tool",
+    "object_id",
+    "value_type",
+    "confidence",
+]

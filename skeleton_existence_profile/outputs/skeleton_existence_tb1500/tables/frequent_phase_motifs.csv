@@ -1,0 +1,101 @@
+motif,n,support_traces,support_tasks,support_harnesses,success_rate,heldout_support_traces
+explore/read -> execute/test,2,473,4,7,0.2257100149476831,196
+execute/test -> explore/read,2,440,4,6,0.22727272727272727,176
+explore/read -> execute/test -> explore/read,3,342,4,6,0.2012448132780083,140
+explore/read -> edit/write,2,326,4,5,0.2302771855010661,143
+execute/test -> explore/read -> execute/test,3,287,4,6,0.16080402010050251,111
+edit/write -> execute/test,2,243,4,6,0.23595505617977527,113
+edit/write -> explore/read,2,241,4,6,0.2349570200573066,108
+execute/test -> explore/read -> execute/test -> explore/read,4,224,4,6,0.12540192926045016,87
+explore/read -> execute/test -> explore/read -> execute/test,4,217,4,6,0.14046822742474915,82
+execute/test -> edit/write,2,203,4,7,0.2708333333333333,85
+edit/write -> execute/test -> explore/read,3,184,4,5,0.18604651162790697,74
+explore/read -> edit/write -> execute/test,3,178,4,5,0.2222222222222222,83
+execute/test -> explore/read -> edit/write,3,176,3,5,0.23904382470119523,75
+explore/read -> execute/test -> explore/read -> execute/test -> explore/read,5,173,3,6,0.11570247933884298,69
+explore/read -> edit/write -> explore/read,3,172,4,5,0.212,78
+execute/test -> explore/read -> execute/test -> explore/read -> execute/test,5,163,4,6,0.10572687224669604,64
+explore/read -> execute/test -> edit/write,3,153,4,6,0.2318840579710145,54
+explore/read -> edit/write -> execute/test -> explore/read,4,133,4,5,0.16216216216216217,52
+execute/test -> edit/write -> execute/test,3,125,4,6,0.25405405405405407,60
+edit/write -> explore/read -> edit/write,3,125,4,5,0.2011173184357542,54
+explore/read -> execute/test -> explore/read -> edit/write,4,121,3,5,0.1797752808988764,57
+edit/write -> execute/test -> explore/read -> execute/test,4,118,4,5,0.1566265060240964,48
+execute/test -> explore/read -> edit/write -> execute/test,4,105,3,4,0.19607843137254902,48
+explore/read -> edit/write -> explore/read -> edit/write,4,100,4,5,0.16891891891891891,48
+edit/write -> execute/test -> edit/write,3,91,3,6,0.27007299270072993,46
+explore/read -> execute/test -> edit/write -> execute/test,4,84,4,5,0.20833333333333334,36
+edit/write -> explore/read -> execute/test,3,81,4,5,0.23770491803278687,41
+edit/write -> execute/test -> explore/read -> execute/test -> explore/read,5,81,4,5,0.125,39
+execute/test -> explore/read -> edit/write -> execute/test -> explore/read,5,81,3,4,0.11607142857142858,31
+execute/test -> explore/read -> execute/test -> edit/write,4,80,3,5,0.23,20
+execute/test -> edit/write -> explore/read,3,79,4,6,0.2777777777777778,29
+edit/write -> execute/test -> explore/read -> edit/write,4,77,3,5,0.1743119266055046,32
+edit/write -> explore/read -> edit/write -> explore/read,4,76,4,4,0.2018348623853211,33
+execute/test -> explore/read -> edit/write -> explore/read,4,75,3,5,0.20909090909090908,35
+explore/read -> edit/write -> execute/test -> explore/read -> execute/test,5,74,4,4,0.1651376146788991,35
+execute/test -> edit/write -> execute/test -> explore/read,4,71,4,5,0.205607476635514,36
+execute/test -> explore/read -> execute/test -> explore/read -> edit/write,5,71,3,5,0.1553398058252427,32
+explore/read -> execute/test -> explore/read -> edit/write -> execute/test,5,67,3,4,0.09615384615384616,37
+explore/read -> edit/write -> explore/read -> edit/write -> explore/read,5,65,4,4,0.14736842105263157,30
+explore/read -> edit/write -> execute/test -> explore/read -> edit/write,5,65,3,5,0.11363636363636363,23
+edit/write -> execute/test -> edit/write -> execute/test,4,63,3,5,0.25510204081632654,35
+explore/read -> edit/write -> explore/read -> execute/test,4,60,3,4,0.2247191011235955,29
+edit/write -> explore/read -> edit/write -> explore/read -> edit/write,5,55,4,3,0.14102564102564102,23
+explore/read -> edit/write -> execute/test -> edit/write,4,55,3,5,0.2823529411764706,30
+execute/test -> edit/write -> execute/test -> edit/write,4,55,3,4,0.2976190476190476,29
+explore/read -> execute/test -> edit/write -> explore/read,4,54,4,5,0.2638888888888889,18
+explore/read -> execute/test -> explore/read -> edit/write -> explore/read,5,54,3,5,0.2345679012345679,27
+edit/write -> explore/read -> execute/test -> explore/read,4,50,4,5,0.24390243902439024,32
+execute/test -> edit/write -> execute/test -> explore/read -> execute/test,5,49,4,5,0.15151515151515152,17
+edit/write -> execute/test -> explore/read -> edit/write -> execute/test,5,48,3,4,0.14705882352941177,20
+explore/read -> execute/test -> explore/read -> execute/test -> edit/write,5,47,3,5,0.2033898305084746,12
+execute/test -> explore/read -> execute/test -> edit/write -> execute/test,5,45,3,5,0.22950819672131148,16
+execute/test -> edit/write -> execute/test -> edit/write -> execute/test,5,44,3,4,0.3088235294117647,24
+execute/test -> explore/read -> edit/write -> explore/read -> edit/write,5,43,3,5,0.19402985074626866,24
+explore/read -> execute/test -> edit/write -> execute/test -> explore/read,5,43,4,5,0.15873015873015872,20
+edit/write -> explore/read -> edit/write -> execute/test,4,43,3,5,0.12307692307692308,22
+explore/read -> edit/write -> execute/test -> edit/write -> execute/test,5,38,3,4,0.25806451612903225,24
+edit/write -> execute/test -> edit/write -> execute/test -> edit/write,5,37,3,4,0.2857142857142857,19
+execute/test -> edit/write -> explore/read -> edit/write,4,36,3,5,0.2391304347826087,10
+explore/read -> edit/write -> explore/read -> execute/test -> explore/read,5,35,3,4,0.21428571428571427,21
+explore/read -> execute/test -> edit/write -> execute/test -> edit/write,5,35,3,4,0.26,15
+explore/read -> edit/write -> explore/read -> edit/write -> execute/test,5,33,3,4,0.09259259259259259,21
+execute/test -> explore/read -> edit/write -> explore/read -> execute/test,5,32,3,3,0.2,18
+execute/test -> edit/write -> explore/read -> execute/test,4,30,4,4,0.25,18
+edit/write -> explore/read -> edit/write -> execute/test -> explore/read,5,30,2,3,0.07692307692307693,9
+edit/write -> execute/test -> edit/write -> explore/read,4,30,3,5,0.2682926829268293,11
+execute/test -> explore/read -> execute/test -> edit/write -> explore/read,5,28,3,3,0.24242424242424243,5
+edit/write -> explore/read -> execute/test -> explore/read -> execute/test,5,28,4,4,0.22448979591836735,21
+edit/write -> execute/test -> edit/write -> execute/test -> explore/read,5,27,3,4,0.19148936170212766,20
+edit/write -> execute/test -> explore/read -> execute/test -> edit/write,5,27,3,4,0.2647058823529412,7
+execute/test -> explore/read -> edit/write -> execute/test -> edit/write,5,26,3,4,0.28205128205128205,13
+edit/write -> explore/read -> execute/test -> edit/write,4,26,3,3,0.2647058823529412,8
+edit/write -> execute/test -> explore/read -> edit/write -> explore/read,5,25,2,3,0.1,15
+explore/read -> execute/test -> edit/write -> explore/read -> edit/write,5,24,3,3,0.1935483870967742,7
+explore/read -> execute/test -> edit/write -> explore/read -> execute/test,5,23,4,4,0.2571428571428571,12
+execute/test -> edit/write -> explore/read -> edit/write -> explore/read,5,21,3,3,0.23076923076923078,5
+execute/test -> edit/write -> explore/read -> execute/test -> explore/read,5,20,4,4,0.2727272727272727,13
+execute/test -> edit/write -> execute/test -> explore/read -> edit/write,5,19,3,4,0.2777777777777778,17
+edit/write -> explore/read -> execute/test -> explore/read -> edit/write,5,18,3,4,0.25925925925925924,9
+edit/write -> explore/read -> edit/write -> explore/read -> execute/test,5,17,3,4,0.21428571428571427,11
+explore/read -> edit/write -> explore/read -> execute/test -> edit/write,5,15,3,3,0.21052631578947367,4
+edit/write -> explore/read -> execute/test -> edit/write -> explore/read,5,15,3,3,0.2631578947368421,4
+edit/write -> explore/read -> edit/write -> execute/test -> edit/write,5,14,3,4,0.13636363636363635,8
+execute/test -> edit/write -> explore/read -> execute/test -> edit/write,5,14,3,3,0.2631578947368421,5
+execute/test -> edit/write -> execute/test -> edit/write -> explore/read,5,14,3,4,0.25,6
+explore/read -> edit/write -> execute/test -> edit/write -> explore/read,5,14,3,4,0.2631578947368421,5
+edit/write -> execute/test -> edit/write -> explore/read -> edit/write,5,13,3,4,0.3125,3
+edit/write -> explore/read -> execute/test -> edit/write -> execute/test,5,12,3,3,0.25,4
+execute/test -> edit/write -> explore/read -> edit/write -> execute/test,5,11,3,3,0.21428571428571427,3
+edit/write -> execute/test -> edit/write -> explore/read -> execute/test,5,10,3,3,0.1875,6
+retrieve/browser -> execute/test,2,4,3,1,0.2,1
+execute/test -> retrieve/browser,2,3,3,2,0.2,2
+execute/test -> retrieve/browser -> execute/test,3,3,3,1,0.25,1
+edit/write -> execute/test -> retrieve/browser,3,2,2,1,0.5,0
+edit/write -> execute/test -> retrieve/browser -> execute/test,4,2,2,1,0.5,0
+execute/test -> edit/write -> retrieve/browser,3,2,2,2,0.0,0
+execute/test -> explore/read -> execute/test -> edit/write -> retrieve/browser,5,2,2,2,0.0,0
+edit/write -> retrieve/browser,2,2,2,2,0.0,0
+execute/test -> retrieve/browser -> execute/test -> explore/read -> execute/test,5,2,2,1,0.0,1
+retrieve/browser -> execute/test -> explore/read,3,2,2,1,0.0,1

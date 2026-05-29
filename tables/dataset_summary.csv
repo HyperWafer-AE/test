@@ -1,2 +1,0 @@
-dataset,num_traces,num_steps,success_rate,median_steps,mean_steps,median_obs_chars_per_trace,mean_obs_chars_per_trace
-terminalbench,100,5095,0.29,29.5,50.95,5317.5,12289.95

@@ -1,0 +1,301 @@
+motif_kind,motif,train_support,heldout_support,support_harnesses,appears_in_heldout
+phase,explore/read -> execute/test,473,196,7,True
+phase,execute/test -> explore/read,440,176,6,True
+phase,explore/read -> execute/test -> explore/read,342,140,6,True
+phase,explore/read -> edit/write,326,143,5,True
+phase,execute/test -> explore/read -> execute/test,287,111,6,True
+phase,edit/write -> execute/test,243,113,6,True
+phase,edit/write -> explore/read,241,108,6,True
+phase,execute/test -> explore/read -> execute/test -> explore/read,224,87,6,True
+phase,explore/read -> execute/test -> explore/read -> execute/test,217,82,6,True
+phase,execute/test -> edit/write,203,85,7,True
+phase,edit/write -> execute/test -> explore/read,184,74,5,True
+phase,explore/read -> edit/write -> execute/test,178,83,5,True
+phase,execute/test -> explore/read -> edit/write,176,75,5,True
+phase,explore/read -> execute/test -> explore/read -> execute/test -> explore/read,173,69,6,True
+phase,explore/read -> edit/write -> explore/read,172,78,5,True
+phase,execute/test -> explore/read -> execute/test -> explore/read -> execute/test,163,64,6,True
+phase,explore/read -> execute/test -> edit/write,153,54,6,True
+phase,explore/read -> edit/write -> execute/test -> explore/read,133,52,5,True
+phase,execute/test -> edit/write -> execute/test,125,60,6,True
+phase,edit/write -> explore/read -> edit/write,125,54,5,True
+phase,explore/read -> execute/test -> explore/read -> edit/write,121,57,5,True
+phase,edit/write -> execute/test -> explore/read -> execute/test,118,48,5,True
+phase,execute/test -> explore/read -> edit/write -> execute/test,105,48,4,True
+phase,explore/read -> edit/write -> explore/read -> edit/write,100,48,5,True
+phase,edit/write -> execute/test -> edit/write,91,46,6,True
+phase,explore/read -> execute/test -> edit/write -> execute/test,84,36,5,True
+phase,edit/write -> explore/read -> execute/test,81,41,5,True
+phase,edit/write -> execute/test -> explore/read -> execute/test -> explore/read,81,39,5,True
+phase,execute/test -> explore/read -> edit/write -> execute/test -> explore/read,81,31,4,True
+phase,execute/test -> explore/read -> execute/test -> edit/write,80,20,5,True
+phase,execute/test -> edit/write -> explore/read,79,29,6,True
+phase,edit/write -> execute/test -> explore/read -> edit/write,77,32,5,True
+phase,edit/write -> explore/read -> edit/write -> explore/read,76,33,4,True
+phase,execute/test -> explore/read -> edit/write -> explore/read,75,35,5,True
+phase,explore/read -> edit/write -> execute/test -> explore/read -> execute/test,74,35,4,True
+phase,execute/test -> edit/write -> execute/test -> explore/read,71,36,5,True
+phase,execute/test -> explore/read -> execute/test -> explore/read -> edit/write,71,32,5,True
+phase,explore/read -> execute/test -> explore/read -> edit/write -> execute/test,67,37,4,True
+phase,explore/read -> edit/write -> explore/read -> edit/write -> explore/read,65,30,4,True
+phase,explore/read -> edit/write -> execute/test -> explore/read -> edit/write,65,23,5,True
+phase,edit/write -> execute/test -> edit/write -> execute/test,63,35,5,True
+phase,explore/read -> edit/write -> explore/read -> execute/test,60,29,4,True
+phase,edit/write -> explore/read -> edit/write -> explore/read -> edit/write,55,23,3,True
+phase,explore/read -> edit/write -> execute/test -> edit/write,55,30,5,True
+phase,execute/test -> edit/write -> execute/test -> edit/write,55,29,4,True
+phase,explore/read -> execute/test -> edit/write -> explore/read,54,18,5,True
+phase,explore/read -> execute/test -> explore/read -> edit/write -> explore/read,54,27,5,True
+phase,edit/write -> explore/read -> execute/test -> explore/read,50,32,5,True
+phase,execute/test -> edit/write -> execute/test -> explore/read -> execute/test,49,17,5,True
+phase,edit/write -> execute/test -> explore/read -> edit/write -> execute/test,48,20,4,True
+phase,explore/read -> execute/test -> explore/read -> execute/test -> edit/write,47,12,5,True
+phase,execute/test -> explore/read -> execute/test -> edit/write -> execute/test,45,16,5,True
+phase,execute/test -> edit/write -> execute/test -> edit/write -> execute/test,44,24,4,True
+phase,execute/test -> explore/read -> edit/write -> explore/read -> edit/write,43,24,5,True
+phase,explore/read -> execute/test -> edit/write -> execute/test -> explore/read,43,20,5,True
+phase,edit/write -> explore/read -> edit/write -> execute/test,43,22,5,True
+phase,explore/read -> edit/write -> execute/test -> edit/write -> execute/test,38,24,4,True
+phase,edit/write -> execute/test -> edit/write -> execute/test -> edit/write,37,19,4,True
+phase,execute/test -> edit/write -> explore/read -> edit/write,36,10,5,True
+phase,explore/read -> edit/write -> explore/read -> execute/test -> explore/read,35,21,4,True
+phase,explore/read -> execute/test -> edit/write -> execute/test -> edit/write,35,15,4,True
+phase,explore/read -> edit/write -> explore/read -> edit/write -> execute/test,33,21,4,True
+phase,execute/test -> explore/read -> edit/write -> explore/read -> execute/test,32,18,3,True
+phase,execute/test -> edit/write -> explore/read -> execute/test,30,18,4,True
+phase,edit/write -> explore/read -> edit/write -> execute/test -> explore/read,30,9,3,True
+phase,edit/write -> execute/test -> edit/write -> explore/read,30,11,5,True
+phase,execute/test -> explore/read -> execute/test -> edit/write -> explore/read,28,5,3,True
+phase,edit/write -> explore/read -> execute/test -> explore/read -> execute/test,28,21,4,True
+phase,edit/write -> execute/test -> edit/write -> execute/test -> explore/read,27,20,4,True
+phase,edit/write -> execute/test -> explore/read -> execute/test -> edit/write,27,7,4,True
+phase,execute/test -> explore/read -> edit/write -> execute/test -> edit/write,26,13,4,True
+phase,edit/write -> explore/read -> execute/test -> edit/write,26,8,3,True
+phase,edit/write -> execute/test -> explore/read -> edit/write -> explore/read,25,15,3,True
+phase,explore/read -> execute/test -> edit/write -> explore/read -> edit/write,24,7,3,True
+phase,explore/read -> execute/test -> edit/write -> explore/read -> execute/test,23,12,4,True
+phase,execute/test -> edit/write -> explore/read -> edit/write -> explore/read,21,5,3,True
+phase,execute/test -> edit/write -> explore/read -> execute/test -> explore/read,20,13,4,True
+phase,execute/test -> edit/write -> execute/test -> explore/read -> edit/write,19,17,4,True
+phase,edit/write -> explore/read -> execute/test -> explore/read -> edit/write,18,9,4,True
+phase,edit/write -> explore/read -> edit/write -> explore/read -> execute/test,17,11,4,True
+phase,explore/read -> edit/write -> explore/read -> execute/test -> edit/write,15,4,3,True
+phase,edit/write -> explore/read -> execute/test -> edit/write -> explore/read,15,4,3,True
+phase,edit/write -> explore/read -> edit/write -> execute/test -> edit/write,14,8,4,True
+phase,execute/test -> edit/write -> explore/read -> execute/test -> edit/write,14,5,3,True
+phase,execute/test -> edit/write -> execute/test -> edit/write -> explore/read,14,6,4,True
+phase,explore/read -> edit/write -> execute/test -> edit/write -> explore/read,14,5,4,True
+phase,edit/write -> execute/test -> edit/write -> explore/read -> edit/write,13,3,4,True
+phase,edit/write -> explore/read -> execute/test -> edit/write -> execute/test,12,4,3,True
+phase,execute/test -> edit/write -> explore/read -> edit/write -> execute/test,11,3,3,True
+phase,edit/write -> execute/test -> edit/write -> explore/read -> execute/test,10,6,3,True
+phase,retrieve/browser -> execute/test,4,1,1,True
+phase,execute/test -> retrieve/browser,3,2,2,True
+phase,execute/test -> retrieve/browser -> execute/test,3,1,1,True
+phase,edit/write -> execute/test -> retrieve/browser,2,0,1,False
+phase,edit/write -> execute/test -> retrieve/browser -> execute/test,2,0,1,False
+phase,execute/test -> edit/write -> retrieve/browser,2,0,2,False
+phase,execute/test -> explore/read -> execute/test -> edit/write -> retrieve/browser,2,0,2,False
+phase,edit/write -> retrieve/browser,2,0,2,False
+phase,execute/test -> retrieve/browser -> execute/test -> explore/read -> execute/test,2,1,1,True
+phase,retrieve/browser -> execute/test -> explore/read,2,1,1,True
+tool,execute -> read_file,281,102,6,True
+tool,read_file -> execute,279,110,5,True
+tool,list_files -> read_file,278,99,5,True
+tool,pip -> execute,203,88,6,True
+tool,execute -> pip,200,89,6,True
+tool,edit -> execute,193,91,6,True
+tool,read_file -> edit,185,80,5,True
+tool,execute -> list_files,170,64,6,True
+tool,execute -> read_file -> execute,150,60,4,True
+tool,list_files -> execute,147,62,6,True
+tool,execute -> edit,146,60,5,True
+tool,read_file -> execute -> read_file,138,54,4,True
+tool,cd -> read_file,120,42,3,True
+tool,execute -> pip -> execute,116,57,6,True
+tool,edit -> read_file,113,61,5,True
+tool,read_file -> list_files,111,45,5,True
+tool,execute -> cd,110,50,6,True
+tool,cd -> execute,110,51,6,True
+tool,pip -> cd,105,37,4,True
+tool,cd -> pip,101,37,4,True
+tool,list_files -> read_file -> execute,99,39,3,True
+tool,list_files -> edit,96,40,5,True
+tool,which -> apt-get,95,41,5,True
+tool,read_file -> execute -> read_file -> execute,89,39,4,True
+tool,execute -> read_file -> execute -> read_file,89,36,4,True
+tool,edit -> cd,84,26,4,True
+tool,cd -> pip -> cd,82,25,4,True
+tool,pip -> execute -> pip,81,33,6,True
+tool,read_file -> str_replace,77,29,1,True
+tool,execute -> edit -> execute,77,39,5,True
+tool,edit -> execute -> read_file,74,26,5,True
+tool,read_file -> cd,72,30,4,True
+tool,execute -> search,71,35,4,True
+tool,execute -> read_file -> execute -> read_file -> execute,70,29,4,True
+tool,read_file -> edit -> execute,68,33,4,True
+tool,read_file -> search,67,28,4,True
+tool,read_file -> pip,65,28,6,True
+tool,search -> edit,63,38,4,True
+tool,pip3 -> execute,62,20,4,True
+tool,read_file -> execute -> read_file -> execute -> read_file,61,31,4,True
+tool,cd -> list_files,60,23,5,True
+tool,str_replace -> read_file,60,19,1,True
+tool,execute -> read_file -> edit,59,26,4,True
+tool,read_file -> execute -> pip,59,22,4,True
+tool,apt-get -> r,58,22,5,True
+tool,cd -> edit,58,17,3,True
+tool,str_replace -> cd,56,20,1,True
+tool,execute -> apt,56,21,5,True
+tool,read_file -> edit -> read_file,56,29,4,True
+tool,read_file -> execute -> list_files,55,20,3,True
+tool,pip -> execute -> pip -> execute,54,23,6,True
+tool,search -> read_file,54,22,5,True
+tool,pip -> execute -> read_file,53,17,5,True
+tool,list_files -> read_file -> edit,53,17,4,True
+tool,apt -> execute,50,15,5,True
+tool,list_files -> pip,50,21,6,True
+tool,execute -> pip -> execute -> pip,50,16,5,True
+tool,your_command_here -> list_files,49,14,1,True
+tool,read_file -> execute -> edit,49,17,3,True
+tool,list_files -> cd,49,17,4,True
+tool,edit -> execute -> edit,49,24,5,True
+tool,read_file -> list_files -> read_file,48,21,3,True
+tool,execute -> pip3,46,21,4,True
+tool,execute -> which,46,16,4,True
+tool,which -> execute,46,17,3,True
+tool,str_replace -> read_file -> str_replace,45,15,1,True
+tool,edit -> search,44,22,4,True
+tool,cd -> read_file -> cd,43,13,3,True
+tool,read_file -> plan,43,19,1,True
+tool,pip -> list_files,43,17,5,True
+tool,rscript -> list_files,43,21,5,True
+tool,edit -> execute -> read_file -> execute,43,17,4,True
+tool,git -> list_files,43,13,5,True
+tool,edit -> read_file -> edit,42,22,4,True
+tool,which -> apt-get -> r,42,14,5,True
+tool,rscript -> read_file,42,26,4,True
+tool,cd -> edit -> cd,42,10,3,True
+tool,execute -> apt -> execute,42,13,5,True
+tool,r -> apt-get,41,16,5,True
+tool,edit -> read_file -> execute,40,21,4,True
+tool,pip -> cd -> execute,40,17,4,True
+tool,cd -> str_replace,40,17,1,True
+tool,test -> execute,40,16,6,True
+tool,execute -> pip -> execute -> pip -> execute,40,12,5,True
+tool,read_file -> str_replace -> cd,40,15,1,True
+tool,list_files -> execute -> pip,39,19,5,True
+tool,execute -> apt-get,39,14,5,True
+tool,git -> cd,39,16,4,True
+tool,cd -> read_file -> str_replace,39,15,1,True
+tool,read_file -> wc,39,14,4,True
+tool,execute -> list_files -> execute,39,17,4,True
+tool,search -> execute,39,12,4,True
+tool,execute -> cd -> pip,38,11,4,True
+tool,cd -> execute -> cd,38,14,4,True
+tool,str_replace -> execute,38,8,1,True
+tool,execute -> pip3 -> execute,37,11,4,True
+tool,read_file -> edit -> execute -> read_file,37,13,3,True
+tool,read_file -> rscript,36,19,4,True
+tool,r -> read_file,36,13,4,True
+tool,execute -> read_file -> execute -> list_files,35,10,3,True
+stateflow,file_object -> file_object,630,259,8,True
+stateflow,file_object -> file_object -> file_object,460,185,8,True
+stateflow,file_object -> file_object -> file_object -> file_object,332,138,8,True
+stateflow,error_signature_object -> file_object,327,152,7,True
+stateflow,file_object -> error_signature_object,291,126,7,True
+stateflow,execute -> read_file,279,102,6,True
+stateflow,read_file -> execute,278,110,5,True
+stateflow,list_files -> read_file,277,99,5,True
+stateflow,error_signature_object -> file_object -> file_object,263,117,7,True
+stateflow,file_object -> file_object -> file_object -> file_object -> file_object,257,95,7,True
+stateflow,file_object -> file_object -> error_signature_object,243,110,7,True
+stateflow,url_object -> file_object,220,82,8,True
+stateflow,pip -> execute,203,88,6,True
+stateflow,execute -> pip,200,89,6,True
+stateflow,url_object -> file_object -> file_object,196,70,8,True
+stateflow,error_signature_object -> file_object -> file_object -> file_object,194,85,7,True
+stateflow,edit -> execute,192,91,6,True
+stateflow,file_object -> file_object -> file_object -> error_signature_object,188,77,6,True
+stateflow,read_file -> edit,185,80,5,True
+stateflow,file_object -> test_case_object,171,78,7,True
+stateflow,execute -> list_files,169,64,6,True
+stateflow,error_signature_object -> error_signature_object,168,56,6,True
+stateflow,url_object -> file_object -> file_object -> file_object,162,54,7,True
+stateflow,file_object -> error_signature_object -> file_object,159,71,7,True
+stateflow,file_object -> file_object -> test_case_object,156,74,7,True
+stateflow,execute -> read_file -> execute,149,60,4,True
+stateflow,list_files -> execute,147,62,6,True
+stateflow,execute -> edit,146,59,5,True
+stateflow,error_signature_object -> file_object -> file_object -> file_object -> file_object,141,61,7,True
+stateflow,file_object -> file_object -> error_signature_object -> file_object,138,62,6,True
+stateflow,read_file -> execute -> read_file,137,54,4,True
+stateflow,execute -> file_object,135,66,7,True
+stateflow,url_object -> url_object,135,52,4,True
+stateflow,read_file -> file_object,134,64,6,True
+stateflow,test_case_object -> error_signature_object,130,59,5,True
+stateflow,file_object -> error_signature_object -> file_object -> file_object,124,53,6,True
+stateflow,file_object -> file_object -> file_object -> file_object -> error_signature_object,123,48,6,True
+stateflow,cd -> read_file,120,42,3,True
+stateflow,url_object -> file_object -> file_object -> file_object -> file_object,117,43,6,True
+stateflow,execute -> pip -> execute,116,57,6,True
+stateflow,file_object -> file_object -> file_object -> error_signature_object -> file_object,114,49,6,True
+stateflow,edit -> read_file,112,61,4,True
+stateflow,read_file -> list_files,111,45,5,True
+stateflow,cd -> execute,110,51,6,True
+stateflow,execute -> cd,110,50,6,True
+stateflow,file_object -> file_object -> error_signature_object -> file_object -> file_object,109,48,6,True
+stateflow,file_object -> url_object,106,28,6,True
+stateflow,pip -> cd,105,37,4,True
+stateflow,test_case_object -> error_signature_object -> file_object,105,45,5,True
+stateflow,file_object -> error_signature_object -> error_signature_object,104,30,5,True
+stateflow,cd -> pip,101,37,4,True
+stateflow,file_object -> test_case_object -> error_signature_object,101,43,5,True
+stateflow,read_file -> file_object -> file_object,99,46,6,True
+stateflow,execute -> file_object -> file_object,99,45,7,True
+stateflow,list_files -> read_file -> execute,99,39,3,True
+stateflow,error_signature_object -> url_object,96,30,7,True
+stateflow,list_files -> edit,96,40,5,True
+stateflow,file_object -> file_object -> test_case_object -> error_signature_object,95,42,5,True
+stateflow,which -> apt-get,95,41,5,True
+stateflow,file_object -> error_signature_object -> file_object -> file_object -> file_object,93,38,6,True
+stateflow,test_case_object -> file_object,92,44,7,True
+stateflow,file_object -> file_object -> file_object -> test_case_object,90,47,6,True
+stateflow,read_file -> execute -> read_file -> execute,89,39,4,True
+stateflow,execute -> read_file -> execute -> read_file,88,36,4,True
+stateflow,test_case_object -> error_signature_object -> file_object -> file_object,87,39,5,True
+stateflow,file_object -> test_case_object -> file_object,85,42,6,True
+stateflow,file_object -> test_case_object -> error_signature_object -> file_object,85,33,5,True
+stateflow,edit -> cd,84,26,4,True
+stateflow,cd -> pip -> cd,82,25,4,True
+stateflow,pip -> execute -> pip,81,33,6,True
+stateflow,file_object -> file_object -> test_case_object -> error_signature_object -> file_object,80,32,5,True
+stateflow,file_object -> file_object -> error_signature_object -> error_signature_object,78,27,5,True
+stateflow,read_file -> str_replace,77,29,1,True
+stateflow,test_case_object -> file_object -> file_object,77,35,5,True
+stateflow,error_signature_object -> error_signature_object -> error_signature_object,77,27,5,True
+stateflow,execute -> edit -> execute,76,38,5,True
+stateflow,url_object -> error_signature_object,75,35,6,True
+stateflow,file_object -> test_case_object -> file_object -> file_object,73,34,5,True
+stateflow,edit -> execute -> read_file,72,26,5,True
+stateflow,file_object -> file_object -> url_object,72,17,5,True
+stateflow,file_object -> file_object -> test_case_object -> file_object,72,37,6,True
+stateflow,execute -> search,71,34,4,True
+stateflow,read_file -> cd,71,30,4,True
+stateflow,url_object -> url_object -> file_object,70,23,4,True
+stateflow,file_object -> test_case_object -> error_signature_object -> file_object -> file_object,70,28,5,True
+stateflow,error_signature_object -> error_signature_object -> file_object,70,25,5,True
+stateflow,execute -> read_file -> execute -> read_file -> execute,70,29,4,True
+stateflow,file_object -> file_object -> file_object -> file_object -> test_case_object,70,39,5,True
+stateflow,read_file -> edit -> execute,68,33,4,True
+stateflow,read_file -> search,67,28,4,True
+stateflow,read_file -> pip,65,28,6,True
+stateflow,list_files -> file_object,64,21,5,True
+stateflow,test_case_object -> error_signature_object -> file_object -> file_object -> file_object,63,26,4,True
+stateflow,edit -> file_object,63,19,4,True
+stateflow,search -> edit,63,38,4,True
+stateflow,pip3 -> execute,62,20,4,True
+stateflow,url_object -> url_object -> file_object -> file_object,62,19,3,True
+stateflow,file_object -> file_object -> test_case_object -> file_object -> file_object,61,30,5,True
+stateflow,read_file -> execute -> read_file -> execute -> read_file,61,31,4,True
+stateflow,cd -> list_files,60,23,5,True
