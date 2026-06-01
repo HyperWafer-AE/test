@@ -1,0 +1,65 @@
+{
+  "policy": "asg",
+  "args": {
+    "policy": "asg",
+    "run_all_policies": false,
+    "cfg": "src/platform/cfgs/wamis_hd_distributed.cfg",
+    "topology": "wamis",
+    "num_agents": 2,
+    "turns": 4,
+    "memory_budget_gb": 1.0,
+    "seed": 1,
+    "output": "agent_results/smoke_asg.json",
+    "output_dir": "agent_results",
+    "trace_json": null,
+    "save_trace": null,
+    "disable_prefetch": false,
+    "shared_prefix_tokens": 1024,
+    "role_tokens": 128,
+    "append_tokens_mean": 128,
+    "output_tokens_mean": 96,
+    "tool_probability": 0.55,
+    "tool_latency_mean": 1000,
+    "tool_output_tokens_mean": 256,
+    "failure_probability": 0.12,
+    "n_layers": 32,
+    "hidden_size": 4096,
+    "dtype_bytes": 2,
+    "prefill_cycles_per_token": 1000,
+    "decode_cycles_per_token": 5000
+  },
+  "timing": {
+    "total_cycles": 5939000,
+    "pure_comp_cycles": 5939000,
+    "pure_comm_cycles": 0
+  },
+  "agent_metrics": {
+    "total_input_tokens": 11596,
+    "append_tokens": 1049,
+    "effective_prefill_tokens": 1689,
+    "decode_tokens": 850,
+    "cache_hits": 34,
+    "cache_misses": 6,
+    "kv_migration_bytes": 0,
+    "evicted_kv_bytes": 442499072,
+    "tool_wait_cycles": 2443,
+    "num_llm_steps": 8,
+    "num_tool_steps": 2,
+    "cache_hit_ratio": 0.85,
+    "effective_prefill_reduction": 0.866429418742586,
+    "decode_to_prefill_ratio": 0.5032563647128478
+  },
+  "workload_stats": {
+    "num_events": 14,
+    "num_state_events": 4,
+    "num_llm_events": 8,
+    "num_tool_events": 2,
+    "total_append_tokens": 1049,
+    "total_output_tokens": 1350
+  },
+  "event_stats": {
+    "busybarn_events": 18,
+    "asg_states": 14,
+    "asg_execs": 10
+  }
+}
