@@ -55,9 +55,15 @@ from .agent_event_builder import AgentEventBuilder
 from .metrics import postprocess_agent_events
 from .model_profile import ModelProfile
 from .state_manager import (
+    ASGOraclePlacementStateManager,
+    ASGOraclePrefetchStateManager,
+    ASGOracleRetentionStateManager,
     ASGPlacementStateManager,
+    ASGPlacementV2StateManager,
     ASGPrefetchStateManager,
+    ASGPrefetchV2StateManager,
     ASGRetentionStateManager,
+    ASGRetentionV2StateManager,
     ASGStateManager,
     KVFlowLikeStateManager,
     LRUStateManager,
@@ -73,9 +79,33 @@ POLICIES = (
     "asg-retention",
     "asg-placement",
     "asg-prefetch",
+    "asg-retention-v2",
+    "asg-placement-v2",
+    "asg-prefetch-v2",
+    "asg-oracle-retention",
+    "asg-oracle-placement",
+    "asg-oracle-prefetch",
     "asg",
 )
-RUN_ALL_POLICIES = ("nocache", "lru", "kvflow", "asg-retention", "asg-placement", "asg-prefetch")
+POLICY_SUITES = {
+    "basic": ("nocache", "lru", "kvflow", "asg-retention", "asg-placement", "asg-prefetch"),
+    "v2": ("nocache", "lru", "kvflow", "asg-retention-v2", "asg-placement-v2", "asg-prefetch-v2"),
+    "oracle": ("lru", "asg-oracle-retention", "asg-oracle-placement", "asg-oracle-prefetch"),
+    "all": (
+        "nocache",
+        "lru",
+        "kvflow",
+        "asg-retention",
+        "asg-placement",
+        "asg-prefetch",
+        "asg-retention-v2",
+        "asg-placement-v2",
+        "asg-prefetch-v2",
+        "asg-oracle-retention",
+        "asg-oracle-placement",
+        "asg-oracle-prefetch",
+    ),
+}
 
 
 def build_hardware(cfg_path: str, topology: str):
@@ -97,7 +127,7 @@ def build_model(args) -> ModelProfile:
     )
 
 
-def build_state_manager(policy: str, memory_budget_bytes: int, model: ModelProfile):
+def build_state_manager(policy: str, memory_budget_bytes: int, model: ModelProfile, args):
     if policy == "nocache":
         return NoCacheStateManager(memory_budget_bytes)
     if policy == "lru":
@@ -108,13 +138,26 @@ def build_state_manager(policy: str, memory_budget_bytes: int, model: ModelProfi
         "asg-retention": ASGRetentionStateManager,
         "asg-placement": ASGPlacementStateManager,
         "asg-prefetch": ASGPrefetchStateManager,
-        "asg": ASGPrefetchStateManager,
+        "asg-retention-v2": ASGRetentionV2StateManager,
+        "asg-placement-v2": ASGPlacementV2StateManager,
+        "asg-prefetch-v2": ASGPrefetchV2StateManager,
+        "asg-oracle-retention": ASGOracleRetentionStateManager,
+        "asg-oracle-placement": ASGOraclePlacementStateManager,
+        "asg-oracle-prefetch": ASGOraclePrefetchStateManager,
+        "asg": ASGPrefetchV2StateManager,
     }.get(policy)
     if manager_cls is not None:
-        manager = manager_cls(
-            memory_budget_bytes,
-            prefill_cycles_per_token=model.prefill_cycles_per_token,
-        )
+        kwargs = {"prefill_cycles_per_token": model.prefill_cycles_per_token}
+        if issubclass(manager_cls, ASGRetentionV2StateManager) or issubclass(manager_cls, ASGPlacementV2StateManager) or issubclass(manager_cls, ASGPrefetchV2StateManager) or issubclass(manager_cls, ASGOracleRetentionStateManager) or issubclass(manager_cls, ASGOraclePlacementStateManager) or issubclass(manager_cls, ASGOraclePrefetchStateManager):
+            kwargs.update(
+                {
+                    "knapsack_granularity_bytes": int(args.knapsack_granularity_mb * 1024 * 1024),
+                    "max_future_access_cap": args.max_future_access_cap,
+                    "storage_penalty": args.storage_penalty,
+                    "knapsack_max_candidates": args.knapsack_max_candidates,
+                }
+            )
+        manager = manager_cls(memory_budget_bytes, **kwargs)
         if policy == "asg":
             manager.policy_name = "asg"
         return manager
@@ -136,17 +179,32 @@ def workload_stats(trace):
 def run_policy(policy: str, args, trace):
     model = build_model(args)
     hardware = build_hardware(args.cfg, args.topology)
+    if hasattr(hardware, "frequency"):
+        hardware.frequency = args.hardware_frequency_ghz
     random.seed(args.scheduler_seed)
     np.random.seed(args.scheduler_seed)
     memory_budget_bytes = int(args.memory_budget_gb * (1024 ** 3))
-    state_manager = build_state_manager(policy, memory_budget_bytes, model)
+    state_manager = build_state_manager(policy, memory_budget_bytes, model, args)
     active_nodes = max(1, len(getattr(hardware, "nodes_set", [])))
     if args.per_node_memory_mb is None:
         per_node_memory_mb = max(16, int(args.memory_budget_gb * 1024 / active_nodes))
     else:
         per_node_memory_mb = args.per_node_memory_mb
-    topology_enabled = not args.disable_topology_placement and policy in {"asg-placement", "asg-prefetch", "asg"}
-    prefetch_enabled = not args.disable_prefetch and policy in {"asg-prefetch", "asg"}
+    topology_enabled = not args.disable_topology_placement and policy in {
+        "asg-placement",
+        "asg-prefetch",
+        "asg-placement-v2",
+        "asg-prefetch-v2",
+        "asg-oracle-placement",
+        "asg-oracle-prefetch",
+        "asg",
+    }
+    prefetch_enabled = not args.disable_prefetch and policy in {
+        "asg-prefetch",
+        "asg-prefetch-v2",
+        "asg-oracle-prefetch",
+        "asg",
+    }
     builder = AgentEventBuilder(
         hardware_platform=hardware,
         model_profile=model,
@@ -165,10 +223,13 @@ def run_policy(policy: str, args, trace):
         enable_observation_compression=args.enable_observation_compression,
         large_observation_token_threshold=args.large_observation_token_threshold,
         observation_compression_ratio=args.observation_compression_ratio,
+        future_horizon=args.future_horizon,
+        oracle_future=args.oracle_future or policy.startswith("asg-oracle"),
+        comm_cost_model=args.comm_cost_model,
     )
     events_dict, graph, metrics = builder.build(trace)
     total_cycles, pure_comp_cycles, pure_comm_cycles = collective_event_driver(events_dict, hardware)
-    postprocess_agent_events(events_dict, metrics)
+    postprocess_agent_events(events_dict, metrics, total_cycles, pure_comp_cycles, pure_comm_cycles)
     return {
         "policy": policy,
         "args": vars(args),
@@ -223,11 +284,26 @@ def write_summary_csv(path, results):
         "num_remote_reads",
         "remote_read_cycles",
         "migration_skipped_by_cost",
+        "num_action_local",
+        "num_action_remote_read",
+        "num_action_migrate",
+        "num_action_replicate",
+        "num_action_static_hit",
         "static_replica_bytes",
         "num_static_replicas",
         "unused_prefetch_events",
         "migration_cost_estimate_cycles",
         "remote_read_cost_estimate_cycles",
+        "external_wait_cycles",
+        "model_compute_cycles",
+        "model_comm_cycles",
+        "exposed_migration_cycles",
+        "exposed_prefetch_cycles",
+        "llm_side_cycles",
+        "prefetch_hidden_cycles",
+        "prefetch_exposed_cycles",
+        "compressed_observation_tokens_saved",
+        "num_compressed_observations",
         "busybarn_events",
     ]
     with output_path.open("w", newline="", encoding="utf-8") as handle:
@@ -264,11 +340,26 @@ def write_summary_csv(path, results):
                     "num_remote_reads": metrics["num_remote_reads"],
                     "remote_read_cycles": metrics["remote_read_cycles"],
                     "migration_skipped_by_cost": metrics["migration_skipped_by_cost"],
+                    "num_action_local": metrics["num_action_local"],
+                    "num_action_remote_read": metrics["num_action_remote_read"],
+                    "num_action_migrate": metrics["num_action_migrate"],
+                    "num_action_replicate": metrics["num_action_replicate"],
+                    "num_action_static_hit": metrics["num_action_static_hit"],
                     "static_replica_bytes": metrics["static_replica_bytes"],
                     "num_static_replicas": metrics["num_static_replicas"],
                     "unused_prefetch_events": metrics["unused_prefetch_events"],
                     "migration_cost_estimate_cycles": metrics["migration_cost_estimate_cycles"],
                     "remote_read_cost_estimate_cycles": metrics["remote_read_cost_estimate_cycles"],
+                    "external_wait_cycles": metrics["external_wait_cycles"],
+                    "model_compute_cycles": metrics["model_compute_cycles"],
+                    "model_comm_cycles": metrics["model_comm_cycles"],
+                    "exposed_migration_cycles": metrics["exposed_migration_cycles"],
+                    "exposed_prefetch_cycles": metrics["exposed_prefetch_cycles"],
+                    "llm_side_cycles": metrics["llm_side_cycles"],
+                    "prefetch_hidden_cycles": metrics["prefetch_hidden_cycles"],
+                    "prefetch_exposed_cycles": metrics["prefetch_exposed_cycles"],
+                    "compressed_observation_tokens_saved": metrics["compressed_observation_tokens_saved"],
+                    "num_compressed_observations": metrics["num_compressed_observations"],
                     "busybarn_events": result["event_stats"]["busybarn_events"],
                 }
             )
@@ -327,6 +418,7 @@ def parse_args(argv=None):
     parser = argparse.ArgumentParser(description="Run Agent-on-Wafer MVP experiments on BusyBarn.")
     parser.add_argument("--policy", choices=POLICIES, default="asg")
     parser.add_argument("--run-all-policies", action="store_true")
+    parser.add_argument("--policy-suite", choices=tuple(POLICY_SUITES), default="v2")
     parser.add_argument("--cfg", default="src/platform/cfgs/wamis_hd_distributed.cfg")
     parser.add_argument("--topology", choices=("wamis", "tlm"), default="wamis")
     parser.add_argument("--num-agents", type=int, default=8)
@@ -347,6 +439,13 @@ def parse_args(argv=None):
     parser.add_argument("--tool-latency-scale", type=int, default=1_000_000)
     parser.add_argument("--hardware-frequency-ghz", type=float, default=1.0)
     parser.add_argument("--effective-bandwidth-bytes-per-cycle", type=float, default=64.0)
+    parser.add_argument("--comm-cost-model", choices=("heuristic", "backend"), default="backend")
+    parser.add_argument("--future-horizon", type=int, default=16)
+    parser.add_argument("--oracle-future", action="store_true")
+    parser.add_argument("--knapsack-granularity-mb", type=float, default=16)
+    parser.add_argument("--max-future-access-cap", type=int, default=8)
+    parser.add_argument("--storage-penalty", type=float, default=0.0)
+    parser.add_argument("--knapsack-max-candidates", type=int, default=2048)
     parser.add_argument("--prefetch-reuse-threshold", type=float, default=0.6)
     parser.add_argument("--prefetch-next-use-threshold", type=float, default=2.0)
     parser.add_argument("--max-prefetch-bytes", type=int, default=536870912)
@@ -400,7 +499,8 @@ def main(argv=None):
     if args.run_all_policies:
         output_dir = Path(args.output_dir)
         results = []
-        for policy in RUN_ALL_POLICIES:
+        policies = POLICY_SUITES[args.policy_suite]
+        for policy in policies:
             result = run_policy(policy, args, trace)
             results.append(result)
             write_json(output_dir / f"{policy}.json", result)

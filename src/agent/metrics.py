@@ -33,11 +33,24 @@ class AgentMetrics:
     num_remote_reads: int = 0
     remote_read_cycles: int = 0
     migration_skipped_by_cost: int = 0
+    num_action_local: int = 0
+    num_action_remote_read: int = 0
+    num_action_migrate: int = 0
+    num_action_replicate: int = 0
+    num_action_static_hit: int = 0
     static_replica_bytes: int = 0
     num_static_replicas: int = 0
     unused_prefetch_events: int = 0
     migration_cost_estimate_cycles: int = 0
     remote_read_cost_estimate_cycles: int = 0
+    external_wait_cycles: int = 0
+    model_compute_cycles: int = 0
+    model_comm_cycles: int = 0
+    exposed_migration_cycles: int = 0
+    exposed_prefetch_cycles: int = 0
+    llm_side_cycles: int = 0
+    compressed_observation_tokens_saved: int = 0
+    num_compressed_observations: int = 0
     num_agents: int = 0
     num_states_resident_final: int = 0
     num_states_total: int = 0
@@ -76,7 +89,13 @@ class AgentMetrics:
         return data
 
 
-def postprocess_agent_events(events_dict, metrics: AgentMetrics):
+def postprocess_agent_events(
+    events_dict,
+    metrics: AgentMetrics,
+    total_cycles: int = None,
+    pure_comp_cycles: int = None,
+    pure_comm_cycles: int = None,
+):
     wait_events = {
         event.event_tag: event
         for event in events_dict.values()
@@ -85,13 +104,20 @@ def postprocess_agent_events(events_dict, metrics: AgentMetrics):
     metrics.prefetch_hidden_cycles = 0
     metrics.prefetch_exposed_cycles = 0
     metrics.prefetch_total_cycles = 0
+    metrics.external_wait_cycles = 0
+    metrics.exposed_migration_cycles = 0
 
     for event in events_dict.values():
+        if getattr(event, "event_type", None) == "external_wait":
+            metrics.external_wait_cycles += max(0, int(event.end_time) - int(event.start_time))
+            continue
         if getattr(event, "event_type", None) != "communication":
             continue
         metadata = getattr(event, "metadata", {}) or {}
         if metadata.get("reason") == "remote_read":
             metrics.remote_read_cycles += max(0, int(event.end_time) - int(event.start_time))
+        if metadata.get("reason") in {"demand", "replicate"}:
+            metrics.exposed_migration_cycles += max(0, int(event.end_time) - int(event.start_time))
         if metadata.get("reason") != "prefetch":
             continue
         duration = max(0, int(event.end_time) - int(event.start_time))
@@ -105,3 +131,10 @@ def postprocess_agent_events(events_dict, metrics: AgentMetrics):
         metrics.prefetch_hidden_cycles += hidden
         metrics.prefetch_exposed_cycles += exposed
         metrics.prefetch_total_cycles += duration
+    metrics.exposed_prefetch_cycles = metrics.prefetch_exposed_cycles
+    if pure_comp_cycles is not None:
+        metrics.model_compute_cycles = int(pure_comp_cycles)
+    if pure_comm_cycles is not None:
+        metrics.model_comm_cycles = int(pure_comm_cycles)
+    if total_cycles is not None:
+        metrics.llm_side_cycles = max(0, int(total_cycles) - metrics.external_wait_cycles)

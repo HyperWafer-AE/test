@@ -7,8 +7,13 @@ from src.scheduling.event_notation import (
     fixed_compute_notation,
 )
 
-from .cost_model import estimate_comm_cycles, estimate_future_accesses, should_migrate_state
+from .cost_model import (
+    estimate_comm_cycles_with_model,
+    estimate_future_accesses,
+    should_migrate_state,
+)
 from .agent_state_graph import AgentStateGraph
+from .future_demand import FutureDemandIndex
 from .metrics import AgentMetrics
 from .phase_detector import detect_phase
 from .placement import (
@@ -29,8 +34,26 @@ STATIC_DEFAULT_TOKENS = {
 }
 
 
-TOPOLOGY_POLICIES = {"asg-placement", "asg-prefetch", "asg"}
-PREFETCH_POLICIES = {"asg-prefetch", "asg"}
+TOPOLOGY_POLICIES = {
+    "asg-placement",
+    "asg-prefetch",
+    "asg-placement-v2",
+    "asg-prefetch-v2",
+    "asg-oracle-placement",
+    "asg-oracle-prefetch",
+    "asg",
+}
+PREFETCH_POLICIES = {"asg-prefetch", "asg-prefetch-v2", "asg-oracle-prefetch", "asg"}
+V2_POLICIES = {
+    "asg-retention-v2",
+    "asg-placement-v2",
+    "asg-prefetch-v2",
+    "asg-oracle-retention",
+    "asg-oracle-placement",
+    "asg-oracle-prefetch",
+    "asg",
+}
+ORACLE_POLICIES = {"asg-oracle-retention", "asg-oracle-placement", "asg-oracle-prefetch"}
 
 
 class AgentEventBuilder:
@@ -53,6 +76,9 @@ class AgentEventBuilder:
         enable_observation_compression: bool = False,
         large_observation_token_threshold: int = 2048,
         observation_compression_ratio: float = 0.25,
+        future_horizon: int = 16,
+        oracle_future: bool = False,
+        comm_cost_model: str = "backend",
     ):
         self.hardware_platform = hardware_platform
         self.model_profile = model_profile
@@ -70,6 +96,9 @@ class AgentEventBuilder:
         self.enable_observation_compression = enable_observation_compression
         self.large_observation_token_threshold = int(large_observation_token_threshold)
         self.observation_compression_ratio = float(observation_compression_ratio)
+        self.future_horizon = int(future_horizon)
+        self.oracle_future = bool(oracle_future)
+        self.comm_cost_model = comm_cost_model
         self.graph = AgentStateGraph()
         self.metrics = AgentMetrics()
         self.events_dict: Dict[int, object] = {}
@@ -80,6 +109,7 @@ class AgentEventBuilder:
         self._module_load = defaultdict(int)
         self.agent_homes: Dict[str, tuple] = {}
         self.shared_anchor = None
+        self.future_index = None
         self.node_memory = NodeMemoryTracker(
             state_manager.memory_budget_bytes,
             per_node_budget_bytes,
@@ -97,7 +127,16 @@ class AgentEventBuilder:
     def prefetch_enabled(self) -> bool:
         return self.enable_prefetch and self.policy_name in PREFETCH_POLICIES
 
+    @property
+    def v2_enabled(self) -> bool:
+        return self.policy_name in V2_POLICIES
+
+    @property
+    def oracle_enabled(self) -> bool:
+        return self.oracle_future or self.policy_name in ORACLE_POLICIES
+
     def build(self, trace: List[dict]):
+        self.future_index = FutureDemandIndex(trace, horizon=self.future_horizon)
         agent_ids = sorted({event["agent"] for event in trace if "agent" in event})
         self.agent_homes = assign_agent_homes(
             agent_ids,
@@ -154,7 +193,13 @@ class AgentEventBuilder:
         return self.agent_homes.get(agent) or next(iter(self.agent_homes.values()))
 
     def _refresh_policy(self, phase_score: dict):
-        self.state_manager.update(self.graph, phase_score, self.graph.current_step)
+        self.state_manager.update(
+            self.graph,
+            phase_score,
+            self.graph.current_step,
+            future_index=self.future_index,
+            oracle_future=self.oracle_enabled,
+        )
         self.metrics.evicted_kv_bytes += self.state_manager.last_evicted_bytes
         self._sync_node_memory()
 
@@ -299,9 +344,51 @@ class AgentEventBuilder:
                 old_node = loc_before.get(state.state_id) or state.loc
                 if old_node is None:
                     continue
-                if old_node == target_node or target_node in state.replica_locs:
+                if old_node == target_node:
+                    self.metrics.num_action_local += 1
+                    continue
+                if target_node in state.replica_locs:
+                    if is_static_shared(state):
+                        self.metrics.num_action_static_hit += 1
+                    else:
+                        self.metrics.num_action_local += 1
+                    continue
+                if self.v2_enabled:
+                    action = self._select_state_action(state, old_node, target_node, agent, phase_score)
+                    if action == "REMOTE_READ":
+                        self.metrics.num_action_remote_read += 1
+                        read_tag = self._emit_remote_read(state, old_node, target_node, parent_tag, agent)
+                        movement_dependencies.add(read_tag)
+                    elif action == "REPLICATE":
+                        self.metrics.num_action_replicate += 1
+                        replica_tag = self._emit_kv_migration(
+                            state=state,
+                            old_node=old_node,
+                            new_node=target_node,
+                            parent_tag=parent_tag,
+                            reason="replicate",
+                            blocking=True,
+                            agent=agent,
+                            copy_only=True,
+                        )
+                        movement_dependencies.add(replica_tag)
+                    elif action == "MIGRATE":
+                        self.metrics.num_action_migrate += 1
+                        migration_tag = self._emit_kv_migration(
+                            state=state,
+                            old_node=old_node,
+                            new_node=target_node,
+                            parent_tag=parent_tag,
+                            reason="demand",
+                            blocking=True,
+                            agent=agent,
+                        )
+                        movement_dependencies.add(migration_tag)
+                    else:
+                        self.metrics.num_action_local += 1
                     continue
                 if should_never_demand_migrate(state):
+                    self.metrics.num_action_remote_read += 1
                     read_tag = self._emit_remote_read(state, old_node, target_node, parent_tag, agent)
                     movement_dependencies.add(read_tag)
                     continue
@@ -315,7 +402,9 @@ class AgentEventBuilder:
                     phase_score,
                     expected_accesses,
                     effective_bandwidth_bytes_per_cycle=self.effective_bandwidth_bytes_per_cycle,
+                    comm_cost_model=self.comm_cost_model,
                 ):
+                    self.metrics.num_action_migrate += 1
                     migration_tag = self._emit_kv_migration(
                         state=state,
                         old_node=old_node,
@@ -328,6 +417,7 @@ class AgentEventBuilder:
                     movement_dependencies.add(migration_tag)
                 else:
                     self.metrics.migration_skipped_by_cost += 1
+                    self.metrics.num_action_remote_read += 1
                     read_tag = self._emit_remote_read(state, old_node, target_node, parent_tag, agent)
                     movement_dependencies.add(read_tag)
         else:
@@ -458,6 +548,98 @@ class AgentEventBuilder:
                 missing_tokens += state.token_len
         return missing_tokens + append_tokens
 
+    def _state_comm_cost(self, state: StateNode, old_node, new_node) -> int:
+        return estimate_comm_cycles_with_model(
+            state,
+            old_node,
+            new_node,
+            self.hardware_platform,
+            self.effective_bandwidth_bytes_per_cycle,
+            self.comm_cost_model,
+        )
+
+    def _future_consumers(self, state: StateNode):
+        if not self.oracle_enabled or self.future_index is None:
+            return []
+        return self.future_index.future_consumers(
+            self.graph.current_step,
+            state.state_id,
+            self.future_horizon,
+        )
+
+    def _future_access_count(self, state: StateNode, phase_score: dict, agent: str = None) -> float:
+        if self.oracle_enabled and self.future_index is not None:
+            count = self.future_index.future_access_count(
+                self.graph.current_step,
+                state.state_id,
+                self.future_horizon,
+            )
+            state.predicted_future_accesses = float(count)
+            state.next_use = self.future_index.next_use_distance(self.graph.current_step, state.state_id)
+            return float(count)
+        return estimate_future_accesses(state, phase_score, agent)
+
+    def _future_agents(self, state: StateNode, agent: str) -> set:
+        if self.oracle_enabled and self.future_index is not None:
+            return self.future_index.future_agents(
+                self.graph.current_step,
+                state.state_id,
+                self.future_horizon,
+            )
+        if state.owner == "shared":
+            return set(self.agent_homes)
+        return {state.owner or agent}
+
+    def _can_replicate_to(self, state: StateNode, target_node) -> bool:
+        target_node = tuple(target_node)
+        if target_node in state.replica_locs:
+            return True
+        if self.node_memory.total_used + state.kv_bytes > self.node_memory.global_budget_bytes:
+            return False
+        if self.node_memory.per_node_budget_bytes is None:
+            return True
+        return self.node_memory.node_used[target_node] + state.kv_bytes <= self.node_memory.per_node_budget_bytes
+
+    def _select_state_action(self, state: StateNode, old_node, target_node, agent: str, phase_score: dict) -> str:
+        if old_node == target_node:
+            return "LOCAL_HIT"
+        if target_node in state.replica_locs:
+            return "STATIC_REPLICA_HIT" if is_static_shared(state) else "LOCAL_HIT"
+        if is_static_shared(state) or should_never_demand_migrate(state):
+            self._replicate_static_state(state)
+            return "STATIC_REPLICA_HIT" if target_node in state.replica_locs else "REMOTE_READ"
+
+        future_accesses = self._future_access_count(state, phase_score, agent)
+        future_agents = self._future_agents(state, agent)
+        same_agent_future = len([item for item in self._future_consumers(state) if item.get("agent") == agent])
+        comm_cost = self._state_comm_cost(state, old_node, target_node)
+        remote_read_cost = max(1, comm_cost)
+        expected_future_local_savings = max(0.0, future_accesses - 1.0) * remote_read_cost
+
+        if state.state_type in {"tool_observation", "raw_error_log"} and state.token_len >= self.large_observation_token_threshold:
+            return "REMOTE_READ"
+        if future_accesses <= 1:
+            return "REMOTE_READ"
+        if len(future_agents) > 1:
+            if self._can_replicate_to(state, target_node) and expected_future_local_savings > comm_cost:
+                return "REPLICATE"
+            return "REMOTE_READ"
+        if same_agent_future >= 2 or future_accesses >= 2:
+            should_migrate = should_migrate_state(
+                state,
+                old_node,
+                target_node,
+                self.hardware_platform,
+                phase_score,
+                future_accesses,
+                effective_bandwidth_bytes_per_cycle=self.effective_bandwidth_bytes_per_cycle,
+                comm_cost_model=self.comm_cost_model,
+            )
+            if should_migrate and expected_future_local_savings > comm_cost:
+                return "MIGRATE"
+        self.metrics.migration_skipped_by_cost += 1
+        return "REMOTE_READ"
+
     def _emit_kv_migration(
         self,
         state: StateNode,
@@ -468,6 +650,7 @@ class AgentEventBuilder:
         blocking: bool,
         agent: str,
         associated_wait_tag: Optional[int] = None,
+        copy_only: bool = False,
     ) -> int:
         old_node = tuple(old_node)
         new_node = tuple(new_node)
@@ -497,12 +680,13 @@ class AgentEventBuilder:
         self._add_dependency(parent_tag, migration)
         if prior_available_tag is not None and prior_available_tag in self.events_dict:
             self._add_dependency(prior_available_tag, migration)
-        estimate = estimate_comm_cycles(
+        estimate = estimate_comm_cycles_with_model(
             state,
             old_node,
             new_node,
             self.hardware_platform,
             self.effective_bandwidth_bytes_per_cycle,
+            self.comm_cost_model,
         )
         self.metrics.migration_cost_estimate_cycles += estimate
         self.metrics.kv_migration_bytes += state.kv_bytes
@@ -512,10 +696,15 @@ class AgentEventBuilder:
             self.metrics.num_prefetch_migrations += 1
             self.metrics.num_prefetch_events += 1
             self.metrics.prefetch_kv_bytes += state.kv_bytes
+        elif reason == "replicate":
+            self.metrics.demand_migration_bytes += state.kv_bytes
+            self.metrics.num_demand_migrations += 1
         else:
             self.metrics.demand_migration_bytes += state.kv_bytes
             self.metrics.num_demand_migrations += 1
-        if state.resident:
+        if copy_only:
+            state.replica_locs.add(new_node)
+        elif state.resident:
             self.node_memory.move(state, old_node, new_node)
         else:
             state.loc = new_node
@@ -545,12 +734,13 @@ class AgentEventBuilder:
         self._add_dependency(parent_tag, remote_read)
         if state.available_event_tag is not None and state.available_event_tag in self.events_dict:
             self._add_dependency(state.available_event_tag, remote_read)
-        estimate = estimate_comm_cycles(
+        estimate = estimate_comm_cycles_with_model(
             state,
             old_node,
             new_node,
             self.hardware_platform,
             self.effective_bandwidth_bytes_per_cycle,
+            self.comm_cost_model,
         )
         self.metrics.remote_read_cost_estimate_cycles += estimate
         self.metrics.remote_read_bytes += state.kv_bytes
@@ -594,6 +784,9 @@ class AgentEventBuilder:
         state_id = trace_event.get("new_state_id") or f"{agent}_tool_{exec_id}_out"
         state_type = trace_event.get("new_state_type", "tool_observation")
         output_tokens, summarized, original_tokens = self._maybe_compress_observation(state_type, output_tokens)
+        if summarized:
+            self.metrics.num_compressed_observations += 1
+            self.metrics.compressed_observation_tokens_saved += max(0, original_tokens - output_tokens)
         state = self.graph.build_or_get_state(
             state_id=state_id,
             state_type=state_type,
@@ -642,6 +835,9 @@ class AgentEventBuilder:
     def _maybe_emit_prefetches_during_tool_wait(self, agent, parent_tag, wait_tag, tool_latency_cycles, tool_event, phase_score):
         if not self.prefetch_enabled or self.max_prefetch_states <= 0:
             return
+        if self.v2_enabled:
+            self._maybe_emit_windowed_prefetches(agent, parent_tag, wait_tag, tool_latency_cycles, phase_score)
+            return
         predicted_exec_loc = self._agent_home(agent)
         target_node = node_of_module(predicted_exec_loc)
         candidates = []
@@ -667,12 +863,13 @@ class AgentEventBuilder:
                 continue
             if state.kv_bytes > self.max_prefetch_bytes:
                 continue
-            estimated_cycles = estimate_comm_cycles(
+            estimated_cycles = estimate_comm_cycles_with_model(
                 state,
                 state.loc,
                 target_node,
                 self.hardware_platform,
                 self.effective_bandwidth_bytes_per_cycle,
+                self.comm_cost_model,
             )
             if estimated_cycles > self.prefetch_wait_fraction * max(1, tool_latency_cycles):
                 continue
@@ -698,6 +895,97 @@ class AgentEventBuilder:
             )
             if tag >= 0:
                 self._pending_prefetch_tags[agent][state.state_id] = tag
+
+    def _prefetch_future_accesses_for_agent(self, state: StateNode, agent: str) -> int:
+        if not self.oracle_enabled:
+            if state.owner not in {agent, "shared"} and state.reuse_prob < self.prefetch_reuse_threshold:
+                return 0
+            return 1 if state.next_use <= self.prefetch_next_use_threshold else 0
+        if self.future_index is None:
+            return 0
+        return len(
+            [
+                consumer
+                for consumer in self.future_index.future_consumers(
+                    self.graph.current_step,
+                    state.state_id,
+                    self.future_horizon,
+                )
+                if consumer.get("agent") == agent
+            ]
+        )
+
+    def _maybe_emit_windowed_prefetches(self, agent, parent_tag, wait_tag, tool_latency_cycles, phase_score):
+        target_node = node_of_module(self._agent_home(agent))
+        window_budget = int(max(0, tool_latency_cycles) * self.prefetch_wait_fraction)
+        if window_budget <= 0:
+            return
+        jobs = []
+        for state in self.graph.states.values():
+            if not state.resident or state.loc is None:
+                continue
+            if state.loc == target_node or target_node in state.replica_locs:
+                continue
+            if state.state_type == "raw_error_log":
+                continue
+            if state.state_type == "speculative_state" and not state.metadata.get("committed", False):
+                continue
+            if state.kv_bytes > self.max_prefetch_bytes:
+                continue
+            future_count = self._prefetch_future_accesses_for_agent(state, agent)
+            if future_count <= 0:
+                continue
+            next_use = (
+                self.future_index.next_use_distance(self.graph.current_step, state.state_id)
+                if self.oracle_enabled and self.future_index
+                else state.next_use
+            )
+            if next_use > self.future_horizon:
+                continue
+            cost_cycles = self._state_comm_cost(state, state.loc, target_node)
+            if cost_cycles <= 0 or cost_cycles > window_budget:
+                continue
+            recompute_cost = state.token_len * self.model_profile.prefill_cycles_per_token
+            benefit_cycles = max(cost_cycles * future_count, recompute_cost * min(future_count, 2) * 0.05)
+            if state.owner == agent:
+                benefit_cycles *= 1.15
+            if state.state_type in {"file_context", "edit_diff", "test_failure_summary", "failure_summary"}:
+                benefit_cycles *= 1.10
+            if benefit_cycles <= cost_cycles:
+                continue
+            jobs.append(
+                {
+                    "density": benefit_cycles / max(1, cost_cycles),
+                    "benefit": benefit_cycles,
+                    "cost": cost_cycles,
+                    "deadline": next_use,
+                    "state": state,
+                }
+            )
+
+        jobs.sort(key=lambda item: (-item["density"], item["deadline"], item["state"].state_id))
+        used_budget = 0
+        emitted = 0
+        for job in jobs:
+            if emitted >= self.max_prefetch_states:
+                break
+            if used_budget + job["cost"] > window_budget:
+                continue
+            state = job["state"]
+            tag = self._emit_kv_migration(
+                state=state,
+                old_node=state.loc,
+                new_node=target_node,
+                parent_tag=parent_tag,
+                reason="prefetch",
+                blocking=False,
+                agent=agent,
+                associated_wait_tag=wait_tag,
+            )
+            if tag >= 0:
+                self._pending_prefetch_tags[agent][state.state_id] = tag
+                used_budget += job["cost"]
+                emitted += 1
 
     def _add_static_affinities(self, agent: str):
         role = f"{agent}_role"

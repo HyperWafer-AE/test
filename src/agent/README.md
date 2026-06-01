@@ -10,7 +10,11 @@ This package adds an agent-level frontend over BusyBarn. It converts synthetic m
 - `asg-retention`: ASG phase-aware retention only, using agent home placement and no KV migration.
 - `asg-placement`: ASG retention plus topology-aware execution/state placement and blocking demand KV migration.
 - `asg-prefetch`: ASG retention and placement plus tool-wait KV prefetch.
-- `asg`: alias for `asg-prefetch`.
+- `asg-retention-v2`: Future-Demand-aware knapsack retention that optimizes expected saved prefill cycles.
+- `asg-placement-v2`: v2 retention plus explicit local/remote-read/migrate/replicate action selection.
+- `asg-prefetch-v2`: v2 placement plus windowed prefetch knapsack during tool waits.
+- `asg-oracle-retention`, `asg-oracle-placement`, `asg-oracle-prefetch`: oracle future-demand upper-bound policies for diagnosis.
+- `asg`: alias for `asg-prefetch-v2`.
 
 ## Common Commands
 
@@ -23,11 +27,15 @@ python -m src.agent.experiment --policy asg --cfg src/platform/cfgs/wamis_hd_dis
 ```
 
 ```bash
-python -m src.agent.experiment --run-all-policies --cfg src/platform/cfgs/wamis_hd_distributed.cfg --topology wamis --num-agents 4 --turns 8 --memory-budget-gb 1 --seed 1 --output-dir agent_results/basic/
+python -m src.agent.experiment --run-all-policies --policy-suite v2 --cfg src/platform/cfgs/wamis_hd_distributed.cfg --topology wamis --num-agents 4 --turns 8 --memory-budget-gb 1 --seed 1 --output-dir agent_results/basic/
 ```
 
 ```bash
-python -m src.agent.experiment --run-all-policies --cfg src/platform/cfgs/wamis_hd_distributed.cfg --topology wamis --num-agents 8 --turns 16 --memory-budget-gb 0.5 --per-node-memory-mb 64 --stress-placement --agent-placement round_robin --seed 2 --output-dir agent_results/stress/
+python -m src.agent.experiment --run-all-policies --policy-suite v2 --cfg src/platform/cfgs/wamis_hd_distributed.cfg --topology wamis --num-agents 8 --turns 16 --memory-budget-gb 0.5 --per-node-memory-mb 64 --stress-placement --agent-placement round_robin --tool-latency-scale 1000000 --enable-observation-compression --seed 2 --scheduler-seed 0 --oracle-future --output-dir agent_results/stress/
+```
+
+```bash
+python -m src.agent.comm_benchmark --cfg src/platform/cfgs/wamis_hd_distributed.cfg --topology wamis --output agent_results/comm_benchmark.json
 ```
 
 ## Useful CLI Flags
@@ -39,9 +47,13 @@ python -m src.agent.experiment --run-all-policies --cfg src/platform/cfgs/wamis_
 - `--max-prefetch-states` caps prefetch migrations emitted during each tool wait.
 - `--disable-topology-placement` disables ASG topology-aware placement.
 - `--disable-prefetch` disables tool-wait prefetch.
+- `--policy-suite {basic,v2,oracle,all}` chooses the policies used by `--run-all-policies`; the default is `v2`.
+- `--future-horizon` and `--oracle-future` enable synthetic-trace future demand for ASG v2/oracle policies.
+- `--knapsack-granularity-mb`, `--max-future-access-cap`, `--storage-penalty`, and `--knapsack-max-candidates` control v2 cost-weighted retention.
 - `--scheduler-seed` seeds BusyBarn's randomized communication scheduling for repeatable agent experiments.
 - `--tool-latency-scale` converts synthetic tool latency units into cycles. The default is `1000000`, so a trace latency of `1000` becomes `1e9` external wait cycles.
-- `--effective-bandwidth-bytes-per-cycle` controls the migration/remote-read cost model.
+- `--comm-cost-model {heuristic,backend}` selects either the old distance/bandwidth estimate or a backend-calibrated link-time estimate. `backend` is the default.
+- `--effective-bandwidth-bytes-per-cycle` controls the fallback heuristic migration/remote-read cost model.
 - `--prefetch-reuse-threshold`, `--prefetch-next-use-threshold`, `--max-prefetch-bytes`, and `--prefetch-wait-fraction` gate prefetch candidates.
 - `--enable-observation-compression` compresses large tool observations with `--large-observation-token-threshold` and `--observation-compression-ratio`.
 
@@ -63,6 +75,11 @@ python -m src.agent.experiment --run-all-policies --cfg src/platform/cfgs/wamis_
 - `remote_state_hits`: resident states that required remote movement/access before compute.
 - `state_misses`: non-resident input states that force prefill.
 - `prefetch_hidden_cycles` / `prefetch_exposed_cycles`: postprocessed overlap of prefetch migration with external tool wait.
+- `external_wait_cycles` / `llm_side_cycles`: approximate split between tool latency and model-side system time.
+- `model_compute_cycles` / `model_comm_cycles`: BusyBarn pure compute/communication timing breakdown.
+- `exposed_migration_cycles` / `exposed_prefetch_cycles`: communication time attributed to blocking movement and unhidden prefetch.
+- `num_action_local`, `num_action_remote_read`, `num_action_migrate`, `num_action_replicate`, `num_action_static_hit`: v2 placement action counts.
+- `compressed_observation_tokens_saved` / `num_compressed_observations`: stress-run observation compression effect.
 
 ## Limitations
 
@@ -73,7 +90,7 @@ python -m src.agent.experiment --run-all-policies --cfg src/platform/cfgs/wamis_
 - KV bytes and prefill/decode costs use a configurable analytical model.
 - Tool execution is modeled as fixed external wait.
 - Topology-aware placement is heuristic, not globally optimal.
-- Migration versus remote read uses a simple analytical cost model, not a full hardware runtime.
+- Migration versus remote read uses a calibrated estimate of backend link time, but contention is still only measured after event-driver execution.
 - KV migration is modeled as state movement events, not physical DMA implementation.
 - Speculation is not implemented yet.
 - Skill routing is not implemented yet.

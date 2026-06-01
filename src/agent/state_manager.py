@@ -1,3 +1,4 @@
+import math
 from collections import defaultdict
 from typing import Iterable, Optional
 
@@ -14,7 +15,7 @@ class BaseStateManager:
         self.resident_state_ids = set()
         self.last_evicted_bytes = 0
 
-    def update(self, graph, phase_score, current_step):
+    def update(self, graph, phase_score, current_step, future_index=None, oracle_future: bool = False):
         raise NotImplementedError
 
     def is_resident(self, state_id: str) -> bool:
@@ -48,7 +49,7 @@ class BaseStateManager:
 class NoCacheStateManager(BaseStateManager):
     policy_name = "nocache"
 
-    def update(self, graph, phase_score, current_step):
+    def update(self, graph, phase_score, current_step, future_index=None, oracle_future: bool = False):
         self._prepare(graph, phase_score, current_step)
         self._mark_selected([])
 
@@ -56,7 +57,7 @@ class NoCacheStateManager(BaseStateManager):
 class LRUStateManager(BaseStateManager):
     policy_name = "lru"
 
-    def update(self, graph, phase_score, current_step):
+    def update(self, graph, phase_score, current_step, future_index=None, oracle_future: bool = False):
         self._prepare(graph, phase_score, current_step)
         selected = []
         used = 0
@@ -76,7 +77,7 @@ class LRUStateManager(BaseStateManager):
 class KVFlowLikeStateManager(BaseStateManager):
     policy_name = "kvflow"
 
-    def update(self, graph, phase_score, current_step):
+    def update(self, graph, phase_score, current_step, future_index=None, oracle_future: bool = False):
         self._prepare(graph, phase_score, current_step)
         selected = []
         used = 0
@@ -107,7 +108,7 @@ class ASGStateManager(BaseStateManager):
         self.prefill_cycles_per_token = int(prefill_cycles_per_token)
         self.lambda_mem = float(lambda_mem)
 
-    def update(self, graph, phase_score, current_step):
+    def update(self, graph, phase_score, current_step, future_index=None, oracle_future: bool = False):
         self._prepare(graph, phase_score, current_step)
         selected = []
         used = 0
@@ -156,6 +157,141 @@ class ASGPlacementStateManager(ASGStateManager):
 
 class ASGPrefetchStateManager(ASGStateManager):
     policy_name = "asg-prefetch"
+
+
+class ASGKnapsackStateManager(BaseStateManager):
+    policy_name = "asg-retention-v2"
+
+    def __init__(
+        self,
+        memory_budget_bytes: int,
+        per_node_budget_bytes: Optional[int] = None,
+        prefill_cycles_per_token: int = 1000,
+        knapsack_granularity_bytes: int = 16 * 1024 * 1024,
+        max_future_access_cap: int = 8,
+        storage_penalty: float = 0.0,
+        knapsack_max_candidates: int = 2048,
+    ):
+        super().__init__(memory_budget_bytes, per_node_budget_bytes)
+        self.prefill_cycles_per_token = int(prefill_cycles_per_token)
+        self.knapsack_granularity_bytes = max(1, int(knapsack_granularity_bytes))
+        self.max_future_access_cap = max(1, int(max_future_access_cap))
+        self.storage_penalty = float(storage_penalty)
+        self.knapsack_max_candidates = max(1, int(knapsack_max_candidates))
+
+    def _criticality(self, state: StateNode, phase_score: dict) -> float:
+        criticality = 1.0
+        if state.state_type in {"system_prefix", "task_prefix", "agent_role", "shared_prefix"}:
+            criticality += 0.5
+        if state.state_type in {"test_failure_summary", "failure_summary"} and phase_score.get("failure", 0.0) > 0.2:
+            criticality += 0.5
+        if state.state_type in {"edit_diff", "file_context"} and phase_score.get("execute", 0.0) > 0.2:
+            criticality += 0.25
+        return criticality
+
+    def _future_terms(self, state: StateNode, graph, phase_score, current_step, future_index, oracle_future):
+        if oracle_future and future_index is not None:
+            future_accesses = future_index.future_access_count(
+                current_step,
+                state.state_id,
+            )
+            next_use = future_index.next_use_distance(current_step, state.state_id)
+            if math.isinf(next_use):
+                future_accesses = 0
+            reuse_probability = 1.0 if future_accesses > 0 else 0.0
+        else:
+            future_accesses = estimate_future_accesses(state, phase_score, agent=None)
+            next_use = state.next_use
+            reuse_probability = state.reuse_prob
+        state.next_use = next_use
+        state.predicted_future_accesses = float(future_accesses)
+        return future_accesses, reuse_probability
+
+    def _profit(self, state: StateNode, graph, phase_score, current_step, future_index, oracle_future) -> float:
+        future_accesses, reuse_probability = self._future_terms(
+            state,
+            graph,
+            phase_score,
+            current_step,
+            future_index,
+            oracle_future,
+        )
+        if future_accesses <= 0 or state.kv_bytes <= 0:
+            state.retention_score = 0.0
+            return 0.0
+        recompute_cost = state.token_len * self.prefill_cycles_per_token
+        storage_cost = self.storage_penalty * state.kv_bytes / max(1, self.memory_budget_bytes)
+        expected_saved_cycles = (
+            min(float(future_accesses), float(self.max_future_access_cap))
+            * recompute_cost
+            * float(reuse_probability)
+            * self._criticality(state, phase_score)
+        )
+        state.retention_score = expected_saved_cycles - storage_cost
+        return state.retention_score
+
+    def update(self, graph, phase_score, current_step, future_index=None, oracle_future: bool = False):
+        self._prepare(graph, phase_score, current_step)
+        capacity = self.memory_budget_bytes // self.knapsack_granularity_bytes
+        if capacity <= 0:
+            self._mark_selected([])
+            return
+
+        candidates = []
+        for state in self._all_states:
+            profit = self._profit(state, graph, phase_score, current_step, future_index, oracle_future)
+            if profit <= 0 or state.kv_bytes <= 0:
+                continue
+            if state.state_type in {"system_prefix", "task_prefix", "shared_prefix"}:
+                weight = 0
+            else:
+                weight = max(1, math.ceil(state.kv_bytes / self.knapsack_granularity_bytes))
+            if weight > capacity:
+                continue
+            candidates.append((profit, -weight, -state.access_count, state.state_id, state, weight))
+        candidates.sort(reverse=True)
+        candidates = candidates[: self.knapsack_max_candidates]
+
+        # Sparse dynamic-programming knapsack over MB-ish buckets. This optimizes
+        # saved cycles directly, avoiding the tiny-state density bias of Round3.
+        dp = {0: (0.0, [])}
+        for profit, _, _, _, state, weight in candidates:
+            snapshot = list(dp.items())
+            for used, (value, states) in snapshot:
+                new_used = used + weight
+                if new_used > capacity:
+                    continue
+                new_value = value + profit
+                old_value = dp.get(new_used, (-1.0, []))[0]
+                if new_value > old_value:
+                    dp[new_used] = (new_value, states + [state])
+        best_used, (_, selected) = max(dp.items(), key=lambda item: (item[1][0], -item[0]))
+        _ = best_used
+        self._mark_selected(selected)
+
+
+class ASGRetentionV2StateManager(ASGKnapsackStateManager):
+    policy_name = "asg-retention-v2"
+
+
+class ASGPlacementV2StateManager(ASGKnapsackStateManager):
+    policy_name = "asg-placement-v2"
+
+
+class ASGPrefetchV2StateManager(ASGKnapsackStateManager):
+    policy_name = "asg-prefetch-v2"
+
+
+class ASGOracleRetentionStateManager(ASGKnapsackStateManager):
+    policy_name = "asg-oracle-retention"
+
+
+class ASGOraclePlacementStateManager(ASGKnapsackStateManager):
+    policy_name = "asg-oracle-placement"
+
+
+class ASGOraclePrefetchStateManager(ASGKnapsackStateManager):
+    policy_name = "asg-oracle-prefetch"
 
 
 class NodeMemoryTracker:
