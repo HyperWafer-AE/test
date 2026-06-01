@@ -38,6 +38,14 @@ python -m src.agent.experiment --run-all-policies --policy-suite v2 --cfg src/pl
 python -m src.agent.comm_benchmark --cfg src/platform/cfgs/wamis_hd_distributed.cfg --topology wamis --output agent_results/comm_benchmark.json
 ```
 
+```bash
+python -m src.agent.trace_profile --trace-dir traces/real --trace-format auto --output agent_results/real_trace_profile.json
+```
+
+```bash
+python -m src.agent.real_trace_experiment --trace-dir traces/real --trace-format auto --prediction-mode heuristic --policy-suite v2 --memory-budget-gb 0.5 --concurrency 8 --output-dir agent_results/real_online_vs_oracle/
+```
+
 ## Useful CLI Flags
 
 - `--agent-placement {round_robin,compact}` controls deterministic agent home assignment.
@@ -56,6 +64,20 @@ python -m src.agent.comm_benchmark --cfg src/platform/cfgs/wamis_hd_distributed.
 - `--effective-bandwidth-bytes-per-cycle` controls the fallback heuristic migration/remote-read cost model.
 - `--prefetch-reuse-threshold`, `--prefetch-next-use-threshold`, `--max-prefetch-bytes`, and `--prefetch-wait-fraction` gate prefetch candidates.
 - `--enable-observation-compression` compresses large tool observations with `--large-observation-token-threshold` and `--observation-compression-ratio`.
+
+## Real Trace Evaluation
+
+Round5 adds a trace-driven path that does not change the recorded agent trajectory. `trace_loader.py` accepts normalized JSON/JSONL and best-effort public trajectory adapters for SWE-Gym, CodeTraceBench/CodeTracer, AgentLens/OpenHands, and generic ReAct JSONL. Source-specific adapters preserve raw payloads in metadata and fall back to robust message/tool/observation detection when public schemas are incomplete or drift.
+
+Normalized trace events are:
+
+- `state`: persistent prompt/state segment with `state_id`, `state_type`, `owner`, `tokens`, optional `semantic_key`, and optional `exact_token_hash`.
+- `llm`: recorded LLM step with `input_state_ids`, `append_tokens`, `output_tokens`, and `new_state_id`.
+- `tool`: recorded tool/action wait with `tool`, `latency`, `output_tokens`, `status`, and `new_state_id`.
+
+`prompt_segmenter.py` maps system/developer prompts, task statements, roles, assistant deltas, file reads, edits, test failures, raw errors, web results, summaries, and subagent outputs into state types. Exact KV reuse is keyed by `exact_token_hash`; semantic keys are retained for analysis but do not imply KV equality.
+
+`real_trace_experiment.py` runs `nocache`, `lru-basic`, `lru-system`, `kvflow-like`, online ASG v2, and oracle ASG v2. `lru-basic` disables static replicas and observation compression; `lru-system` enables both. The summary includes `oracle_gap`, retained state type distribution, LRU regret preservation, and delayed-reuse subset metadata.
 
 ## Metrics
 

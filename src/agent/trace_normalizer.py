@@ -1,0 +1,452 @@
+import json
+from pathlib import Path
+from typing import Iterable, List, Optional
+
+from .prompt_segmenter import estimate_tokens, segment_messages, segment_tool_output, stable_id
+from .trace_schema import LLMEvent, ToolEvent, is_normalized_event, validate_trace
+
+
+LLM_KEYS = {"messages", "prompt", "input", "llm_input", "response", "completion", "assistant"}
+TOOL_KEYS = {"tool", "tool_name", "action", "observation", "output", "result", "command"}
+
+
+def normalize_payload(payload, trace_format: str = "auto", source_id: str = "trace") -> List[dict]:
+    payload = _decode_maybe_json(payload)
+    if isinstance(payload, dict) and isinstance(payload.get("rows"), list) and payload["rows"]:
+        first_row = payload["rows"][0]
+        payload = first_row.get("row", first_row)
+    if _looks_like_normalized_trace(payload):
+        return validate_trace(list(payload))
+    if isinstance(payload, dict) and _looks_like_normalized_trace(payload.get("events")):
+        return validate_trace(payload["events"])
+    if trace_format == "normalized_json":
+        return validate_trace(payload if isinstance(payload, list) else payload.get("events", []))
+    return normalize_generic_react(payload, source_id=source_id, trace_format=trace_format)
+
+
+def normalize_jsonl_records(records: Iterable[dict], trace_format: str = "auto", source_id: str = "trace") -> List[dict]:
+    records = list(records)
+    if _looks_like_normalized_trace(records):
+        return validate_trace(records)
+    return normalize_generic_react(records, source_id=source_id, trace_format=trace_format)
+
+
+def _looks_like_normalized_trace(obj) -> bool:
+    return isinstance(obj, list) and obj and all(is_normalized_event(item) for item in obj)
+
+
+def _candidate_steps(payload):
+    payload = _decode_maybe_json(payload)
+    if isinstance(payload, list):
+        return [_decode_maybe_json(item.get("row", item)) if isinstance(item, dict) else _decode_maybe_json(item) for item in payload]
+    if not isinstance(payload, dict):
+        return [{"content": str(payload)}]
+    for key in ("events", "steps", "trajectory_steps", "trajectory", "trajectories", "history", "records", "logs", "rows"):
+        value = _decode_maybe_json(payload.get(key))
+        if isinstance(value, list):
+            return [_decode_maybe_json(item.get("row", item)) if isinstance(item, dict) else _decode_maybe_json(item) for item in value]
+    if isinstance(payload.get("messages"), list):
+        return [payload]
+    return [payload]
+
+
+def _as_messages(value):
+    value = _decode_maybe_json(value)
+    if isinstance(value, list):
+        messages = []
+        for item in value:
+            if isinstance(item, dict):
+                role = item.get("role") or item.get("speaker") or item.get("type") or "user"
+                content = item.get("content", item.get("text", item.get("message", "")))
+                messages.append({"role": role, "content": content, **item})
+            else:
+                messages.append({"role": "user", "content": str(item)})
+        return messages
+    if value is None:
+        return []
+    return [{"role": "user", "content": str(value)}]
+
+
+def _extract_messages(step: dict):
+    step = _decode_maybe_json(step)
+    if not isinstance(step, dict):
+        return [{"role": "user", "content": str(step)}]
+    for key in ("messages", "prompt", "input", "llm_input", "state"):
+        if key in step:
+            return _as_messages(step[key])
+    return []
+
+
+def _extract_assistant_text(step: dict) -> str:
+    step = _decode_maybe_json(step)
+    if not isinstance(step, dict):
+        return ""
+    for key in ("response", "completion", "assistant", "llm_output", "thought"):
+        if key in step and step[key] is not None:
+            return str(step[key])
+    messages = step.get("messages")
+    if isinstance(messages, list):
+        for message in reversed(messages):
+            if isinstance(message, dict) and str(message.get("role", "")).lower() == "assistant":
+                return str(message.get("content", ""))
+    return ""
+
+
+def _extract_tool(step: dict):
+    step = _decode_maybe_json(step)
+    if not isinstance(step, dict):
+        return None
+    tool = step.get("tool") or step.get("tool_name") or step.get("action") or step.get("command")
+    output = step.get("observation", step.get("output", step.get("result")))
+    if isinstance(tool, dict):
+        output = output if output is not None else tool.get("output", tool.get("result", ""))
+        tool = tool.get("name", tool.get("tool", tool.get("type", "tool")))
+    if tool is None and output is None:
+        return None
+    status = step.get("status") or step.get("exit_status") or ("failed" if step.get("error") else "ok")
+    latency = step.get("latency", step.get("duration", step.get("elapsed", 1)))
+    try:
+        latency = int(float(latency))
+    except Exception:
+        latency = 1
+    return {
+        "tool": str(tool or "tool"),
+        "output": "" if output is None else output,
+        "status": str(status or "ok"),
+        "latency": max(0, latency),
+    }
+
+
+def _success_from_payload(payload) -> Optional[bool]:
+    if not isinstance(payload, dict):
+        return None
+    for key in ("success", "passed", "resolved"):
+        if key in payload:
+            return bool(payload[key])
+    status = str(payload.get("status", payload.get("exit_status", ""))).lower()
+    if status:
+        if any(word in status for word in ("success", "passed", "resolved", "submit")):
+            return True
+        if any(word in status for word in ("fail", "error", "timeout")):
+            return False
+    return None
+
+
+def normalize_generic_react(payload, source_id: str, trace_format: str = "auto") -> List[dict]:
+    payload = _decode_maybe_json(payload)
+    if isinstance(payload, dict) and _is_message_trajectory(payload.get("messages")):
+        return validate_trace(_normalize_message_trajectory(payload, source_id, trace_format))
+    events = []
+    current_states = []
+    seen_state_ids = set()
+    agent = _agent_name(payload, source_id)
+    trace_success = _success_from_payload(payload)
+    steps = _candidate_steps(payload)
+
+    initial_messages = _initial_messages(payload)
+    if initial_messages and not any(isinstance(step, dict) and "messages" in step for step in steps[1:]):
+        steps = [{"messages": initial_messages}] + [step for step in steps if step is not payload]
+
+    for turn, step in enumerate(steps):
+        messages = _extract_messages(step)
+        if messages:
+            state_events = segment_messages(messages, source_id=f"{source_id}:turn{turn}", agent=agent)
+            for state in state_events:
+                if state["state_id"] not in seen_state_ids:
+                    state["metadata"].setdefault("trace_format", trace_format)
+                    events.append(state)
+                    seen_state_ids.add(state["state_id"])
+                current_states.append(state["state_id"])
+            current_states = list(dict.fromkeys(current_states))
+
+            assistant_text = _extract_assistant_text(step)
+            event_id = _event_id(source_id, "llm", turn)
+            output_state_id = stable_id(source_id, "assistant", turn, assistant_text, prefix="state")
+            events.append(
+                LLMEvent(
+                    event_id=event_id,
+                    agent=agent,
+                    turn=turn,
+                    input_state_ids=list(current_states),
+                    input_segments=state_events,
+                    append_tokens=estimate_tokens(messages[-1].get("content", "")),
+                    output_tokens=estimate_tokens(assistant_text),
+                    new_state_id=output_state_id,
+                    phase=_phase_from_step(step),
+                    metadata={"raw": step, "trace_success": trace_success, "trace_format": trace_format},
+                ).to_dict()
+            )
+            current_states.append(output_state_id)
+        elif isinstance(step, dict) and (step.get("thought") or step.get("action")) and current_states:
+            assistant_text = "\n".join(str(step.get(key, "")) for key in ("thought", "action") if step.get(key))
+            event_id = _event_id(source_id, "llm", turn)
+            output_state_id = stable_id(source_id, "assistant", turn, assistant_text, prefix="state")
+            events.append(
+                LLMEvent(
+                    event_id=event_id,
+                    agent=agent,
+                    turn=turn,
+                    input_state_ids=list(current_states),
+                    append_tokens=0,
+                    output_tokens=estimate_tokens(assistant_text),
+                    new_state_id=output_state_id,
+                    phase=_phase_from_step(step),
+                    metadata={"raw": step, "trace_success": trace_success, "trace_format": trace_format},
+                ).to_dict()
+            )
+            current_states.append(output_state_id)
+
+        tool_info = _extract_tool(step)
+        if tool_info is not None:
+            event_id = _event_id(source_id, "tool", turn)
+            state = segment_tool_output(
+                tool_info["tool"],
+                tool_info["output"],
+                source_id=f"{source_id}:tool{turn}",
+                agent=agent,
+                ordinal=turn,
+                status=tool_info["status"],
+                producer_event_id=event_id,
+                metadata={"raw": step, "trace_format": trace_format},
+            )
+            events.append(
+                ToolEvent(
+                    event_id=event_id,
+                    agent=agent,
+                    turn=turn,
+                    tool=tool_info["tool"],
+                    latency=tool_info["latency"],
+                    output_tokens=state["tokens"],
+                    status=tool_info["status"],
+                    new_state_id=state["state_id"],
+                    new_state_type=state["state_type"],
+                    phase=_phase_from_step(step),
+                    metadata={"raw": step, "trace_success": trace_success, "trace_format": trace_format},
+                ).to_dict()
+            )
+            current_states.append(state["state_id"])
+
+    return validate_trace(events)
+
+
+def _is_message_trajectory(messages) -> bool:
+    messages = _decode_maybe_json(messages)
+    return (
+        isinstance(messages, list)
+        and len(messages) >= 3
+        and any(isinstance(item, dict) and str(item.get("role", "")).lower() == "assistant" for item in messages)
+    )
+
+
+def _normalize_message_trajectory(payload: dict, source_id: str, trace_format: str = "auto") -> List[dict]:
+    messages = _decode_maybe_json(payload.get("messages")) or []
+    agent = _agent_name(payload, source_id)
+    trace_success = _success_from_payload(payload)
+    events = []
+    current_states = []
+    seen_states = set()
+    last_user_text = ""
+    turn = 0
+    pending_initial = []
+
+    for idx, message in enumerate(messages):
+        if not isinstance(message, dict):
+            message = {"role": "user", "content": str(message)}
+        role = str(message.get("role", "user")).lower()
+        content = message.get("content", "")
+        if role in {"system", "developer"}:
+            state = segment_messages([message], source_id=f"{source_id}:msg{idx}", agent=agent)[0]
+            state["metadata"].setdefault("trace_format", trace_format)
+            if state["state_id"] not in seen_states:
+                events.append(state)
+                seen_states.add(state["state_id"])
+            current_states.append(state["state_id"])
+            continue
+
+        if role == "assistant":
+            if pending_initial:
+                state_events = segment_messages(pending_initial, source_id=f"{source_id}:initial", agent=agent)
+                for state in state_events:
+                    state["metadata"].setdefault("trace_format", trace_format)
+                    if state["state_id"] not in seen_states:
+                        events.append(state)
+                        seen_states.add(state["state_id"])
+                    current_states.append(state["state_id"])
+                pending_initial = []
+            current_states = list(dict.fromkeys(current_states))
+            event_id = _event_id(source_id, "llm", turn)
+            output_state_id = stable_id(source_id, "assistant", idx, content, prefix="state")
+            events.append(
+                LLMEvent(
+                    event_id=event_id,
+                    agent=agent,
+                    turn=turn,
+                    input_state_ids=list(current_states),
+                    append_tokens=estimate_tokens(last_user_text),
+                    output_tokens=estimate_tokens(content),
+                    new_state_id=output_state_id,
+                    phase=_phase_from_text(content),
+                    metadata={"raw": message, "trace_success": trace_success, "trace_format": trace_format},
+                ).to_dict()
+            )
+            current_states.append(output_state_id)
+            turn += 1
+            last_user_text = ""
+            continue
+
+        if role in {"user", "tool", "observation"}:
+            if not current_states:
+                pending_initial.append(message)
+                last_user_text = str(content)
+                continue
+            tool_like = _looks_like_observation(content)
+            if tool_like:
+                tool_name = _infer_tool_from_previous(events)
+                status = "failed" if _looks_failed(content) else "ok"
+                state_type = _tool_state_type_from_text(tool_name, content, status)
+                state_id = stable_id(source_id, "tool", idx, content, prefix="state")
+                events.append(
+                    ToolEvent(
+                        event_id=_event_id(source_id, "tool", turn),
+                        agent=agent,
+                        turn=turn,
+                        tool=tool_name,
+                        latency=max(1, _latency_from_message(message)),
+                        output_tokens=estimate_tokens(content),
+                        status=status,
+                        new_state_id=state_id,
+                        new_state_type=state_type,
+                        phase=_phase_from_text(content),
+                        metadata={"raw": message, "trace_success": trace_success, "trace_format": trace_format},
+                    ).to_dict()
+                )
+                current_states.append(state_id)
+            else:
+                state = segment_messages([message], source_id=f"{source_id}:msg{idx}", agent=agent)[0]
+                state["metadata"].setdefault("trace_format", trace_format)
+                if state["state_id"] not in seen_states:
+                    events.append(state)
+                    seen_states.add(state["state_id"])
+                current_states.append(state["state_id"])
+                last_user_text = str(content)
+    return events
+
+
+def _looks_like_observation(content: object) -> bool:
+    text = str(content or "").lower()
+    return any(marker in text for marker in ("<returncode>", "<output>", "<warning>", "<explore_context>", "traceback", "error:"))
+
+
+def _looks_failed(content: object) -> bool:
+    text = str(content or "").lower()
+    return any(marker in text for marker in ("<returncode>1", "<returncode>2", "traceback", "error:", "failed", "not found"))
+
+
+def _infer_tool_from_previous(events: List[dict]) -> str:
+    for event in reversed(events):
+        if event.get("type") == "llm":
+            raw = (event.get("metadata") or {}).get("raw", {})
+            content = str(raw.get("content", "")).lower() if isinstance(raw, dict) else ""
+            if "pytest" in content or "cargo test" in content or "test" in content:
+                return "test"
+            if "rg " in content or "grep" in content or "find " in content:
+                return "Grep"
+            if "sed " in content or "cat " in content or "nl " in content:
+                return "Read"
+            if "apply_patch" in content or "git apply" in content or "diff" in content:
+                return "Edit"
+            if "bash" in content or "```" in content:
+                return "Bash"
+    return "tool"
+
+
+def _tool_state_type_from_text(tool: str, content: object, status: str) -> str:
+    from .prompt_segmenter import state_type_for_tool
+
+    return state_type_for_tool(tool, content, status=status)
+
+
+def _latency_from_message(message: dict) -> int:
+    for key in ("latency", "duration", "elapsed", "total_time"):
+        value = message.get(key)
+        if value is None:
+            continue
+        try:
+            return int(float(value))
+        except Exception:
+            continue
+    return 1
+
+
+def _phase_from_text(content: object) -> Optional[str]:
+    text = str(content or "").lower()
+    if any(word in text for word in ("test", "pytest", "cargo test", "failure", "traceback", "verify")):
+        return "verify"
+    if any(word in text for word in ("edit", "patch", "write", "diff", "fix")):
+        return "execute"
+    if any(word in text for word in ("read", "grep", "search", "inspect", "find")):
+        return "explore"
+    return None
+
+
+def _event_id(source_id: str, kind: str, turn: int) -> str:
+    return f"{source_id}:{kind}:{turn}"
+
+
+def _agent_name(payload, source_id: str) -> str:
+    if isinstance(payload, dict):
+        for key in ("agent", "agent_id", "model", "instance_id"):
+            if payload.get(key):
+                return str(payload[key]).replace("/", "_")[:80]
+    return Path(source_id).stem or "agent_0"
+
+
+def _initial_messages(payload):
+    if not isinstance(payload, dict):
+        return None
+    if payload.get("messages"):
+        return payload.get("messages")
+    messages = []
+    agent_args = _decode_maybe_json(payload.get("agent_args", {}))
+    if isinstance(agent_args, dict) and agent_args.get("system_prompt"):
+        messages.append({"role": "system", "content": agent_args["system_prompt"]})
+    if payload.get("problem_statement"):
+        messages.append({"role": "user", "content": payload["problem_statement"]})
+    elif isinstance(payload.get("ds"), dict) and payload["ds"].get("problem_statement"):
+        messages.append({"role": "user", "content": payload["ds"]["problem_statement"]})
+    return messages or None
+
+
+def _phase_from_step(step) -> Optional[str]:
+    step = _decode_maybe_json(step)
+    if not isinstance(step, dict):
+        return None
+    phase = step.get("phase") or step.get("stage")
+    if phase:
+        return str(phase).lower()
+    text = json.dumps(step, ensure_ascii=True).lower()[:4000]
+    if any(word in text for word in ("pytest", "test", "verify", "failure", "traceback")):
+        return "verify"
+    if any(word in text for word in ("edit", "write", "patch", "diff")):
+        return "execute"
+    if any(word in text for word in ("read", "grep", "search", "inspect")):
+        return "explore"
+    return None
+
+
+def _decode_maybe_json(value):
+    for _ in range(3):
+        if not isinstance(value, str):
+            return value
+        stripped = value.strip()
+        if stripped and stripped[0] in "[{\"":
+            try:
+                decoded = json.loads(stripped)
+                if decoded == value:
+                    return value
+                value = decoded
+                continue
+            except Exception:
+                return value
+        return value
+    return value

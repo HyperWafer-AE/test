@@ -15,7 +15,7 @@ class BaseStateManager:
         self.resident_state_ids = set()
         self.last_evicted_bytes = 0
 
-    def update(self, graph, phase_score, current_step, future_index=None, oracle_future: bool = False):
+    def update(self, graph, phase_score, current_step, future_index=None, oracle_future: bool = False, demand_predictor=None):
         raise NotImplementedError
 
     def is_resident(self, state_id: str) -> bool:
@@ -49,7 +49,7 @@ class BaseStateManager:
 class NoCacheStateManager(BaseStateManager):
     policy_name = "nocache"
 
-    def update(self, graph, phase_score, current_step, future_index=None, oracle_future: bool = False):
+    def update(self, graph, phase_score, current_step, future_index=None, oracle_future: bool = False, demand_predictor=None):
         self._prepare(graph, phase_score, current_step)
         self._mark_selected([])
 
@@ -57,7 +57,7 @@ class NoCacheStateManager(BaseStateManager):
 class LRUStateManager(BaseStateManager):
     policy_name = "lru"
 
-    def update(self, graph, phase_score, current_step, future_index=None, oracle_future: bool = False):
+    def update(self, graph, phase_score, current_step, future_index=None, oracle_future: bool = False, demand_predictor=None):
         self._prepare(graph, phase_score, current_step)
         selected = []
         used = 0
@@ -77,7 +77,7 @@ class LRUStateManager(BaseStateManager):
 class KVFlowLikeStateManager(BaseStateManager):
     policy_name = "kvflow"
 
-    def update(self, graph, phase_score, current_step, future_index=None, oracle_future: bool = False):
+    def update(self, graph, phase_score, current_step, future_index=None, oracle_future: bool = False, demand_predictor=None):
         self._prepare(graph, phase_score, current_step)
         selected = []
         used = 0
@@ -108,7 +108,7 @@ class ASGStateManager(BaseStateManager):
         self.prefill_cycles_per_token = int(prefill_cycles_per_token)
         self.lambda_mem = float(lambda_mem)
 
-    def update(self, graph, phase_score, current_step, future_index=None, oracle_future: bool = False):
+    def update(self, graph, phase_score, current_step, future_index=None, oracle_future: bool = False, demand_predictor=None):
         self._prepare(graph, phase_score, current_step)
         selected = []
         used = 0
@@ -189,7 +189,7 @@ class ASGKnapsackStateManager(BaseStateManager):
             criticality += 0.25
         return criticality
 
-    def _future_terms(self, state: StateNode, graph, phase_score, current_step, future_index, oracle_future):
+    def _future_terms(self, state: StateNode, graph, phase_score, current_step, future_index, oracle_future, demand_predictor=None):
         if oracle_future and future_index is not None:
             future_accesses = future_index.future_access_count(
                 current_step,
@@ -199,38 +199,50 @@ class ASGKnapsackStateManager(BaseStateManager):
             if math.isinf(next_use):
                 future_accesses = 0
             reuse_probability = 1.0 if future_accesses > 0 else 0.0
+            expected_saved_cycles = None
+        elif demand_predictor is not None:
+            prediction = demand_predictor.predict(state, graph, phase_score, current_step)
+            future_accesses = prediction.expected_future_accesses
+            next_use = prediction.next_use_distance
+            reuse_probability = prediction.reuse_probability
+            expected_saved_cycles = prediction.expected_saved_cycles
         else:
             future_accesses = estimate_future_accesses(state, phase_score, agent=None)
             next_use = state.next_use
             reuse_probability = state.reuse_prob
+            expected_saved_cycles = None
         state.next_use = next_use
         state.predicted_future_accesses = float(future_accesses)
-        return future_accesses, reuse_probability
+        return future_accesses, reuse_probability, expected_saved_cycles
 
-    def _profit(self, state: StateNode, graph, phase_score, current_step, future_index, oracle_future) -> float:
-        future_accesses, reuse_probability = self._future_terms(
+    def _profit(self, state: StateNode, graph, phase_score, current_step, future_index, oracle_future, demand_predictor=None) -> float:
+        future_accesses, reuse_probability, predicted_saved_cycles = self._future_terms(
             state,
             graph,
             phase_score,
             current_step,
             future_index,
             oracle_future,
+            demand_predictor,
         )
         if future_accesses <= 0 or state.kv_bytes <= 0:
             state.retention_score = 0.0
             return 0.0
         recompute_cost = state.token_len * self.prefill_cycles_per_token
         storage_cost = self.storage_penalty * state.kv_bytes / max(1, self.memory_budget_bytes)
-        expected_saved_cycles = (
-            min(float(future_accesses), float(self.max_future_access_cap))
-            * recompute_cost
-            * float(reuse_probability)
-            * self._criticality(state, phase_score)
-        )
+        if predicted_saved_cycles is None:
+            expected_saved_cycles = (
+                min(float(future_accesses), float(self.max_future_access_cap))
+                * recompute_cost
+                * float(reuse_probability)
+                * self._criticality(state, phase_score)
+            )
+        else:
+            expected_saved_cycles = float(predicted_saved_cycles) * self._criticality(state, phase_score)
         state.retention_score = expected_saved_cycles - storage_cost
         return state.retention_score
 
-    def update(self, graph, phase_score, current_step, future_index=None, oracle_future: bool = False):
+    def update(self, graph, phase_score, current_step, future_index=None, oracle_future: bool = False, demand_predictor=None):
         self._prepare(graph, phase_score, current_step)
         capacity = self.memory_budget_bytes // self.knapsack_granularity_bytes
         if capacity <= 0:
@@ -239,7 +251,7 @@ class ASGKnapsackStateManager(BaseStateManager):
 
         candidates = []
         for state in self._all_states:
-            profit = self._profit(state, graph, phase_score, current_step, future_index, oracle_future)
+            profit = self._profit(state, graph, phase_score, current_step, future_index, oracle_future, demand_predictor)
             if profit <= 0 or state.kv_bytes <= 0:
                 continue
             if state.state_type in {"system_prefix", "task_prefix", "shared_prefix"}:

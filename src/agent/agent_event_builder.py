@@ -79,6 +79,8 @@ class AgentEventBuilder:
         future_horizon: int = 16,
         oracle_future: bool = False,
         comm_cost_model: str = "backend",
+        demand_predictor=None,
+        enable_static_replica: bool = True,
     ):
         self.hardware_platform = hardware_platform
         self.model_profile = model_profile
@@ -99,6 +101,8 @@ class AgentEventBuilder:
         self.future_horizon = int(future_horizon)
         self.oracle_future = bool(oracle_future)
         self.comm_cost_model = comm_cost_model
+        self.demand_predictor = demand_predictor
+        self.enable_static_replica = bool(enable_static_replica)
         self.graph = AgentStateGraph()
         self.metrics = AgentMetrics()
         self.events_dict: Dict[int, object] = {}
@@ -199,6 +203,7 @@ class AgentEventBuilder:
             self.graph.current_step,
             future_index=self.future_index,
             oracle_future=self.oracle_enabled,
+            demand_predictor=None if self.oracle_enabled else self.demand_predictor,
         )
         self.metrics.evicted_kv_bytes += self.state_manager.last_evicted_bytes
         self._sync_node_memory()
@@ -214,7 +219,7 @@ class AgentEventBuilder:
                 self._replicate_static_state(state)
 
     def _replicate_static_state(self, state: StateNode):
-        if self.policy_name == "nocache" or not self.agent_homes:
+        if self.policy_name == "nocache" or not self.agent_homes or not self.enable_static_replica:
             return
         state.pinned = True
         state.anchored = True
@@ -274,8 +279,8 @@ class AgentEventBuilder:
             owner=trace_event.get("owner", trace_event.get("agent", "shared")),
             token_len=token_len,
             kv_bytes=int(trace_event.get("kv_bytes", self.model_profile.kv_bytes(token_len))),
-            semantic_id=trace_event.get("semantic_id"),
-            exact_kv_id=trace_event.get("exact_kv_id"),
+            semantic_id=trace_event.get("semantic_id", trace_event.get("semantic_key")),
+            exact_kv_id=trace_event.get("exact_kv_id", trace_event.get("exact_token_hash")),
             metadata=trace_event.get("metadata"),
         )
         phase_score = self._phase_score()
@@ -529,6 +534,7 @@ class AgentEventBuilder:
         if self.policy_name == "nocache":
             self.metrics.cache_misses += len(input_states)
             self.metrics.state_misses += len(input_states)
+            self.metrics.cache_byte_miss += sum(state.kv_bytes for state in input_states)
             return sum(state.token_len for state in input_states) + append_tokens
 
         missing_tokens = 0
@@ -545,6 +551,7 @@ class AgentEventBuilder:
             else:
                 self.metrics.cache_misses += 1
                 self.metrics.state_misses += 1
+                self.metrics.cache_byte_miss += state.kv_bytes
                 missing_tokens += state.token_len
         return missing_tokens + append_tokens
 
@@ -577,6 +584,18 @@ class AgentEventBuilder:
             state.predicted_future_accesses = float(count)
             state.next_use = self.future_index.next_use_distance(self.graph.current_step, state.state_id)
             return float(count)
+        if self.demand_predictor is not None:
+            prediction = self.demand_predictor.predict(
+                state,
+                self.graph,
+                phase_score,
+                self.graph.current_step,
+                agent=agent,
+            )
+            state.predicted_future_accesses = prediction.expected_future_accesses
+            state.next_use = prediction.next_use_distance
+            state.reuse_prob = prediction.reuse_probability
+            return prediction.expected_future_accesses
         return estimate_future_accesses(state, phase_score, agent)
 
     def _future_agents(self, state: StateNode, agent: str) -> set:
@@ -824,7 +843,7 @@ class AgentEventBuilder:
         original_tokens = token_len
         if not self.enable_observation_compression:
             return token_len, False, original_tokens
-        compressible = {"tool_observation", "file_context", "raw_error_log", "failure_summary"}
+        compressible = {"tool_observation", "file_context", "raw_error_log", "failure_summary", "web_result", "subagent_output"}
         if state_type == "test_failure_summary" and token_len > self.large_observation_token_threshold:
             return self.large_observation_token_threshold, True, original_tokens
         if state_type not in compressible or token_len <= self.large_observation_token_threshold:

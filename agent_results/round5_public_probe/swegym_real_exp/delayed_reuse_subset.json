@@ -1,0 +1,12 @@
+{
+  "median_delayed_reuse_ratio": 0.0,
+  "selected_trace_count": 0,
+  "total_trace_count": 1,
+  "rows": [
+    {
+      "trace_idx": 0,
+      "delayed_reuse_ratio": 0.0,
+      "num_reuses": 0
+    }
+  ]
+}

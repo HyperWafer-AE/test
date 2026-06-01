@@ -11,6 +11,7 @@ class AgentMetrics:
     tool_output_tokens: int = 0
     cache_hits: int = 0
     cache_misses: int = 0
+    cache_byte_miss: int = 0
     kv_migration_bytes: int = 0
     demand_migration_bytes: int = 0
     prefetch_migration_bytes: int = 0

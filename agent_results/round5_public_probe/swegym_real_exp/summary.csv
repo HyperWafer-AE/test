@@ -1,0 +1,9 @@
+policy,prediction_mode,num_traces,concurrency,memory_budget,effective_prefill_tokens,effective_prefill_reduction,cache_hit_ratio,cache_byte_miss,model_compute_cycles,model_comm_cycles,remote_read_bytes,demand_migration_bytes,prefetch_migration_bytes,prefetch_hidden_cycles,prefetch_exposed_cycles,unused_prefetch_events,state_misses,local_state_hits,remote_state_hits,retained_state_type_distribution,LRU_regret_states_preserved,oracle_gap
+nocache,heuristic,1,1,0.5,32,0.0,0.0,8388608,37000,0,0,0,0,0,0,0,1,0,0,{},0,
+lru-basic,heuristic,1,1,0.5,16,0.5,1.0,0,21000,0,0,0,0,0,0,0,0,1,0,"{""assistant_delta"": 1, ""task_prefix"": 1}",0,
+lru-system,heuristic,1,1,0.5,16,0.5,1.0,0,21000,0,0,0,0,0,0,0,0,1,0,"{""assistant_delta"": 1, ""task_prefix"": 1}",0,
+kvflow-like,heuristic,1,1,0.5,16,0.5,1.0,0,21000,0,0,0,0,0,0,0,0,1,0,"{""assistant_delta"": 1, ""task_prefix"": 1}",0,
+asg-retention-v2-online,heuristic,1,1,0.5,16,0.5,1.0,0,21000,0,0,0,0,0,0,0,0,1,0,"{""assistant_delta"": 1, ""task_prefix"": 1}",0,
+asg-retention-v2-oracle,oracle,1,1,0.5,16,0.5,1.0,0,21000,0,0,0,0,0,0,0,0,1,0,"{""task_prefix"": 1}",0,
+asg-placement-v2-online,heuristic,1,1,0.5,16,0.5,1.0,0,21000,0,0,0,0,0,0,0,0,1,0,"{""assistant_delta"": 1, ""task_prefix"": 1}",0,
+asg-prefetch-v2-online,heuristic,1,1,0.5,16,0.5,1.0,0,21000,0,0,0,0,0,0,0,0,1,0,"{""assistant_delta"": 1, ""task_prefix"": 1}",0,

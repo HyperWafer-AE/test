@@ -1,0 +1,22 @@
+{
+  "median_delayed_reuse_ratio": 0.0,
+  "selected_trace_count": 0,
+  "total_trace_count": 3,
+  "rows": [
+    {
+      "trace_idx": 0,
+      "delayed_reuse_ratio": 0.0,
+      "num_reuses": 600
+    },
+    {
+      "trace_idx": 1,
+      "delayed_reuse_ratio": 0.0,
+      "num_reuses": 1640
+    },
+    {
+      "trace_idx": 2,
+      "delayed_reuse_ratio": 0.0,
+      "num_reuses": 1332
+    }
+  ]
+}

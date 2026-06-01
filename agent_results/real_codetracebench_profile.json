@@ -1,0 +1,232 @@
+{
+  "num_traces": 3,
+  "num_llm_events": 103,
+  "num_tool_events": 103,
+  "turn_count_distribution": {
+    "count": 3,
+    "min": 25,
+    "p50": 37,
+    "p90": 41,
+    "max": 41,
+    "mean": 34.333333333333336
+  },
+  "state_count_distribution": {
+    "count": 3,
+    "min": 3,
+    "p50": 3,
+    "p90": 3,
+    "max": 3,
+    "mean": 3.0
+  },
+  "state_type_distribution": {
+    "system_prefix": 3,
+    "failure_summary": 4,
+    "test_failure_summary": 20,
+    "tool_observation": 26,
+    "file_context": 52,
+    "task_prefix": 6,
+    "edit_diff": 1
+  },
+  "token_distribution_per_state_type": {
+    "system_prefix": {
+      "count": 3,
+      "min": 104,
+      "p50": 104,
+      "p90": 104,
+      "max": 104,
+      "mean": 104.0
+    },
+    "failure_summary": {
+      "count": 4,
+      "min": 16,
+      "p50": 1271,
+      "p90": 1337,
+      "max": 1337,
+      "mean": 971.25
+    },
+    "assistant_delta": {
+      "count": 100,
+      "min": 39,
+      "p50": 85,
+      "p90": 157,
+      "max": 1106,
+      "mean": 110.09
+    },
+    "test_failure_summary": {
+      "count": 20,
+      "min": 10,
+      "p50": 1023,
+      "p90": 1625,
+      "max": 1844,
+      "mean": 907.25
+    },
+    "tool_observation": {
+      "count": 26,
+      "min": 3,
+      "p50": 55,
+      "p90": 357,
+      "max": 986,
+      "mean": 156.07692307692307
+    },
+    "file_context": {
+      "count": 51,
+      "min": 3,
+      "p50": 262,
+      "p90": 976,
+      "max": 1439,
+      "mean": 399.03921568627453
+    },
+    "task_prefix": {
+      "count": 1,
+      "min": 91,
+      "p50": 91,
+      "p90": 91,
+      "max": 91,
+      "mean": 91.0
+    },
+    "edit_diff": {
+      "count": 1,
+      "min": 923,
+      "p50": 923,
+      "p90": 923,
+      "max": 923,
+      "mean": 923.0
+    }
+  },
+  "accumulated_context_length_distribution": {
+    "count": 103,
+    "min": 1365,
+    "p50": 10026,
+    "p90": 19667,
+    "max": 23769,
+    "mean": 10496.213592233009
+  },
+  "append_tokens_distribution": {
+    "count": 103,
+    "min": 1,
+    "p50": 1,
+    "p90": 1,
+    "max": 91,
+    "mean": 1.8737864077669903
+  },
+  "state_reuse_distance_distribution": {
+    "count": 3572,
+    "min": 2,
+    "p50": 2,
+    "p90": 2,
+    "max": 2,
+    "mean": 2.0
+  },
+  "delayed_reuse_ratio": 0.0,
+  "delayed_reuse_k": 8,
+  "cross_agent_reuse_ratio": 0.0,
+  "lru_regret_candidates": [],
+  "num_lru_regret_candidates": 0,
+  "top_state_types_by_future_saved_prefill_tokens": {
+    "file_context": 441439,
+    "test_failure_summary": 199310,
+    "assistant_delta": 160820,
+    "failure_summary": 129332,
+    "tool_observation": 59377,
+    "edit_diff": 19383,
+    "system_prefix": 10400,
+    "task_prefix": 2275
+  },
+  "phase_tool_transition_counts": {
+    "('verify', 'tool')->('verify', 'llm')": 1,
+    "('verify', 'llm')->('verify', 'test')": 24,
+    "('verify', 'test')->('verify', 'llm')": 20,
+    "('verify', 'test')->('explore', 'llm')": 2,
+    "('explore', 'llm')->('verify', 'Grep')": 7,
+    "('verify', 'Grep')->('verify', 'llm')": 1,
+    "('verify', 'llm')->('execute', 'Read')": 3,
+    "('execute', 'Read')->('verify', 'llm')": 4,
+    "('verify', 'llm')->('unknown', 'test')": 9,
+    "('unknown', 'test')->('explore', 'llm')": 1,
+    "('explore', 'llm')->('unknown', 'Grep')": 7,
+    "('unknown', 'Grep')->('verify', 'llm')": 6,
+    "('verify', 'llm')->('explore', 'test')": 2,
+    "('explore', 'test')->('verify', 'llm')": 2,
+    "('verify', 'llm')->('execute', 'test')": 9,
+    "('execute', 'test')->('verify', 'llm')": 8,
+    "('verify', 'llm')->('explore', 'Read')": 2,
+    "('explore', 'Read')->('explore', 'llm')": 2,
+    "('explore', 'llm')->('execute', 'Grep')": 2,
+    "('execute', 'Grep')->('verify', 'llm')": 1,
+    "('unknown', 'test')->('verify', 'llm')": 7,
+    "('verify', 'test')->('execute', 'llm')": 2,
+    "('verify', 'tool')->('explore', 'llm')": 1,
+    "('verify', 'Grep')->('explore', 'llm')": 5,
+    "('verify', 'Grep')->('execute', 'llm')": 3,
+    "('execute', 'llm')->('unknown', 'Grep')": 3,
+    "('unknown', 'Grep')->('explore', 'llm')": 6,
+    "('explore', 'llm')->('unknown', 'Read')": 4,
+    "('unknown', 'Read')->('explore', 'llm')": 4,
+    "('explore', 'llm')->('unknown', 'Bash')": 2,
+    "('unknown', 'Bash')->('explore', 'llm')": 2,
+    "('explore', 'llm')->('verify', 'Read')": 2,
+    "('verify', 'Read')->('explore', 'llm')": 2,
+    "('explore', 'llm')->('explore', 'Read')": 2,
+    "('execute', 'Grep')->('unknown', 'llm')": 2,
+    "('unknown', 'llm')->('execute', 'Read')": 1,
+    "('execute', 'Read')->('explore', 'llm')": 3,
+    "('explore', 'llm')->('explore', 'llm')": 1,
+    "('explore', 'Read')->('unknown', 'llm')": 1,
+    "('unknown', 'llm')->('unknown', 'Read')": 3,
+    "('unknown', 'Read')->('unknown', 'llm')": 1,
+    "('explore', 'llm')->('execute', 'Read')": 3,
+    "('execute', 'Read')->('unknown', 'llm')": 1,
+    "('unknown', 'Read')->('execute', 'llm')": 2,
+    "('execute', 'llm')->('execute', 'Grep')": 3,
+    "('unknown', 'llm')->('unknown', 'Grep')": 1,
+    "('execute', 'test')->('execute', 'llm')": 1,
+    "('execute', 'llm')->('unknown', 'Read')": 1,
+    "('unknown', 'Read')->('verify', 'llm')": 4,
+    "('verify', 'llm')->('unknown', 'Grep')": 2,
+    "('explore', 'Read')->('execute', 'llm')": 1,
+    "('execute', 'llm')->('unknown', 'Bash')": 1,
+    "('unknown', 'Bash')->('execute', 'llm')": 1,
+    "('verify', 'llm')->('unknown', 'Read')": 3,
+    "('unknown', 'Grep')->('execute', 'llm')": 1,
+    "('execute', 'llm')->('verify', 'Grep')": 2,
+    "('verify', 'tool')->('unknown', 'llm')": 1,
+    "('unknown', 'llm')->('verify', 'Bash')": 1,
+    "('verify', 'Bash')->('explore', 'llm')": 1,
+    "('unknown', 'test')->('execute', 'llm')": 1,
+    "('execute', 'Grep')->('execute', 'llm')": 1,
+    "('execute', 'llm')->('execute', 'Read')": 1
+  },
+  "tool_latency_distribution": {
+    "count": 103,
+    "min": 1,
+    "p50": 1,
+    "p90": 1,
+    "max": 1,
+    "mean": 1.0
+  },
+  "observation_size_distribution": {
+    "count": 103,
+    "min": 3,
+    "p50": 249,
+    "p90": 1277,
+    "max": 1844,
+    "mean": 468.7864077669903
+  },
+  "delayed_reuse_by_trace": [
+    {
+      "trace_idx": 0,
+      "delayed_reuse_ratio": 0.0,
+      "num_reuses": 600
+    },
+    {
+      "trace_idx": 1,
+      "delayed_reuse_ratio": 0.0,
+      "num_reuses": 1640
+    },
+    {
+      "trace_idx": 2,
+      "delayed_reuse_ratio": 0.0,
+      "num_reuses": 1332
+    }
+  ]
+}

@@ -1,0 +1,554 @@
+import argparse
+import csv
+import json
+import os
+import random
+import sys
+from collections import Counter
+from pathlib import Path
+from types import SimpleNamespace
+
+
+def _repo_root() -> Path:
+    return Path(__file__).resolve().parents[2]
+
+
+def _maybe_reexec_in_venv():
+    repo_root = _repo_root()
+    venv_python = repo_root / ".venv" / "Scripts" / "python.exe"
+    if not venv_python.exists():
+        return
+    if Path(sys.executable).resolve() == venv_python.resolve():
+        return
+    try:
+        import numpy  # noqa: F401
+    except ModuleNotFoundError:
+        os.execv(str(venv_python), [str(venv_python), "-m", "src.agent.real_trace_experiment"] + sys.argv[1:])
+
+
+_maybe_reexec_in_venv()
+
+
+def _setup_paths():
+    repo_root = _repo_root()
+    paths = [
+        repo_root,
+        repo_root / "src",
+        repo_root / "utils",
+        repo_root / "src" / "scheduling",
+        repo_root / "src" / "scheduling" / "communication" / "topology",
+        repo_root / "src" / "backend" / "analytical",
+    ]
+    for path in paths:
+        path_str = str(path)
+        if path_str not in sys.path:
+            sys.path.insert(0, path_str)
+
+
+_setup_paths()
+
+from event_driver import collective_event_driver
+import numpy as np
+from read_cfg import cfg_to_dict
+from tlm import tlm2d
+from WAMIS_HD import wamis_hdc
+
+from .agent_event_builder import AgentEventBuilder
+from .demand_predictor import DemandPredictor, PredictionMode, fit_trace_stats
+from .metrics import postprocess_agent_events
+from .model_profile import ModelProfile
+from .state_manager import (
+    ASGPlacementV2StateManager,
+    ASGPrefetchV2StateManager,
+    ASGRetentionV2StateManager,
+    KVFlowLikeStateManager,
+    LRUStateManager,
+    NoCacheStateManager,
+)
+from .trace_loader import load_trace_dir, load_trace_file
+from .trace_profile import delayed_reuse_by_trace
+
+
+REAL_V2_POLICIES = (
+    "nocache",
+    "lru-basic",
+    "lru-system",
+    "kvflow-like",
+    "asg-retention-v2-online",
+    "asg-retention-v2-oracle",
+    "asg-placement-v2-online",
+    "asg-prefetch-v2-online",
+)
+
+
+def build_hardware(cfg_path: str, topology: str):
+    cfg = cfg_to_dict(cfg_path)
+    if topology == "wamis":
+        return wamis_hdc(cfg)
+    if topology == "tlm":
+        return tlm2d(cfg)
+    raise ValueError(f"Unsupported topology: {topology}")
+
+
+def build_model(args) -> ModelProfile:
+    return ModelProfile(
+        n_layers=args.n_layers,
+        hidden_size=args.hidden_size,
+        dtype_bytes=args.dtype_bytes,
+        prefill_cycles_per_token=args.prefill_cycles_per_token,
+        decode_cycles_per_token=args.decode_cycles_per_token,
+    )
+
+
+def load_traces_from_args(args):
+    if args.trace_dir:
+        return load_trace_dir(
+            args.trace_dir,
+            trace_format=args.trace_format,
+            max_traces=args.max_traces,
+            min_turns=args.min_turns,
+            filter_success=args.filter_success,
+        )
+    if args.trace_file:
+        return [load_trace_file(args.trace_file, trace_format=args.trace_format)]
+    raise ValueError("Provide --trace-dir or --trace-file")
+
+
+def namespace_trace(trace, trace_idx: int):
+    state_map = {}
+    agent_map = {}
+
+    def map_state(state_id):
+        if state_id not in state_map:
+            state_map[state_id] = f"trace{trace_idx}:{state_id}"
+        return state_map[state_id]
+
+    def map_agent(agent):
+        if agent not in agent_map:
+            agent_map[agent] = f"trace{trace_idx}_{agent}"
+        return agent_map[agent]
+
+    namespaced = []
+    for event in trace:
+        item = dict(event)
+        if item.get("type") == "state":
+            item["state_id"] = map_state(item["state_id"])
+            if item.get("owner") not in {"shared", None}:
+                item["owner"] = map_agent(item["owner"])
+        elif item.get("type") == "llm":
+            item["agent"] = map_agent(item.get("agent", "agent_0"))
+            item["input_state_ids"] = [map_state(state_id) for state_id in item.get("input_state_ids", [])]
+            item["new_state_id"] = map_state(item["new_state_id"])
+            item["event_id"] = f"trace{trace_idx}:{item.get('event_id', len(namespaced))}"
+        elif item.get("type") == "tool":
+            item["agent"] = map_agent(item.get("agent", "agent_0"))
+            item["new_state_id"] = map_state(item["new_state_id"])
+            item["event_id"] = f"trace{trace_idx}:{item.get('event_id', len(namespaced))}"
+        metadata = dict(item.get("metadata") or {})
+        metadata["trace_idx"] = trace_idx
+        item["metadata"] = metadata
+        namespaced.append(item)
+    return namespaced
+
+
+def interleave_traces(traces, concurrency: int):
+    concurrency = max(1, int(concurrency))
+    output = []
+    for batch_start in range(0, len(traces), concurrency):
+        batch = [namespace_trace(trace, idx) for idx, trace in enumerate(traces[batch_start : batch_start + concurrency], batch_start)]
+        offsets = [0 for _ in batch]
+        while any(offset < len(trace) for offset, trace in zip(offsets, batch)):
+            for idx, trace in enumerate(batch):
+                if offsets[idx] >= len(trace):
+                    continue
+                output.append(trace[offsets[idx]])
+                offsets[idx] += 1
+    return output
+
+
+def make_state_manager(policy: str, memory_budget_bytes: int, model: ModelProfile, args):
+    if policy == "nocache":
+        return NoCacheStateManager(memory_budget_bytes)
+    if policy in {"lru-basic", "lru-system"}:
+        return LRUStateManager(memory_budget_bytes)
+    if policy == "kvflow-like":
+        return KVFlowLikeStateManager(memory_budget_bytes)
+    manager_cls = {
+        "asg-retention-v2-online": ASGRetentionV2StateManager,
+        "asg-retention-v2-oracle": ASGRetentionV2StateManager,
+        "asg-placement-v2-online": ASGPlacementV2StateManager,
+        "asg-prefetch-v2-online": ASGPrefetchV2StateManager,
+    }[policy]
+    return manager_cls(
+        memory_budget_bytes,
+        prefill_cycles_per_token=model.prefill_cycles_per_token,
+        knapsack_granularity_bytes=int(args.knapsack_granularity_mb * 1024 * 1024),
+        max_future_access_cap=args.max_future_access_cap,
+        storage_penalty=args.storage_penalty,
+        knapsack_max_candidates=args.knapsack_max_candidates,
+    )
+
+
+def policy_backend_name(policy: str) -> str:
+    return {
+        "nocache": "nocache",
+        "lru-basic": "lru",
+        "lru-system": "lru",
+        "kvflow-like": "kvflow",
+        "asg-retention-v2-online": "asg-retention-v2",
+        "asg-retention-v2-oracle": "asg-oracle-retention",
+        "asg-placement-v2-online": "asg-placement-v2",
+        "asg-prefetch-v2-online": "asg-prefetch-v2",
+    }[policy]
+
+
+def run_real_policy(policy: str, args, trace, predictor, num_traces: int, regret_state_ids: set):
+    model = build_model(args)
+    hardware = build_hardware(args.cfg, args.topology)
+    if hasattr(hardware, "frequency"):
+        hardware.frequency = args.hardware_frequency_ghz
+    random.seed(args.scheduler_seed)
+    np.random.seed(args.scheduler_seed)
+    memory_budget_bytes = int(args.memory_budget_gb * (1024 ** 3))
+    state_manager = make_state_manager(policy, memory_budget_bytes, model, args)
+    state_manager.policy_name = policy_backend_name(policy)
+    active_nodes = max(1, len(getattr(hardware, "nodes_set", [])))
+    per_node_memory_mb = args.per_node_memory_mb
+    if per_node_memory_mb is None:
+        per_node_memory_mb = max(16, int(args.memory_budget_gb * 1024 / active_nodes))
+
+    topology_enabled = policy in {"asg-placement-v2-online", "asg-prefetch-v2-online"}
+    prefetch_enabled = policy == "asg-prefetch-v2-online"
+    oracle_future = policy == "asg-retention-v2-oracle"
+    static_replica = policy != "lru-basic" and not args.disable_static_replica
+    compression = policy != "lru-basic" and not args.disable_observation_compression
+
+    builder = AgentEventBuilder(
+        hardware_platform=hardware,
+        model_profile=model,
+        state_manager=state_manager,
+        enable_prefetch=prefetch_enabled,
+        enable_topology_placement=topology_enabled,
+        agent_placement=args.agent_placement,
+        per_node_budget_bytes=int(per_node_memory_mb * 1024 * 1024),
+        max_prefetch_states=args.max_prefetch_states,
+        tool_latency_scale=args.tool_latency_scale,
+        effective_bandwidth_bytes_per_cycle=args.effective_bandwidth_bytes_per_cycle,
+        prefetch_reuse_threshold=args.prefetch_reuse_threshold,
+        prefetch_next_use_threshold=args.prefetch_next_use_threshold,
+        max_prefetch_bytes=args.max_prefetch_bytes,
+        prefetch_wait_fraction=args.prefetch_wait_fraction,
+        enable_observation_compression=compression,
+        large_observation_token_threshold=args.large_observation_token_threshold,
+        observation_compression_ratio=args.observation_compression_ratio,
+        future_horizon=args.horizon,
+        oracle_future=oracle_future,
+        comm_cost_model=args.comm_cost_model,
+        demand_predictor=None if oracle_future else predictor,
+        enable_static_replica=static_replica,
+    )
+    events_dict, graph, metrics = builder.build(trace)
+    total_cycles, pure_comp_cycles, pure_comm_cycles = collective_event_driver(events_dict, hardware)
+    postprocess_agent_events(events_dict, metrics, total_cycles, pure_comp_cycles, pure_comm_cycles)
+    retained_types = Counter(state.state_type for state in graph.states.values() if state.resident)
+    regret_preserved = sum(1 for state_id in regret_state_ids if state_id in graph.states and graph.states[state_id].resident)
+    return {
+        "policy": policy,
+        "prediction_mode": "oracle" if oracle_future else args.prediction_mode,
+        "num_traces": num_traces,
+        "concurrency": args.concurrency,
+        "memory_budget": args.memory_budget_gb,
+        "timing": {
+            "total_cycles": int(total_cycles),
+            "pure_comp_cycles": int(pure_comp_cycles),
+            "pure_comm_cycles": int(pure_comm_cycles),
+        },
+        "agent_metrics": metrics.to_dict(),
+        "retained_state_type_distribution": dict(retained_types),
+        "LRU_regret_states_preserved": regret_preserved,
+        "event_stats": {
+            "busybarn_events": len(events_dict),
+            "asg_states": len(graph.states),
+            "asg_execs": len(graph.execs),
+        },
+    }
+
+
+def regret_candidate_ids(trace, horizon: int = 16, min_tokens: int = 128) -> set:
+    state_tokens = {}
+    for event in trace:
+        if event.get("type") == "state":
+            state_tokens[event["state_id"]] = int(event.get("tokens", 1))
+        elif event.get("type") == "tool":
+            state_tokens[event["new_state_id"]] = int(event.get("output_tokens", 1))
+        elif event.get("type") == "llm":
+            state_tokens[event["new_state_id"]] = int(event.get("output_tokens", 1))
+    llm_steps = [(idx, event) for idx, event in enumerate(trace) if event.get("type") == "llm"]
+    candidates = set()
+    for pos, (step_idx, event) in enumerate(llm_steps):
+        for state_id in event.get("input_state_ids", []):
+            future = llm_steps[pos + 1 : pos + horizon + 1]
+            reused = any(state_id in future_event.get("input_state_ids", []) for _, future_event in future)
+            if reused and state_tokens.get(state_id, 0) >= min_tokens:
+                candidates.add(state_id)
+    return candidates
+
+
+def write_summary_csv(path, results):
+    oracle_eff = _metric_for(results, "asg-retention-v2-oracle", "effective_prefill_tokens")
+    lru_eff = _metric_for(results, "lru-system", "effective_prefill_tokens")
+    fields = [
+        "policy",
+        "prediction_mode",
+        "num_traces",
+        "concurrency",
+        "memory_budget",
+        "effective_prefill_tokens",
+        "effective_prefill_reduction",
+        "cache_hit_ratio",
+        "cache_byte_miss",
+        "model_compute_cycles",
+        "model_comm_cycles",
+        "remote_read_bytes",
+        "demand_migration_bytes",
+        "prefetch_migration_bytes",
+        "prefetch_hidden_cycles",
+        "prefetch_exposed_cycles",
+        "unused_prefetch_events",
+        "state_misses",
+        "local_state_hits",
+        "remote_state_hits",
+        "retained_state_type_distribution",
+        "LRU_regret_states_preserved",
+        "oracle_gap",
+    ]
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fields)
+        writer.writeheader()
+        for result in results:
+            metrics = result["agent_metrics"]
+            writer.writerow(
+                {
+                    "policy": result["policy"],
+                    "prediction_mode": result["prediction_mode"],
+                    "num_traces": result["num_traces"],
+                    "concurrency": result["concurrency"],
+                    "memory_budget": result["memory_budget"],
+                    "effective_prefill_tokens": metrics["effective_prefill_tokens"],
+                    "effective_prefill_reduction": metrics["effective_prefill_reduction"],
+                    "cache_hit_ratio": metrics["cache_hit_ratio"],
+                    "cache_byte_miss": metrics["cache_byte_miss"],
+                    "model_compute_cycles": metrics["model_compute_cycles"],
+                    "model_comm_cycles": metrics["model_comm_cycles"],
+                    "remote_read_bytes": metrics["remote_read_bytes"],
+                    "demand_migration_bytes": metrics["demand_migration_bytes"],
+                    "prefetch_migration_bytes": metrics["prefetch_migration_bytes"],
+                    "prefetch_hidden_cycles": metrics["prefetch_hidden_cycles"],
+                    "prefetch_exposed_cycles": metrics["prefetch_exposed_cycles"],
+                    "unused_prefetch_events": metrics["unused_prefetch_events"],
+                    "state_misses": metrics["state_misses"],
+                    "local_state_hits": metrics["local_state_hits"],
+                    "remote_state_hits": metrics["remote_state_hits"],
+                    "retained_state_type_distribution": json.dumps(result["retained_state_type_distribution"], sort_keys=True),
+                    "LRU_regret_states_preserved": result["LRU_regret_states_preserved"],
+                    "oracle_gap": _oracle_gap(metrics["effective_prefill_tokens"], lru_eff, oracle_eff),
+                }
+            )
+
+
+def _metric_for(results, policy: str, metric: str):
+    for result in results:
+        if result["policy"] == policy:
+            return result["agent_metrics"][metric]
+    return None
+
+
+def _oracle_gap(value, lru_value, oracle_value):
+    if lru_value is None or oracle_value is None or lru_value == oracle_value:
+        return ""
+    return (value - oracle_value) / (lru_value - oracle_value)
+
+
+def run_suite(args, traces, output_dir: Path, policies=REAL_V2_POLICIES):
+    combined_trace = interleave_traces(traces, args.concurrency)
+    if not combined_trace:
+        raise ValueError("No trace events to replay.")
+    train_traces = traces
+    if args.train_trace_dir:
+        train_traces = load_trace_dir(args.train_trace_dir, trace_format=args.trace_format, max_traces=args.max_traces)
+    stats = fit_trace_stats(train_traces, horizon=args.horizon) if args.prediction_mode == PredictionMode.TRACE_STATS else None
+    predictor = DemandPredictor(
+        mode=args.prediction_mode,
+        horizon=args.horizon,
+        prefill_cycles_per_token=args.prefill_cycles_per_token,
+        stats=stats,
+    )
+    (output_dir / "predictor_errors.json").write_text(
+        json.dumps(prediction_diagnostics(combined_trace, predictor, args.horizon), indent=2),
+        encoding="utf-8",
+    )
+    regret_ids = regret_candidate_ids(combined_trace, horizon=args.horizon)
+    results = []
+    for policy in policies:
+        result = run_real_policy(policy, args, combined_trace, predictor, len(traces), regret_ids)
+        results.append(result)
+        (output_dir / f"{policy}.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
+    write_summary_csv(output_dir / "summary.csv", results)
+    return results
+
+
+def prediction_diagnostics(trace, predictor: DemandPredictor, horizon: int = 16) -> dict:
+    state_meta = {}
+    last_access = {}
+    access_count = Counter()
+    errors = []
+    llm_indices = [idx for idx, event in enumerate(trace) if event.get("type") == "llm"]
+    for idx, event in enumerate(trace):
+        if event.get("type") == "state":
+            state_meta[event["state_id"]] = {
+                "state_type": event.get("state_type", "unknown"),
+                "token_len": int(event.get("tokens", 1)),
+                "birth_step": idx,
+                "owner": event.get("owner", "shared"),
+                "metadata": event.get("metadata") or {},
+            }
+        elif event.get("type") == "tool":
+            state_meta[event["new_state_id"]] = {
+                "state_type": event.get("new_state_type", "tool_observation"),
+                "token_len": int(event.get("output_tokens", 1)),
+                "birth_step": idx,
+                "owner": event.get("agent", "agent_0"),
+                "metadata": {"tool": event.get("tool", "tool")},
+            }
+        elif event.get("type") == "llm":
+            phase = event.get("phase") or "unknown"
+            phase_score = {phase: 1.0}
+            future_llms = [trace[fidx] for fidx in llm_indices if idx < fidx <= idx + horizon]
+            for state_id in event.get("input_state_ids", []):
+                meta = state_meta.get(state_id)
+                if meta is None:
+                    continue
+                state = SimpleNamespace(
+                    state_id=state_id,
+                    state_type=meta["state_type"],
+                    token_len=meta["token_len"],
+                    birth_step=meta["birth_step"],
+                    last_access=last_access.get(state_id, meta["birth_step"]),
+                    access_count=access_count[state_id],
+                    owner=meta["owner"],
+                    metadata=meta["metadata"],
+                )
+                pred = predictor.predict(state, None, phase_score, idx, agent=event.get("agent"))
+                actual = sum(1 for future in future_llms if state_id in future.get("input_state_ids", []))
+                errors.append(pred.expected_future_accesses - actual)
+                access_count[state_id] += 1
+                last_access[state_id] = idx
+            state_meta[event["new_state_id"]] = {
+                "state_type": event.get("new_state_type", "assistant_delta"),
+                "token_len": int(event.get("output_tokens", 1)),
+                "birth_step": idx,
+                "owner": event.get("agent", "agent_0"),
+                "metadata": {"tool": "llm"},
+            }
+    if not errors:
+        return {"samples": 0, "mae": 0.0, "bias": 0.0}
+    return {
+        "samples": len(errors),
+        "mae": sum(abs(value) for value in errors) / len(errors),
+        "bias": sum(errors) / len(errors),
+    }
+
+
+def write_delayed_reuse_subset(args, traces, output_dir: Path):
+    rows = delayed_reuse_by_trace(traces, delayed_reuse_k=args.horizon // 2)
+    ratios = sorted(row["delayed_reuse_ratio"] for row in rows)
+    median_ratio = ratios[len(ratios) // 2] if ratios else 0.0
+    selected = [traces[row["trace_idx"]] for row in rows if row["delayed_reuse_ratio"] > median_ratio]
+    metadata = {
+        "median_delayed_reuse_ratio": median_ratio,
+        "selected_trace_count": len(selected),
+        "total_trace_count": len(traces),
+        "rows": rows,
+    }
+    (output_dir / "delayed_reuse_subset.json").write_text(json.dumps(metadata, indent=2), encoding="utf-8")
+    if not selected:
+        return
+    subset_args = SimpleNamespace(**vars(args))
+    subset_args.output_dir = str(output_dir / "delayed_reuse_subset")
+    subset_output = Path(subset_args.output_dir)
+    subset_output.mkdir(parents=True, exist_ok=True)
+    run_suite(
+        subset_args,
+        selected,
+        subset_output,
+        policies=("lru-system", "asg-retention-v2-online", "asg-retention-v2-oracle"),
+    )
+
+
+def parse_args(argv=None):
+    parser = argparse.ArgumentParser(description="Replay real code-agent traces through Agent-on-Wafer policies.")
+    parser.add_argument("--trace-dir")
+    parser.add_argument("--trace-file")
+    parser.add_argument("--trace-format", choices=("auto", "normalized_jsonl", "normalized_json", "swe_gym", "codetracer", "agentlens", "generic_react_jsonl"), default="auto")
+    parser.add_argument("--max-traces", type=int)
+    parser.add_argument("--min-turns", type=int, default=0)
+    parser.add_argument("--filter-success", choices=("all", "success", "fail"), default="all")
+    parser.add_argument("--train-trace-dir")
+    parser.add_argument("--prediction-mode", choices=(PredictionMode.ORACLE, PredictionMode.HEURISTIC, PredictionMode.TRACE_STATS), default=PredictionMode.HEURISTIC)
+    parser.add_argument("--horizon", type=int, default=16)
+    parser.add_argument("--policy-suite", choices=("v2",), default="v2")
+    parser.add_argument("--memory-budget-gb", type=float, default=0.5)
+    parser.add_argument("--concurrency", type=int, default=8)
+    parser.add_argument("--output-dir", required=True)
+    parser.add_argument("--cfg", default="src/platform/cfgs/wamis_hd_distributed.cfg")
+    parser.add_argument("--topology", choices=("wamis", "tlm"), default="wamis")
+    parser.add_argument("--scheduler-seed", type=int, default=0)
+    parser.add_argument("--agent-placement", choices=("round_robin", "compact"), default="round_robin")
+    parser.add_argument("--per-node-memory-mb", type=float)
+    parser.add_argument("--tool-latency-scale", type=int, default=1_000_000)
+    parser.add_argument("--hardware-frequency-ghz", type=float, default=1.0)
+    parser.add_argument("--effective-bandwidth-bytes-per-cycle", type=float, default=64.0)
+    parser.add_argument("--comm-cost-model", choices=("heuristic", "backend"), default="backend")
+    parser.add_argument("--knapsack-granularity-mb", type=float, default=16)
+    parser.add_argument("--max-future-access-cap", type=int, default=8)
+    parser.add_argument("--storage-penalty", type=float, default=0.0)
+    parser.add_argument("--knapsack-max-candidates", type=int, default=2048)
+    parser.add_argument("--max-prefetch-states", type=int, default=2)
+    parser.add_argument("--prefetch-reuse-threshold", type=float, default=0.6)
+    parser.add_argument("--prefetch-next-use-threshold", type=float, default=2.0)
+    parser.add_argument("--max-prefetch-bytes", type=int, default=536870912)
+    parser.add_argument("--prefetch-wait-fraction", type=float, default=0.8)
+    parser.add_argument("--disable-static-replica", action="store_true")
+    parser.add_argument("--disable-observation-compression", action="store_true")
+    parser.add_argument("--large-observation-token-threshold", type=int, default=2048)
+    parser.add_argument("--observation-compression-ratio", type=float, default=0.25)
+    parser.add_argument("--n-layers", type=int, default=32)
+    parser.add_argument("--hidden-size", type=int, default=4096)
+    parser.add_argument("--dtype-bytes", type=int, default=2)
+    parser.add_argument("--prefill-cycles-per-token", type=int, default=1000)
+    parser.add_argument("--decode-cycles-per-token", type=int, default=5000)
+    return parser.parse_args(argv)
+
+
+def main(argv=None):
+    args = parse_args(argv)
+    traces = load_traces_from_args(args)
+    output_dir = Path(args.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    results = run_suite(args, traces, output_dir)
+    write_delayed_reuse_subset(args, traces, output_dir)
+    print(f"Wrote {len(results)} real-trace policy results to {output_dir}")
+    print("policy,effective_prefill_tokens,cache_hit_ratio,oracle_gap")
+    oracle_eff = _metric_for(results, "asg-retention-v2-oracle", "effective_prefill_tokens")
+    lru_eff = _metric_for(results, "lru-system", "effective_prefill_tokens")
+    for result in results:
+        metrics = result["agent_metrics"]
+        print(
+            f"{result['policy']},{metrics['effective_prefill_tokens']},{metrics['cache_hit_ratio']},{_oracle_gap(metrics['effective_prefill_tokens'], lru_eff, oracle_eff)}"
+        )
+
+
+if __name__ == "__main__":
+    main()
