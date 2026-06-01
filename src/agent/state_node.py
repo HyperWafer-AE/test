@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Set, Tuple
 
 
 STATE_TYPES = {
@@ -44,6 +44,15 @@ class StateNode:
     semantic_id: Optional[str] = None
     metadata: Dict = field(default_factory=dict)
 
+    producer_exec_id: Optional[str] = None
+    producer_event_tag: Optional[int] = None
+    available_event_tag: Optional[int] = None
+    replica_locs: Set[Tuple] = field(default_factory=set)
+    pinned: bool = False
+    anchored: bool = False
+    summarized: bool = False
+    predicted_future_accesses: float = 1.0
+
 
 @dataclass
 class ExecNode:
@@ -63,4 +72,3 @@ class ExecNode:
 
     assigned_loc: Optional[Tuple] = None
     metadata: Dict = field(default_factory=dict)
-

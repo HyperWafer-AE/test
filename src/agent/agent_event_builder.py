@@ -7,6 +7,7 @@ from src.scheduling.event_notation import (
     fixed_compute_notation,
 )
 
+from .cost_model import estimate_comm_cycles, estimate_future_accesses, should_migrate_state
 from .agent_state_graph import AgentStateGraph
 from .metrics import AgentMetrics
 from .phase_detector import detect_phase
@@ -17,6 +18,7 @@ from .placement import (
     choose_state_location,
     node_of_module,
 )
+from .state_lifecycle import is_static_shared, should_never_demand_migrate
 from .state_manager import NodeMemoryTracker
 from .state_node import ExecNode, StateNode
 
@@ -42,6 +44,15 @@ class AgentEventBuilder:
         agent_placement: str = "round_robin",
         per_node_budget_bytes: Optional[int] = None,
         max_prefetch_states: int = 2,
+        tool_latency_scale: int = 1_000_000,
+        effective_bandwidth_bytes_per_cycle: float = 64.0,
+        prefetch_reuse_threshold: float = 0.6,
+        prefetch_next_use_threshold: float = 2.0,
+        max_prefetch_bytes: int = 536870912,
+        prefetch_wait_fraction: float = 0.8,
+        enable_observation_compression: bool = False,
+        large_observation_token_threshold: int = 2048,
+        observation_compression_ratio: float = 0.25,
     ):
         self.hardware_platform = hardware_platform
         self.model_profile = model_profile
@@ -50,13 +61,22 @@ class AgentEventBuilder:
         self.enable_topology_placement = enable_topology_placement
         self.agent_placement = agent_placement
         self.max_prefetch_states = int(max_prefetch_states)
+        self.tool_latency_scale = int(tool_latency_scale)
+        self.effective_bandwidth_bytes_per_cycle = float(effective_bandwidth_bytes_per_cycle)
+        self.prefetch_reuse_threshold = float(prefetch_reuse_threshold)
+        self.prefetch_next_use_threshold = float(prefetch_next_use_threshold)
+        self.max_prefetch_bytes = int(max_prefetch_bytes)
+        self.prefetch_wait_fraction = float(prefetch_wait_fraction)
+        self.enable_observation_compression = enable_observation_compression
+        self.large_observation_token_threshold = int(large_observation_token_threshold)
+        self.observation_compression_ratio = float(observation_compression_ratio)
         self.graph = AgentStateGraph()
         self.metrics = AgentMetrics()
         self.events_dict: Dict[int, object] = {}
         self._next_event_tag = 0
         self._next_exec_id = 0
         self._last_agent_event: Dict[str, int] = {}
-        self._pending_prefetch_tags: Dict[str, set] = defaultdict(set)
+        self._pending_prefetch_tags: Dict[str, Dict[str, int]] = defaultdict(dict)
         self._module_load = defaultdict(int)
         self.agent_homes: Dict[str, tuple] = {}
         self.shared_anchor = None
@@ -145,6 +165,22 @@ class AgentEventBuilder:
             elif state.loc is not None and state.state_id not in self.node_memory.state_to_node:
                 if self.node_memory.can_place(state, state.loc):
                     self.node_memory.place(state, state.loc)
+            if state.resident and is_static_shared(state):
+                self._replicate_static_state(state)
+
+    def _replicate_static_state(self, state: StateNode):
+        if self.policy_name == "nocache" or not self.agent_homes:
+            return
+        state.pinned = True
+        state.anchored = True
+        for home in self.agent_homes.values():
+            node = node_of_module(home)
+            if node not in state.replica_locs:
+                state.replica_locs.add(node)
+                self.metrics.num_static_replicas += 1
+                self.metrics.static_replica_bytes += state.kv_bytes
+        if state.loc is None:
+            state.loc = self.shared_anchor or next(iter(state.replica_locs))
 
     def _place_state_if_needed(self, state: StateNode, predicted_exec_loc, agent: str):
         if state.loc is not None:
@@ -199,6 +235,9 @@ class AgentEventBuilder:
         )
         phase_score = self._phase_score()
         self._refresh_policy(phase_score)
+        if is_static_shared(state):
+            state.available_event_tag = None
+            self._replicate_static_state(state)
         agent = state.owner if state.owner in self.agent_homes else next(iter(self.agent_homes), "agent_0")
         self._place_state_if_needed(state, self._agent_home(agent) if self.agent_homes else None, agent)
 
@@ -240,9 +279,17 @@ class AgentEventBuilder:
         target_node = node_of_module(exec_loc)
 
         parent_tag = self._last_agent_event.get(agent)
-        prefill_dependencies = set(self._pending_prefetch_tags.pop(agent, set()))
+        pending_by_state = self._pending_prefetch_tags.pop(agent, {})
+        input_id_set = set(input_ids)
+        prefill_dependencies = set()
+        for state_id, tag in pending_by_state.items():
+            if state_id in input_id_set:
+                prefill_dependencies.add(tag)
+            else:
+                self.metrics.unused_prefetch_events += 1
         resident_now = {state.state_id: state.resident for state in input_states}
         loc_before = {state.state_id: state.loc for state in input_states}
+        movement_dependencies = set()
 
         if self.topology_enabled:
             for state in input_states:
@@ -252,8 +299,24 @@ class AgentEventBuilder:
                 old_node = loc_before.get(state.state_id) or state.loc
                 if old_node is None:
                     continue
-                if old_node != target_node:
-                    parent_tag = self._emit_kv_migration(
+                if old_node == target_node or target_node in state.replica_locs:
+                    continue
+                if should_never_demand_migrate(state):
+                    read_tag = self._emit_remote_read(state, old_node, target_node, parent_tag, agent)
+                    movement_dependencies.add(read_tag)
+                    continue
+
+                expected_accesses = estimate_future_accesses(state, phase_score, agent)
+                if should_migrate_state(
+                    state,
+                    old_node,
+                    target_node,
+                    self.hardware_platform,
+                    phase_score,
+                    expected_accesses,
+                    effective_bandwidth_bytes_per_cycle=self.effective_bandwidth_bytes_per_cycle,
+                ):
+                    migration_tag = self._emit_kv_migration(
                         state=state,
                         old_node=old_node,
                         new_node=target_node,
@@ -262,8 +325,11 @@ class AgentEventBuilder:
                         blocking=True,
                         agent=agent,
                     )
+                    movement_dependencies.add(migration_tag)
                 else:
-                    state.loc = target_node
+                    self.metrics.migration_skipped_by_cost += 1
+                    read_tag = self._emit_remote_read(state, old_node, target_node, parent_tag, agent)
+                    movement_dependencies.add(read_tag)
         else:
             for state in input_states:
                 if state.resident:
@@ -296,6 +362,11 @@ class AgentEventBuilder:
         self._add_dependency(parent_tag, prefill)
         for dep_tag in sorted(prefill_dependencies):
             self._add_dependency(dep_tag, prefill)
+        for dep_tag in sorted(movement_dependencies):
+            self._add_dependency(dep_tag, prefill)
+        for state in input_states:
+            if state.available_event_tag is not None and state.available_event_tag in self.events_dict:
+                self._add_dependency(state.available_event_tag, prefill)
 
         decode_tag = self._new_tag()
         decode = fixed_compute_notation(
@@ -321,6 +392,9 @@ class AgentEventBuilder:
             kv_bytes=self.model_profile.kv_bytes(output_tokens),
             metadata={"producer_exec": exec_id},
         )
+        output_state.producer_exec_id = exec_id
+        output_state.producer_event_tag = decode_tag
+        output_state.available_event_tag = decode_tag
         output_state.loc = choose_state_location(
             output_state,
             exec_loc,
@@ -372,7 +446,7 @@ class AgentEventBuilder:
             if resident_now.get(state.state_id, False):
                 self.metrics.cache_hits += 1
                 old_node = loc_before.get(state.state_id)
-                if old_node is None or old_node == target_node:
+                if old_node is None or old_node == target_node or target_node in state.replica_locs:
                     self.metrics.local_state_hits += 1
                 else:
                     self.metrics.remote_state_hits += 1
@@ -401,6 +475,7 @@ class AgentEventBuilder:
             state.loc = new_node
             return parent_tag if parent_tag is not None else -1
 
+        prior_available_tag = state.available_event_tag
         tag = self._new_tag()
         migration = communication_notation(
             comm_name="kv_migrate",
@@ -420,6 +495,16 @@ class AgentEventBuilder:
         }
         self._add_event(migration)
         self._add_dependency(parent_tag, migration)
+        if prior_available_tag is not None and prior_available_tag in self.events_dict:
+            self._add_dependency(prior_available_tag, migration)
+        estimate = estimate_comm_cycles(
+            state,
+            old_node,
+            new_node,
+            self.hardware_platform,
+            self.effective_bandwidth_bytes_per_cycle,
+        )
+        self.metrics.migration_cost_estimate_cycles += estimate
         self.metrics.kv_migration_bytes += state.kv_bytes
         self.metrics.num_kv_migrations += 1
         if reason == "prefetch":
@@ -434,6 +519,42 @@ class AgentEventBuilder:
             self.node_memory.move(state, old_node, new_node)
         else:
             state.loc = new_node
+        state.available_event_tag = tag
+        return tag
+
+    def _emit_remote_read(self, state: StateNode, old_node, new_node, parent_tag: Optional[int], agent: str) -> int:
+        old_node = tuple(old_node)
+        new_node = tuple(new_node)
+        tag = self._new_tag()
+        remote_read = communication_notation(
+            comm_name="kv_remote_read",
+            comm_tag=tag,
+            source_location=old_node,
+            target_location=new_node,
+            comm_bytes=state.kv_bytes,
+        )
+        remote_read.metadata = {
+            "agent": agent,
+            "state_id": state.state_id,
+            "state_type": state.state_type,
+            "reason": "remote_read",
+            "blocking": True,
+            "bytes": state.kv_bytes,
+        }
+        self._add_event(remote_read)
+        self._add_dependency(parent_tag, remote_read)
+        if state.available_event_tag is not None and state.available_event_tag in self.events_dict:
+            self._add_dependency(state.available_event_tag, remote_read)
+        estimate = estimate_comm_cycles(
+            state,
+            old_node,
+            new_node,
+            self.hardware_platform,
+            self.effective_bandwidth_bytes_per_cycle,
+        )
+        self.metrics.remote_read_cost_estimate_cycles += estimate
+        self.metrics.remote_read_bytes += state.kv_bytes
+        self.metrics.num_remote_reads += 1
         return tag
 
     def _handle_tool(self, trace_event: dict):
@@ -442,7 +563,8 @@ class AgentEventBuilder:
         phase_score = self._phase_score()
         phase_name = self._phase_name(phase_score)
         exec_id = self._new_exec_id("tool")
-        latency = int(trace_event.get("latency", trace_event.get("tool_latency", 0)))
+        raw_latency = int(trace_event.get("latency", trace_event.get("tool_latency", 0)))
+        latency = int(raw_latency * self.tool_latency_scale)
         output_tokens = int(trace_event.get("output_tokens", 0))
         exec_node = ExecNode(
             exec_id=exec_id,
@@ -463,7 +585,7 @@ class AgentEventBuilder:
             wait_name=f"tool_{tool_name}",
             wait_tag=wait_tag,
             duration=max(0, latency),
-            metadata={"agent": agent, "exec_id": exec_id, "tool": tool_name},
+            metadata={"agent": agent, "exec_id": exec_id, "tool": tool_name, "raw_latency": raw_latency},
         )
         self._add_event(wait)
         self._add_dependency(parent_before_wait, wait)
@@ -471,14 +593,19 @@ class AgentEventBuilder:
 
         state_id = trace_event.get("new_state_id") or f"{agent}_tool_{exec_id}_out"
         state_type = trace_event.get("new_state_type", "tool_observation")
+        output_tokens, summarized, original_tokens = self._maybe_compress_observation(state_type, output_tokens)
         state = self.graph.build_or_get_state(
             state_id=state_id,
             state_type=state_type,
             owner=agent,
             token_len=output_tokens,
             kv_bytes=self.model_profile.kv_bytes(output_tokens),
-            metadata={"producer_exec": exec_id, "tool": tool_name},
+            metadata={"producer_exec": exec_id, "tool": tool_name, "original_tokens": original_tokens},
         )
+        state.producer_exec_id = exec_id
+        state.producer_event_tag = wait_tag
+        state.available_event_tag = wait_tag
+        state.summarized = summarized
         state.loc = choose_state_location(
             state,
             self._agent_home(agent),
@@ -498,9 +625,21 @@ class AgentEventBuilder:
         self._refresh_policy(phase_score)
         if state.resident and self.node_memory.can_place(state, state.loc):
             self.node_memory.place(state, state.loc)
-        self._maybe_emit_prefetches_during_tool_wait(agent, parent_before_wait, wait_tag, trace_event, phase_score)
+        self._maybe_emit_prefetches_during_tool_wait(agent, parent_before_wait, wait_tag, latency, trace_event, phase_score)
 
-    def _maybe_emit_prefetches_during_tool_wait(self, agent, parent_tag, wait_tag, tool_event, phase_score):
+    def _maybe_compress_observation(self, state_type: str, token_len: int):
+        original_tokens = token_len
+        if not self.enable_observation_compression:
+            return token_len, False, original_tokens
+        compressible = {"tool_observation", "file_context", "raw_error_log", "failure_summary"}
+        if state_type == "test_failure_summary" and token_len > self.large_observation_token_threshold:
+            return self.large_observation_token_threshold, True, original_tokens
+        if state_type not in compressible or token_len <= self.large_observation_token_threshold:
+            return token_len, False, original_tokens
+        compressed = max(1, int(token_len * self.observation_compression_ratio))
+        return compressed, True, original_tokens
+
+    def _maybe_emit_prefetches_during_tool_wait(self, agent, parent_tag, wait_tag, tool_latency_cycles, tool_event, phase_score):
         if not self.prefetch_enabled or self.max_prefetch_states <= 0:
             return
         predicted_exec_loc = self._agent_home(agent)
@@ -509,11 +648,33 @@ class AgentEventBuilder:
         for state in self.graph.states.values():
             if not state.resident or state.loc is None or state.loc == target_node:
                 continue
-            if state.owner not in {agent, "shared"} and state.state_type not in {"system_prefix", "task_prefix", "shared_prefix"}:
+            cross_agent_candidate = state.owner not in {agent, "shared"}
+            if (
+                cross_agent_candidate
+                and state.access_count < 2
+                and state.reuse_prob < self.prefetch_reuse_threshold + 0.1
+            ):
+                continue
+            if is_static_shared(state) and target_node in state.replica_locs:
                 continue
             if state.state_type == "raw_error_log":
                 continue
             if state.state_type == "speculative_state" and not state.metadata.get("committed", False):
+                continue
+            if state.reuse_prob < self.prefetch_reuse_threshold:
+                continue
+            if state.next_use > self.prefetch_next_use_threshold:
+                continue
+            if state.kv_bytes > self.max_prefetch_bytes:
+                continue
+            estimated_cycles = estimate_comm_cycles(
+                state,
+                state.loc,
+                target_node,
+                self.hardware_platform,
+                self.effective_bandwidth_bytes_per_cycle,
+            )
+            if estimated_cycles > self.prefetch_wait_fraction * max(1, tool_latency_cycles):
                 continue
             priority = (
                 state.reuse_prob
@@ -536,7 +697,7 @@ class AgentEventBuilder:
                 associated_wait_tag=wait_tag,
             )
             if tag >= 0:
-                self._pending_prefetch_tags[agent].add(tag)
+                self._pending_prefetch_tags[agent][state.state_id] = tag
 
     def _add_static_affinities(self, agent: str):
         role = f"{agent}_role"

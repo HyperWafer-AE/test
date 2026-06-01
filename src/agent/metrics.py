@@ -29,6 +29,15 @@ class AgentMetrics:
     state_misses: int = 0
     num_remote_accesses: int = 0
     remote_access_bytes: int = 0
+    remote_read_bytes: int = 0
+    num_remote_reads: int = 0
+    remote_read_cycles: int = 0
+    migration_skipped_by_cost: int = 0
+    static_replica_bytes: int = 0
+    num_static_replicas: int = 0
+    unused_prefetch_events: int = 0
+    migration_cost_estimate_cycles: int = 0
+    remote_read_cost_estimate_cycles: int = 0
     num_agents: int = 0
     num_states_resident_final: int = 0
     num_states_total: int = 0
@@ -81,6 +90,8 @@ def postprocess_agent_events(events_dict, metrics: AgentMetrics):
         if getattr(event, "event_type", None) != "communication":
             continue
         metadata = getattr(event, "metadata", {}) or {}
+        if metadata.get("reason") == "remote_read":
+            metrics.remote_read_cycles += max(0, int(event.end_time) - int(event.start_time))
         if metadata.get("reason") != "prefetch":
             continue
         duration = max(0, int(event.end_time) - int(event.start_time))

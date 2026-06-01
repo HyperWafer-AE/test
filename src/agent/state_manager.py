@@ -121,7 +121,23 @@ class ASGStateManager(BaseStateManager):
             scored.append((density, state.retention_score, -state.next_use, state.state_id, state))
 
         candidates = [item[-1] for item in sorted(scored, reverse=True)]
+        selected_ids = set()
+        reserved_for_dynamic = int(self.memory_budget_bytes * 0.35)
         for state in candidates:
+            if reserved_for_dynamic <= 0:
+                break
+            if state.state_type in {"system_prefix", "task_prefix", "shared_prefix", "agent_role"}:
+                continue
+            if state.kv_bytes <= 0 or state.retention_score <= 0:
+                continue
+            if used + state.kv_bytes <= self.memory_budget_bytes and state.kv_bytes <= reserved_for_dynamic:
+                selected.append(state)
+                selected_ids.add(state.state_id)
+                used += state.kv_bytes
+                reserved_for_dynamic -= state.kv_bytes
+        for state in candidates:
+            if state.state_id in selected_ids:
+                continue
             if state.kv_bytes <= 0 or state.retention_score <= 0:
                 continue
             if used + state.kv_bytes <= self.memory_budget_bytes:

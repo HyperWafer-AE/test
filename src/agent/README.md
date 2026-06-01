@@ -39,6 +39,11 @@ python -m src.agent.experiment --run-all-policies --cfg src/platform/cfgs/wamis_
 - `--max-prefetch-states` caps prefetch migrations emitted during each tool wait.
 - `--disable-topology-placement` disables ASG topology-aware placement.
 - `--disable-prefetch` disables tool-wait prefetch.
+- `--scheduler-seed` seeds BusyBarn's randomized communication scheduling for repeatable agent experiments.
+- `--tool-latency-scale` converts synthetic tool latency units into cycles. The default is `1000000`, so a trace latency of `1000` becomes `1e9` external wait cycles.
+- `--effective-bandwidth-bytes-per-cycle` controls the migration/remote-read cost model.
+- `--prefetch-reuse-threshold`, `--prefetch-next-use-threshold`, `--max-prefetch-bytes`, and `--prefetch-wait-fraction` gate prefetch candidates.
+- `--enable-observation-compression` compresses large tool observations with `--large-observation-token-threshold` and `--observation-compression-ratio`.
 
 ## Metrics
 
@@ -49,6 +54,11 @@ python -m src.agent.experiment --run-all-policies --cfg src/platform/cfgs/wamis_
 - `demand_migration_bytes`: blocking KV movement before an LLM step.
 - `prefetch_migration_bytes` / `prefetch_kv_bytes`: KV movement issued during tool-wait prefetch.
 - `num_prefetch_events`: number of prefetch migration events.
+- `remote_read_bytes`: bytes read remotely when migration is not cost-effective.
+- `migration_skipped_by_cost`: count of remote reads selected by the migration cost model.
+- `static_replica_bytes` / `num_static_replicas`: zero-cost MVP replicas for pinned static shared prefixes at agent homes.
+- `unused_prefetch_events`: prefetches not consumed by the next LLM step for that agent.
+- `migration_cost_estimate_cycles` / `remote_read_cost_estimate_cycles`: deterministic estimates used by policy decisions.
 - `local_state_hits`: resident states already at the chosen execution node.
 - `remote_state_hits`: resident states that required remote movement/access before compute.
 - `state_misses`: non-resident input states that force prefill.
@@ -63,7 +73,7 @@ python -m src.agent.experiment --run-all-policies --cfg src/platform/cfgs/wamis_
 - KV bytes and prefill/decode costs use a configurable analytical model.
 - Tool execution is modeled as fixed external wait.
 - Topology-aware placement is heuristic, not globally optimal.
+- Migration versus remote read uses a simple analytical cost model, not a full hardware runtime.
 - KV migration is modeled as state movement events, not physical DMA implementation.
 - Speculation is not implemented yet.
 - Skill routing is not implemented yet.
-

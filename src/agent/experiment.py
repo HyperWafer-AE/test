@@ -2,6 +2,7 @@ import argparse
 import csv
 import json
 import os
+import random
 import sys
 from pathlib import Path
 
@@ -45,6 +46,7 @@ def _setup_paths():
 _setup_paths()
 
 from event_driver import collective_event_driver
+import numpy as np
 from read_cfg import cfg_to_dict
 from tlm import tlm2d
 from WAMIS_HD import wamis_hdc
@@ -134,6 +136,8 @@ def workload_stats(trace):
 def run_policy(policy: str, args, trace):
     model = build_model(args)
     hardware = build_hardware(args.cfg, args.topology)
+    random.seed(args.scheduler_seed)
+    np.random.seed(args.scheduler_seed)
     memory_budget_bytes = int(args.memory_budget_gb * (1024 ** 3))
     state_manager = build_state_manager(policy, memory_budget_bytes, model)
     active_nodes = max(1, len(getattr(hardware, "nodes_set", [])))
@@ -152,6 +156,15 @@ def run_policy(policy: str, args, trace):
         agent_placement=args.agent_placement,
         per_node_budget_bytes=int(per_node_memory_mb * 1024 * 1024),
         max_prefetch_states=args.max_prefetch_states,
+        tool_latency_scale=args.tool_latency_scale,
+        effective_bandwidth_bytes_per_cycle=args.effective_bandwidth_bytes_per_cycle,
+        prefetch_reuse_threshold=args.prefetch_reuse_threshold,
+        prefetch_next_use_threshold=args.prefetch_next_use_threshold,
+        max_prefetch_bytes=args.max_prefetch_bytes,
+        prefetch_wait_fraction=args.prefetch_wait_fraction,
+        enable_observation_compression=args.enable_observation_compression,
+        large_observation_token_threshold=args.large_observation_token_threshold,
+        observation_compression_ratio=args.observation_compression_ratio,
     )
     events_dict, graph, metrics = builder.build(trace)
     total_cycles, pure_comp_cycles, pure_comm_cycles = collective_event_driver(events_dict, hardware)
@@ -205,6 +218,16 @@ def write_summary_csv(path, results):
         "remote_state_hits",
         "state_misses",
         "tool_wait_cycles",
+        "tool_wait_overlap_ratio",
+        "remote_read_bytes",
+        "num_remote_reads",
+        "remote_read_cycles",
+        "migration_skipped_by_cost",
+        "static_replica_bytes",
+        "num_static_replicas",
+        "unused_prefetch_events",
+        "migration_cost_estimate_cycles",
+        "remote_read_cost_estimate_cycles",
         "busybarn_events",
     ]
     with output_path.open("w", newline="", encoding="utf-8") as handle:
@@ -236,6 +259,16 @@ def write_summary_csv(path, results):
                     "remote_state_hits": metrics["remote_state_hits"],
                     "state_misses": metrics["state_misses"],
                     "tool_wait_cycles": metrics["tool_wait_cycles"],
+                    "tool_wait_overlap_ratio": metrics["tool_wait_overlap_ratio"],
+                    "remote_read_bytes": metrics["remote_read_bytes"],
+                    "num_remote_reads": metrics["num_remote_reads"],
+                    "remote_read_cycles": metrics["remote_read_cycles"],
+                    "migration_skipped_by_cost": metrics["migration_skipped_by_cost"],
+                    "static_replica_bytes": metrics["static_replica_bytes"],
+                    "num_static_replicas": metrics["num_static_replicas"],
+                    "unused_prefetch_events": metrics["unused_prefetch_events"],
+                    "migration_cost_estimate_cycles": metrics["migration_cost_estimate_cycles"],
+                    "remote_read_cost_estimate_cycles": metrics["remote_read_cost_estimate_cycles"],
                     "busybarn_events": result["event_stats"]["busybarn_events"],
                 }
             )
@@ -300,6 +333,7 @@ def parse_args(argv=None):
     parser.add_argument("--turns", type=int, default=32)
     parser.add_argument("--memory-budget-gb", type=float, default=8.0)
     parser.add_argument("--seed", type=int, default=1)
+    parser.add_argument("--scheduler-seed", type=int, default=0)
     parser.add_argument("--output", default="agent_results/asg.json")
     parser.add_argument("--output-dir", default="agent_results")
     parser.add_argument("--trace-json")
@@ -310,6 +344,16 @@ def parse_args(argv=None):
     parser.add_argument("--per-node-memory-mb", type=float)
     parser.add_argument("--max-prefetch-states", type=int, default=2)
     parser.add_argument("--stress-placement", action="store_true")
+    parser.add_argument("--tool-latency-scale", type=int, default=1_000_000)
+    parser.add_argument("--hardware-frequency-ghz", type=float, default=1.0)
+    parser.add_argument("--effective-bandwidth-bytes-per-cycle", type=float, default=64.0)
+    parser.add_argument("--prefetch-reuse-threshold", type=float, default=0.6)
+    parser.add_argument("--prefetch-next-use-threshold", type=float, default=2.0)
+    parser.add_argument("--max-prefetch-bytes", type=int, default=536870912)
+    parser.add_argument("--prefetch-wait-fraction", type=float, default=0.8)
+    parser.add_argument("--enable-observation-compression", action="store_true")
+    parser.add_argument("--large-observation-token-threshold", type=int, default=2048)
+    parser.add_argument("--observation-compression-ratio", type=float, default=0.25)
 
     parser.add_argument("--shared-prefix-tokens", type=int, default=1024)
     parser.add_argument("--role-tokens", type=int, default=128)
