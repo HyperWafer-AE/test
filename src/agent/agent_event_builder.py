@@ -1,3 +1,4 @@
+from collections import defaultdict
 from typing import Dict, List, Optional
 
 from src.scheduling.event_notation import (
@@ -9,7 +10,14 @@ from src.scheduling.event_notation import (
 from .agent_state_graph import AgentStateGraph
 from .metrics import AgentMetrics
 from .phase_detector import detect_phase
-from .placement import choose_exec_location, choose_state_location, node_of_module
+from .placement import (
+    assign_agent_homes,
+    choose_exec_location,
+    choose_shared_anchor,
+    choose_state_location,
+    node_of_module,
+)
+from .state_manager import NodeMemoryTracker
 from .state_node import ExecNode, StateNode
 
 
@@ -19,20 +27,66 @@ STATIC_DEFAULT_TOKENS = {
 }
 
 
+TOPOLOGY_POLICIES = {"asg-placement", "asg-prefetch", "asg"}
+PREFETCH_POLICIES = {"asg-prefetch", "asg"}
+
+
 class AgentEventBuilder:
-    def __init__(self, hardware_platform, model_profile, state_manager, enable_prefetch: bool = True):
+    def __init__(
+        self,
+        hardware_platform,
+        model_profile,
+        state_manager,
+        enable_prefetch: bool = True,
+        enable_topology_placement: bool = True,
+        agent_placement: str = "round_robin",
+        per_node_budget_bytes: Optional[int] = None,
+        max_prefetch_states: int = 2,
+    ):
         self.hardware_platform = hardware_platform
         self.model_profile = model_profile
         self.state_manager = state_manager
         self.enable_prefetch = enable_prefetch
+        self.enable_topology_placement = enable_topology_placement
+        self.agent_placement = agent_placement
+        self.max_prefetch_states = int(max_prefetch_states)
         self.graph = AgentStateGraph()
         self.metrics = AgentMetrics()
         self.events_dict: Dict[int, object] = {}
         self._next_event_tag = 0
         self._next_exec_id = 0
         self._last_agent_event: Dict[str, int] = {}
+        self._pending_prefetch_tags: Dict[str, set] = defaultdict(set)
+        self._module_load = defaultdict(int)
+        self.agent_homes: Dict[str, tuple] = {}
+        self.shared_anchor = None
+        self.node_memory = NodeMemoryTracker(
+            state_manager.memory_budget_bytes,
+            per_node_budget_bytes,
+        )
+
+    @property
+    def policy_name(self) -> str:
+        return self.state_manager.policy_name
+
+    @property
+    def topology_enabled(self) -> bool:
+        return self.enable_topology_placement and self.policy_name in TOPOLOGY_POLICIES
+
+    @property
+    def prefetch_enabled(self) -> bool:
+        return self.enable_prefetch and self.policy_name in PREFETCH_POLICIES
 
     def build(self, trace: List[dict]):
+        agent_ids = sorted({event["agent"] for event in trace if "agent" in event})
+        self.agent_homes = assign_agent_homes(
+            agent_ids,
+            self.hardware_platform,
+            spread=self.agent_placement,
+        )
+        self.shared_anchor = choose_shared_anchor(self.hardware_platform)
+        self.metrics.num_agents = len(agent_ids)
+
         for step, trace_event in enumerate(trace):
             self.graph.current_step = step
             self.graph.recent_events.append(trace_event)
@@ -45,6 +99,9 @@ class AgentEventBuilder:
                 self._handle_tool(trace_event)
             else:
                 raise ValueError(f"Unsupported trace event type: {event_type}")
+
+        self.metrics.num_states_total = len(self.graph.states)
+        self.metrics.num_states_resident_final = sum(1 for state in self.graph.states.values() if state.resident)
         return self.events_dict, self.graph, self.metrics
 
     def _new_tag(self) -> int:
@@ -73,9 +130,38 @@ class AgentEventBuilder:
     def _phase_name(self, phase_score: dict) -> str:
         return max(phase_score.items(), key=lambda item: (item[1], item[0]))[0]
 
+    def _agent_home(self, agent: str):
+        return self.agent_homes.get(agent) or next(iter(self.agent_homes.values()))
+
     def _refresh_policy(self, phase_score: dict):
         self.state_manager.update(self.graph, phase_score, self.graph.current_step)
         self.metrics.evicted_kv_bytes += self.state_manager.last_evicted_bytes
+        self._sync_node_memory()
+
+    def _sync_node_memory(self):
+        for state in sorted(self.graph.states.values(), key=lambda item: item.state_id):
+            if not state.resident:
+                self.node_memory.remove(state)
+            elif state.loc is not None and state.state_id not in self.node_memory.state_to_node:
+                if self.node_memory.can_place(state, state.loc):
+                    self.node_memory.place(state, state.loc)
+
+    def _place_state_if_needed(self, state: StateNode, predicted_exec_loc, agent: str):
+        if state.loc is not None:
+            return
+        node = choose_state_location(
+            state,
+            predicted_exec_loc,
+            self.hardware_platform,
+            agent_home=self._agent_home(agent),
+            shared_anchor=self.shared_anchor,
+            per_node_used=self.node_memory.node_used,
+            per_node_budget=self.node_memory.per_node_budget_bytes,
+        )
+        if state.resident and self.node_memory.can_place(state, node):
+            self.node_memory.place(state, node)
+        else:
+            state.loc = node
 
     def _infer_state(self, state_id: str, agent: str, token_len: int = 1) -> StateNode:
         if state_id in self.graph.states:
@@ -101,7 +187,7 @@ class AgentEventBuilder:
 
     def _handle_state(self, trace_event: dict):
         token_len = int(trace_event.get("tokens", trace_event.get("token_len", 1)))
-        self.graph.build_or_get_state(
+        state = self.graph.build_or_get_state(
             state_id=trace_event["state_id"],
             state_type=trace_event.get("state_type", "dialogue_delta"),
             owner=trace_event.get("owner", trace_event.get("agent", "shared")),
@@ -111,14 +197,15 @@ class AgentEventBuilder:
             exact_kv_id=trace_event.get("exact_kv_id"),
             metadata=trace_event.get("metadata"),
         )
-        self._refresh_policy(self._phase_score())
+        phase_score = self._phase_score()
+        self._refresh_policy(phase_score)
+        agent = state.owner if state.owner in self.agent_homes else next(iter(self.agent_homes), "agent_0")
+        self._place_state_if_needed(state, self._agent_home(agent) if self.agent_homes else None, agent)
 
     def _handle_llm(self, trace_event: dict):
         agent = trace_event["agent"]
         input_ids = list(trace_event.get("input_state_ids", []))
         input_states = [self._infer_state(state_id, agent) for state_id in input_ids]
-        resident_before = {state.state_id: state.resident for state in input_states}
-        loc_before = {state.state_id: state.loc for state in input_states}
 
         for state in input_states:
             self.graph.touch_state(state.state_id)
@@ -143,29 +230,51 @@ class AgentEventBuilder:
         self.graph.add_exec(exec_node)
         for state_id in input_ids:
             self.graph.add_dependency(state_id, exec_id)
+            self.graph.add_affinity(state_id, exec_id, 1.0)
+        self._add_static_affinities(agent)
 
         self._refresh_policy(phase_score)
-        exec_loc = choose_exec_location(input_states, self.hardware_platform, "tensorcore")
+        agent_home = self._agent_home(agent)
+        exec_loc = self._choose_llm_exec_location(agent, input_states, exec_id, agent_home)
         exec_node.assigned_loc = exec_loc
         target_node = node_of_module(exec_loc)
 
         parent_tag = self._last_agent_event.get(agent)
-        if self.state_manager.policy_name != "nocache":
+        prefill_dependencies = set(self._pending_prefetch_tags.pop(agent, set()))
+        resident_now = {state.state_id: state.resident for state in input_states}
+        loc_before = {state.state_id: state.loc for state in input_states}
+
+        if self.topology_enabled:
             for state in input_states:
-                if not resident_before.get(state.state_id, False):
+                if not state.resident:
                     continue
-                old_node = loc_before.get(state.state_id)
+                self._place_state_if_needed(state, exec_loc, agent)
+                old_node = loc_before.get(state.state_id) or state.loc
                 if old_node is None:
+                    continue
+                if old_node != target_node:
+                    parent_tag = self._emit_kv_migration(
+                        state=state,
+                        old_node=old_node,
+                        new_node=target_node,
+                        parent_tag=parent_tag,
+                        reason="demand",
+                        blocking=True,
+                        agent=agent,
+                    )
+                else:
                     state.loc = target_node
-                    continue
-                if old_node == target_node:
-                    continue
-                parent_tag = self._emit_migration(state, old_node, target_node, parent_tag)
+        else:
+            for state in input_states:
+                if state.resident:
+                    self._place_state_if_needed(state, agent_home, agent)
 
         total_input_tokens = sum(state.token_len for state in input_states)
         effective_prefill_tokens = self._effective_prefill_tokens(
             input_states=input_states,
-            resident_before=resident_before,
+            resident_now=resident_now,
+            loc_before=loc_before,
+            target_node=target_node,
             append_tokens=append_tokens,
         )
 
@@ -185,6 +294,8 @@ class AgentEventBuilder:
         )
         self._add_event(prefill)
         self._add_dependency(parent_tag, prefill)
+        for dep_tag in sorted(prefill_dependencies):
+            self._add_dependency(dep_tag, prefill)
 
         decode_tag = self._new_tag()
         decode = fixed_compute_notation(
@@ -198,6 +309,7 @@ class AgentEventBuilder:
         self._add_event(decode)
         self._add_dependency(prefill_tag, decode)
         self._last_agent_event[agent] = decode_tag
+        self._module_load[exec_loc] += 1
 
         output_state_id = trace_event.get("new_state_id") or f"{agent}_llm_{exec_id}_out"
         output_state_type = trace_event.get("new_state_type", "assistant_delta")
@@ -209,35 +321,86 @@ class AgentEventBuilder:
             kv_bytes=self.model_profile.kv_bytes(output_tokens),
             metadata={"producer_exec": exec_id},
         )
-        output_state.loc = target_node
+        output_state.loc = choose_state_location(
+            output_state,
+            exec_loc,
+            self.hardware_platform,
+            agent_home=agent_home,
+            shared_anchor=self.shared_anchor,
+            per_node_used=self.node_memory.node_used,
+            per_node_budget=self.node_memory.per_node_budget_bytes,
+        )
         self.graph.add_generation(exec_id, output_state.state_id)
-
-        for state in input_states:
-            if state.resident:
-                state.loc = target_node
+        self._add_output_affinities(agent, output_state.state_id, input_ids)
 
         self.metrics.total_input_tokens += total_input_tokens
         self.metrics.append_tokens += append_tokens
         self.metrics.effective_prefill_tokens += effective_prefill_tokens
         self.metrics.decode_tokens += output_tokens
+        self.metrics.llm_output_tokens += output_tokens
         self.metrics.num_llm_steps += 1
         self._refresh_policy(phase_score)
+        if output_state.resident and self.node_memory.can_place(output_state, output_state.loc):
+            self.node_memory.place(output_state, output_state.loc)
 
-    def _effective_prefill_tokens(self, input_states, resident_before: dict, append_tokens: int) -> int:
-        if self.state_manager.policy_name == "nocache":
+    def _choose_llm_exec_location(self, agent, input_states, exec_id, agent_home):
+        if not self.topology_enabled:
+            return agent_home
+        affinity_states = self.graph.affinity_neighbor_states(exec_id, top_k=8)
+        resident_bytes = sum(state.kv_bytes for state in input_states if state.resident)
+        home_weight = max(1.0, resident_bytes)
+        return choose_exec_location(
+            input_states=input_states,
+            hardware_platform=self.hardware_platform,
+            agent_home=agent_home,
+            affinity_states=affinity_states,
+            module_load=self._module_load,
+            locality_weight=1.0,
+            home_weight=home_weight,
+            affinity_weight=0.4,
+            load_weight=max(1.0, home_weight * 0.05),
+        )
+
+    def _effective_prefill_tokens(self, input_states, resident_now: dict, loc_before: dict, target_node, append_tokens: int) -> int:
+        if self.policy_name == "nocache":
             self.metrics.cache_misses += len(input_states)
+            self.metrics.state_misses += len(input_states)
             return sum(state.token_len for state in input_states) + append_tokens
 
         missing_tokens = 0
         for state in input_states:
-            if resident_before.get(state.state_id, False):
+            if resident_now.get(state.state_id, False):
                 self.metrics.cache_hits += 1
+                old_node = loc_before.get(state.state_id)
+                if old_node is None or old_node == target_node:
+                    self.metrics.local_state_hits += 1
+                else:
+                    self.metrics.remote_state_hits += 1
+                    self.metrics.num_remote_accesses += 1
+                    self.metrics.remote_access_bytes += state.kv_bytes
             else:
                 self.metrics.cache_misses += 1
+                self.metrics.state_misses += 1
                 missing_tokens += state.token_len
         return missing_tokens + append_tokens
 
-    def _emit_migration(self, state: StateNode, old_node, new_node, parent_tag: Optional[int]) -> int:
+    def _emit_kv_migration(
+        self,
+        state: StateNode,
+        old_node,
+        new_node,
+        parent_tag: Optional[int],
+        reason: str,
+        blocking: bool,
+        agent: str,
+        associated_wait_tag: Optional[int] = None,
+    ) -> int:
+        old_node = tuple(old_node)
+        new_node = tuple(new_node)
+        if old_node == new_node:
+            state.loc = new_node
+            return parent_tag if parent_tag is not None else -1
+
         tag = self._new_tag()
         migration = communication_notation(
             comm_name="kv_migrate",
@@ -246,10 +409,31 @@ class AgentEventBuilder:
             target_location=new_node,
             comm_bytes=state.kv_bytes,
         )
+        migration.metadata = {
+            "agent": agent,
+            "state_id": state.state_id,
+            "state_type": state.state_type,
+            "reason": reason,
+            "blocking": blocking,
+            "bytes": state.kv_bytes,
+            "associated_wait_tag": associated_wait_tag,
+        }
         self._add_event(migration)
         self._add_dependency(parent_tag, migration)
         self.metrics.kv_migration_bytes += state.kv_bytes
-        state.loc = new_node
+        self.metrics.num_kv_migrations += 1
+        if reason == "prefetch":
+            self.metrics.prefetch_migration_bytes += state.kv_bytes
+            self.metrics.num_prefetch_migrations += 1
+            self.metrics.num_prefetch_events += 1
+            self.metrics.prefetch_kv_bytes += state.kv_bytes
+        else:
+            self.metrics.demand_migration_bytes += state.kv_bytes
+            self.metrics.num_demand_migrations += 1
+        if state.resident:
+            self.node_memory.move(state, old_node, new_node)
+        else:
+            state.loc = new_node
         return tag
 
     def _handle_tool(self, trace_event: dict):
@@ -273,6 +457,7 @@ class AgentEventBuilder:
         )
         self.graph.add_exec(exec_node)
 
+        parent_before_wait = self._last_agent_event.get(agent)
         wait_tag = self._new_tag()
         wait = external_wait_notation(
             wait_name=f"tool_{tool_name}",
@@ -281,7 +466,7 @@ class AgentEventBuilder:
             metadata={"agent": agent, "exec_id": exec_id, "tool": tool_name},
         )
         self._add_event(wait)
-        self._add_dependency(self._last_agent_event.get(agent), wait)
+        self._add_dependency(parent_before_wait, wait)
         self._last_agent_event[agent] = wait_tag
 
         state_id = trace_event.get("new_state_id") or f"{agent}_tool_{exec_id}_out"
@@ -294,12 +479,76 @@ class AgentEventBuilder:
             kv_bytes=self.model_profile.kv_bytes(output_tokens),
             metadata={"producer_exec": exec_id, "tool": tool_name},
         )
-        if self.graph.hot_states():
-            anchor = self.graph.hot_states()[0].loc
-            state.loc = anchor
+        state.loc = choose_state_location(
+            state,
+            self._agent_home(agent),
+            self.hardware_platform,
+            agent_home=self._agent_home(agent),
+            shared_anchor=self.shared_anchor,
+            per_node_used=self.node_memory.node_used,
+            per_node_budget=self.node_memory.per_node_budget_bytes,
+        )
         self.graph.add_generation(exec_id, state.state_id)
+        self.graph.add_affinity(exec_id, state.state_id, 1.0)
+        self._add_output_affinities(agent, state.state_id, ["task", f"{agent}_role"])
 
         self.metrics.tool_wait_cycles += latency
+        self.metrics.tool_output_tokens += output_tokens
         self.metrics.num_tool_steps += 1
         self._refresh_policy(phase_score)
+        if state.resident and self.node_memory.can_place(state, state.loc):
+            self.node_memory.place(state, state.loc)
+        self._maybe_emit_prefetches_during_tool_wait(agent, parent_before_wait, wait_tag, trace_event, phase_score)
 
+    def _maybe_emit_prefetches_during_tool_wait(self, agent, parent_tag, wait_tag, tool_event, phase_score):
+        if not self.prefetch_enabled or self.max_prefetch_states <= 0:
+            return
+        predicted_exec_loc = self._agent_home(agent)
+        target_node = node_of_module(predicted_exec_loc)
+        candidates = []
+        for state in self.graph.states.values():
+            if not state.resident or state.loc is None or state.loc == target_node:
+                continue
+            if state.owner not in {agent, "shared"} and state.state_type not in {"system_prefix", "task_prefix", "shared_prefix"}:
+                continue
+            if state.state_type == "raw_error_log":
+                continue
+            if state.state_type == "speculative_state" and not state.metadata.get("committed", False):
+                continue
+            priority = (
+                state.reuse_prob
+                + (0.3 if state.owner == agent else 0.0)
+                + (0.2 if state.next_use <= 2 else 0.0)
+                + phase_score.get("execute", 0.0) * 0.1
+            )
+            candidates.append((priority, state.state_id, state))
+
+        for _, _, state in sorted(candidates, reverse=True)[: self.max_prefetch_states]:
+            old_node = state.loc
+            tag = self._emit_kv_migration(
+                state=state,
+                old_node=old_node,
+                new_node=target_node,
+                parent_tag=parent_tag,
+                reason="prefetch",
+                blocking=False,
+                agent=agent,
+                associated_wait_tag=wait_tag,
+            )
+            if tag >= 0:
+                self._pending_prefetch_tags[agent].add(tag)
+
+    def _add_static_affinities(self, agent: str):
+        role = f"{agent}_role"
+        if role in self.graph.states:
+            for static_id in ("system", "task"):
+                if static_id in self.graph.states:
+                    self.graph.add_affinity(static_id, role, 1.5)
+
+    def _add_output_affinities(self, agent: str, output_state_id: str, input_ids: List[str]):
+        for anchor_id in ("task", f"{agent}_role"):
+            if anchor_id in self.graph.states:
+                self.graph.add_affinity(output_state_id, anchor_id, 1.0)
+        for state_id in input_ids[-4:]:
+            if state_id in self.graph.states:
+                self.graph.add_affinity(output_state_id, state_id, 0.5)

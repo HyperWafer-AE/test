@@ -50,8 +50,12 @@ from tlm import tlm2d
 from WAMIS_HD import wamis_hdc
 
 from .agent_event_builder import AgentEventBuilder
+from .metrics import postprocess_agent_events
 from .model_profile import ModelProfile
 from .state_manager import (
+    ASGPlacementStateManager,
+    ASGPrefetchStateManager,
+    ASGRetentionStateManager,
     ASGStateManager,
     KVFlowLikeStateManager,
     LRUStateManager,
@@ -60,7 +64,16 @@ from .state_manager import (
 from .workload import generate_synthetic_trace, load_trace_json, save_trace_json
 
 
-POLICIES = ("nocache", "lru", "kvflow", "asg")
+POLICIES = (
+    "nocache",
+    "lru",
+    "kvflow",
+    "asg-retention",
+    "asg-placement",
+    "asg-prefetch",
+    "asg",
+)
+RUN_ALL_POLICIES = ("nocache", "lru", "kvflow", "asg-retention", "asg-placement", "asg-prefetch")
 
 
 def build_hardware(cfg_path: str, topology: str):
@@ -89,11 +102,20 @@ def build_state_manager(policy: str, memory_budget_bytes: int, model: ModelProfi
         return LRUStateManager(memory_budget_bytes)
     if policy == "kvflow":
         return KVFlowLikeStateManager(memory_budget_bytes)
-    if policy == "asg":
-        return ASGStateManager(
+    manager_cls = {
+        "asg-retention": ASGRetentionStateManager,
+        "asg-placement": ASGPlacementStateManager,
+        "asg-prefetch": ASGPrefetchStateManager,
+        "asg": ASGPrefetchStateManager,
+    }.get(policy)
+    if manager_cls is not None:
+        manager = manager_cls(
             memory_budget_bytes,
             prefill_cycles_per_token=model.prefill_cycles_per_token,
         )
+        if policy == "asg":
+            manager.policy_name = "asg"
+        return manager
     raise ValueError(f"Unsupported policy: {policy}")
 
 
@@ -104,7 +126,8 @@ def workload_stats(trace):
         "num_llm_events": sum(1 for event in trace if event.get("type") == "llm"),
         "num_tool_events": sum(1 for event in trace if event.get("type") == "tool"),
         "total_append_tokens": sum(int(event.get("append_tokens", 0)) for event in trace),
-        "total_output_tokens": sum(int(event.get("output_tokens", 0)) for event in trace),
+        "llm_output_tokens": sum(int(event.get("output_tokens", 0)) for event in trace if event.get("type") == "llm"),
+        "tool_output_tokens": sum(int(event.get("output_tokens", 0)) for event in trace if event.get("type") == "tool"),
     }
 
 
@@ -113,14 +136,26 @@ def run_policy(policy: str, args, trace):
     hardware = build_hardware(args.cfg, args.topology)
     memory_budget_bytes = int(args.memory_budget_gb * (1024 ** 3))
     state_manager = build_state_manager(policy, memory_budget_bytes, model)
+    active_nodes = max(1, len(getattr(hardware, "nodes_set", [])))
+    if args.per_node_memory_mb is None:
+        per_node_memory_mb = max(16, int(args.memory_budget_gb * 1024 / active_nodes))
+    else:
+        per_node_memory_mb = args.per_node_memory_mb
+    topology_enabled = not args.disable_topology_placement and policy in {"asg-placement", "asg-prefetch", "asg"}
+    prefetch_enabled = not args.disable_prefetch and policy in {"asg-prefetch", "asg"}
     builder = AgentEventBuilder(
         hardware_platform=hardware,
         model_profile=model,
         state_manager=state_manager,
-        enable_prefetch=not args.disable_prefetch,
+        enable_prefetch=prefetch_enabled,
+        enable_topology_placement=topology_enabled,
+        agent_placement=args.agent_placement,
+        per_node_budget_bytes=int(per_node_memory_mb * 1024 * 1024),
+        max_prefetch_states=args.max_prefetch_states,
     )
     events_dict, graph, metrics = builder.build(trace)
     total_cycles, pure_comp_cycles, pure_comm_cycles = collective_event_driver(events_dict, hardware)
+    postprocess_agent_events(events_dict, metrics)
     return {
         "policy": policy,
         "args": vars(args),
@@ -157,9 +192,18 @@ def write_summary_csv(path, results):
         "total_input_tokens",
         "append_tokens",
         "decode_tokens",
+        "llm_output_tokens",
+        "tool_output_tokens",
         "cache_hit_ratio",
         "effective_prefill_reduction",
         "kv_migration_bytes",
+        "demand_migration_bytes",
+        "prefetch_migration_bytes",
+        "num_kv_migrations",
+        "num_prefetch_events",
+        "local_state_hits",
+        "remote_state_hits",
+        "state_misses",
         "tool_wait_cycles",
         "busybarn_events",
     ]
@@ -179,9 +223,18 @@ def write_summary_csv(path, results):
                     "total_input_tokens": metrics["total_input_tokens"],
                     "append_tokens": metrics["append_tokens"],
                     "decode_tokens": metrics["decode_tokens"],
+                    "llm_output_tokens": metrics["llm_output_tokens"],
+                    "tool_output_tokens": metrics["tool_output_tokens"],
                     "cache_hit_ratio": metrics["cache_hit_ratio"],
                     "effective_prefill_reduction": metrics["effective_prefill_reduction"],
                     "kv_migration_bytes": metrics["kv_migration_bytes"],
+                    "demand_migration_bytes": metrics["demand_migration_bytes"],
+                    "prefetch_migration_bytes": metrics["prefetch_migration_bytes"],
+                    "num_kv_migrations": metrics["num_kv_migrations"],
+                    "num_prefetch_events": metrics["num_prefetch_events"],
+                    "local_state_hits": metrics["local_state_hits"],
+                    "remote_state_hits": metrics["remote_state_hits"],
+                    "state_misses": metrics["state_misses"],
                     "tool_wait_cycles": metrics["tool_wait_cycles"],
                     "busybarn_events": result["event_stats"]["busybarn_events"],
                 }
@@ -203,13 +256,41 @@ def build_trace(args):
         tool_output_tokens_mean=args.tool_output_tokens_mean,
         failure_probability=args.failure_probability,
         seed=args.seed,
+        shared_state_probability=args.shared_state_probability,
+        cross_agent_share_probability=args.cross_agent_share_probability,
+        tool_output_shared_probability=args.tool_output_shared_probability,
+        agent_handoff_probability=args.agent_handoff_probability,
+        large_observation_probability=args.large_observation_probability,
     )
     if args.save_trace:
         save_trace_json(trace, args.save_trace)
     return trace
 
 
+def _flag_present(argv, flag):
+    return any(item == flag or item.startswith(f"{flag}=") for item in argv)
+
+
+def _apply_stress_defaults(args, argv):
+    if not args.stress_placement:
+        return args
+    if not _flag_present(argv, "--num-agents"):
+        args.num_agents = max(args.num_agents, 8)
+    if not _flag_present(argv, "--cross-agent-share-probability"):
+        args.cross_agent_share_probability = 0.35
+    if not _flag_present(argv, "--agent-handoff-probability"):
+        args.agent_handoff_probability = 0.25
+    if not _flag_present(argv, "--large-observation-probability"):
+        args.large_observation_probability = 0.25
+    if not _flag_present(argv, "--tool-probability"):
+        args.tool_probability = 0.7
+    if not _flag_present(argv, "--memory-budget-gb"):
+        args.memory_budget_gb = min(args.memory_budget_gb, 0.5)
+    return args
+
+
 def parse_args(argv=None):
+    argv = list(sys.argv[1:] if argv is None else argv)
     parser = argparse.ArgumentParser(description="Run Agent-on-Wafer MVP experiments on BusyBarn.")
     parser.add_argument("--policy", choices=POLICIES, default="asg")
     parser.add_argument("--run-all-policies", action="store_true")
@@ -224,6 +305,11 @@ def parse_args(argv=None):
     parser.add_argument("--trace-json")
     parser.add_argument("--save-trace")
     parser.add_argument("--disable-prefetch", action="store_true")
+    parser.add_argument("--disable-topology-placement", action="store_true")
+    parser.add_argument("--agent-placement", choices=("round_robin", "compact"), default="round_robin")
+    parser.add_argument("--per-node-memory-mb", type=float)
+    parser.add_argument("--max-prefetch-states", type=int, default=2)
+    parser.add_argument("--stress-placement", action="store_true")
 
     parser.add_argument("--shared-prefix-tokens", type=int, default=1024)
     parser.add_argument("--role-tokens", type=int, default=128)
@@ -233,13 +319,35 @@ def parse_args(argv=None):
     parser.add_argument("--tool-latency-mean", type=int, default=1000)
     parser.add_argument("--tool-output-tokens-mean", type=int, default=256)
     parser.add_argument("--failure-probability", type=float, default=0.12)
+    parser.add_argument("--shared-state-probability", type=float, default=0.15)
+    parser.add_argument("--cross-agent-share-probability", type=float, default=0.10)
+    parser.add_argument("--tool-output-shared-probability", type=float, default=0.20)
+    parser.add_argument("--agent-handoff-probability", type=float, default=0.08)
+    parser.add_argument("--large-observation-probability", type=float, default=0.10)
 
     parser.add_argument("--n-layers", type=int, default=32)
     parser.add_argument("--hidden-size", type=int, default=4096)
     parser.add_argument("--dtype-bytes", type=int, default=2)
     parser.add_argument("--prefill-cycles-per-token", type=int, default=1000)
     parser.add_argument("--decode-cycles-per-token", type=int, default=5000)
-    return parser.parse_args(argv)
+    return _apply_stress_defaults(parser.parse_args(argv), argv)
+
+
+def print_summary(results):
+    print("policy,total_cycles,effective_prefill_tokens,kv_migration_bytes,prefetch_kv_bytes,pure_comm_cycles")
+    for result in results:
+        metrics = result["agent_metrics"]
+        timing = result["timing"]
+        print(
+            "{policy},{total},{prefill},{migration},{prefetch},{comm}".format(
+                policy=result["policy"],
+                total=timing["total_cycles"],
+                prefill=metrics["effective_prefill_tokens"],
+                migration=metrics["kv_migration_bytes"],
+                prefetch=metrics["prefetch_kv_bytes"],
+                comm=timing["pure_comm_cycles"],
+            )
+        )
 
 
 def main(argv=None):
@@ -248,12 +356,13 @@ def main(argv=None):
     if args.run_all_policies:
         output_dir = Path(args.output_dir)
         results = []
-        for policy in POLICIES:
+        for policy in RUN_ALL_POLICIES:
             result = run_policy(policy, args, trace)
             results.append(result)
             write_json(output_dir / f"{policy}.json", result)
         write_summary_csv(output_dir / "summary.csv", results)
         print(f"Wrote {len(results)} policy results to {output_dir}")
+        print_summary(results)
     else:
         result = run_policy(args.policy, args, trace)
         write_json(args.output, result)
@@ -264,6 +373,7 @@ def main(argv=None):
                 prefill=result["agent_metrics"]["effective_prefill_tokens"],
             )
         )
+        print_summary([result])
 
 
 if __name__ == "__main__":

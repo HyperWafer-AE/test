@@ -43,6 +43,20 @@ class AgentStateGraph:
         key = tuple(sorted((a, b)))
         self.affinity_edges[key] = self.affinity_edges.get(key, 0.0) + float(weight)
 
+    def affinity_neighbor_states(self, state_or_exec_id: str, top_k: int = 8):
+        neighbors = []
+        for (a, b), weight in self.affinity_edges.items():
+            other = None
+            if a == state_or_exec_id:
+                other = b
+            elif b == state_or_exec_id:
+                other = a
+            if other is None or other not in self.states:
+                continue
+            neighbors.append((self.states[other], weight))
+        neighbors.sort(key=lambda item: (-item[1], item[0].state_id))
+        return neighbors[:top_k]
+
     def touch_state(self, state_id: str):
         state = self.states.get(state_id)
         if state is None:
@@ -97,4 +111,3 @@ class AgentStateGraph:
         )
         self.states[state_id] = state
         return state
-

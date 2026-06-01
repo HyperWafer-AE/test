@@ -1,3 +1,4 @@
+from collections import defaultdict
 from typing import Iterable, Optional
 
 from .reuse_predictor import compute_reuse_score, estimate_next_use_distance
@@ -128,3 +129,63 @@ class ASGStateManager(BaseStateManager):
                 used += state.kv_bytes
         self._mark_selected(selected)
 
+
+class ASGRetentionStateManager(ASGStateManager):
+    policy_name = "asg-retention"
+
+
+class ASGPlacementStateManager(ASGStateManager):
+    policy_name = "asg-placement"
+
+
+class ASGPrefetchStateManager(ASGStateManager):
+    policy_name = "asg-prefetch"
+
+
+class NodeMemoryTracker:
+    def __init__(self, global_budget_bytes, per_node_budget_bytes=None):
+        self.global_budget_bytes = int(global_budget_bytes)
+        self.per_node_budget_bytes = (
+            int(per_node_budget_bytes) if per_node_budget_bytes is not None else None
+        )
+        self.node_used = defaultdict(int)
+        self.state_to_node = {}
+        self.total_used = 0
+
+    def can_place(self, state, node) -> bool:
+        node = tuple(node)
+        current_node = self.state_to_node.get(state.state_id)
+        current_size = state.kv_bytes if current_node == node else 0
+        projected_total = self.total_used
+        if current_node is None:
+            projected_total += state.kv_bytes
+        elif current_node != node:
+            projected_total += 0
+        if projected_total > self.global_budget_bytes:
+            return False
+        if self.per_node_budget_bytes is None:
+            return True
+        projected_node = self.node_used[node] - current_size + state.kv_bytes
+        return projected_node <= self.per_node_budget_bytes
+
+    def place(self, state, node):
+        node = tuple(node)
+        self.remove(state)
+        self.node_used[node] += state.kv_bytes
+        self.state_to_node[state.state_id] = node
+        self.total_used += state.kv_bytes
+        state.loc = node
+
+    def remove(self, state):
+        old_node = self.state_to_node.pop(state.state_id, None)
+        if old_node is None:
+            return
+        self.node_used[old_node] = max(0, self.node_used[old_node] - state.kv_bytes)
+        self.total_used = max(0, self.total_used - state.kv_bytes)
+
+    def move(self, state, old_node, new_node):
+        self.remove(state)
+        self.place(state, new_node)
+
+    def used(self, node):
+        return self.node_used[tuple(node)]

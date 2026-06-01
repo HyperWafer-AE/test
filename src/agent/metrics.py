@@ -7,11 +7,31 @@ class AgentMetrics:
     append_tokens: int = 0
     effective_prefill_tokens: int = 0
     decode_tokens: int = 0
+    llm_output_tokens: int = 0
+    tool_output_tokens: int = 0
     cache_hits: int = 0
     cache_misses: int = 0
     kv_migration_bytes: int = 0
+    demand_migration_bytes: int = 0
+    prefetch_migration_bytes: int = 0
+    num_kv_migrations: int = 0
+    num_demand_migrations: int = 0
+    num_prefetch_migrations: int = 0
+    num_prefetch_events: int = 0
+    prefetch_kv_bytes: int = 0
+    prefetch_hidden_cycles: int = 0
+    prefetch_exposed_cycles: int = 0
+    prefetch_total_cycles: int = 0
     evicted_kv_bytes: int = 0
     tool_wait_cycles: int = 0
+    local_state_hits: int = 0
+    remote_state_hits: int = 0
+    state_misses: int = 0
+    num_remote_accesses: int = 0
+    remote_access_bytes: int = 0
+    num_agents: int = 0
+    num_states_resident_final: int = 0
+    num_states_total: int = 0
     num_llm_steps: int = 0
     num_tool_steps: int = 0
 
@@ -33,10 +53,44 @@ class AgentMetrics:
             return float("inf") if self.decode_tokens else 0.0
         return self.decode_tokens / self.effective_prefill_tokens
 
+    @property
+    def tool_wait_overlap_ratio(self) -> float:
+        total = self.prefetch_hidden_cycles + self.prefetch_exposed_cycles
+        return self.prefetch_hidden_cycles / total if total else 0.0
+
     def to_dict(self) -> dict:
         data = asdict(self)
         data["cache_hit_ratio"] = self.cache_hit_ratio
         data["effective_prefill_reduction"] = self.effective_prefill_reduction
         data["decode_to_prefill_ratio"] = self.decode_to_prefill_ratio
+        data["tool_wait_overlap_ratio"] = self.tool_wait_overlap_ratio
         return data
 
+
+def postprocess_agent_events(events_dict, metrics: AgentMetrics):
+    wait_events = {
+        event.event_tag: event
+        for event in events_dict.values()
+        if getattr(event, "event_type", None) == "external_wait"
+    }
+    metrics.prefetch_hidden_cycles = 0
+    metrics.prefetch_exposed_cycles = 0
+    metrics.prefetch_total_cycles = 0
+
+    for event in events_dict.values():
+        if getattr(event, "event_type", None) != "communication":
+            continue
+        metadata = getattr(event, "metadata", {}) or {}
+        if metadata.get("reason") != "prefetch":
+            continue
+        duration = max(0, int(event.end_time) - int(event.start_time))
+        wait = wait_events.get(metadata.get("associated_wait_tag"))
+        hidden = 0
+        if wait is not None:
+            overlap_start = max(int(event.start_time), int(wait.start_time))
+            overlap_end = min(int(event.end_time), int(wait.end_time))
+            hidden = max(0, overlap_end - overlap_start)
+        exposed = max(0, duration - hidden)
+        metrics.prefetch_hidden_cycles += hidden
+        metrics.prefetch_exposed_cycles += exposed
+        metrics.prefetch_total_cycles += duration
