@@ -75,6 +75,7 @@ def plot_paper_eval(input_dir, output_dir, trace_selection_dir=None):
         "selection_rows": _load_selection_rows(selection_dir),
         "selection_report": _load_json(selection_dir / "selection_report.json") if selection_dir else {},
     }
+    context["evidence_class"] = _evidence_class(context)
 
     generated = []
     data_files = []
@@ -97,6 +98,8 @@ def plot_paper_eval(input_dir, output_dir, trace_selection_dir=None):
         "status": "generated",
         "input_dir": str(input_dir),
         "trace_selection_dir": str(selection_dir) if selection_dir else None,
+        "evidence_class": context["evidence_class"],
+        "can_support_real_paper_claims": context["evidence_class"] == "real",
         "figures": generated,
         "data_csv": data_files,
         "evidence": evidence,
@@ -120,12 +123,12 @@ def _plot_problem_motivation(plt, context, name):
         ax.bar(labels, pressure, color=PALETTE["blue"], edgecolor="black", linewidth=0.6)
         ax.axhline(1.0, color=PALETTE["red"], linestyle="--", linewidth=1.0)
         ax.set_ylabel("Live KV / budget")
-        ax.set_title("(a) Paper-usable traces exceed KV budget")
+        ax.set_title(f"(a) {_trace_label(context)} traces exceed KV budget")
         for x, y, reg in zip(labels, pressure, regret):
             ax.text(x, y + max(pressure) * 0.035, f"{int(reg)} tok", ha="center", va="bottom", fontsize=7)
             trace_rows.append({"panel": "trace_pressure", "trace": x, "live_kv_over_budget": y, "lru_regret_tokens": reg})
     else:
-        _missing_axis(ax, "No paper-usable trace rows")
+        _missing_axis(ax, f"No {_trace_label(context).lower()} trace rows")
 
     ax = axes[0][1]
     mem_points = _policy_points(memory, "lru-system", "cache_byte_miss", scale=1e9)
@@ -219,7 +222,7 @@ def _plot_workload_characterization(plt, context, name):
         values = [counts[label] for label in labels]
     ax.bar(labels, values, color=[PALETTE["light_gray"], PALETTE["gray"], "#E2E2E2", PALETTE["blue"], PALETTE["green"]], edgecolor="black", linewidth=0.5)
     ax.set_ylabel("# traces")
-    ax.set_title("(a) Real-trace selection funnel")
+    ax.set_title(f"(a) {_trace_label(context)} selection funnel")
     ax.tick_params(axis="x", rotation=25)
     for label, value in zip(labels, values):
         data.append({"panel": "selection_funnel", "label": label, "value": value})
@@ -725,9 +728,25 @@ def _selection_evidence(context):
     }
 
 
+def _evidence_class(context):
+    for key in ("full_rows", "opportunity_rows", "control_rows", "memory_rows", "concurrency_rows", "arrival_rows"):
+        for row in context.get(key, []):
+            value = row.get("evidence_class")
+            if value:
+                return value
+    return "real"
+
+
+def _trace_label(context):
+    return "Synthetic" if context.get("evidence_class") == "synthetic" else "Paper-usable"
+
+
 def _limitations(context):
     report = context["selection_report"]
     limitations = []
+    if context.get("evidence_class") == "synthetic":
+        limitations.append("Synthetic traces validate controlled algorithm behavior only; they cannot support real-trace paper claims.")
+        return limitations
     if report.get("num_paper_usable", 0) < 10:
         limitations.append("Only a small number of paper-usable public traces are available locally; treat current plots as problem-existence evidence, not a broad workload study.")
     if report.get("num_matched_control", 0) == 0:

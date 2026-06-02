@@ -49,6 +49,7 @@ class AgentMetrics:
     model_comm_cycles: int = 0
     exposed_migration_cycles: int = 0
     exposed_prefetch_cycles: int = 0
+    approximate_non_wait_cycles: int = 0
     llm_side_cycles: int = 0
     compressed_observation_tokens_saved: int = 0
     num_compressed_observations: int = 0
@@ -138,4 +139,5 @@ def postprocess_agent_events(
     if pure_comm_cycles is not None:
         metrics.model_comm_cycles = int(pure_comm_cycles)
     if total_cycles is not None:
-        metrics.llm_side_cycles = max(0, int(total_cycles) - metrics.external_wait_cycles)
+        metrics.approximate_non_wait_cycles = max(0, int(total_cycles) - metrics.external_wait_cycles)
+        metrics.llm_side_cycles = metrics.approximate_non_wait_cycles

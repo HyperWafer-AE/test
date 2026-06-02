@@ -52,6 +52,7 @@ from tlm import tlm2d
 from WAMIS_HD import wamis_hdc
 
 from .agent_event_builder import AgentEventBuilder
+from .invariant_checks import assert_invariant_reports, check_policy_outputs, run_invariant_checks
 from .metrics import postprocess_agent_events
 from .model_profile import ModelProfile
 from .state_manager import (
@@ -230,8 +231,27 @@ def run_policy(policy: str, args, trace):
         comm_cost_model=args.comm_cost_model,
     )
     events_dict, graph, metrics = builder.build(trace)
+    invariant_reports = []
+    if args.check_invariants:
+        invariant_reports.extend(run_invariant_checks(events_dict, graph, metrics, hardware, policy))
+        assert_invariant_reports(invariant_reports)
     total_cycles, pure_comp_cycles, pure_comm_cycles = collective_event_driver(events_dict, hardware)
     postprocess_agent_events(events_dict, metrics, total_cycles, pure_comp_cycles, pure_comm_cycles)
+    if args.check_invariants:
+        invariant_reports.append(
+            check_policy_outputs(
+                metrics,
+                graph,
+                policy,
+                timing={
+                    "total_cycles": int(total_cycles),
+                    "pure_comp_cycles": int(pure_comp_cycles),
+                    "pure_comm_cycles": int(pure_comm_cycles),
+                },
+                events_dict=events_dict,
+            )
+        )
+        assert_invariant_reports(invariant_reports)
     return {
         "policy": policy,
         "args": vars(args),
@@ -247,6 +267,7 @@ def run_policy(policy: str, args, trace):
             "asg_states": len(graph.states),
             "asg_execs": len(graph.execs),
         },
+        "invariant_checks": [report.to_dict() for report in invariant_reports],
     }
 
 
@@ -302,7 +323,7 @@ def write_summary_csv(path, results):
         "model_comm_cycles",
         "exposed_migration_cycles",
         "exposed_prefetch_cycles",
-        "llm_side_cycles",
+        "approximate_non_wait_cycles",
         "prefetch_hidden_cycles",
         "prefetch_exposed_cycles",
         "compressed_observation_tokens_saved",
@@ -359,7 +380,7 @@ def write_summary_csv(path, results):
                     "model_comm_cycles": metrics["model_comm_cycles"],
                     "exposed_migration_cycles": metrics["exposed_migration_cycles"],
                     "exposed_prefetch_cycles": metrics["exposed_prefetch_cycles"],
-                    "llm_side_cycles": metrics["llm_side_cycles"],
+                    "approximate_non_wait_cycles": metrics["approximate_non_wait_cycles"],
                     "prefetch_hidden_cycles": metrics["prefetch_hidden_cycles"],
                     "prefetch_exposed_cycles": metrics["prefetch_exposed_cycles"],
                     "compressed_observation_tokens_saved": metrics["compressed_observation_tokens_saved"],
@@ -457,6 +478,7 @@ def parse_args(argv=None):
     parser.add_argument("--max-prefetch-bytes", type=int, default=536870912)
     parser.add_argument("--prefetch-wait-fraction", type=float, default=0.8)
     parser.add_argument("--enable-observation-compression", action="store_true")
+    parser.add_argument("--check-invariants", action="store_true")
     parser.add_argument("--large-observation-token-threshold", type=int, default=2048)
     parser.add_argument("--observation-compression-ratio", type=float, default=0.25)
 

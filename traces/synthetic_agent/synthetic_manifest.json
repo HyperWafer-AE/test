@@ -1,0 +1,815 @@
+{
+  "status": "generated",
+  "synthetic": true,
+  "seed": 1,
+  "warning": "Synthetic traces are for algorithm and pipeline testing only; do not mix with real-trace paper evidence.",
+  "scenarios": [
+    {
+      "split": "opportunity",
+      "spec": {
+        "scenario": "opportunity_delayed_reuse",
+        "index": 0,
+        "agents": 4,
+        "turns": 28,
+        "core_states": 4,
+        "filler_states": 16,
+        "core_tokens": 1536,
+        "filler_tokens": 256,
+        "tool_tokens": 1024,
+        "delayed_gap": 10,
+        "cross_agent": true,
+        "tool_waits": true,
+        "phase_shift": true
+      },
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 228,
+          "min": 1,
+          "p50": 2,
+          "p90": 9,
+          "max": 17,
+          "mean": 3.5789473684210527
+        },
+        "delayed_reuse_ratio": 0.10526315789473684,
+        "cross_agent_reuse_ratio": 0.8787878787878788,
+        "high_value_delayed_reuse_count": 24,
+        "LRU_regret_candidate_count": 21,
+        "has_asg_opportunity": true
+      },
+      "num_events": 64
+    },
+    {
+      "split": "opportunity",
+      "spec": {
+        "scenario": "opportunity_delayed_reuse",
+        "index": 1,
+        "agents": 4,
+        "turns": 30,
+        "core_states": 5,
+        "filler_states": 18,
+        "core_tokens": 2048,
+        "filler_tokens": 384,
+        "tool_tokens": 1280,
+        "delayed_gap": 11,
+        "cross_agent": true,
+        "tool_waits": true,
+        "phase_shift": true
+      },
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 241,
+          "min": 1,
+          "p50": 2,
+          "p90": 10,
+          "max": 19,
+          "mean": 3.7510373443983402
+        },
+        "delayed_reuse_ratio": 0.1037344398340249,
+        "cross_agent_reuse_ratio": 0.8918918918918919,
+        "high_value_delayed_reuse_count": 25,
+        "LRU_regret_candidate_count": 23,
+        "has_asg_opportunity": true
+      },
+      "num_events": 70
+    },
+    {
+      "split": "opportunity",
+      "spec": {
+        "scenario": "opportunity_delayed_reuse",
+        "index": 2,
+        "agents": 4,
+        "turns": 32,
+        "core_states": 6,
+        "filler_states": 20,
+        "core_tokens": 2560,
+        "filler_tokens": 512,
+        "tool_tokens": 1536,
+        "delayed_gap": 12,
+        "cross_agent": true,
+        "tool_waits": true,
+        "phase_shift": true
+      },
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 258,
+          "min": 1,
+          "p50": 2,
+          "p90": 12,
+          "max": 22,
+          "mean": 3.992248062015504
+        },
+        "delayed_reuse_ratio": 0.10465116279069768,
+        "cross_agent_reuse_ratio": 0.8571428571428571,
+        "high_value_delayed_reuse_count": 27,
+        "LRU_regret_candidate_count": 25,
+        "has_asg_opportunity": true
+      },
+      "num_events": 76
+    },
+    {
+      "split": "opportunity",
+      "spec": {
+        "scenario": "opportunity_delayed_reuse",
+        "index": 3,
+        "agents": 4,
+        "turns": 28,
+        "core_states": 4,
+        "filler_states": 22,
+        "core_tokens": 3072,
+        "filler_tokens": 256,
+        "tool_tokens": 1792,
+        "delayed_gap": 13,
+        "cross_agent": true,
+        "tool_waits": true,
+        "phase_shift": true
+      },
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 220,
+          "min": 1,
+          "p50": 2,
+          "p90": 6,
+          "max": 24,
+          "mean": 3.609090909090909
+        },
+        "delayed_reuse_ratio": 0.07272727272727272,
+        "cross_agent_reuse_ratio": 0.8780487804878049,
+        "high_value_delayed_reuse_count": 16,
+        "LRU_regret_candidate_count": 15,
+        "has_asg_opportunity": true
+      },
+      "num_events": 70
+    },
+    {
+      "split": "opportunity",
+      "spec": {
+        "scenario": "opportunity_delayed_reuse",
+        "index": 4,
+        "agents": 4,
+        "turns": 30,
+        "core_states": 5,
+        "filler_states": 24,
+        "core_tokens": 1536,
+        "filler_tokens": 384,
+        "tool_tokens": 1024,
+        "delayed_gap": 10,
+        "cross_agent": true,
+        "tool_waits": true,
+        "phase_shift": true
+      },
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 235,
+          "min": 1,
+          "p50": 2,
+          "p90": 6,
+          "max": 27,
+          "mean": 3.7787234042553193
+        },
+        "delayed_reuse_ratio": 0.0851063829787234,
+        "cross_agent_reuse_ratio": 0.9090909090909091,
+        "high_value_delayed_reuse_count": 20,
+        "LRU_regret_candidate_count": 17,
+        "has_asg_opportunity": true
+      },
+      "num_events": 76
+    },
+    {
+      "split": "opportunity",
+      "spec": {
+        "scenario": "opportunity_delayed_reuse",
+        "index": 5,
+        "agents": 4,
+        "turns": 32,
+        "core_states": 6,
+        "filler_states": 16,
+        "core_tokens": 2048,
+        "filler_tokens": 512,
+        "tool_tokens": 1280,
+        "delayed_gap": 11,
+        "cross_agent": true,
+        "tool_waits": true,
+        "phase_shift": true
+      },
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 261,
+          "min": 1,
+          "p50": 2,
+          "p90": 14,
+          "max": 21,
+          "mean": 3.9272030651340994
+        },
+        "delayed_reuse_ratio": 0.12260536398467432,
+        "cross_agent_reuse_ratio": 0.8648648648648649,
+        "high_value_delayed_reuse_count": 32,
+        "LRU_regret_candidate_count": 25,
+        "has_asg_opportunity": true
+      },
+      "num_events": 72
+    },
+    {
+      "split": "opportunity",
+      "spec": {
+        "scenario": "opportunity_delayed_reuse",
+        "index": 6,
+        "agents": 4,
+        "turns": 28,
+        "core_states": 4,
+        "filler_states": 18,
+        "core_tokens": 2560,
+        "filler_tokens": 256,
+        "tool_tokens": 1536,
+        "delayed_gap": 12,
+        "cross_agent": true,
+        "tool_waits": true,
+        "phase_shift": true
+      },
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 224,
+          "min": 1,
+          "p50": 2,
+          "p90": 6,
+          "max": 19,
+          "mean": 3.5892857142857144
+        },
+        "delayed_reuse_ratio": 0.08928571428571429,
+        "cross_agent_reuse_ratio": 0.8611111111111112,
+        "high_value_delayed_reuse_count": 20,
+        "LRU_regret_candidate_count": 19,
+        "has_asg_opportunity": true
+      },
+      "num_events": 66
+    },
+    {
+      "split": "opportunity",
+      "spec": {
+        "scenario": "opportunity_delayed_reuse",
+        "index": 7,
+        "agents": 4,
+        "turns": 30,
+        "core_states": 5,
+        "filler_states": 20,
+        "core_tokens": 3072,
+        "filler_tokens": 384,
+        "tool_tokens": 1792,
+        "delayed_gap": 13,
+        "cross_agent": true,
+        "tool_waits": true,
+        "phase_shift": true
+      },
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 238,
+          "min": 1,
+          "p50": 2,
+          "p90": 6,
+          "max": 22,
+          "mean": 3.76890756302521
+        },
+        "delayed_reuse_ratio": 0.09243697478991597,
+        "cross_agent_reuse_ratio": 0.9,
+        "high_value_delayed_reuse_count": 22,
+        "LRU_regret_candidate_count": 21,
+        "has_asg_opportunity": true
+      },
+      "num_events": 72
+    },
+    {
+      "split": "opportunity",
+      "spec": {
+        "scenario": "opportunity_delayed_reuse",
+        "index": 8,
+        "agents": 4,
+        "turns": 32,
+        "core_states": 6,
+        "filler_states": 22,
+        "core_tokens": 1536,
+        "filler_tokens": 512,
+        "tool_tokens": 1024,
+        "delayed_gap": 10,
+        "cross_agent": true,
+        "tool_waits": true,
+        "phase_shift": true
+      },
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 257,
+          "min": 1,
+          "p50": 2,
+          "p90": 11,
+          "max": 24,
+          "mean": 4.124513618677042
+        },
+        "delayed_reuse_ratio": 0.10505836575875487,
+        "cross_agent_reuse_ratio": 0.8837209302325582,
+        "high_value_delayed_reuse_count": 27,
+        "LRU_regret_candidate_count": 23,
+        "has_asg_opportunity": true
+      },
+      "num_events": 78
+    },
+    {
+      "split": "opportunity",
+      "spec": {
+        "scenario": "opportunity_delayed_reuse",
+        "index": 9,
+        "agents": 4,
+        "turns": 28,
+        "core_states": 4,
+        "filler_states": 24,
+        "core_tokens": 2048,
+        "filler_tokens": 256,
+        "tool_tokens": 1280,
+        "delayed_gap": 11,
+        "cross_agent": true,
+        "tool_waits": true,
+        "phase_shift": true
+      },
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 218,
+          "min": 1,
+          "p50": 2,
+          "p90": 6,
+          "max": 27,
+          "mean": 3.5
+        },
+        "delayed_reuse_ratio": 0.06880733944954129,
+        "cross_agent_reuse_ratio": 0.9024390243902439,
+        "high_value_delayed_reuse_count": 15,
+        "LRU_regret_candidate_count": 13,
+        "has_asg_opportunity": true
+      },
+      "num_events": 72
+    },
+    {
+      "split": "opportunity",
+      "spec": {
+        "scenario": "opportunity_delayed_reuse",
+        "index": 10,
+        "agents": 4,
+        "turns": 30,
+        "core_states": 5,
+        "filler_states": 16,
+        "core_tokens": 2560,
+        "filler_tokens": 384,
+        "tool_tokens": 1536,
+        "delayed_gap": 12,
+        "cross_agent": true,
+        "tool_waits": true,
+        "phase_shift": true
+      },
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 241,
+          "min": 1,
+          "p50": 2,
+          "p90": 11,
+          "max": 17,
+          "mean": 3.6307053941908713
+        },
+        "delayed_reuse_ratio": 0.1078838174273859,
+        "cross_agent_reuse_ratio": 0.8857142857142857,
+        "high_value_delayed_reuse_count": 26,
+        "LRU_regret_candidate_count": 23,
+        "has_asg_opportunity": true
+      },
+      "num_events": 68
+    },
+    {
+      "split": "opportunity",
+      "spec": {
+        "scenario": "opportunity_delayed_reuse",
+        "index": 11,
+        "agents": 4,
+        "turns": 32,
+        "core_states": 6,
+        "filler_states": 18,
+        "core_tokens": 3072,
+        "filler_tokens": 512,
+        "tool_tokens": 1792,
+        "delayed_gap": 13,
+        "cross_agent": true,
+        "tool_waits": true,
+        "phase_shift": true
+      },
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 259,
+          "min": 1,
+          "p50": 2,
+          "p90": 13,
+          "max": 20,
+          "mean": 3.8803088803088803
+        },
+        "delayed_reuse_ratio": 0.10810810810810811,
+        "cross_agent_reuse_ratio": 0.9,
+        "high_value_delayed_reuse_count": 28,
+        "LRU_regret_candidate_count": 27,
+        "has_asg_opportunity": true
+      },
+      "num_events": 74
+    },
+    {
+      "split": "control",
+      "spec": {
+        "scenario": "control_short_reuse",
+        "index": 0,
+        "agents": 2,
+        "turns": 14,
+        "core_states": 2,
+        "filler_states": 4,
+        "core_tokens": 384,
+        "filler_tokens": 128,
+        "tool_tokens": 256,
+        "delayed_gap": 2,
+        "cross_agent": true,
+        "tool_waits": true,
+        "phase_shift": false
+      },
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 63,
+          "min": 1,
+          "p50": 2,
+          "p90": 3,
+          "max": 3,
+          "mean": 1.8253968253968254
+        },
+        "delayed_reuse_ratio": 0.0,
+        "cross_agent_reuse_ratio": 0.42857142857142855,
+        "high_value_delayed_reuse_count": 0,
+        "LRU_regret_candidate_count": 0,
+        "has_asg_opportunity": true
+      },
+      "num_events": 30
+    },
+    {
+      "split": "control",
+      "spec": {
+        "scenario": "control_short_reuse",
+        "index": 1,
+        "agents": 2,
+        "turns": 15,
+        "core_states": 2,
+        "filler_states": 5,
+        "core_tokens": 384,
+        "filler_tokens": 128,
+        "tool_tokens": 256,
+        "delayed_gap": 2,
+        "cross_agent": false,
+        "tool_waits": true,
+        "phase_shift": false
+      },
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 68,
+          "min": 1,
+          "p50": 2,
+          "p90": 3,
+          "max": 3,
+          "mean": 1.8676470588235294
+        },
+        "delayed_reuse_ratio": 0.0,
+        "cross_agent_reuse_ratio": 0.42857142857142855,
+        "high_value_delayed_reuse_count": 0,
+        "LRU_regret_candidate_count": 0,
+        "has_asg_opportunity": true
+      },
+      "num_events": 32
+    },
+    {
+      "split": "control",
+      "spec": {
+        "scenario": "control_short_reuse",
+        "index": 2,
+        "agents": 2,
+        "turns": 16,
+        "core_states": 2,
+        "filler_states": 4,
+        "core_tokens": 384,
+        "filler_tokens": 128,
+        "tool_tokens": 256,
+        "delayed_gap": 2,
+        "cross_agent": true,
+        "tool_waits": true,
+        "phase_shift": false
+      },
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 73,
+          "min": 1,
+          "p50": 2,
+          "p90": 3,
+          "max": 3,
+          "mean": 1.8630136986301369
+        },
+        "delayed_reuse_ratio": 0.0,
+        "cross_agent_reuse_ratio": 0.42857142857142855,
+        "high_value_delayed_reuse_count": 0,
+        "LRU_regret_candidate_count": 0,
+        "has_asg_opportunity": true
+      },
+      "num_events": 32
+    },
+    {
+      "split": "control",
+      "spec": {
+        "scenario": "control_short_reuse",
+        "index": 3,
+        "agents": 2,
+        "turns": 14,
+        "core_states": 2,
+        "filler_states": 5,
+        "core_tokens": 384,
+        "filler_tokens": 128,
+        "tool_tokens": 256,
+        "delayed_gap": 2,
+        "cross_agent": false,
+        "tool_waits": true,
+        "phase_shift": false
+      },
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 63,
+          "min": 1,
+          "p50": 2,
+          "p90": 3,
+          "max": 3,
+          "mean": 1.8253968253968254
+        },
+        "delayed_reuse_ratio": 0.0,
+        "cross_agent_reuse_ratio": 0.42857142857142855,
+        "high_value_delayed_reuse_count": 0,
+        "LRU_regret_candidate_count": 0,
+        "has_asg_opportunity": true
+      },
+      "num_events": 31
+    },
+    {
+      "split": "control",
+      "spec": {
+        "scenario": "control_short_reuse",
+        "index": 4,
+        "agents": 2,
+        "turns": 15,
+        "core_states": 2,
+        "filler_states": 4,
+        "core_tokens": 384,
+        "filler_tokens": 128,
+        "tool_tokens": 256,
+        "delayed_gap": 2,
+        "cross_agent": true,
+        "tool_waits": true,
+        "phase_shift": false
+      },
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 68,
+          "min": 1,
+          "p50": 2,
+          "p90": 3,
+          "max": 3,
+          "mean": 1.8676470588235294
+        },
+        "delayed_reuse_ratio": 0.0,
+        "cross_agent_reuse_ratio": 0.42857142857142855,
+        "high_value_delayed_reuse_count": 0,
+        "LRU_regret_candidate_count": 0,
+        "has_asg_opportunity": true
+      },
+      "num_events": 31
+    },
+    {
+      "split": "control",
+      "spec": {
+        "scenario": "control_short_reuse",
+        "index": 5,
+        "agents": 2,
+        "turns": 16,
+        "core_states": 2,
+        "filler_states": 5,
+        "core_tokens": 384,
+        "filler_tokens": 128,
+        "tool_tokens": 256,
+        "delayed_gap": 2,
+        "cross_agent": false,
+        "tool_waits": true,
+        "phase_shift": false
+      },
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 73,
+          "min": 1,
+          "p50": 2,
+          "p90": 3,
+          "max": 3,
+          "mean": 1.8630136986301369
+        },
+        "delayed_reuse_ratio": 0.0,
+        "cross_agent_reuse_ratio": 0.42857142857142855,
+        "high_value_delayed_reuse_count": 0,
+        "LRU_regret_candidate_count": 0,
+        "has_asg_opportunity": true
+      },
+      "num_events": 33
+    },
+    {
+      "split": "stress",
+      "spec": {
+        "scenario": "stress_memory_pressure",
+        "index": 0,
+        "agents": 6,
+        "turns": 40,
+        "core_states": 8,
+        "filler_states": 28,
+        "core_tokens": 2048,
+        "filler_tokens": 512,
+        "tool_tokens": 2048,
+        "delayed_gap": 12,
+        "cross_agent": true,
+        "tool_waits": true,
+        "phase_shift": true
+      },
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 318,
+          "min": 1,
+          "p50": 2,
+          "p90": 18,
+          "max": 36,
+          "mean": 5.716981132075472
+        },
+        "delayed_reuse_ratio": 0.22012578616352202,
+        "cross_agent_reuse_ratio": 0.8113207547169812,
+        "high_value_delayed_reuse_count": 70,
+        "LRU_regret_candidate_count": 37,
+        "has_asg_opportunity": true
+      },
+      "num_events": 105
+    },
+    {
+      "split": "stress",
+      "spec": {
+        "scenario": "stress_memory_pressure",
+        "index": 1,
+        "agents": 6,
+        "turns": 42,
+        "core_states": 8,
+        "filler_states": 32,
+        "core_tokens": 2560,
+        "filler_tokens": 512,
+        "tool_tokens": 2048,
+        "delayed_gap": 12,
+        "cross_agent": true,
+        "tool_waits": true,
+        "phase_shift": true
+      },
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 334,
+          "min": 1,
+          "p50": 2,
+          "p90": 18,
+          "max": 43,
+          "mean": 5.793413173652695
+        },
+        "delayed_reuse_ratio": 0.2155688622754491,
+        "cross_agent_reuse_ratio": 0.8421052631578947,
+        "high_value_delayed_reuse_count": 72,
+        "LRU_regret_candidate_count": 36,
+        "has_asg_opportunity": true
+      },
+      "num_events": 112
+    },
+    {
+      "split": "stress",
+      "spec": {
+        "scenario": "stress_memory_pressure",
+        "index": 2,
+        "agents": 6,
+        "turns": 44,
+        "core_states": 8,
+        "filler_states": 36,
+        "core_tokens": 3072,
+        "filler_tokens": 512,
+        "tool_tokens": 2048,
+        "delayed_gap": 12,
+        "cross_agent": true,
+        "tool_waits": true,
+        "phase_shift": true
+      },
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 350,
+          "min": 1,
+          "p50": 2,
+          "p90": 17,
+          "max": 49,
+          "mean": 5.78
+        },
+        "delayed_reuse_ratio": 0.21142857142857144,
+        "cross_agent_reuse_ratio": 0.8688524590163934,
+        "high_value_delayed_reuse_count": 74,
+        "LRU_regret_candidate_count": 34,
+        "has_asg_opportunity": true
+      },
+      "num_events": 120
+    },
+    {
+      "split": "stress",
+      "spec": {
+        "scenario": "stress_memory_pressure",
+        "index": 3,
+        "agents": 6,
+        "turns": 46,
+        "core_states": 8,
+        "filler_states": 40,
+        "core_tokens": 3584,
+        "filler_tokens": 512,
+        "tool_tokens": 2048,
+        "delayed_gap": 12,
+        "cross_agent": true,
+        "tool_waits": true,
+        "phase_shift": true
+      },
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 366,
+          "min": 1,
+          "p50": 2,
+          "p90": 15,
+          "max": 54,
+          "mean": 5.683060109289618
+        },
+        "delayed_reuse_ratio": 0.20765027322404372,
+        "cross_agent_reuse_ratio": 0.8923076923076924,
+        "high_value_delayed_reuse_count": 76,
+        "LRU_regret_candidate_count": 32,
+        "has_asg_opportunity": true
+      },
+      "num_events": 126
+    }
+  ],
+  "audit_summary": {
+    "paper_usable_trace_count": 22,
+    "smoke_test_trace_count": 0,
+    "unusable_trace_count": 0,
+    "exclusion_reason_counts": {}
+  },
+  "profile_summary": {
+    "num_traces": 22,
+    "num_llm_events": 622,
+    "num_tool_events": 237,
+    "delayed_reuse_ratio": 0.12328178694158076,
+    "cross_agent_reuse_ratio": 0.8500669344042838,
+    "LRU_regret_tokens": 436736,
+    "num_lru_regret_candidates": 391
+  }
+}

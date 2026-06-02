@@ -1,0 +1,11 @@
+panel,label,value,count,mean,max,metric,smoke_mean,opportunity_mean
+selection_funnel,Loaded,22,,,,,,
+selection_funnel,Smoke,0,,,,,,
+selection_funnel,Unusable,0,,,,,,
+selection_funnel,Opp.,7,,,,,,
+selection_funnel,Ctrl,15,,,,,,
+pressure_distribution,smoke,,0,0.0,0.0,,,
+pressure_distribution,opp.,,7,762.4330385545701,1067.3437539761653,,,
+opportunity_vs_smoke,,,,,,asg_opportunity_score,0.0,0.7519346539011492
+opportunity_vs_smoke,,,,,,delayed_reuse_ratio,0.0,0.16570996268290114
+opportunity_vs_smoke,,,,,,LRU_regret_tokens,0.0,40.08228571428572

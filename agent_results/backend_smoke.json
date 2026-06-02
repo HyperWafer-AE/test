@@ -1,0 +1,46 @@
+{
+  "status": "passed",
+  "backend_mode": "event-level BusyBarn backend with fixed-duration analytical LLM compute events",
+  "tests": [
+    {
+      "test_name": "fixed_compute_only",
+      "passed": true,
+      "reason": "fixed compute should consume compute cycles only",
+      "total_cycles": 100,
+      "pure_comp_cycles": 100,
+      "pure_comm_cycles": 0
+    },
+    {
+      "test_name": "communication_only",
+      "passed": true,
+      "reason": "communication should consume link cycles only",
+      "total_cycles": 17,
+      "pure_comp_cycles": 0,
+      "pure_comm_cycles": 17
+    },
+    {
+      "test_name": "external_wait_then_fixed_compute",
+      "passed": true,
+      "reason": "compute should start after external wait dependency",
+      "total_cycles": 150,
+      "pure_comp_cycles": 100,
+      "pure_comm_cycles": 0
+    },
+    {
+      "test_name": "communication_then_fixed_compute",
+      "passed": true,
+      "reason": "compute should depend on communication completion",
+      "total_cycles": 117,
+      "pure_comp_cycles": 100,
+      "pure_comm_cycles": 17
+    },
+    {
+      "test_name": "unused_prefetch_does_not_block_compute",
+      "passed": true,
+      "reason": "unused prefetch should not be a dependency of compute",
+      "total_cycles": 100,
+      "pure_comp_cycles": 83,
+      "pure_comm_cycles": 0
+    }
+  ]
+}

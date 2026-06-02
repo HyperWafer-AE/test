@@ -1,0 +1,72 @@
+{
+  "status": "generated",
+  "input_dir": "agent_results\\paper_eval_synthetic",
+  "trace_selection_dir": "agent_results\\trace_selection_synthetic",
+  "evidence_class": "synthetic",
+  "can_support_real_paper_claims": false,
+  "figures": [
+    "agent_results\\paper_figures_synthetic\\fig_problem_motivation.pdf",
+    "agent_results\\paper_figures_synthetic\\fig_problem_motivation.svg",
+    "agent_results\\paper_figures_synthetic\\fig_problem_motivation.png",
+    "agent_results\\paper_figures_synthetic\\fig_workload_characterization.pdf",
+    "agent_results\\paper_figures_synthetic\\fig_workload_characterization.svg",
+    "agent_results\\paper_figures_synthetic\\fig_workload_characterization.png",
+    "agent_results\\paper_figures_synthetic\\fig_concurrency_memory_sweep.pdf",
+    "agent_results\\paper_figures_synthetic\\fig_concurrency_memory_sweep.svg",
+    "agent_results\\paper_figures_synthetic\\fig_concurrency_memory_sweep.png",
+    "agent_results\\paper_figures_synthetic\\fig_online_vs_oracle_gap.pdf",
+    "agent_results\\paper_figures_synthetic\\fig_online_vs_oracle_gap.svg",
+    "agent_results\\paper_figures_synthetic\\fig_online_vs_oracle_gap.png",
+    "agent_results\\paper_figures_synthetic\\fig_opportunity_vs_control.pdf",
+    "agent_results\\paper_figures_synthetic\\fig_opportunity_vs_control.svg",
+    "agent_results\\paper_figures_synthetic\\fig_opportunity_vs_control.png",
+    "agent_results\\paper_figures_synthetic\\fig_mapping_ablation.pdf",
+    "agent_results\\paper_figures_synthetic\\fig_mapping_ablation.svg",
+    "agent_results\\paper_figures_synthetic\\fig_mapping_ablation.png",
+    "agent_results\\paper_figures_synthetic\\fig_prefetch_ablation.pdf",
+    "agent_results\\paper_figures_synthetic\\fig_prefetch_ablation.svg",
+    "agent_results\\paper_figures_synthetic\\fig_prefetch_ablation.png"
+  ],
+  "data_csv": [
+    "agent_results\\paper_figures_synthetic\\fig_problem_motivation.csv",
+    "agent_results\\paper_figures_synthetic\\fig_workload_characterization.csv",
+    "agent_results\\paper_figures_synthetic\\fig_concurrency_memory_sweep.csv",
+    "agent_results\\paper_figures_synthetic\\fig_online_vs_oracle_gap.csv",
+    "agent_results\\paper_figures_synthetic\\fig_opportunity_vs_control.csv",
+    "agent_results\\paper_figures_synthetic\\fig_mapping_ablation.csv",
+    "agent_results\\paper_figures_synthetic\\fig_prefetch_ablation.csv"
+  ],
+  "evidence": {
+    "fig_problem_motivation": {
+      "num_paper_usable_traces": 22,
+      "max_live_kv_over_budget": 1067.3437539761653,
+      "max_lru_cache_miss_gb": 1734.780911616
+    },
+    "fig_workload_characterization": {
+      "num_candidates": 22,
+      "num_paper_usable": 22,
+      "num_matched_control": 15,
+      "max_paper_usable_live_kv_over_budget": 1067.3437539761653
+    },
+    "fig_concurrency_memory_sweep": {
+      "num_memory_points": 8,
+      "num_concurrency_points": 4
+    },
+    "fig_online_vs_oracle_gap": {
+      "max_prefill_reduction_vs_lru_pct": 19.6062417967041
+    },
+    "fig_opportunity_vs_control": {
+      "num_matched_control": 15,
+      "num_opportunity": 7
+    },
+    "fig_mapping_ablation": {
+      "max_remote_read_gb": 24.730140672
+    },
+    "fig_prefetch_ablation": {
+      "max_prefetch_migration_gb": 3.703570432
+    }
+  },
+  "limitations": [
+    "Synthetic traces validate controlled algorithm behavior only; they cannot support real-trace paper claims."
+  ]
+}

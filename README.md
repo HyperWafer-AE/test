@@ -5,6 +5,29 @@ Reproduce all experimental figures for the ISCA 2026 paper:
 
 ---
 
+## Agent-on-Wafer Extension
+
+This checkout also contains an Agent-on-Wafer prototype under `src/agent/`.
+It reuses BusyBarn as an event-level wafer backend for agent trace replay:
+ASG construction, persistent-state planning, wafer mapping, BusyBarn event
+compilation, backend smoke tests, real-trace evaluation, and artifact status
+reporting are documented in `src/agent/README.md`.
+
+Useful validation commands:
+
+```bash
+python -m compileall src
+python -m src.agent.backend_smoke --cfg src/platform/cfgs/wamis_hd_distributed.cfg --topology wamis --output agent_results/backend_smoke.json
+python -m src.agent.artifact_status --output agent_results/artifact_status.json
+```
+
+The extension does not claim BusyBarn's original operator-level LLM partition
+pipeline for agent prefill/decode. LLM compute is represented as analytical
+fixed-duration BusyBarn events, while KV movement uses BusyBarn communication,
+routing, and link scheduling.
+
+---
+
 ## Full reproduction 
 
 ```bash

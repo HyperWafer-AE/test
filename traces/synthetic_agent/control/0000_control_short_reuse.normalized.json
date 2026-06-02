@@ -1,0 +1,709 @@
+[
+  {
+    "state_id": "syn_control_short_reuse_0000:system",
+    "state_type": "system_prefix",
+    "owner": "shared",
+    "tokens": 1024,
+    "semantic_key": "shared:system",
+    "exact_token_hash": "06067fadb73cad9c1c7a02875cd3038b574769d3d060dfabd87f2955daa19b73",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "semantic_key": "shared:system",
+      "exact_token_hash": "06067fadb73cad9c1c7a02875cd3038b574769d3d060dfabd87f2955daa19b73"
+    },
+    "type": "state",
+    "semantic_id": "shared:system",
+    "exact_kv_id": "06067fadb73cad9c1c7a02875cd3038b574769d3d060dfabd87f2955daa19b73"
+  },
+  {
+    "state_id": "syn_control_short_reuse_0000:task",
+    "state_type": "task_prefix",
+    "owner": "shared",
+    "tokens": 768,
+    "semantic_key": "syn_control_short_reuse_0000:task",
+    "exact_token_hash": "69ef2e8585679eea836358006519484c20f0f89392dff311070500a6da353999",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "semantic_key": "syn_control_short_reuse_0000:task",
+      "exact_token_hash": "69ef2e8585679eea836358006519484c20f0f89392dff311070500a6da353999"
+    },
+    "type": "state",
+    "semantic_id": "syn_control_short_reuse_0000:task",
+    "exact_kv_id": "69ef2e8585679eea836358006519484c20f0f89392dff311070500a6da353999"
+  },
+  {
+    "state_id": "syn_control_short_reuse_0000:shared_plan",
+    "state_type": "summary_state",
+    "owner": "shared",
+    "tokens": 1024,
+    "semantic_key": "syn_control_short_reuse_0000:shared_plan",
+    "exact_token_hash": "5c47e131a127d2ccd05061505a6896e49972b0eac0db2d0c4ec39e70095105fc",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "semantic_key": "syn_control_short_reuse_0000:shared_plan",
+      "exact_token_hash": "5c47e131a127d2ccd05061505a6896e49972b0eac0db2d0c4ec39e70095105fc"
+    },
+    "type": "state",
+    "semantic_id": "syn_control_short_reuse_0000:shared_plan",
+    "exact_kv_id": "5c47e131a127d2ccd05061505a6896e49972b0eac0db2d0c4ec39e70095105fc"
+  },
+  {
+    "state_id": "syn_control_short_reuse_0000:agent_0:role",
+    "state_type": "agent_role",
+    "owner": "agent_0",
+    "tokens": 128,
+    "semantic_key": "syn_control_short_reuse_0000:role:0",
+    "exact_token_hash": "51a302a29be1ed4112f9dec8fe5bfa7fe745fe016d294d286a14668162d9b652",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "semantic_key": "syn_control_short_reuse_0000:role:0",
+      "exact_token_hash": "51a302a29be1ed4112f9dec8fe5bfa7fe745fe016d294d286a14668162d9b652"
+    },
+    "type": "state",
+    "semantic_id": "syn_control_short_reuse_0000:role:0",
+    "exact_kv_id": "51a302a29be1ed4112f9dec8fe5bfa7fe745fe016d294d286a14668162d9b652"
+  },
+  {
+    "state_id": "syn_control_short_reuse_0000:agent_1:role",
+    "state_type": "agent_role",
+    "owner": "agent_1",
+    "tokens": 128,
+    "semantic_key": "syn_control_short_reuse_0000:role:1",
+    "exact_token_hash": "4f52c4f2565d71948042780b7adf67c05da5d5887f3cf2c76acb668fe2665306",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "semantic_key": "syn_control_short_reuse_0000:role:1",
+      "exact_token_hash": "4f52c4f2565d71948042780b7adf67c05da5d5887f3cf2c76acb668fe2665306"
+    },
+    "type": "state",
+    "semantic_id": "syn_control_short_reuse_0000:role:1",
+    "exact_kv_id": "4f52c4f2565d71948042780b7adf67c05da5d5887f3cf2c76acb668fe2665306"
+  },
+  {
+    "state_id": "syn_control_short_reuse_0000:core_0",
+    "state_type": "file_context",
+    "owner": "shared",
+    "tokens": 384,
+    "semantic_key": "syn_control_short_reuse_0000:core_semantic_0",
+    "exact_token_hash": "6296c33cb0809c0f098512de3db836145709c7e859d447130812a4c639445fc2",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "semantic_key": "syn_control_short_reuse_0000:core_semantic_0",
+      "exact_token_hash": "6296c33cb0809c0f098512de3db836145709c7e859d447130812a4c639445fc2"
+    },
+    "type": "state",
+    "semantic_id": "syn_control_short_reuse_0000:core_semantic_0",
+    "exact_kv_id": "6296c33cb0809c0f098512de3db836145709c7e859d447130812a4c639445fc2"
+  },
+  {
+    "state_id": "syn_control_short_reuse_0000:core_1",
+    "state_type": "test_failure_summary",
+    "owner": "agent_1",
+    "tokens": 640,
+    "semantic_key": "syn_control_short_reuse_0000:core_semantic_1",
+    "exact_token_hash": "520510b35895647e37ac0f6ed01a7e4abb202e9df95833b1b8ec37102f707488",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "semantic_key": "syn_control_short_reuse_0000:core_semantic_1",
+      "exact_token_hash": "520510b35895647e37ac0f6ed01a7e4abb202e9df95833b1b8ec37102f707488"
+    },
+    "type": "state",
+    "semantic_id": "syn_control_short_reuse_0000:core_semantic_1",
+    "exact_kv_id": "520510b35895647e37ac0f6ed01a7e4abb202e9df95833b1b8ec37102f707488"
+  },
+  {
+    "state_id": "syn_control_short_reuse_0000:filler_0",
+    "state_type": "assistant_delta",
+    "owner": "agent_0",
+    "tokens": 128,
+    "semantic_key": "syn_control_short_reuse_0000:filler_semantic_0",
+    "exact_token_hash": "a3ab5fb658c146b5c6f27d6f446fd65116c850769b14b7bfa0eb820e6537d98b",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "semantic_key": "syn_control_short_reuse_0000:filler_semantic_0",
+      "exact_token_hash": "a3ab5fb658c146b5c6f27d6f446fd65116c850769b14b7bfa0eb820e6537d98b"
+    },
+    "type": "state",
+    "semantic_id": "syn_control_short_reuse_0000:filler_semantic_0",
+    "exact_kv_id": "a3ab5fb658c146b5c6f27d6f446fd65116c850769b14b7bfa0eb820e6537d98b"
+  },
+  {
+    "state_id": "syn_control_short_reuse_0000:filler_1",
+    "state_type": "dialogue_delta",
+    "owner": "agent_1",
+    "tokens": 128,
+    "semantic_key": "syn_control_short_reuse_0000:filler_semantic_1",
+    "exact_token_hash": "c958d9bb896237f7e7323debcdb62480c94561fcdfd1f9692fcf25c9e7960cfb",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "semantic_key": "syn_control_short_reuse_0000:filler_semantic_1",
+      "exact_token_hash": "c958d9bb896237f7e7323debcdb62480c94561fcdfd1f9692fcf25c9e7960cfb"
+    },
+    "type": "state",
+    "semantic_id": "syn_control_short_reuse_0000:filler_semantic_1",
+    "exact_kv_id": "c958d9bb896237f7e7323debcdb62480c94561fcdfd1f9692fcf25c9e7960cfb"
+  },
+  {
+    "state_id": "syn_control_short_reuse_0000:filler_2",
+    "state_type": "dialogue_delta",
+    "owner": "agent_0",
+    "tokens": 128,
+    "semantic_key": "syn_control_short_reuse_0000:filler_semantic_2",
+    "exact_token_hash": "af30f952c3839c3c5e5fc2ae385683294f7427cc9d99dd6f40ced6b7ae5c54c8",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "semantic_key": "syn_control_short_reuse_0000:filler_semantic_2",
+      "exact_token_hash": "af30f952c3839c3c5e5fc2ae385683294f7427cc9d99dd6f40ced6b7ae5c54c8"
+    },
+    "type": "state",
+    "semantic_id": "syn_control_short_reuse_0000:filler_semantic_2",
+    "exact_kv_id": "af30f952c3839c3c5e5fc2ae385683294f7427cc9d99dd6f40ced6b7ae5c54c8"
+  },
+  {
+    "state_id": "syn_control_short_reuse_0000:filler_3",
+    "state_type": "assistant_delta",
+    "owner": "agent_1",
+    "tokens": 128,
+    "semantic_key": "syn_control_short_reuse_0000:filler_semantic_3",
+    "exact_token_hash": "4c6d772d47e4b904f05c65e2da6392139d83ae89cb9f067350516b8b105cb85b",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "semantic_key": "syn_control_short_reuse_0000:filler_semantic_3",
+      "exact_token_hash": "4c6d772d47e4b904f05c65e2da6392139d83ae89cb9f067350516b8b105cb85b"
+    },
+    "type": "state",
+    "semantic_id": "syn_control_short_reuse_0000:filler_semantic_3",
+    "exact_kv_id": "4c6d772d47e4b904f05c65e2da6392139d83ae89cb9f067350516b8b105cb85b"
+  },
+  {
+    "event_id": "syn_control_short_reuse_0000:llm:0",
+    "agent": "agent_0",
+    "turn": 0,
+    "input_state_ids": [
+      "syn_control_short_reuse_0000:system",
+      "syn_control_short_reuse_0000:task",
+      "syn_control_short_reuse_0000:shared_plan",
+      "syn_control_short_reuse_0000:agent_0:role",
+      "syn_control_short_reuse_0000:core_0"
+    ],
+    "append_tokens": 64,
+    "output_tokens": 96,
+    "new_state_id": "syn_control_short_reuse_0000:llm_out_0",
+    "new_state_type": "assistant_delta",
+    "phase": "execute",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "synthetic_index": 0,
+      "turn": 0,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_control_short_reuse_0000:llm:1",
+    "agent": "agent_1",
+    "turn": 1,
+    "input_state_ids": [
+      "syn_control_short_reuse_0000:system",
+      "syn_control_short_reuse_0000:task",
+      "syn_control_short_reuse_0000:shared_plan",
+      "syn_control_short_reuse_0000:agent_1:role",
+      "syn_control_short_reuse_0000:core_1",
+      "syn_control_short_reuse_0000:llm_out_0"
+    ],
+    "append_tokens": 72,
+    "output_tokens": 112,
+    "new_state_id": "syn_control_short_reuse_0000:llm_out_1",
+    "new_state_type": "assistant_delta",
+    "phase": "execute",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "synthetic_index": 0,
+      "turn": 1,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_control_short_reuse_0000:tool:1",
+    "agent": "agent_1",
+    "turn": 1,
+    "tool": "run_tests",
+    "latency": 120,
+    "output_tokens": 384,
+    "status": "error",
+    "new_state_id": "syn_control_short_reuse_0000:tool_out_1",
+    "new_state_type": "failure_summary",
+    "phase": "execute",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "synthetic_index": 0,
+      "turn": 1,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "tool"
+  },
+  {
+    "event_id": "syn_control_short_reuse_0000:llm:2",
+    "agent": "agent_0",
+    "turn": 2,
+    "input_state_ids": [
+      "syn_control_short_reuse_0000:system",
+      "syn_control_short_reuse_0000:task",
+      "syn_control_short_reuse_0000:shared_plan",
+      "syn_control_short_reuse_0000:agent_0:role",
+      "syn_control_short_reuse_0000:core_0",
+      "syn_control_short_reuse_0000:llm_out_1"
+    ],
+    "append_tokens": 80,
+    "output_tokens": 128,
+    "new_state_id": "syn_control_short_reuse_0000:llm_out_2",
+    "new_state_type": "assistant_delta",
+    "phase": "execute",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "synthetic_index": 0,
+      "turn": 2,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_control_short_reuse_0000:llm:3",
+    "agent": "agent_1",
+    "turn": 3,
+    "input_state_ids": [
+      "syn_control_short_reuse_0000:system",
+      "syn_control_short_reuse_0000:task",
+      "syn_control_short_reuse_0000:shared_plan",
+      "syn_control_short_reuse_0000:agent_1:role",
+      "syn_control_short_reuse_0000:core_1",
+      "syn_control_short_reuse_0000:llm_out_2"
+    ],
+    "append_tokens": 88,
+    "output_tokens": 144,
+    "new_state_id": "syn_control_short_reuse_0000:llm_out_3",
+    "new_state_type": "assistant_delta",
+    "phase": "execute",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "synthetic_index": 0,
+      "turn": 3,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_control_short_reuse_0000:llm:4",
+    "agent": "agent_0",
+    "turn": 4,
+    "input_state_ids": [
+      "syn_control_short_reuse_0000:system",
+      "syn_control_short_reuse_0000:task",
+      "syn_control_short_reuse_0000:shared_plan",
+      "syn_control_short_reuse_0000:agent_0:role",
+      "syn_control_short_reuse_0000:core_0",
+      "syn_control_short_reuse_0000:llm_out_3"
+    ],
+    "append_tokens": 96,
+    "output_tokens": 96,
+    "new_state_id": "syn_control_short_reuse_0000:llm_out_4",
+    "new_state_type": "assistant_delta",
+    "phase": "execute",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "synthetic_index": 0,
+      "turn": 4,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_control_short_reuse_0000:tool:4",
+    "agent": "agent_0",
+    "turn": 4,
+    "tool": "web_lookup",
+    "latency": 240,
+    "output_tokens": 384,
+    "status": "error",
+    "new_state_id": "syn_control_short_reuse_0000:tool_out_4",
+    "new_state_type": "raw_error_log",
+    "phase": "execute",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "synthetic_index": 0,
+      "turn": 4,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "tool"
+  },
+  {
+    "event_id": "syn_control_short_reuse_0000:llm:5",
+    "agent": "agent_1",
+    "turn": 5,
+    "input_state_ids": [
+      "syn_control_short_reuse_0000:system",
+      "syn_control_short_reuse_0000:task",
+      "syn_control_short_reuse_0000:shared_plan",
+      "syn_control_short_reuse_0000:agent_1:role",
+      "syn_control_short_reuse_0000:core_1",
+      "syn_control_short_reuse_0000:llm_out_4"
+    ],
+    "append_tokens": 64,
+    "output_tokens": 112,
+    "new_state_id": "syn_control_short_reuse_0000:llm_out_5",
+    "new_state_type": "assistant_delta",
+    "phase": "execute",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "synthetic_index": 0,
+      "turn": 5,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_control_short_reuse_0000:llm:6",
+    "agent": "agent_0",
+    "turn": 6,
+    "input_state_ids": [
+      "syn_control_short_reuse_0000:system",
+      "syn_control_short_reuse_0000:task",
+      "syn_control_short_reuse_0000:shared_plan",
+      "syn_control_short_reuse_0000:agent_0:role",
+      "syn_control_short_reuse_0000:core_0",
+      "syn_control_short_reuse_0000:llm_out_5"
+    ],
+    "append_tokens": 72,
+    "output_tokens": 128,
+    "new_state_id": "syn_control_short_reuse_0000:llm_out_6",
+    "new_state_type": "assistant_delta",
+    "phase": "execute",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "synthetic_index": 0,
+      "turn": 6,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_control_short_reuse_0000:llm:7",
+    "agent": "agent_1",
+    "turn": 7,
+    "input_state_ids": [
+      "syn_control_short_reuse_0000:system",
+      "syn_control_short_reuse_0000:task",
+      "syn_control_short_reuse_0000:shared_plan",
+      "syn_control_short_reuse_0000:agent_1:role",
+      "syn_control_short_reuse_0000:core_1",
+      "syn_control_short_reuse_0000:llm_out_6"
+    ],
+    "append_tokens": 80,
+    "output_tokens": 144,
+    "new_state_id": "syn_control_short_reuse_0000:llm_out_7",
+    "new_state_type": "assistant_delta",
+    "phase": "execute",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "synthetic_index": 0,
+      "turn": 7,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_control_short_reuse_0000:tool:7",
+    "agent": "agent_1",
+    "turn": 7,
+    "tool": "search",
+    "latency": 160,
+    "output_tokens": 384,
+    "status": "ok",
+    "new_state_id": "syn_control_short_reuse_0000:tool_out_7",
+    "new_state_type": "web_result",
+    "phase": "execute",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "synthetic_index": 0,
+      "turn": 7,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "tool"
+  },
+  {
+    "event_id": "syn_control_short_reuse_0000:llm:8",
+    "agent": "agent_0",
+    "turn": 8,
+    "input_state_ids": [
+      "syn_control_short_reuse_0000:system",
+      "syn_control_short_reuse_0000:task",
+      "syn_control_short_reuse_0000:shared_plan",
+      "syn_control_short_reuse_0000:agent_0:role",
+      "syn_control_short_reuse_0000:core_0",
+      "syn_control_short_reuse_0000:llm_out_7"
+    ],
+    "append_tokens": 88,
+    "output_tokens": 96,
+    "new_state_id": "syn_control_short_reuse_0000:llm_out_8",
+    "new_state_type": "assistant_delta",
+    "phase": "execute",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "synthetic_index": 0,
+      "turn": 8,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_control_short_reuse_0000:llm:9",
+    "agent": "agent_1",
+    "turn": 9,
+    "input_state_ids": [
+      "syn_control_short_reuse_0000:system",
+      "syn_control_short_reuse_0000:task",
+      "syn_control_short_reuse_0000:shared_plan",
+      "syn_control_short_reuse_0000:agent_1:role",
+      "syn_control_short_reuse_0000:core_1",
+      "syn_control_short_reuse_0000:llm_out_8"
+    ],
+    "append_tokens": 96,
+    "output_tokens": 112,
+    "new_state_id": "syn_control_short_reuse_0000:llm_out_9",
+    "new_state_type": "assistant_delta",
+    "phase": "execute",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "synthetic_index": 0,
+      "turn": 9,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_control_short_reuse_0000:llm:10",
+    "agent": "agent_0",
+    "turn": 10,
+    "input_state_ids": [
+      "syn_control_short_reuse_0000:system",
+      "syn_control_short_reuse_0000:task",
+      "syn_control_short_reuse_0000:shared_plan",
+      "syn_control_short_reuse_0000:agent_0:role",
+      "syn_control_short_reuse_0000:core_0",
+      "syn_control_short_reuse_0000:llm_out_9"
+    ],
+    "append_tokens": 64,
+    "output_tokens": 128,
+    "new_state_id": "syn_control_short_reuse_0000:llm_out_10",
+    "new_state_type": "assistant_delta",
+    "phase": "execute",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "synthetic_index": 0,
+      "turn": 10,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_control_short_reuse_0000:tool:10",
+    "agent": "agent_0",
+    "turn": 10,
+    "tool": "read_file",
+    "latency": 80,
+    "output_tokens": 384,
+    "status": "ok",
+    "new_state_id": "syn_control_short_reuse_0000:tool_out_10",
+    "new_state_type": "tool_observation",
+    "phase": "execute",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "synthetic_index": 0,
+      "turn": 10,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "tool"
+  },
+  {
+    "event_id": "syn_control_short_reuse_0000:llm:11",
+    "agent": "agent_1",
+    "turn": 11,
+    "input_state_ids": [
+      "syn_control_short_reuse_0000:system",
+      "syn_control_short_reuse_0000:task",
+      "syn_control_short_reuse_0000:shared_plan",
+      "syn_control_short_reuse_0000:agent_1:role",
+      "syn_control_short_reuse_0000:core_1",
+      "syn_control_short_reuse_0000:llm_out_10"
+    ],
+    "append_tokens": 72,
+    "output_tokens": 144,
+    "new_state_id": "syn_control_short_reuse_0000:llm_out_11",
+    "new_state_type": "assistant_delta",
+    "phase": "execute",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "synthetic_index": 0,
+      "turn": 11,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_control_short_reuse_0000:llm:12",
+    "agent": "agent_0",
+    "turn": 12,
+    "input_state_ids": [
+      "syn_control_short_reuse_0000:system",
+      "syn_control_short_reuse_0000:task",
+      "syn_control_short_reuse_0000:shared_plan",
+      "syn_control_short_reuse_0000:agent_0:role",
+      "syn_control_short_reuse_0000:core_0",
+      "syn_control_short_reuse_0000:llm_out_11"
+    ],
+    "append_tokens": 80,
+    "output_tokens": 96,
+    "new_state_id": "syn_control_short_reuse_0000:llm_out_12",
+    "new_state_type": "assistant_delta",
+    "phase": "execute",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "synthetic_index": 0,
+      "turn": 12,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_control_short_reuse_0000:llm:13",
+    "agent": "agent_1",
+    "turn": 13,
+    "input_state_ids": [
+      "syn_control_short_reuse_0000:system",
+      "syn_control_short_reuse_0000:task",
+      "syn_control_short_reuse_0000:shared_plan",
+      "syn_control_short_reuse_0000:agent_1:role",
+      "syn_control_short_reuse_0000:core_1",
+      "syn_control_short_reuse_0000:llm_out_12"
+    ],
+    "append_tokens": 88,
+    "output_tokens": 112,
+    "new_state_id": "syn_control_short_reuse_0000:llm_out_13",
+    "new_state_type": "assistant_delta",
+    "phase": "execute",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "synthetic_index": 0,
+      "turn": 13,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_control_short_reuse_0000:tool:13",
+    "agent": "agent_1",
+    "turn": 13,
+    "tool": "edit_file",
+    "latency": 200,
+    "output_tokens": 384,
+    "status": "error",
+    "new_state_id": "syn_control_short_reuse_0000:tool_out_13",
+    "new_state_type": "test_failure_summary",
+    "phase": "execute",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "control_short_reuse",
+      "synthetic_index": 0,
+      "turn": 13,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "tool"
+  }
+]

@@ -57,6 +57,8 @@ from .agent_event_builder import AgentEventBuilder
 from .demand_predictor import DemandPredictor, PredictionMode, fit_trace_stats
 from .metrics import postprocess_agent_events
 from .model_profile import ModelProfile
+from .policy_registry import REAL_V2_POLICY_NAMES, get_policy_spec
+from .invariant_checks import assert_invariant_reports, check_policy_outputs, run_invariant_checks
 from .state_manager import (
     ASGPlacementV2StateManager,
     ASGPrefetchV2StateManager,
@@ -70,18 +72,7 @@ from .trace_loader import load_trace_dir, load_trace_file
 from .trace_profile import delayed_reuse_by_trace, profile_traces
 
 
-REAL_V2_POLICIES = (
-    "nocache",
-    "lru-basic",
-    "lru-system",
-    "kvflow-like",
-    "asg-retention-v2-graph-only",
-    "asg-retention-v2-online",
-    "asg-retention-v2-trace-stats",
-    "asg-retention-v2-oracle",
-    "asg-placement-v2-online",
-    "asg-prefetch-v2-online",
-)
+REAL_V2_POLICIES = REAL_V2_POLICY_NAMES
 
 
 def build_hardware(cfg_path: str, topology: str):
@@ -204,44 +195,15 @@ def make_state_manager(policy: str, memory_budget_bytes: int, model: ModelProfil
 
 
 def policy_backend_name(policy: str) -> str:
-    return {
-        "nocache": "nocache",
-        "lru-basic": "lru",
-        "lru-system": "lru",
-        "kvflow-like": "kvflow",
-        "asg-retention-v2-graph-only": "asg-retention-v2",
-        "asg-retention-v2-online": "asg-retention-v2",
-        "asg-retention-v2-trace-stats": "asg-retention-v2",
-        "asg-retention-v2-oracle": "asg-oracle-retention",
-        "asg-placement-v2-online": "asg-placement-v2",
-        "asg-prefetch-v2-online": "asg-prefetch-v2",
-    }[policy]
+    return get_policy_spec(policy).backend_policy_name
 
 
 def _estimator_mode_for(policy: str, args) -> str:
-    if policy == "asg-retention-v2-oracle":
-        return "oracle"
-    if policy == "asg-retention-v2-trace-stats":
-        return PredictionMode.TRACE_STATS
-    if policy in {
-        "asg-retention-v2-online",
-        "asg-placement-v2-online",
-        "asg-prefetch-v2-online",
-    }:
-        return PredictionMode.HEURISTIC
-    return "none"
+    return get_policy_spec(policy).estimator_mode
 
 
 def _baseline_class_for(policy: str) -> str:
-    if policy in {"nocache", "lru-basic"}:
-        return "basic"
-    if policy in {"lru-system", "kvflow-like"}:
-        return "system"
-    if policy == "asg-retention-v2-oracle":
-        return "oracle"
-    if policy.startswith("asg-"):
-        return "asg"
-    return "unknown"
+    return get_policy_spec(policy).baseline_class
 
 
 def prompt_quality_summary(trace) -> dict:
@@ -296,6 +258,7 @@ def run_real_policy(
     selected_trace_count=None,
     delayed_reuse_ratio=None,
 ):
+    spec = get_policy_spec(policy)
     model = build_model(args)
     hardware = build_hardware(args.cfg, args.topology)
     if hasattr(hardware, "frequency"):
@@ -310,13 +273,13 @@ def run_real_policy(
     if per_node_memory_mb is None:
         per_node_memory_mb = max(16, int(args.memory_budget_gb * 1024 / active_nodes))
 
-    topology_enabled = policy in {"asg-placement-v2-online", "asg-prefetch-v2-online"}
-    prefetch_enabled = policy == "asg-prefetch-v2-online"
-    oracle_future = policy == "asg-retention-v2-oracle"
-    is_asg_policy = policy.startswith("asg-")
+    topology_enabled = spec.topology_enabled
+    prefetch_enabled = spec.prefetch_enabled
+    oracle_future = spec.estimator_mode == PredictionMode.ORACLE
+    is_asg_policy = spec.baseline_class in {"asg", "oracle"}
     estimator_mode = _estimator_mode_for(policy, args)
     active_predictor = predictors.get(estimator_mode) if estimator_mode in {PredictionMode.HEURISTIC, PredictionMode.TRACE_STATS} else None
-    static_replica = policy != "lru-basic" and not args.disable_static_replica
+    static_replica = spec.static_replica_enabled and not args.disable_static_replica
     common_compression = args.enable_common_observation_compression and not args.disable_observation_compression
     asg_specific_compression = (
         is_asg_policy
@@ -360,8 +323,38 @@ def run_real_policy(
         enable_static_replica=static_replica,
     )
     events_dict, graph, metrics = builder.build(trace)
+    invariant_reports = []
+    if getattr(args, "check_invariants", False):
+        invariant_reports.extend(
+            run_invariant_checks(
+                events_dict,
+                graph,
+                metrics,
+                hardware,
+                policy,
+                paper_usable=bool(getattr(args, "paper_usable", False)),
+            )
+        )
+        assert_invariant_reports(invariant_reports)
     total_cycles, pure_comp_cycles, pure_comm_cycles = collective_event_driver(events_dict, hardware)
     postprocess_agent_events(events_dict, metrics, total_cycles, pure_comp_cycles, pure_comm_cycles)
+    if getattr(args, "check_invariants", False):
+        timing_for_checks = {
+            "total_cycles": int(total_cycles),
+            "pure_comp_cycles": int(pure_comp_cycles),
+            "pure_comm_cycles": int(pure_comm_cycles),
+        }
+        invariant_reports.append(
+            check_policy_outputs(
+                metrics,
+                graph,
+                policy,
+                timing=timing_for_checks,
+                paper_usable=bool(getattr(args, "paper_usable", False)),
+                events_dict=events_dict,
+            )
+        )
+        assert_invariant_reports(invariant_reports)
     retained_types = Counter(state.state_type for state in graph.states.values() if state.resident)
     regret_preserved = sum(1 for state_id in regret_state_tokens if state_id in graph.states and graph.states[state_id].resident)
     regret_tokens_preserved = sum(
@@ -376,6 +369,12 @@ def run_real_policy(
         "asg_builder_enabled": is_asg_policy,
         "oracle_future": oracle_future,
         "baseline_class": _baseline_class_for(policy),
+        "retention_policy": spec.retention_policy,
+        "mapping_policy": spec.mapping_policy,
+        "prefetch_policy": spec.prefetch_policy,
+        "topology_enabled": spec.topology_enabled,
+        "prefetch_enabled": spec.prefetch_enabled,
+        "static_replica_enabled": static_replica,
         "prompt_reconstruction_quality": prompt_quality,
         "prompt_reconstruction_quality_label": _prompt_quality_label(prompt_quality),
         "observation_compression_class": (
@@ -404,6 +403,7 @@ def run_real_policy(
             "asg_states": len(graph.states),
             "asg_execs": len(graph.execs),
         },
+        "invariant_checks": [report.to_dict() for report in invariant_reports],
     }
 
 
@@ -441,6 +441,9 @@ def write_summary_csv(path, results):
         "asg_builder_enabled",
         "oracle_future",
         "baseline_class",
+        "retention_policy",
+        "mapping_policy",
+        "prefetch_policy",
         "prompt_reconstruction_quality",
         "observation_compression_class",
         "data_quality",
@@ -487,6 +490,9 @@ def write_summary_csv(path, results):
                     "asg_builder_enabled": result["asg_builder_enabled"],
                     "oracle_future": result["oracle_future"],
                     "baseline_class": result["baseline_class"],
+                    "retention_policy": result.get("retention_policy", ""),
+                    "mapping_policy": result.get("mapping_policy", ""),
+                    "prefetch_policy": result.get("prefetch_policy", ""),
                     "prompt_reconstruction_quality": result["prompt_reconstruction_quality_label"],
                     "observation_compression_class": result["observation_compression_class"],
                     "data_quality": result["data_quality"],
@@ -624,10 +630,14 @@ def select_traces_for_replay(args, traces, output_dir: Path):
 def run_suite(args, traces, output_dir: Path, policies=REAL_V2_POLICIES):
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
-    combined_trace = interleave_traces(traces, args.concurrency)
+    source_traces = getattr(args, "source_traces_for_stats", traces)
+    if getattr(args, "precomposed_trace", False):
+        combined_trace = list(traces[0]) if traces else []
+    else:
+        combined_trace = interleave_traces(traces, args.concurrency)
     if not combined_trace:
         raise ValueError("No trace events to replay.")
-    train_traces = traces
+    train_traces = source_traces
     if args.train_trace_dir:
         train_traces = load_trace_dir(
             args.train_trace_dir,
@@ -667,8 +677,9 @@ def run_suite(args, traces, output_dir: Path, policies=REAL_V2_POLICIES):
         encoding="utf-8",
     )
     prompt_quality = prompt_quality_summary(combined_trace)
-    dataset_profile = profile_traces(traces, delayed_reuse_k=max(1, args.horizon // 2))
+    dataset_profile = profile_traces(source_traces, delayed_reuse_k=max(1, args.horizon // 2))
     regret_tokens = regret_candidate_tokens(combined_trace, horizon=args.horizon)
+    num_replay_workflows = int(getattr(args, "num_replay_workflows", len(source_traces)))
     results = []
     for policy in policies:
         result = run_real_policy(
@@ -676,7 +687,7 @@ def run_suite(args, traces, output_dir: Path, policies=REAL_V2_POLICIES):
             args,
             combined_trace,
             predictors,
-            len(traces),
+            num_replay_workflows,
             regret_tokens,
             prompt_quality,
             selected_trace_count=getattr(args, "selected_trace_count", None),
@@ -828,6 +839,7 @@ def parse_args(argv=None):
     parser.add_argument("--enable-common-observation-compression", action="store_true")
     parser.add_argument("--enable-asg-observation-compression", action="store_true")
     parser.add_argument("--disable-observation-compression", action="store_true")
+    parser.add_argument("--check-invariants", action="store_true")
     parser.add_argument("--large-observation-token-threshold", type=int, default=2048)
     parser.add_argument("--observation-compression-ratio", type=float, default=0.25)
     parser.add_argument("--asg-large-observation-token-threshold", type=int, default=512)

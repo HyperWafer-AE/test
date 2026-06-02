@@ -1,31 +1,26 @@
 from collections import defaultdict
 from typing import Dict, List, Optional
 
-from src.scheduling.event_notation import (
-    communication_notation,
-    external_wait_notation,
-    fixed_compute_notation,
-)
-
 from .cost_model import (
     estimate_comm_cycles_with_model,
     estimate_future_accesses,
     should_migrate_state,
 )
 from .agent_state_graph import AgentStateGraph
+from .asg_builder_runtime import ASGBuilderRuntime
+from .event_compiler import EventCompiler
 from .future_demand import FutureDemandIndex
 from .metrics import AgentMetrics
 from .phase_detector import detect_phase
 from .placement import (
     assign_agent_homes,
-    choose_exec_location,
-    choose_shared_anchor,
-    choose_state_location,
     node_of_module,
 )
+from .state_planner_runtime import StatePlannerRuntime
 from .state_lifecycle import is_static_shared, should_never_demand_migrate
 from .state_manager import NodeMemoryTracker
-from .state_node import ExecNode, StateNode
+from .state_node import StateNode
+from .wafer_mapper_runtime import WaferMapperRuntime
 
 
 STATIC_DEFAULT_TOKENS = {
@@ -118,6 +113,19 @@ class AgentEventBuilder:
             state_manager.memory_budget_bytes,
             per_node_budget_bytes,
         )
+        self.asg_runtime = ASGBuilderRuntime(self.graph, self.model_profile)
+        self.state_planner_runtime = StatePlannerRuntime(
+            self.state_manager,
+            self.node_memory,
+            self.metrics,
+            self._replicate_static_state,
+        )
+        self.wafer_mapper_runtime = WaferMapperRuntime(
+            self.hardware_platform,
+            self.node_memory,
+            self._module_load,
+        )
+        self.event_compiler = EventCompiler(self.events_dict, self._new_tag)
 
     @property
     def policy_name(self) -> str:
@@ -147,7 +155,7 @@ class AgentEventBuilder:
             self.hardware_platform,
             spread=self.agent_placement,
         )
-        self.shared_anchor = choose_shared_anchor(self.hardware_platform)
+        self.shared_anchor = self.wafer_mapper_runtime.choose_shared_anchor()
         self.metrics.num_agents = len(agent_ids)
 
         for step, trace_event in enumerate(trace):
@@ -182,10 +190,7 @@ class AgentEventBuilder:
         return event
 
     def _add_dependency(self, parent_tag: Optional[int], child_event):
-        if parent_tag is None:
-            return
-        child_event.dependency_set.add(parent_tag)
-        self.events_dict[parent_tag].issue_set.add(child_event.event_tag)
+        self.event_compiler.add_dependency(parent_tag, child_event)
 
     def _phase_score(self) -> dict:
         return detect_phase(self.graph.recent_events)
@@ -197,7 +202,7 @@ class AgentEventBuilder:
         return self.agent_homes.get(agent) or next(iter(self.agent_homes.values()))
 
     def _refresh_policy(self, phase_score: dict):
-        self.state_manager.update(
+        self.state_planner_runtime.update(
             self.graph,
             phase_score,
             self.graph.current_step,
@@ -205,8 +210,6 @@ class AgentEventBuilder:
             oracle_future=self.oracle_enabled,
             demand_predictor=None if self.oracle_enabled else self.demand_predictor,
         )
-        self.metrics.evicted_kv_bytes += self.state_manager.last_evicted_bytes
-        self._sync_node_memory()
 
     def _sync_node_memory(self):
         for state in sorted(self.graph.states.values(), key=lambda item: item.state_id):
@@ -235,14 +238,11 @@ class AgentEventBuilder:
     def _place_state_if_needed(self, state: StateNode, predicted_exec_loc, agent: str):
         if state.loc is not None:
             return
-        node = choose_state_location(
+        node = self.wafer_mapper_runtime.choose_state_location(
             state,
             predicted_exec_loc,
-            self.hardware_platform,
             agent_home=self._agent_home(agent),
             shared_anchor=self.shared_anchor,
-            per_node_used=self.node_memory.node_used,
-            per_node_budget=self.node_memory.per_node_budget_bytes,
         )
         if state.resident and self.node_memory.can_place(state, node):
             self.node_memory.place(state, node)
@@ -263,7 +263,7 @@ class AgentEventBuilder:
         else:
             state_type = "dialogue_delta"
             owner = agent
-        return self.graph.build_or_get_state(
+        return self.asg_runtime.build_or_get_state(
             state_id=state_id,
             state_type=state_type,
             owner=owner,
@@ -273,7 +273,7 @@ class AgentEventBuilder:
 
     def _handle_state(self, trace_event: dict):
         token_len = int(trace_event.get("tokens", trace_event.get("token_len", 1)))
-        state = self.graph.build_or_get_state(
+        state = self.asg_runtime.build_or_get_state(
             state_id=trace_event["state_id"],
             state_type=trace_event.get("state_type", "dialogue_delta"),
             owner=trace_event.get("owner", trace_event.get("agent", "shared")),
@@ -304,22 +304,17 @@ class AgentEventBuilder:
         exec_id = self._new_exec_id("llm")
         append_tokens = int(trace_event.get("append_tokens", 0))
         output_tokens = int(trace_event.get("output_tokens", 0))
-        exec_node = ExecNode(
+        exec_node = self.asg_runtime.add_llm_exec(
             exec_id=exec_id,
-            exec_type="llm",
-            agent_id=agent,
+            agent=agent,
             phase=phase_name,
-            input_states=input_ids,
+            input_ids=input_ids,
             input_tokens=sum(state.token_len for state in input_states),
             append_tokens=append_tokens,
             output_tokens=output_tokens,
             status=trace_event.get("status", "ok"),
             metadata=dict(trace_event),
         )
-        self.graph.add_exec(exec_node)
-        for state_id in input_ids:
-            self.graph.add_dependency(state_id, exec_id)
-            self.graph.add_affinity(state_id, exec_id, 1.0)
         self._add_static_affinities(agent)
 
         self._refresh_policy(phase_score)
@@ -439,13 +434,11 @@ class AgentEventBuilder:
             append_tokens=append_tokens,
         )
 
-        prefill_tag = self._new_tag()
-        prefill = fixed_compute_notation(
-            comp_name=f"{agent}_prefill",
-            comp_tag=prefill_tag,
-            comp_device="tensorcore",
-            comp_location=exec_loc,
-            duration=max(1, self.model_profile.prefill_cycles(effective_prefill_tokens)),
+        prefill = self.event_compiler.fixed_compute(
+            name=f"{agent}_prefill",
+            device="tensorcore",
+            location=exec_loc,
+            duration=self.model_profile.prefill_cycles(effective_prefill_tokens),
             metadata={
                 "agent": agent,
                 "exec_id": exec_id,
@@ -453,7 +446,7 @@ class AgentEventBuilder:
                 "append_tokens": append_tokens,
             },
         )
-        self._add_event(prefill)
+        prefill_tag = prefill.event_tag
         self._add_dependency(parent_tag, prefill)
         for dep_tag in sorted(prefill_dependencies):
             self._add_dependency(dep_tag, prefill)
@@ -463,23 +456,21 @@ class AgentEventBuilder:
             if state.available_event_tag is not None and state.available_event_tag in self.events_dict:
                 self._add_dependency(state.available_event_tag, prefill)
 
-        decode_tag = self._new_tag()
-        decode = fixed_compute_notation(
-            comp_name=f"{agent}_decode",
-            comp_tag=decode_tag,
-            comp_device="tensorcore",
-            comp_location=exec_loc,
-            duration=max(1, self.model_profile.decode_cycles(output_tokens)),
+        decode = self.event_compiler.fixed_compute(
+            name=f"{agent}_decode",
+            device="tensorcore",
+            location=exec_loc,
+            duration=self.model_profile.decode_cycles(output_tokens),
             metadata={"agent": agent, "exec_id": exec_id, "output_tokens": output_tokens},
         )
-        self._add_event(decode)
+        decode_tag = decode.event_tag
         self._add_dependency(prefill_tag, decode)
         self._last_agent_event[agent] = decode_tag
         self._module_load[exec_loc] += 1
 
         output_state_id = trace_event.get("new_state_id") or f"{agent}_llm_{exec_id}_out"
         output_state_type = trace_event.get("new_state_type", "assistant_delta")
-        output_state = self.graph.build_or_get_state(
+        output_state = self.asg_runtime.build_or_get_state(
             state_id=output_state_id,
             state_type=output_state_type,
             owner=agent,
@@ -490,16 +481,13 @@ class AgentEventBuilder:
         output_state.producer_exec_id = exec_id
         output_state.producer_event_tag = decode_tag
         output_state.available_event_tag = decode_tag
-        output_state.loc = choose_state_location(
+        output_state.loc = self.wafer_mapper_runtime.choose_state_location(
             output_state,
             exec_loc,
-            self.hardware_platform,
             agent_home=agent_home,
             shared_anchor=self.shared_anchor,
-            per_node_used=self.node_memory.node_used,
-            per_node_budget=self.node_memory.per_node_budget_bytes,
         )
-        self.graph.add_generation(exec_id, output_state.state_id)
+        self.asg_runtime.add_generation(exec_id, output_state.state_id)
         self._add_output_affinities(agent, output_state.state_id, input_ids)
 
         self.metrics.total_input_tokens += total_input_tokens
@@ -518,12 +506,10 @@ class AgentEventBuilder:
         affinity_states = self.graph.affinity_neighbor_states(exec_id, top_k=8)
         resident_bytes = sum(state.kv_bytes for state in input_states if state.resident)
         home_weight = max(1.0, resident_bytes)
-        return choose_exec_location(
+        return self.wafer_mapper_runtime.choose_exec_location(
             input_states=input_states,
-            hardware_platform=self.hardware_platform,
             agent_home=agent_home,
             affinity_states=affinity_states,
-            module_load=self._module_load,
             locality_weight=1.0,
             home_weight=home_weight,
             affinity_weight=0.4,
@@ -678,15 +664,12 @@ class AgentEventBuilder:
             return parent_tag if parent_tag is not None else -1
 
         prior_available_tag = state.available_event_tag
-        tag = self._new_tag()
-        migration = communication_notation(
-            comm_name="kv_migrate",
-            comm_tag=tag,
+        migration = self.event_compiler.communication(
+            name="kv_migrate",
             source_location=old_node,
             target_location=new_node,
             comm_bytes=state.kv_bytes,
-        )
-        migration.metadata = {
+            metadata={
             "agent": agent,
             "state_id": state.state_id,
             "state_type": state.state_type,
@@ -694,8 +677,9 @@ class AgentEventBuilder:
             "blocking": blocking,
             "bytes": state.kv_bytes,
             "associated_wait_tag": associated_wait_tag,
-        }
-        self._add_event(migration)
+            },
+        )
+        tag = migration.event_tag
         self._add_dependency(parent_tag, migration)
         if prior_available_tag is not None and prior_available_tag in self.events_dict:
             self._add_dependency(prior_available_tag, migration)
@@ -733,23 +717,21 @@ class AgentEventBuilder:
     def _emit_remote_read(self, state: StateNode, old_node, new_node, parent_tag: Optional[int], agent: str) -> int:
         old_node = tuple(old_node)
         new_node = tuple(new_node)
-        tag = self._new_tag()
-        remote_read = communication_notation(
-            comm_name="kv_remote_read",
-            comm_tag=tag,
+        remote_read = self.event_compiler.communication(
+            name="kv_remote_read",
             source_location=old_node,
             target_location=new_node,
             comm_bytes=state.kv_bytes,
-        )
-        remote_read.metadata = {
+            metadata={
             "agent": agent,
             "state_id": state.state_id,
             "state_type": state.state_type,
             "reason": "remote_read",
             "blocking": True,
             "bytes": state.kv_bytes,
-        }
-        self._add_event(remote_read)
+            },
+        )
+        tag = remote_read.event_tag
         self._add_dependency(parent_tag, remote_read)
         if state.available_event_tag is not None and state.available_event_tag in self.events_dict:
             self._add_dependency(state.available_event_tag, remote_read)
@@ -775,28 +757,24 @@ class AgentEventBuilder:
         raw_latency = int(trace_event.get("latency", trace_event.get("tool_latency", 0)))
         latency = int(raw_latency * self.tool_latency_scale)
         output_tokens = int(trace_event.get("output_tokens", 0))
-        exec_node = ExecNode(
+        exec_node = self.asg_runtime.add_tool_exec(
             exec_id=exec_id,
-            exec_type="tool",
-            agent_id=agent,
+            agent=agent,
             phase=phase_name,
-            output_tokens=output_tokens,
             tool_name=tool_name,
-            tool_latency=latency,
+            latency=latency,
+            output_tokens=output_tokens,
             status=trace_event.get("status", "ok"),
             metadata=dict(trace_event),
         )
-        self.graph.add_exec(exec_node)
 
         parent_before_wait = self._last_agent_event.get(agent)
-        wait_tag = self._new_tag()
-        wait = external_wait_notation(
-            wait_name=f"tool_{tool_name}",
-            wait_tag=wait_tag,
-            duration=max(0, latency),
+        wait = self.event_compiler.external_wait(
+            name=f"tool_{tool_name}",
+            duration=latency,
             metadata={"agent": agent, "exec_id": exec_id, "tool": tool_name, "raw_latency": raw_latency},
         )
-        self._add_event(wait)
+        wait_tag = wait.event_tag
         self._add_dependency(parent_before_wait, wait)
         self._last_agent_event[agent] = wait_tag
 
@@ -806,7 +784,7 @@ class AgentEventBuilder:
         if summarized:
             self.metrics.num_compressed_observations += 1
             self.metrics.compressed_observation_tokens_saved += max(0, original_tokens - output_tokens)
-        state = self.graph.build_or_get_state(
+        state = self.asg_runtime.build_or_get_state(
             state_id=state_id,
             state_type=state_type,
             owner=agent,
@@ -818,17 +796,13 @@ class AgentEventBuilder:
         state.producer_event_tag = wait_tag
         state.available_event_tag = wait_tag
         state.summarized = summarized
-        state.loc = choose_state_location(
+        state.loc = self.wafer_mapper_runtime.choose_state_location(
             state,
             self._agent_home(agent),
-            self.hardware_platform,
             agent_home=self._agent_home(agent),
             shared_anchor=self.shared_anchor,
-            per_node_used=self.node_memory.node_used,
-            per_node_budget=self.node_memory.per_node_budget_bytes,
         )
-        self.graph.add_generation(exec_id, state.state_id)
-        self.graph.add_affinity(exec_id, state.state_id, 1.0)
+        self.asg_runtime.add_generation(exec_id, state.state_id)
         self._add_output_affinities(agent, state.state_id, ["task", f"{agent}_role"])
 
         self.metrics.tool_wait_cycles += latency

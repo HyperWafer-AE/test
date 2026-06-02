@@ -5,6 +5,12 @@
   "asg_builder_enabled": true,
   "oracle_future": false,
   "baseline_class": "asg",
+  "retention_policy": "asg-v2",
+  "mapping_policy": "asg_cost_aware",
+  "prefetch_policy": "windowed",
+  "topology_enabled": true,
+  "prefetch_enabled": true,
+  "static_replica_enabled": true,
   "prompt_reconstruction_quality": {
     "num_llm_events": 86,
     "prompt_reconstruction_distribution": {
@@ -76,6 +82,7 @@
     "model_comm_cycles": 1169429,
     "exposed_migration_cycles": 0,
     "exposed_prefetch_cycles": 704524,
+    "approximate_non_wait_cycles": 4563293312,
     "llm_side_cycles": 4563293312,
     "compressed_observation_tokens_saved": 0,
     "num_compressed_observations": 0,
@@ -100,5 +107,32 @@
     "busybarn_events": 261,
     "asg_states": 220,
     "asg_execs": 141
-  }
+  },
+  "invariant_checks": [
+    {
+      "name": "event_graph",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "name": "asg_graph",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "name": "state_locations",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "name": "policy_outputs",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "name": "policy_outputs",
+      "passed": true,
+      "failures": []
+    }
+  ]
 }

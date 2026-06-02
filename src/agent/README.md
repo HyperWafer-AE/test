@@ -1,6 +1,16 @@
 # Agent-on-Wafer MVP
 
-This package adds an agent-level replay frontend over BusyBarn. It converts normalized agent trajectories into BusyBarn-compatible compute, communication, KV movement, and external-wait events, then uses the existing analytical event driver for wafer timing.
+This package adds an agent-level replay frontend over BusyBarn. It converts normalized agent trajectories into BusyBarn-compatible fixed compute, communication, KV movement, and external-wait events, then uses the existing analytical event driver for wafer timing.
+
+## Backend Contract
+
+Agent-on-Wafer uses BusyBarn as an event-level wafer backend.
+
+- LLM prefill/decode are `fixed_compute` analytical events. They occupy a BusyBarn compute module, but their durations come from `ModelProfile`, not from BusyBarn's original operator-level LLM partition pipeline.
+- KV remote-read, migration, replication, and prefetch are `communication` events. They use BusyBarn NoC routing, link scheduling, and communication contention.
+- Tool/environment latency is an `external_wait` event. It occupies no compute module and no link, but it creates dependency delay.
+
+This artifact does not claim full BusyBarn operator-level LLM integration for prefill/decode. The explicit contract lives in `backend_contract.py`; event creation is centralized through `EventCompiler`.
 
 ## Algorithm Boundaries
 
@@ -8,6 +18,17 @@ This package adds an agent-level replay frontend over BusyBarn. It converts norm
 - State Demand Estimator: optional online demand prediction. `heuristic` uses hand-coded state/phase features; `trace_stats` fits replay-trace buckets from a training trace set; `oracle` is only an upper-bound replay mode.
 - Persistent State Planner / KV Manager: decides which state KV entries remain resident under the memory budget. `asg-retention-v2-graph-only` uses graph state and recency/live-prompt terms without a demand estimator. `asg-retention-v2-online` adds the estimator. `asg-retention-v2-oracle` uses future replay access and should be read as a diagnostic ceiling.
 - Wafer Mapper: maps agents and resident states onto wafer nodes, chooses local/remote/migrate/replicate actions, and optionally emits tool-wait prefetch events.
+- Event Compiler: turns planner/mapper decisions into BusyBarn fixed-compute, communication, and external-wait events.
+- BusyBarn Backend Runner: runs the event graph with `collective_event_driver` and reports compute/communication timing.
+
+## Runtime Components
+
+- `asg_builder_runtime.py`: ASG state/exec insertion, dependencies, generation edges, and affinity edges. It creates no BusyBarn events.
+- `state_planner_runtime.py`: persistent-state planning and node-memory synchronization around `state_manager.update`.
+- `wafer_mapper_runtime.py`: execution/state placement decisions over wafer topology. It creates no BusyBarn events.
+- `event_compiler.py`: BusyBarn event creation and dependency wiring through `backend_contract.py`.
+- `policy_registry.py`: centralized policy definitions for retention, mapping, prefetch, estimator, baseline class, topology, prefetch, and static replica flags.
+- `invariant_checks.py`: optional checks for event graph validity, ASG consistency, state locations, and policy output sanity.
 
 ## Policy Names
 
@@ -29,7 +50,12 @@ python -m compileall src
 ```
 
 ```bash
-python -m src.agent.experiment --policy asg --cfg src/platform/cfgs/wamis_hd_distributed.cfg --topology wamis --num-agents 2 --turns 4 --memory-budget-gb 1 --seed 1 --output agent_results/smoke_asg.json
+python -m src.agent.backend_smoke --cfg src/platform/cfgs/wamis_hd_distributed.cfg --topology wamis --output agent_results/backend_smoke.json
+python -m src.agent.artifact_status --output agent_results/artifact_status.json
+```
+
+```bash
+python -m src.agent.experiment --policy asg --cfg src/platform/cfgs/wamis_hd_distributed.cfg --topology wamis --num-agents 2 --turns 4 --memory-budget-gb 1 --seed 1 --output agent_results/smoke_asg.json --check-invariants
 ```
 
 ```bash
@@ -57,6 +83,12 @@ python -m src.agent.build_real_trace_set --input-dirs traces/real traces/real_ex
 ```
 
 ```bash
+python -m src.agent.synthetic_trace_generator --output-dir traces/synthetic_agent --opportunity-count 12 --control-count 6 --stress-count 4 --turns 28 --agents 4 --seed 1
+python -m src.agent.trace_opportunity_selector --trace-dirs traces/synthetic_agent/raw --trace-format normalized_json --output-dir agent_results/trace_selection_synthetic --max-traces 64 --min-turns 4 --delayed-reuse-k 8 --memory-budget-gb 0.05
+python -m src.agent.run_paper_evaluation --opportunity-trace-dir traces/synthetic_agent/opportunity --control-trace-dir traces/synthetic_agent/control --output-dir agent_results/paper_eval_synthetic --memory-budgets 0.01 0.02 0.05 0.1 --concurrency-levels 1 2 4 8 --arrival-models round_robin burst poisson tool_wait_aware --prediction-modes heuristic trace_stats --evidence-class synthetic
+```
+
+```bash
 python -m src.agent.serving_workload --trace-dir traces/real_high_quality/opportunity --trace-format normalized_json --arrival-model round_robin --concurrency 8 --output traces/serving/opportunity_rr_c8.json
 ```
 
@@ -79,6 +111,7 @@ python -m src.agent.plot_paper_eval --input-dir agent_results/paper_eval --outpu
 - `--enable-common-observation-compression` explicitly enables observation compression for all real-trace policies.
 - `--enable-asg-observation-compression` explicitly enables ASG-specific observation compression and labels it in outputs.
 - `--disable-observation-compression` is a global off switch. Real-trace replay does not enable ASG-specific compression by default.
+- `--check-invariants` validates event graph dependencies, BusyBarn event locations, ASG state/exec links, state locations, and selected policy outputs. It defaults off for quick dev runs and is enabled by `run_paper_evaluation.py`.
 
 ## Real Trace Evaluation
 
@@ -111,9 +144,9 @@ Quality gates are:
 
 `build_real_trace_set.py` writes normalized opportunity traces into `traces/real_high_quality/opportunity/`, matched controls into `traces/real_high_quality/control/`, and smoke traces into `traces/real_smoke/`. If no paper-usable traces exist, it writes `agent_results/high_quality_trace_missing_report.json` instead of fabricating data.
 
-Public traces are often single-workflow trajectories. `serving_workload.py` composes them into controlled concurrent serving workloads with `round_robin`, `burst`, `poisson`, `staggered`, or `tool_wait_aware` arrival models while preserving each workflow's internal event order.
+Public traces are often single-workflow trajectories. `serving_workload.py` composes them into controlled concurrent serving workloads with `round_robin`, `burst`, `poisson`, `staggered`, or `tool_wait_aware` arrival models while preserving each workflow's internal event order. `run_paper_evaluation.py` uses the in-memory `compose_traces(...)` path, so `arrival_model` changes event order rather than only labeling CSV rows.
 
-`run_paper_evaluation.py` runs full-set, opportunity-subset, matched-control, memory, concurrency, arrival-model, mapping, and prefetch evaluations only when paper-usable opportunity traces exist. Otherwise it writes `agent_results/paper_eval/skipped_missing_opportunity_traces.json`. `plot_paper_eval.py` generates figures only from paper-usable CSVs; otherwise it writes `agent_results/paper_figures/skipped_missing_paper_usable_data.json`.
+`run_paper_evaluation.py` runs full-set, opportunity-subset, matched-control, memory, concurrency, and arrival-model evaluations only when paper-usable opportunity traces exist. Otherwise it writes `agent_results/paper_eval/skipped_missing_opportunity_traces.json`. Mapping and prefetch ablations are not fabricated: if the dedicated ablation policy runner is not implemented, the artifact writes `mapping_ablation_skipped.json` and `prefetch_ablation_skipped.json` rather than empty CSVs that look like results. `plot_paper_eval.py` generates figures only from paper-usable CSVs; otherwise it writes `agent_results/paper_figures/skipped_missing_paper_usable_data.json`.
 
 `real_trace_experiment.py` writes one JSON per policy plus `summary.csv`. The summary separates:
 
@@ -127,6 +160,12 @@ Public traces are often single-workflow trajectories. `serving_workload.py` comp
 Current local CodeTraceBench samples remain message-history/full-history reconstructed and have zero delayed reuse, zero cross-agent reuse, and zero LRU-regret candidates. Artifact inspection found no richer state-tree or per-step state context files in the extracted archives. They are smoke-only and should not be used for speedup claims.
 
 Current Hugging Face sample run (`agent_results/trace_selection_hf/selection_report.json`) loaded 181 traces from Exgentic, AgentTrace, ITBench, and CodeTraceBench-HF samples. The selector found 2 paper-usable opportunity traces and 0 matched-control traces. On those two opportunity traces, `asg-retention-v2-online` reduces effective prefill by about 0.41% versus `lru-system` at 0.5GB and 8-way serving, and by about 0.57% under the tightest 0.05GB stress setting. This is a valid end-to-end real-trace run, but it is not evidence that ASG is far beyond LRU; more opportunity-rich/control traces or a stronger retention objective are required before making that claim.
+
+## Synthetic Trace Testing
+
+`synthetic_trace_generator.py` creates controlled normalized traces for algorithm and pipeline testing. The generated suite includes delayed-reuse opportunity traces, short-reuse controls, and memory-pressure stress traces. Every generated event has `metadata.synthetic=true` plus a `scenario` label, and the generator writes `synthetic_manifest.json`, `synthetic_audit.json`, and `synthetic_profile.json`.
+
+Synthetic traces are useful for validating whether ASG retention, placement, prefetch, event compilation, invariant checks, and serving-workload interleaving react to the expected workload structure. They must not be mixed with real-trace paper evidence. Use `run_paper_evaluation.py --evidence-class synthetic` for these runs; the resulting CSVs include `evidence_class=synthetic` and `can_support_real_paper_claims=False`.
 
 ## Baseline Interpretation
 
@@ -145,7 +184,9 @@ Any run with common or ASG-specific observation compression must be labeled by `
 - `oracle_gap`: normalized distance between `lru-system` and `asg-retention-v2-oracle` in effective prefill tokens.
 - `remote_read_bytes`, `demand_migration_bytes`, `prefetch_migration_bytes`: KV movement/access bytes.
 - `model_compute_cycles` / `model_comm_cycles`: BusyBarn pure compute/communication timing breakdown.
+- `exposed_migration_cycles` / `exposed_prefetch_cycles`: KV movement cycles that were not hidden by tool waits.
 - `compressed_observation_tokens_saved` / `num_compressed_observations`: explicit observation compression effect.
+- `approximate_non_wait_cycles`: total cycles minus external wait cycles. This is a coarse diagnostic, not a paper-critical LLM-side timing metric.
 
 ## Limitations
 
@@ -159,3 +200,4 @@ Any run with common or ASG-specific observation compression must be labeled by `
 - Wafer mapping remains analytical; topology-aware placement and prefetch are heuristic, not globally optimal.
 - The oracle policy uses future replay access and is not an online deployable algorithm.
 - Trace-stat demand estimation can overfit if training and evaluation use the same small trace set; report that condition when it happens.
+- Current local HF selection has 2 paper-usable opportunity traces and 0 matched controls. This is enough for problem-existence and pipeline validation, but not enough to claim full paper-readiness or broad speedup superiority.

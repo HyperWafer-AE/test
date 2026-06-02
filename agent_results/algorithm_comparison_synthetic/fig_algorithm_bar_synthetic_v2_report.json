@@ -1,0 +1,27 @@
+{
+  "status": "generated",
+  "figures": [
+    "agent_results\\algorithm_comparison_synthetic\\fig_algorithm_bar_synthetic_v2.pdf",
+    "agent_results\\algorithm_comparison_synthetic\\fig_algorithm_bar_synthetic_v2.svg",
+    "agent_results\\algorithm_comparison_synthetic\\fig_algorithm_bar_synthetic_v2.png"
+  ],
+  "data_csv": [
+    "agent_results\\algorithm_comparison_synthetic\\fig_algorithm_bar_synthetic_v2.csv"
+  ],
+  "evidence": {
+    "claim": "On the synthetic delayed-reuse suite, ASG retention reduces effective prefill tokens relative to lru-system.",
+    "input_csv": "agent_results\\paper_eval_synthetic\\full_set_summary.csv",
+    "baseline_policy": "lru-system",
+    "baseline_effective_prefill_tokens": 3210112,
+    "best_reduction_vs_lru_percent": 25.296064436381037,
+    "best_policy": "asg-retention-v2-graph-only",
+    "max_remote_read_gb": 179.85175552,
+    "max_prefetch_migration_gb": 24.696061952,
+    "evidence_class": "synthetic",
+    "why_previous_bars_matched": "Placement and prefetch policies use the same ASG v2 retention objective for effective_prefill_tokens; their differences appear in traffic and communication metrics."
+  },
+  "limitations": [
+    "Synthetic traces validate controlled algorithm behavior only; they cannot support real-trace paper claims.",
+    "Bars use full synthetic suite summary at the default paper-eval setting, not a hardware-measured deployment trace."
+  ]
+}

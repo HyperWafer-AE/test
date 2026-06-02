@@ -1,0 +1,57 @@
+{
+  "status": "computed",
+  "readiness": "prototype / smoke-test only",
+  "backend_smoke_passed": true,
+  "backend_smoke_path": "agent_results/backend_smoke.json",
+  "trace_status": {
+    "hf_selection_report_exists": true,
+    "hf_paper_usable_traces": 2,
+    "hf_matched_control_traces": 0,
+    "local_high_quality_opportunity_files": 2,
+    "current_data_quality": "paper_usable_partial"
+  },
+  "synthetic_status": {
+    "synthetic_manifest_exists": true,
+    "generated_trace_count": 22,
+    "paper_usable_for_testing": 22,
+    "selection_report_exists": true,
+    "selected_opportunity": 7,
+    "selected_control": 15,
+    "paper_eval_summaries": [
+      "E:\\agent_wafer\\agent_results\\paper_eval_synthetic\\control_subset_summary.csv",
+      "E:\\agent_wafer\\agent_results\\paper_eval_synthetic\\full_set_summary.csv",
+      "E:\\agent_wafer\\agent_results\\paper_eval_synthetic\\opportunity_subset_summary.csv"
+    ],
+    "figure_count": 7,
+    "delayed_reuse_ratio": 0.12328178694158076,
+    "LRU_regret_tokens": 436736,
+    "can_support_real_paper_claims": false
+  },
+  "paper_eval_summaries": [
+    "E:\\agent_wafer\\agent_results\\paper_eval_hf_tight_memory\\full_set_summary.csv",
+    "E:\\agent_wafer\\agent_results\\paper_eval_hf_tight_memory\\opportunity_subset_summary.csv",
+    "E:\\agent_wafer\\agent_results\\paper_eval_hf\\full_set_summary.csv",
+    "E:\\agent_wafer\\agent_results\\paper_eval_hf\\opportunity_subset_summary.csv"
+  ],
+  "placeholder_csvs": [],
+  "ablation_skipped_reports": [
+    "E:\\agent_wafer\\agent_results\\paper_eval_hf_tight_memory\\mapping_ablation_skipped.json",
+    "E:\\agent_wafer\\agent_results\\paper_eval_hf_tight_memory\\prefetch_ablation_skipped.json",
+    "E:\\agent_wafer\\agent_results\\paper_eval_hf\\mapping_ablation_skipped.json",
+    "E:\\agent_wafer\\agent_results\\paper_eval_hf\\prefetch_ablation_skipped.json"
+  ],
+  "code_path": [
+    "ASG Builder",
+    "Persistent State Planner",
+    "Wafer Mapper",
+    "Event Compiler",
+    "BusyBarn Event Backend"
+  ],
+  "backend_mode": "event-level BusyBarn backend with fixed-duration analytical LLM prefill/decode compute events",
+  "backend_boundary": "KV movement uses BusyBarn communication/routing/link scheduling; LLM prefill/decode do not use BusyBarn's original operator-level partition pipeline.",
+  "notes": [
+    "Do not claim full paper-readiness without matched controls and broader paper-usable traces.",
+    "Synthetic traces can validate algorithm behavior but cannot support real-trace paper claims.",
+    "Skipped ablation JSON files are acceptable; empty placeholder ablation CSVs are not."
+  ]
+}

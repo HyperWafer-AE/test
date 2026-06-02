@@ -1,0 +1,47 @@
+{
+  "selection_config": {
+    "trace_dirs": [
+      "traces/synthetic_agent/raw"
+    ],
+    "trace_format": "normalized_json",
+    "max_traces": 64,
+    "min_turns": 4,
+    "delayed_reuse_k": 8,
+    "memory_budget_gb": 0.05
+  },
+  "num_candidates": 22,
+  "num_loaded": 22,
+  "num_paper_usable": 22,
+  "num_opportunity_rich": 7,
+  "num_matched_control": 15,
+  "num_smoke_only": 0,
+  "num_unusable": 0,
+  "load_failures": [],
+  "selected_trace_ids": [
+    "d4245eeabd4267ef",
+    "d1fb503efc768187",
+    "1b9bf430838d2a8f",
+    "512acf2fdfd46abf",
+    "d24807048d5f904e",
+    "97dfd1e41ea1bf77",
+    "5455d8eda39cae0e",
+    "cf5162fa5e947ba8",
+    "70d84be3a4787deb",
+    "0ef3c54dae53b440",
+    "75dfc06bbc8cdc71",
+    "865d174ac3db11da",
+    "331f1e918c2e162c",
+    "65c74285f1f55d66",
+    "da4ce5ad31ec600a",
+    "305287d64ca27d9e",
+    "4ddc9db6e83012f2",
+    "9569cdfc1e10e4a0",
+    "5ddaaa4a5e402654",
+    "8805ff1832a902b0",
+    "30f1250114fe788c",
+    "98de9706581f659c"
+  ],
+  "excluded_trace_ids": [],
+  "selection_signature_sha256": "fe1ba62eb0587c942acafbe78e8dcdf0b075dba0e9f9f6ff3af8092106db718b",
+  "selection_timestamp": "2026-06-02T08:21:00.024380+00:00"
+}

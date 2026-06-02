@@ -1,0 +1,6 @@
+{
+  "status": "skipped",
+  "paper_usable": true,
+  "reason": "Prefetch policy registry exists, but separate greedy/windowed ablation runners are not implemented in this artifact-hardening round.",
+  "message": "No empty placeholder CSV was generated."
+}

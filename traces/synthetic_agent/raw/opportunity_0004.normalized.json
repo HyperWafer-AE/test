@@ -1,0 +1,1820 @@
+[
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:system",
+    "state_type": "system_prefix",
+    "owner": "shared",
+    "tokens": 1024,
+    "semantic_key": "shared:system",
+    "exact_token_hash": "66e201ebfda09957dc99bd2e7adaeb4d5dd53c66beddf912c5e9b1e4fbc11167",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "shared:system",
+      "exact_token_hash": "66e201ebfda09957dc99bd2e7adaeb4d5dd53c66beddf912c5e9b1e4fbc11167"
+    },
+    "type": "state",
+    "semantic_id": "shared:system",
+    "exact_kv_id": "66e201ebfda09957dc99bd2e7adaeb4d5dd53c66beddf912c5e9b1e4fbc11167"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:task",
+    "state_type": "task_prefix",
+    "owner": "shared",
+    "tokens": 768,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:task",
+    "exact_token_hash": "c7b138d85b9a1a50eb6503bac07ddd8acf5ad271a4356e25f612cc49b62472c3",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:task",
+      "exact_token_hash": "c7b138d85b9a1a50eb6503bac07ddd8acf5ad271a4356e25f612cc49b62472c3"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:task",
+    "exact_kv_id": "c7b138d85b9a1a50eb6503bac07ddd8acf5ad271a4356e25f612cc49b62472c3"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:shared_plan",
+    "state_type": "summary_state",
+    "owner": "shared",
+    "tokens": 1024,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:shared_plan",
+    "exact_token_hash": "f1b958d695d6f4b2f2d8995ec26b695a52daa19b80887e17faf80b1f9cab697e",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "exact_token_hash": "f1b958d695d6f4b2f2d8995ec26b695a52daa19b80887e17faf80b1f9cab697e"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:shared_plan",
+    "exact_kv_id": "f1b958d695d6f4b2f2d8995ec26b695a52daa19b80887e17faf80b1f9cab697e"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:agent_0:role",
+    "state_type": "agent_role",
+    "owner": "agent_0",
+    "tokens": 128,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:role:0",
+    "exact_token_hash": "9d880960d1be7b191aeeaedd62f270390839053031fdb932bc74ad170c3d1c23",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:role:0",
+      "exact_token_hash": "9d880960d1be7b191aeeaedd62f270390839053031fdb932bc74ad170c3d1c23"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:role:0",
+    "exact_kv_id": "9d880960d1be7b191aeeaedd62f270390839053031fdb932bc74ad170c3d1c23"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:agent_1:role",
+    "state_type": "agent_role",
+    "owner": "agent_1",
+    "tokens": 128,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:role:1",
+    "exact_token_hash": "9b542b046ad3c320768f2d3ef6cfc9b93b48e7f06f2907dd86319e0bce27b901",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:role:1",
+      "exact_token_hash": "9b542b046ad3c320768f2d3ef6cfc9b93b48e7f06f2907dd86319e0bce27b901"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:role:1",
+    "exact_kv_id": "9b542b046ad3c320768f2d3ef6cfc9b93b48e7f06f2907dd86319e0bce27b901"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:agent_2:role",
+    "state_type": "agent_role",
+    "owner": "agent_2",
+    "tokens": 128,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:role:2",
+    "exact_token_hash": "b373bca9b4d4683ff4382d0be5a7d5b909d422efe5429b02a6cf82af9dc1ae17",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:role:2",
+      "exact_token_hash": "b373bca9b4d4683ff4382d0be5a7d5b909d422efe5429b02a6cf82af9dc1ae17"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:role:2",
+    "exact_kv_id": "b373bca9b4d4683ff4382d0be5a7d5b909d422efe5429b02a6cf82af9dc1ae17"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:agent_3:role",
+    "state_type": "agent_role",
+    "owner": "agent_3",
+    "tokens": 128,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:role:3",
+    "exact_token_hash": "3d54f94cc179f89af20b7dbd60455c1e657b37df28aaf3556def9aa294ece30e",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:role:3",
+      "exact_token_hash": "3d54f94cc179f89af20b7dbd60455c1e657b37df28aaf3556def9aa294ece30e"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:role:3",
+    "exact_kv_id": "3d54f94cc179f89af20b7dbd60455c1e657b37df28aaf3556def9aa294ece30e"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:core_0",
+    "state_type": "file_context",
+    "owner": "shared",
+    "tokens": 1536,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:core_semantic_0",
+    "exact_token_hash": "b9c7f0dbad5fc9d92bf1fbc321bb396f1cd6fea7c9f2b2b4c71ec84e2edd1860",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:core_semantic_0",
+      "exact_token_hash": "b9c7f0dbad5fc9d92bf1fbc321bb396f1cd6fea7c9f2b2b4c71ec84e2edd1860"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:core_semantic_0",
+    "exact_kv_id": "b9c7f0dbad5fc9d92bf1fbc321bb396f1cd6fea7c9f2b2b4c71ec84e2edd1860"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:core_1",
+    "state_type": "test_failure_summary",
+    "owner": "agent_1",
+    "tokens": 1792,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:core_semantic_1",
+    "exact_token_hash": "e05975029f3a4abcedd8cfdb3a3c17412437c68a0d3e799bd4d3cdc45c5ea5ca",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:core_semantic_1",
+      "exact_token_hash": "e05975029f3a4abcedd8cfdb3a3c17412437c68a0d3e799bd4d3cdc45c5ea5ca"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:core_semantic_1",
+    "exact_kv_id": "e05975029f3a4abcedd8cfdb3a3c17412437c68a0d3e799bd4d3cdc45c5ea5ca"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:core_2",
+    "state_type": "edit_diff",
+    "owner": "shared",
+    "tokens": 1536,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:core_semantic_2",
+    "exact_token_hash": "b1ebca19239662b82e3fc963a39c6429bdf81e23d7872f44ebe73402cabd6097",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:core_semantic_2",
+      "exact_token_hash": "b1ebca19239662b82e3fc963a39c6429bdf81e23d7872f44ebe73402cabd6097"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:core_semantic_2",
+    "exact_kv_id": "b1ebca19239662b82e3fc963a39c6429bdf81e23d7872f44ebe73402cabd6097"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:core_3",
+    "state_type": "summary_state",
+    "owner": "agent_3",
+    "tokens": 1792,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:core_semantic_3",
+    "exact_token_hash": "2604a4bdeb1865b44b0d76a272e0a560998abb0ea20ff0d2d8c83307f38011f1",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:core_semantic_3",
+      "exact_token_hash": "2604a4bdeb1865b44b0d76a272e0a560998abb0ea20ff0d2d8c83307f38011f1"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:core_semantic_3",
+    "exact_kv_id": "2604a4bdeb1865b44b0d76a272e0a560998abb0ea20ff0d2d8c83307f38011f1"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:core_4",
+    "state_type": "raw_error_log",
+    "owner": "shared",
+    "tokens": 1536,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:core_semantic_4",
+    "exact_token_hash": "5a518d50d82be1761dce03187a0f172618ade32503b5272e694af4cc21eeadec",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:core_semantic_4",
+      "exact_token_hash": "5a518d50d82be1761dce03187a0f172618ade32503b5272e694af4cc21eeadec"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:core_semantic_4",
+    "exact_kv_id": "5a518d50d82be1761dce03187a0f172618ade32503b5272e694af4cc21eeadec"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:filler_0",
+    "state_type": "assistant_delta",
+    "owner": "agent_0",
+    "tokens": 384,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_0",
+    "exact_token_hash": "c3b4c0f30efa2aeecfc88cb3fe33102c0f1a326743b4e46329613c94ff079392",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_0",
+      "exact_token_hash": "c3b4c0f30efa2aeecfc88cb3fe33102c0f1a326743b4e46329613c94ff079392"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:filler_semantic_0",
+    "exact_kv_id": "c3b4c0f30efa2aeecfc88cb3fe33102c0f1a326743b4e46329613c94ff079392"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:filler_1",
+    "state_type": "dialogue_delta",
+    "owner": "agent_1",
+    "tokens": 384,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_1",
+    "exact_token_hash": "c7c371626cca1db6a774980dd0144b2049e0b3c27d0a82b22cda04cec6ca7494",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_1",
+      "exact_token_hash": "c7c371626cca1db6a774980dd0144b2049e0b3c27d0a82b22cda04cec6ca7494"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:filler_semantic_1",
+    "exact_kv_id": "c7c371626cca1db6a774980dd0144b2049e0b3c27d0a82b22cda04cec6ca7494"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:filler_2",
+    "state_type": "dialogue_delta",
+    "owner": "agent_2",
+    "tokens": 384,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_2",
+    "exact_token_hash": "d0c4bc81264a6ae6fe9e3333e5f534a52044055060e6e3a3f22feae1855bc5b8",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_2",
+      "exact_token_hash": "d0c4bc81264a6ae6fe9e3333e5f534a52044055060e6e3a3f22feae1855bc5b8"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:filler_semantic_2",
+    "exact_kv_id": "d0c4bc81264a6ae6fe9e3333e5f534a52044055060e6e3a3f22feae1855bc5b8"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:filler_3",
+    "state_type": "assistant_delta",
+    "owner": "agent_3",
+    "tokens": 384,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_3",
+    "exact_token_hash": "81ebd06e93b20a67725782ab1a7680d021bbd24c22753b446fc707e8d7406682",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_3",
+      "exact_token_hash": "81ebd06e93b20a67725782ab1a7680d021bbd24c22753b446fc707e8d7406682"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:filler_semantic_3",
+    "exact_kv_id": "81ebd06e93b20a67725782ab1a7680d021bbd24c22753b446fc707e8d7406682"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:filler_4",
+    "state_type": "dialogue_delta",
+    "owner": "agent_0",
+    "tokens": 384,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_4",
+    "exact_token_hash": "73282de7756863f8e1acbb5266da88eda7a58efeba83c6885bede5902c39fe42",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_4",
+      "exact_token_hash": "73282de7756863f8e1acbb5266da88eda7a58efeba83c6885bede5902c39fe42"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:filler_semantic_4",
+    "exact_kv_id": "73282de7756863f8e1acbb5266da88eda7a58efeba83c6885bede5902c39fe42"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:filler_5",
+    "state_type": "dialogue_delta",
+    "owner": "agent_1",
+    "tokens": 384,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_5",
+    "exact_token_hash": "9edc00493e3b00e6b8f28aca1acb954cfeea491d7d433f5b8c0e0d47d7a0ed36",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_5",
+      "exact_token_hash": "9edc00493e3b00e6b8f28aca1acb954cfeea491d7d433f5b8c0e0d47d7a0ed36"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:filler_semantic_5",
+    "exact_kv_id": "9edc00493e3b00e6b8f28aca1acb954cfeea491d7d433f5b8c0e0d47d7a0ed36"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:filler_6",
+    "state_type": "assistant_delta",
+    "owner": "agent_2",
+    "tokens": 384,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_6",
+    "exact_token_hash": "b4ef00d7ba4c361261841232de2b449d7a28604abe44ddf088afba4d14d53f0b",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_6",
+      "exact_token_hash": "b4ef00d7ba4c361261841232de2b449d7a28604abe44ddf088afba4d14d53f0b"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:filler_semantic_6",
+    "exact_kv_id": "b4ef00d7ba4c361261841232de2b449d7a28604abe44ddf088afba4d14d53f0b"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:filler_7",
+    "state_type": "dialogue_delta",
+    "owner": "agent_3",
+    "tokens": 384,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_7",
+    "exact_token_hash": "711008b627756335b740585f18294eccfa729a7dd973d75b2a6d48c40696b7a5",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_7",
+      "exact_token_hash": "711008b627756335b740585f18294eccfa729a7dd973d75b2a6d48c40696b7a5"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:filler_semantic_7",
+    "exact_kv_id": "711008b627756335b740585f18294eccfa729a7dd973d75b2a6d48c40696b7a5"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:filler_8",
+    "state_type": "dialogue_delta",
+    "owner": "agent_0",
+    "tokens": 384,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_8",
+    "exact_token_hash": "e1434e5f14bfbcbebace704f7b07ee50b14831ea05dd38d008c5b53b07b1378a",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_8",
+      "exact_token_hash": "e1434e5f14bfbcbebace704f7b07ee50b14831ea05dd38d008c5b53b07b1378a"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:filler_semantic_8",
+    "exact_kv_id": "e1434e5f14bfbcbebace704f7b07ee50b14831ea05dd38d008c5b53b07b1378a"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:filler_9",
+    "state_type": "assistant_delta",
+    "owner": "agent_1",
+    "tokens": 384,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_9",
+    "exact_token_hash": "178ab76f9f2964aee7691ada57f94c8d51ce2a5eb14d3dfa91c0724ebd56ece5",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_9",
+      "exact_token_hash": "178ab76f9f2964aee7691ada57f94c8d51ce2a5eb14d3dfa91c0724ebd56ece5"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:filler_semantic_9",
+    "exact_kv_id": "178ab76f9f2964aee7691ada57f94c8d51ce2a5eb14d3dfa91c0724ebd56ece5"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:filler_10",
+    "state_type": "dialogue_delta",
+    "owner": "agent_2",
+    "tokens": 384,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_10",
+    "exact_token_hash": "df769883b019ec08139db8c88f7cf2f40b7b725b7e26a26abd3b0ce76e67dc16",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_10",
+      "exact_token_hash": "df769883b019ec08139db8c88f7cf2f40b7b725b7e26a26abd3b0ce76e67dc16"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:filler_semantic_10",
+    "exact_kv_id": "df769883b019ec08139db8c88f7cf2f40b7b725b7e26a26abd3b0ce76e67dc16"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:filler_11",
+    "state_type": "dialogue_delta",
+    "owner": "agent_3",
+    "tokens": 384,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_11",
+    "exact_token_hash": "92e788e8ae859c1ca43388800d6f8adad526c4018a92667ca0ac3a215c6c8d05",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_11",
+      "exact_token_hash": "92e788e8ae859c1ca43388800d6f8adad526c4018a92667ca0ac3a215c6c8d05"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:filler_semantic_11",
+    "exact_kv_id": "92e788e8ae859c1ca43388800d6f8adad526c4018a92667ca0ac3a215c6c8d05"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:filler_12",
+    "state_type": "assistant_delta",
+    "owner": "agent_0",
+    "tokens": 384,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_12",
+    "exact_token_hash": "c2665772d42c0e7d5ca9eaf8a15c4bf6535c74879b62c3bed0d6d137664fc86e",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_12",
+      "exact_token_hash": "c2665772d42c0e7d5ca9eaf8a15c4bf6535c74879b62c3bed0d6d137664fc86e"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:filler_semantic_12",
+    "exact_kv_id": "c2665772d42c0e7d5ca9eaf8a15c4bf6535c74879b62c3bed0d6d137664fc86e"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:filler_13",
+    "state_type": "dialogue_delta",
+    "owner": "agent_1",
+    "tokens": 384,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_13",
+    "exact_token_hash": "d6bccfdf79974e048b83b663cabb1f43e18482a96f737b20502066b1f9b7298b",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_13",
+      "exact_token_hash": "d6bccfdf79974e048b83b663cabb1f43e18482a96f737b20502066b1f9b7298b"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:filler_semantic_13",
+    "exact_kv_id": "d6bccfdf79974e048b83b663cabb1f43e18482a96f737b20502066b1f9b7298b"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:filler_14",
+    "state_type": "dialogue_delta",
+    "owner": "agent_2",
+    "tokens": 384,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_14",
+    "exact_token_hash": "fbc96c20930e7a897f0d291a5295205cf4a24ce8e41e41dada90a9dbfd48b303",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_14",
+      "exact_token_hash": "fbc96c20930e7a897f0d291a5295205cf4a24ce8e41e41dada90a9dbfd48b303"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:filler_semantic_14",
+    "exact_kv_id": "fbc96c20930e7a897f0d291a5295205cf4a24ce8e41e41dada90a9dbfd48b303"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:filler_15",
+    "state_type": "assistant_delta",
+    "owner": "agent_3",
+    "tokens": 384,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_15",
+    "exact_token_hash": "550ec132a22d6de29b21127f0901718f38c696c2c37f3e8132a9e706960e1134",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_15",
+      "exact_token_hash": "550ec132a22d6de29b21127f0901718f38c696c2c37f3e8132a9e706960e1134"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:filler_semantic_15",
+    "exact_kv_id": "550ec132a22d6de29b21127f0901718f38c696c2c37f3e8132a9e706960e1134"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:filler_16",
+    "state_type": "dialogue_delta",
+    "owner": "agent_0",
+    "tokens": 384,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_16",
+    "exact_token_hash": "a0c5369c53fd58c418410f5fcded9b85439273d59ded847dc3c71928a30eecba",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_16",
+      "exact_token_hash": "a0c5369c53fd58c418410f5fcded9b85439273d59ded847dc3c71928a30eecba"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:filler_semantic_16",
+    "exact_kv_id": "a0c5369c53fd58c418410f5fcded9b85439273d59ded847dc3c71928a30eecba"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:filler_17",
+    "state_type": "dialogue_delta",
+    "owner": "agent_1",
+    "tokens": 384,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_17",
+    "exact_token_hash": "24dcdead782c6c2ea0d85c91e4d230d3db17cd192b7adfd8f66d4b3563fb5500",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_17",
+      "exact_token_hash": "24dcdead782c6c2ea0d85c91e4d230d3db17cd192b7adfd8f66d4b3563fb5500"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:filler_semantic_17",
+    "exact_kv_id": "24dcdead782c6c2ea0d85c91e4d230d3db17cd192b7adfd8f66d4b3563fb5500"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:filler_18",
+    "state_type": "assistant_delta",
+    "owner": "agent_2",
+    "tokens": 384,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_18",
+    "exact_token_hash": "003132b6c361d74b78b11b9dfa49c9bbe4c225258dfe3fc29721fa91a3fa5d41",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_18",
+      "exact_token_hash": "003132b6c361d74b78b11b9dfa49c9bbe4c225258dfe3fc29721fa91a3fa5d41"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:filler_semantic_18",
+    "exact_kv_id": "003132b6c361d74b78b11b9dfa49c9bbe4c225258dfe3fc29721fa91a3fa5d41"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:filler_19",
+    "state_type": "dialogue_delta",
+    "owner": "agent_3",
+    "tokens": 384,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_19",
+    "exact_token_hash": "bf199fa1dc4687dd43596f49e636abdb0d4e62ff7a3bfeb16756afc9e2dfa4a0",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_19",
+      "exact_token_hash": "bf199fa1dc4687dd43596f49e636abdb0d4e62ff7a3bfeb16756afc9e2dfa4a0"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:filler_semantic_19",
+    "exact_kv_id": "bf199fa1dc4687dd43596f49e636abdb0d4e62ff7a3bfeb16756afc9e2dfa4a0"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:filler_20",
+    "state_type": "dialogue_delta",
+    "owner": "agent_0",
+    "tokens": 384,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_20",
+    "exact_token_hash": "b9b4475ea407116d8b3730867d1cbe5d5c52e87c5cfd40b9a1b248c6b423af24",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_20",
+      "exact_token_hash": "b9b4475ea407116d8b3730867d1cbe5d5c52e87c5cfd40b9a1b248c6b423af24"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:filler_semantic_20",
+    "exact_kv_id": "b9b4475ea407116d8b3730867d1cbe5d5c52e87c5cfd40b9a1b248c6b423af24"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:filler_21",
+    "state_type": "assistant_delta",
+    "owner": "agent_1",
+    "tokens": 384,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_21",
+    "exact_token_hash": "5825e74700c76c686bb561e5d4acfe451b4c4fb4e070d4d4bfbd2ea65b6d6612",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_21",
+      "exact_token_hash": "5825e74700c76c686bb561e5d4acfe451b4c4fb4e070d4d4bfbd2ea65b6d6612"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:filler_semantic_21",
+    "exact_kv_id": "5825e74700c76c686bb561e5d4acfe451b4c4fb4e070d4d4bfbd2ea65b6d6612"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:filler_22",
+    "state_type": "dialogue_delta",
+    "owner": "agent_2",
+    "tokens": 384,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_22",
+    "exact_token_hash": "a0df309e97b2f11f0b095ba1b78a16de0459e4bf0067b6c9f2d915db5d030823",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_22",
+      "exact_token_hash": "a0df309e97b2f11f0b095ba1b78a16de0459e4bf0067b6c9f2d915db5d030823"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:filler_semantic_22",
+    "exact_kv_id": "a0df309e97b2f11f0b095ba1b78a16de0459e4bf0067b6c9f2d915db5d030823"
+  },
+  {
+    "state_id": "syn_opportunity_delayed_reuse_0004:filler_23",
+    "state_type": "dialogue_delta",
+    "owner": "agent_3",
+    "tokens": 384,
+    "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_23",
+    "exact_token_hash": "bc8a0a66f113824fbcff7cf05a6a225a5ea5a8c8c35feccb414599c20eaf6b4f",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "semantic_key": "syn_opportunity_delayed_reuse_0004:filler_semantic_23",
+      "exact_token_hash": "bc8a0a66f113824fbcff7cf05a6a225a5ea5a8c8c35feccb414599c20eaf6b4f"
+    },
+    "type": "state",
+    "semantic_id": "syn_opportunity_delayed_reuse_0004:filler_semantic_23",
+    "exact_kv_id": "bc8a0a66f113824fbcff7cf05a6a225a5ea5a8c8c35feccb414599c20eaf6b4f"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:0",
+    "agent": "agent_0",
+    "turn": 0,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_0:role",
+      "syn_opportunity_delayed_reuse_0004:core_0",
+      "syn_opportunity_delayed_reuse_0004:filler_0",
+      "syn_opportunity_delayed_reuse_0004:filler_2",
+      "syn_opportunity_delayed_reuse_0004:filler_4"
+    ],
+    "append_tokens": 64,
+    "output_tokens": 96,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_0",
+    "new_state_type": "assistant_delta",
+    "phase": "plan",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 0,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:1",
+    "agent": "agent_1",
+    "turn": 1,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_1:role",
+      "syn_opportunity_delayed_reuse_0004:core_1",
+      "syn_opportunity_delayed_reuse_0004:core_0",
+      "syn_opportunity_delayed_reuse_0004:filler_1",
+      "syn_opportunity_delayed_reuse_0004:filler_3",
+      "syn_opportunity_delayed_reuse_0004:filler_5"
+    ],
+    "append_tokens": 72,
+    "output_tokens": 112,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_1",
+    "new_state_type": "assistant_delta",
+    "phase": "plan",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 1,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:tool:1",
+    "agent": "agent_1",
+    "turn": 1,
+    "tool": "run_tests",
+    "latency": 120,
+    "output_tokens": 1152,
+    "status": "error",
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:tool_out_1",
+    "new_state_type": "failure_summary",
+    "phase": "plan",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 1,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "tool"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:2",
+    "agent": "agent_2",
+    "turn": 2,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_2:role",
+      "syn_opportunity_delayed_reuse_0004:core_2",
+      "syn_opportunity_delayed_reuse_0004:core_0",
+      "syn_opportunity_delayed_reuse_0004:filler_2",
+      "syn_opportunity_delayed_reuse_0004:filler_4",
+      "syn_opportunity_delayed_reuse_0004:filler_6"
+    ],
+    "append_tokens": 80,
+    "output_tokens": 128,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_2",
+    "new_state_type": "assistant_delta",
+    "phase": "plan",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 2,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:3",
+    "agent": "agent_3",
+    "turn": 3,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_3:role",
+      "syn_opportunity_delayed_reuse_0004:core_3",
+      "syn_opportunity_delayed_reuse_0004:core_0",
+      "syn_opportunity_delayed_reuse_0004:filler_3",
+      "syn_opportunity_delayed_reuse_0004:filler_5",
+      "syn_opportunity_delayed_reuse_0004:filler_7"
+    ],
+    "append_tokens": 88,
+    "output_tokens": 144,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_3",
+    "new_state_type": "assistant_delta",
+    "phase": "plan",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 3,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:4",
+    "agent": "agent_0",
+    "turn": 4,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_0:role",
+      "syn_opportunity_delayed_reuse_0004:core_4",
+      "syn_opportunity_delayed_reuse_0004:core_0",
+      "syn_opportunity_delayed_reuse_0004:filler_4",
+      "syn_opportunity_delayed_reuse_0004:filler_6",
+      "syn_opportunity_delayed_reuse_0004:filler_8"
+    ],
+    "append_tokens": 96,
+    "output_tokens": 96,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_4",
+    "new_state_type": "assistant_delta",
+    "phase": "plan",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 4,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:tool:4",
+    "agent": "agent_0",
+    "turn": 4,
+    "tool": "web_lookup",
+    "latency": 240,
+    "output_tokens": 1152,
+    "status": "error",
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:tool_out_4",
+    "new_state_type": "raw_error_log",
+    "phase": "plan",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 4,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "tool"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:5",
+    "agent": "agent_1",
+    "turn": 5,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_1:role",
+      "syn_opportunity_delayed_reuse_0004:tool_out_1",
+      "syn_opportunity_delayed_reuse_0004:core_0",
+      "syn_opportunity_delayed_reuse_0004:filler_5",
+      "syn_opportunity_delayed_reuse_0004:filler_7",
+      "syn_opportunity_delayed_reuse_0004:filler_9",
+      "syn_opportunity_delayed_reuse_0004:llm_out_0"
+    ],
+    "append_tokens": 64,
+    "output_tokens": 112,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_5",
+    "new_state_type": "assistant_delta",
+    "phase": "plan",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 5,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:6",
+    "agent": "agent_2",
+    "turn": 6,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_2:role",
+      "syn_opportunity_delayed_reuse_0004:tool_out_4",
+      "syn_opportunity_delayed_reuse_0004:core_0",
+      "syn_opportunity_delayed_reuse_0004:filler_6",
+      "syn_opportunity_delayed_reuse_0004:filler_8",
+      "syn_opportunity_delayed_reuse_0004:filler_10"
+    ],
+    "append_tokens": 72,
+    "output_tokens": 128,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_6",
+    "new_state_type": "assistant_delta",
+    "phase": "plan",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 6,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:7",
+    "agent": "agent_3",
+    "turn": 7,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_3:role",
+      "syn_opportunity_delayed_reuse_0004:core_0",
+      "syn_opportunity_delayed_reuse_0004:filler_7",
+      "syn_opportunity_delayed_reuse_0004:filler_9",
+      "syn_opportunity_delayed_reuse_0004:filler_11"
+    ],
+    "append_tokens": 80,
+    "output_tokens": 144,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_7",
+    "new_state_type": "assistant_delta",
+    "phase": "plan",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 7,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:tool:7",
+    "agent": "agent_3",
+    "turn": 7,
+    "tool": "search",
+    "latency": 160,
+    "output_tokens": 1152,
+    "status": "ok",
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:tool_out_7",
+    "new_state_type": "web_result",
+    "phase": "plan",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 7,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "tool"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:8",
+    "agent": "agent_0",
+    "turn": 8,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_0:role",
+      "syn_opportunity_delayed_reuse_0004:core_0",
+      "syn_opportunity_delayed_reuse_0004:filler_8",
+      "syn_opportunity_delayed_reuse_0004:filler_10",
+      "syn_opportunity_delayed_reuse_0004:filler_12"
+    ],
+    "append_tokens": 88,
+    "output_tokens": 96,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_8",
+    "new_state_type": "assistant_delta",
+    "phase": "execute",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 8,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:9",
+    "agent": "agent_1",
+    "turn": 9,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_1:role",
+      "syn_opportunity_delayed_reuse_0004:core_1",
+      "syn_opportunity_delayed_reuse_0004:core_0",
+      "syn_opportunity_delayed_reuse_0004:filler_9",
+      "syn_opportunity_delayed_reuse_0004:filler_11",
+      "syn_opportunity_delayed_reuse_0004:filler_13"
+    ],
+    "append_tokens": 96,
+    "output_tokens": 112,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_9",
+    "new_state_type": "assistant_delta",
+    "phase": "execute",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 9,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:10",
+    "agent": "agent_2",
+    "turn": 10,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_2:role",
+      "syn_opportunity_delayed_reuse_0004:core_2",
+      "syn_opportunity_delayed_reuse_0004:core_1",
+      "syn_opportunity_delayed_reuse_0004:core_0",
+      "syn_opportunity_delayed_reuse_0004:filler_10",
+      "syn_opportunity_delayed_reuse_0004:filler_12",
+      "syn_opportunity_delayed_reuse_0004:filler_14",
+      "syn_opportunity_delayed_reuse_0004:llm_out_5"
+    ],
+    "append_tokens": 64,
+    "output_tokens": 128,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_10",
+    "new_state_type": "assistant_delta",
+    "phase": "execute",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 10,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:tool:10",
+    "agent": "agent_2",
+    "turn": 10,
+    "tool": "read_file",
+    "latency": 80,
+    "output_tokens": 1152,
+    "status": "ok",
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:tool_out_10",
+    "new_state_type": "tool_observation",
+    "phase": "execute",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 10,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "tool"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:11",
+    "agent": "agent_3",
+    "turn": 11,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_3:role",
+      "syn_opportunity_delayed_reuse_0004:core_2",
+      "syn_opportunity_delayed_reuse_0004:core_1",
+      "syn_opportunity_delayed_reuse_0004:filler_11",
+      "syn_opportunity_delayed_reuse_0004:filler_13",
+      "syn_opportunity_delayed_reuse_0004:filler_15"
+    ],
+    "append_tokens": 72,
+    "output_tokens": 144,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_11",
+    "new_state_type": "assistant_delta",
+    "phase": "execute",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 11,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:12",
+    "agent": "agent_0",
+    "turn": 12,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_0:role",
+      "syn_opportunity_delayed_reuse_0004:core_3",
+      "syn_opportunity_delayed_reuse_0004:core_1",
+      "syn_opportunity_delayed_reuse_0004:core_2",
+      "syn_opportunity_delayed_reuse_0004:filler_12",
+      "syn_opportunity_delayed_reuse_0004:filler_14",
+      "syn_opportunity_delayed_reuse_0004:filler_16"
+    ],
+    "append_tokens": 80,
+    "output_tokens": 96,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_12",
+    "new_state_type": "assistant_delta",
+    "phase": "execute",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 12,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:13",
+    "agent": "agent_1",
+    "turn": 13,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_1:role",
+      "syn_opportunity_delayed_reuse_0004:core_4",
+      "syn_opportunity_delayed_reuse_0004:core_1",
+      "syn_opportunity_delayed_reuse_0004:core_3",
+      "syn_opportunity_delayed_reuse_0004:filler_13",
+      "syn_opportunity_delayed_reuse_0004:filler_15",
+      "syn_opportunity_delayed_reuse_0004:filler_17"
+    ],
+    "append_tokens": 88,
+    "output_tokens": 112,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_13",
+    "new_state_type": "assistant_delta",
+    "phase": "execute",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 13,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:tool:13",
+    "agent": "agent_1",
+    "turn": 13,
+    "tool": "edit_file",
+    "latency": 200,
+    "output_tokens": 1152,
+    "status": "error",
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:tool_out_13",
+    "new_state_type": "test_failure_summary",
+    "phase": "execute",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 13,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "tool"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:14",
+    "agent": "agent_2",
+    "turn": 14,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_2:role",
+      "syn_opportunity_delayed_reuse_0004:core_4",
+      "syn_opportunity_delayed_reuse_0004:core_1",
+      "syn_opportunity_delayed_reuse_0004:filler_14",
+      "syn_opportunity_delayed_reuse_0004:filler_16",
+      "syn_opportunity_delayed_reuse_0004:filler_18"
+    ],
+    "append_tokens": 96,
+    "output_tokens": 128,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_14",
+    "new_state_type": "assistant_delta",
+    "phase": "execute",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 14,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:15",
+    "agent": "agent_3",
+    "turn": 15,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_3:role",
+      "syn_opportunity_delayed_reuse_0004:tool_out_1",
+      "syn_opportunity_delayed_reuse_0004:core_1",
+      "syn_opportunity_delayed_reuse_0004:filler_15",
+      "syn_opportunity_delayed_reuse_0004:filler_17",
+      "syn_opportunity_delayed_reuse_0004:filler_19",
+      "syn_opportunity_delayed_reuse_0004:llm_out_10"
+    ],
+    "append_tokens": 64,
+    "output_tokens": 144,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_15",
+    "new_state_type": "assistant_delta",
+    "phase": "execute",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 15,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:16",
+    "agent": "agent_0",
+    "turn": 16,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_0:role",
+      "syn_opportunity_delayed_reuse_0004:tool_out_4",
+      "syn_opportunity_delayed_reuse_0004:core_1",
+      "syn_opportunity_delayed_reuse_0004:filler_16",
+      "syn_opportunity_delayed_reuse_0004:filler_18",
+      "syn_opportunity_delayed_reuse_0004:filler_20"
+    ],
+    "append_tokens": 72,
+    "output_tokens": 96,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_16",
+    "new_state_type": "assistant_delta",
+    "phase": "failure",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 16,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:tool:16",
+    "agent": "agent_0",
+    "turn": 16,
+    "tool": "run_tests",
+    "latency": 120,
+    "output_tokens": 1152,
+    "status": "error",
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:tool_out_16",
+    "new_state_type": "failure_summary",
+    "phase": "failure",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 16,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "tool"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:17",
+    "agent": "agent_1",
+    "turn": 17,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_1:role",
+      "syn_opportunity_delayed_reuse_0004:tool_out_4",
+      "syn_opportunity_delayed_reuse_0004:core_1",
+      "syn_opportunity_delayed_reuse_0004:tool_out_7",
+      "syn_opportunity_delayed_reuse_0004:filler_17",
+      "syn_opportunity_delayed_reuse_0004:filler_19",
+      "syn_opportunity_delayed_reuse_0004:filler_21"
+    ],
+    "append_tokens": 80,
+    "output_tokens": 112,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_17",
+    "new_state_type": "assistant_delta",
+    "phase": "failure",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 17,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:18",
+    "agent": "agent_2",
+    "turn": 18,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_2:role",
+      "syn_opportunity_delayed_reuse_0004:tool_out_7",
+      "syn_opportunity_delayed_reuse_0004:core_1",
+      "syn_opportunity_delayed_reuse_0004:tool_out_10",
+      "syn_opportunity_delayed_reuse_0004:filler_18",
+      "syn_opportunity_delayed_reuse_0004:filler_20",
+      "syn_opportunity_delayed_reuse_0004:filler_22"
+    ],
+    "append_tokens": 88,
+    "output_tokens": 128,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_18",
+    "new_state_type": "assistant_delta",
+    "phase": "failure",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 18,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:19",
+    "agent": "agent_3",
+    "turn": 19,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_3:role",
+      "syn_opportunity_delayed_reuse_0004:tool_out_10",
+      "syn_opportunity_delayed_reuse_0004:core_1",
+      "syn_opportunity_delayed_reuse_0004:tool_out_13",
+      "syn_opportunity_delayed_reuse_0004:filler_19",
+      "syn_opportunity_delayed_reuse_0004:filler_21",
+      "syn_opportunity_delayed_reuse_0004:filler_23"
+    ],
+    "append_tokens": 96,
+    "output_tokens": 144,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_19",
+    "new_state_type": "assistant_delta",
+    "phase": "failure",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 19,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:tool:19",
+    "agent": "agent_3",
+    "turn": 19,
+    "tool": "web_lookup",
+    "latency": 240,
+    "output_tokens": 1152,
+    "status": "error",
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:tool_out_19",
+    "new_state_type": "raw_error_log",
+    "phase": "failure",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 19,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "tool"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:20",
+    "agent": "agent_0",
+    "turn": 20,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_0:role",
+      "syn_opportunity_delayed_reuse_0004:tool_out_10",
+      "syn_opportunity_delayed_reuse_0004:core_2",
+      "syn_opportunity_delayed_reuse_0004:tool_out_16",
+      "syn_opportunity_delayed_reuse_0004:filler_20",
+      "syn_opportunity_delayed_reuse_0004:filler_22",
+      "syn_opportunity_delayed_reuse_0004:filler_0",
+      "syn_opportunity_delayed_reuse_0004:llm_out_15"
+    ],
+    "append_tokens": 64,
+    "output_tokens": 96,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_20",
+    "new_state_type": "assistant_delta",
+    "phase": "failure",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 20,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:21",
+    "agent": "agent_1",
+    "turn": 21,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_1:role",
+      "syn_opportunity_delayed_reuse_0004:tool_out_13",
+      "syn_opportunity_delayed_reuse_0004:core_2",
+      "syn_opportunity_delayed_reuse_0004:tool_out_19",
+      "syn_opportunity_delayed_reuse_0004:filler_21",
+      "syn_opportunity_delayed_reuse_0004:filler_23",
+      "syn_opportunity_delayed_reuse_0004:filler_1"
+    ],
+    "append_tokens": 72,
+    "output_tokens": 112,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_21",
+    "new_state_type": "assistant_delta",
+    "phase": "failure",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 21,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:22",
+    "agent": "agent_2",
+    "turn": 22,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_2:role",
+      "syn_opportunity_delayed_reuse_0004:tool_out_16",
+      "syn_opportunity_delayed_reuse_0004:core_2",
+      "syn_opportunity_delayed_reuse_0004:core_0",
+      "syn_opportunity_delayed_reuse_0004:filler_22",
+      "syn_opportunity_delayed_reuse_0004:filler_0",
+      "syn_opportunity_delayed_reuse_0004:filler_2"
+    ],
+    "append_tokens": 80,
+    "output_tokens": 128,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_22",
+    "new_state_type": "assistant_delta",
+    "phase": "failure",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 22,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:tool:22",
+    "agent": "agent_2",
+    "turn": 22,
+    "tool": "search",
+    "latency": 160,
+    "output_tokens": 1152,
+    "status": "ok",
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:tool_out_22",
+    "new_state_type": "web_result",
+    "phase": "failure",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 22,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "tool"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:23",
+    "agent": "agent_3",
+    "turn": 23,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_3:role",
+      "syn_opportunity_delayed_reuse_0004:tool_out_16",
+      "syn_opportunity_delayed_reuse_0004:core_2",
+      "syn_opportunity_delayed_reuse_0004:core_0",
+      "syn_opportunity_delayed_reuse_0004:filler_23",
+      "syn_opportunity_delayed_reuse_0004:filler_1",
+      "syn_opportunity_delayed_reuse_0004:filler_3"
+    ],
+    "append_tokens": 88,
+    "output_tokens": 144,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_23",
+    "new_state_type": "assistant_delta",
+    "phase": "failure",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 23,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:24",
+    "agent": "agent_0",
+    "turn": 24,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_0:role",
+      "syn_opportunity_delayed_reuse_0004:tool_out_19",
+      "syn_opportunity_delayed_reuse_0004:core_2",
+      "syn_opportunity_delayed_reuse_0004:core_1",
+      "syn_opportunity_delayed_reuse_0004:filler_0",
+      "syn_opportunity_delayed_reuse_0004:filler_2",
+      "syn_opportunity_delayed_reuse_0004:filler_4"
+    ],
+    "append_tokens": 96,
+    "output_tokens": 96,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_24",
+    "new_state_type": "assistant_delta",
+    "phase": "repair",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 24,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:25",
+    "agent": "agent_1",
+    "turn": 25,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_1:role",
+      "syn_opportunity_delayed_reuse_0004:tool_out_22",
+      "syn_opportunity_delayed_reuse_0004:core_2",
+      "syn_opportunity_delayed_reuse_0004:filler_1",
+      "syn_opportunity_delayed_reuse_0004:filler_3",
+      "syn_opportunity_delayed_reuse_0004:filler_5",
+      "syn_opportunity_delayed_reuse_0004:llm_out_20"
+    ],
+    "append_tokens": 64,
+    "output_tokens": 112,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_25",
+    "new_state_type": "assistant_delta",
+    "phase": "repair",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 25,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:tool:25",
+    "agent": "agent_1",
+    "turn": 25,
+    "tool": "read_file",
+    "latency": 80,
+    "output_tokens": 1152,
+    "status": "ok",
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:tool_out_25",
+    "new_state_type": "tool_observation",
+    "phase": "repair",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 25,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "tool"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:26",
+    "agent": "agent_2",
+    "turn": 26,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_2:role",
+      "syn_opportunity_delayed_reuse_0004:tool_out_22",
+      "syn_opportunity_delayed_reuse_0004:core_2",
+      "syn_opportunity_delayed_reuse_0004:filler_2",
+      "syn_opportunity_delayed_reuse_0004:filler_4",
+      "syn_opportunity_delayed_reuse_0004:filler_6"
+    ],
+    "append_tokens": 72,
+    "output_tokens": 128,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_26",
+    "new_state_type": "assistant_delta",
+    "phase": "repair",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 26,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:27",
+    "agent": "agent_3",
+    "turn": 27,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_3:role",
+      "syn_opportunity_delayed_reuse_0004:tool_out_25",
+      "syn_opportunity_delayed_reuse_0004:core_2",
+      "syn_opportunity_delayed_reuse_0004:core_3",
+      "syn_opportunity_delayed_reuse_0004:filler_3",
+      "syn_opportunity_delayed_reuse_0004:filler_5",
+      "syn_opportunity_delayed_reuse_0004:filler_7"
+    ],
+    "append_tokens": 80,
+    "output_tokens": 144,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_27",
+    "new_state_type": "assistant_delta",
+    "phase": "repair",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 27,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:28",
+    "agent": "agent_0",
+    "turn": 28,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_0:role",
+      "syn_opportunity_delayed_reuse_0004:core_0",
+      "syn_opportunity_delayed_reuse_0004:core_2",
+      "syn_opportunity_delayed_reuse_0004:core_4",
+      "syn_opportunity_delayed_reuse_0004:filler_4",
+      "syn_opportunity_delayed_reuse_0004:filler_6",
+      "syn_opportunity_delayed_reuse_0004:filler_8"
+    ],
+    "append_tokens": 88,
+    "output_tokens": 96,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_28",
+    "new_state_type": "assistant_delta",
+    "phase": "repair",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 28,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:tool:28",
+    "agent": "agent_0",
+    "turn": 28,
+    "tool": "edit_file",
+    "latency": 200,
+    "output_tokens": 1152,
+    "status": "error",
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:tool_out_28",
+    "new_state_type": "test_failure_summary",
+    "phase": "repair",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 28,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "tool"
+  },
+  {
+    "event_id": "syn_opportunity_delayed_reuse_0004:llm:29",
+    "agent": "agent_1",
+    "turn": 29,
+    "input_state_ids": [
+      "syn_opportunity_delayed_reuse_0004:system",
+      "syn_opportunity_delayed_reuse_0004:task",
+      "syn_opportunity_delayed_reuse_0004:shared_plan",
+      "syn_opportunity_delayed_reuse_0004:agent_1:role",
+      "syn_opportunity_delayed_reuse_0004:tool_out_28",
+      "syn_opportunity_delayed_reuse_0004:core_2",
+      "syn_opportunity_delayed_reuse_0004:core_4",
+      "syn_opportunity_delayed_reuse_0004:filler_5",
+      "syn_opportunity_delayed_reuse_0004:filler_7",
+      "syn_opportunity_delayed_reuse_0004:filler_9"
+    ],
+    "append_tokens": 96,
+    "output_tokens": 112,
+    "new_state_id": "syn_opportunity_delayed_reuse_0004:llm_out_29",
+    "new_state_type": "assistant_delta",
+    "phase": "repair",
+    "metadata": {
+      "synthetic": true,
+      "scenario": "opportunity_delayed_reuse",
+      "synthetic_index": 4,
+      "turn": 29,
+      "trace_success": true,
+      "prompt_reconstruction": "explicit",
+      "full_history_likely": false,
+      "monotonic_context_growth_score": 0.0
+    },
+    "type": "llm"
+  }
+]

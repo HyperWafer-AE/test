@@ -1,0 +1,1421 @@
+{
+  "num_loaded_traces": 22,
+  "num_high_quality_traces": 22,
+  "num_medium_quality_traces": 0,
+  "num_low_quality_traces": 0,
+  "paper_usable_trace_count": 22,
+  "smoke_test_trace_count": 0,
+  "unusable_trace_count": 0,
+  "paper_usable": true,
+  "min_turns": 4,
+  "allow_reconstructed_full_history": false,
+  "delayed_reuse_k": 8,
+  "exclusion_reason_counts": {},
+  "real_trace_data_available": true,
+  "high_quality_real_trace_available": true,
+  "warning": "",
+  "traces": [
+    {
+      "trace_idx": 0,
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "basic": {
+        "num_events": 64,
+        "num_state_events": 27,
+        "num_llm_events": 28,
+        "num_tool_events": 9,
+        "num_agents": 4,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": false,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit": 28
+        },
+        "average_input_state_count": 9.571428571428571,
+        "average_accumulated_context_tokens": 7371.428571428572,
+        "monotonic_context_growth_score": 0.7407407407407407
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.0,
+        "fraction_file_context_states": 0.037037037037037035,
+        "fraction_failure_states": 0.037037037037037035,
+        "fraction_unknown_or_dialogue_delta": 0.15625,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "summary_state": 2,
+          "agent_role": 4,
+          "file_context": 1,
+          "test_failure_summary": 2,
+          "edit_diff": 1,
+          "assistant_delta": 34,
+          "dialogue_delta": 10,
+          "failure_summary": 2,
+          "raw_error_log": 2,
+          "web_result": 2,
+          "tool_observation": 2
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 228,
+          "min": 1,
+          "p50": 2,
+          "p90": 9,
+          "max": 17,
+          "mean": 3.5789473684210527
+        },
+        "delayed_reuse_ratio": 0.10526315789473684,
+        "cross_agent_reuse_ratio": 0.8787878787878788,
+        "high_value_delayed_reuse_count": 24,
+        "LRU_regret_candidate_count": 21,
+        "has_asg_opportunity": true
+      }
+    },
+    {
+      "trace_idx": 1,
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "basic": {
+        "num_events": 70,
+        "num_state_events": 30,
+        "num_llm_events": 30,
+        "num_tool_events": 10,
+        "num_agents": 4,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": false,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit": 30
+        },
+        "average_input_state_count": 9.533333333333333,
+        "average_accumulated_context_tokens": 8684.8,
+        "monotonic_context_growth_score": 0.7241379310344828
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.0,
+        "fraction_file_context_states": 0.03333333333333333,
+        "fraction_failure_states": 0.06666666666666667,
+        "fraction_unknown_or_dialogue_delta": 0.17142857142857143,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "summary_state": 2,
+          "agent_role": 4,
+          "file_context": 1,
+          "test_failure_summary": 3,
+          "edit_diff": 1,
+          "raw_error_log": 3,
+          "assistant_delta": 36,
+          "dialogue_delta": 12,
+          "failure_summary": 2,
+          "web_result": 2,
+          "tool_observation": 2
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 241,
+          "min": 1,
+          "p50": 2,
+          "p90": 10,
+          "max": 19,
+          "mean": 3.7510373443983402
+        },
+        "delayed_reuse_ratio": 0.1037344398340249,
+        "cross_agent_reuse_ratio": 0.8918918918918919,
+        "high_value_delayed_reuse_count": 25,
+        "LRU_regret_candidate_count": 23,
+        "has_asg_opportunity": true
+      }
+    },
+    {
+      "trace_idx": 2,
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "basic": {
+        "num_events": 76,
+        "num_state_events": 33,
+        "num_llm_events": 32,
+        "num_tool_events": 11,
+        "num_agents": 4,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": false,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit": 32
+        },
+        "average_input_state_count": 9.59375,
+        "average_accumulated_context_tokens": 10189.0,
+        "monotonic_context_growth_score": 0.7419354838709677
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.0,
+        "fraction_file_context_states": 0.06060606060606061,
+        "fraction_failure_states": 0.06060606060606061,
+        "fraction_unknown_or_dialogue_delta": 0.17105263157894737,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "summary_state": 2,
+          "agent_role": 4,
+          "file_context": 2,
+          "test_failure_summary": 3,
+          "edit_diff": 1,
+          "raw_error_log": 3,
+          "assistant_delta": 39,
+          "dialogue_delta": 13,
+          "failure_summary": 3,
+          "web_result": 2,
+          "tool_observation": 2
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 258,
+          "min": 1,
+          "p50": 2,
+          "p90": 12,
+          "max": 22,
+          "mean": 3.992248062015504
+        },
+        "delayed_reuse_ratio": 0.10465116279069768,
+        "cross_agent_reuse_ratio": 0.8571428571428571,
+        "high_value_delayed_reuse_count": 27,
+        "LRU_regret_candidate_count": 25,
+        "has_asg_opportunity": true
+      }
+    },
+    {
+      "trace_idx": 3,
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "basic": {
+        "num_events": 70,
+        "num_state_events": 33,
+        "num_llm_events": 28,
+        "num_tool_events": 9,
+        "num_agents": 4,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": false,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit": 28
+        },
+        "average_input_state_count": 9.5,
+        "average_accumulated_context_tokens": 10192.0,
+        "monotonic_context_growth_score": 0.7777777777777778
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.0,
+        "fraction_file_context_states": 0.030303030303030304,
+        "fraction_failure_states": 0.030303030303030304,
+        "fraction_unknown_or_dialogue_delta": 0.2,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "summary_state": 2,
+          "agent_role": 4,
+          "file_context": 1,
+          "test_failure_summary": 2,
+          "edit_diff": 1,
+          "assistant_delta": 36,
+          "dialogue_delta": 14,
+          "failure_summary": 2,
+          "raw_error_log": 2,
+          "web_result": 2,
+          "tool_observation": 2
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 220,
+          "min": 1,
+          "p50": 2,
+          "p90": 6,
+          "max": 24,
+          "mean": 3.609090909090909
+        },
+        "delayed_reuse_ratio": 0.07272727272727272,
+        "cross_agent_reuse_ratio": 0.8780487804878049,
+        "high_value_delayed_reuse_count": 16,
+        "LRU_regret_candidate_count": 15,
+        "has_asg_opportunity": true
+      }
+    },
+    {
+      "trace_idx": 4,
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "basic": {
+        "num_events": 76,
+        "num_state_events": 36,
+        "num_llm_events": 30,
+        "num_tool_events": 10,
+        "num_agents": 4,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": false,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit": 30
+        },
+        "average_input_state_count": 9.533333333333333,
+        "average_accumulated_context_tokens": 7626.666666666667,
+        "monotonic_context_growth_score": 0.7586206896551724
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.0,
+        "fraction_file_context_states": 0.027777777777777776,
+        "fraction_failure_states": 0.05555555555555555,
+        "fraction_unknown_or_dialogue_delta": 0.21052631578947367,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "summary_state": 2,
+          "agent_role": 4,
+          "file_context": 1,
+          "test_failure_summary": 3,
+          "edit_diff": 1,
+          "raw_error_log": 3,
+          "assistant_delta": 38,
+          "dialogue_delta": 16,
+          "failure_summary": 2,
+          "web_result": 2,
+          "tool_observation": 2
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 235,
+          "min": 1,
+          "p50": 2,
+          "p90": 6,
+          "max": 27,
+          "mean": 3.7787234042553193
+        },
+        "delayed_reuse_ratio": 0.0851063829787234,
+        "cross_agent_reuse_ratio": 0.9090909090909091,
+        "high_value_delayed_reuse_count": 20,
+        "LRU_regret_candidate_count": 17,
+        "has_asg_opportunity": true
+      }
+    },
+    {
+      "trace_idx": 5,
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "basic": {
+        "num_events": 72,
+        "num_state_events": 29,
+        "num_llm_events": 32,
+        "num_tool_events": 11,
+        "num_agents": 4,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": false,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit": 32
+        },
+        "average_input_state_count": 9.5625,
+        "average_accumulated_context_tokens": 9033.5,
+        "monotonic_context_growth_score": 0.7096774193548387
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.0,
+        "fraction_file_context_states": 0.06896551724137931,
+        "fraction_failure_states": 0.06896551724137931,
+        "fraction_unknown_or_dialogue_delta": 0.1388888888888889,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "summary_state": 2,
+          "agent_role": 4,
+          "file_context": 2,
+          "test_failure_summary": 3,
+          "edit_diff": 1,
+          "raw_error_log": 3,
+          "assistant_delta": 38,
+          "dialogue_delta": 10,
+          "failure_summary": 3,
+          "web_result": 2,
+          "tool_observation": 2
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 261,
+          "min": 1,
+          "p50": 2,
+          "p90": 14,
+          "max": 21,
+          "mean": 3.9272030651340994
+        },
+        "delayed_reuse_ratio": 0.12260536398467432,
+        "cross_agent_reuse_ratio": 0.8648648648648649,
+        "high_value_delayed_reuse_count": 32,
+        "LRU_regret_candidate_count": 25,
+        "has_asg_opportunity": true
+      }
+    },
+    {
+      "trace_idx": 6,
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "basic": {
+        "num_events": 66,
+        "num_state_events": 29,
+        "num_llm_events": 28,
+        "num_tool_events": 9,
+        "num_agents": 4,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": false,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit": 28
+        },
+        "average_input_state_count": 9.5,
+        "average_accumulated_context_tokens": 9236.57142857143,
+        "monotonic_context_growth_score": 0.7407407407407407
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.0,
+        "fraction_file_context_states": 0.034482758620689655,
+        "fraction_failure_states": 0.034482758620689655,
+        "fraction_unknown_or_dialogue_delta": 0.18181818181818182,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "summary_state": 2,
+          "agent_role": 4,
+          "file_context": 1,
+          "test_failure_summary": 2,
+          "edit_diff": 1,
+          "assistant_delta": 34,
+          "dialogue_delta": 12,
+          "failure_summary": 2,
+          "raw_error_log": 2,
+          "web_result": 2,
+          "tool_observation": 2
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 224,
+          "min": 1,
+          "p50": 2,
+          "p90": 6,
+          "max": 19,
+          "mean": 3.5892857142857144
+        },
+        "delayed_reuse_ratio": 0.08928571428571429,
+        "cross_agent_reuse_ratio": 0.8611111111111112,
+        "high_value_delayed_reuse_count": 20,
+        "LRU_regret_candidate_count": 19,
+        "has_asg_opportunity": true
+      }
+    },
+    {
+      "trace_idx": 7,
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "basic": {
+        "num_events": 72,
+        "num_state_events": 32,
+        "num_llm_events": 30,
+        "num_tool_events": 10,
+        "num_agents": 4,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": false,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit": 30
+        },
+        "average_input_state_count": 9.5,
+        "average_accumulated_context_tokens": 10609.066666666668,
+        "monotonic_context_growth_score": 0.7586206896551724
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.0,
+        "fraction_file_context_states": 0.03125,
+        "fraction_failure_states": 0.0625,
+        "fraction_unknown_or_dialogue_delta": 0.18055555555555555,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "summary_state": 2,
+          "agent_role": 4,
+          "file_context": 1,
+          "test_failure_summary": 3,
+          "edit_diff": 1,
+          "raw_error_log": 3,
+          "assistant_delta": 37,
+          "dialogue_delta": 13,
+          "failure_summary": 2,
+          "web_result": 2,
+          "tool_observation": 2
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 238,
+          "min": 1,
+          "p50": 2,
+          "p90": 6,
+          "max": 22,
+          "mean": 3.76890756302521
+        },
+        "delayed_reuse_ratio": 0.09243697478991597,
+        "cross_agent_reuse_ratio": 0.9,
+        "high_value_delayed_reuse_count": 22,
+        "LRU_regret_candidate_count": 21,
+        "has_asg_opportunity": true
+      }
+    },
+    {
+      "trace_idx": 8,
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "basic": {
+        "num_events": 78,
+        "num_state_events": 35,
+        "num_llm_events": 32,
+        "num_tool_events": 11,
+        "num_agents": 4,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": false,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit": 32
+        },
+        "average_input_state_count": 9.625,
+        "average_accumulated_context_tokens": 8145.5,
+        "monotonic_context_growth_score": 0.7419354838709677
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.0,
+        "fraction_file_context_states": 0.05714285714285714,
+        "fraction_failure_states": 0.05714285714285714,
+        "fraction_unknown_or_dialogue_delta": 0.1794871794871795,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "summary_state": 2,
+          "agent_role": 4,
+          "file_context": 2,
+          "test_failure_summary": 3,
+          "edit_diff": 1,
+          "raw_error_log": 3,
+          "assistant_delta": 40,
+          "dialogue_delta": 14,
+          "failure_summary": 3,
+          "web_result": 2,
+          "tool_observation": 2
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 257,
+          "min": 1,
+          "p50": 2,
+          "p90": 11,
+          "max": 24,
+          "mean": 4.124513618677042
+        },
+        "delayed_reuse_ratio": 0.10505836575875487,
+        "cross_agent_reuse_ratio": 0.8837209302325582,
+        "high_value_delayed_reuse_count": 27,
+        "LRU_regret_candidate_count": 23,
+        "has_asg_opportunity": true
+      }
+    },
+    {
+      "trace_idx": 9,
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "basic": {
+        "num_events": 72,
+        "num_state_events": 35,
+        "num_llm_events": 28,
+        "num_tool_events": 9,
+        "num_agents": 4,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": false,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit": 28
+        },
+        "average_input_state_count": 9.5,
+        "average_accumulated_context_tokens": 8276.57142857143,
+        "monotonic_context_growth_score": 0.8148148148148148
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.0,
+        "fraction_file_context_states": 0.02857142857142857,
+        "fraction_failure_states": 0.02857142857142857,
+        "fraction_unknown_or_dialogue_delta": 0.2222222222222222,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "summary_state": 2,
+          "agent_role": 4,
+          "file_context": 1,
+          "test_failure_summary": 2,
+          "edit_diff": 1,
+          "assistant_delta": 36,
+          "dialogue_delta": 16,
+          "failure_summary": 2,
+          "raw_error_log": 2,
+          "web_result": 2,
+          "tool_observation": 2
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 218,
+          "min": 1,
+          "p50": 2,
+          "p90": 6,
+          "max": 27,
+          "mean": 3.5
+        },
+        "delayed_reuse_ratio": 0.06880733944954129,
+        "cross_agent_reuse_ratio": 0.9024390243902439,
+        "high_value_delayed_reuse_count": 15,
+        "LRU_regret_candidate_count": 13,
+        "has_asg_opportunity": true
+      }
+    },
+    {
+      "trace_idx": 10,
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "basic": {
+        "num_events": 68,
+        "num_state_events": 28,
+        "num_llm_events": 30,
+        "num_tool_events": 10,
+        "num_agents": 4,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": false,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit": 30
+        },
+        "average_input_state_count": 9.466666666666667,
+        "average_accumulated_context_tokens": 9529.6,
+        "monotonic_context_growth_score": 0.7241379310344828
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.0,
+        "fraction_file_context_states": 0.03571428571428571,
+        "fraction_failure_states": 0.07142857142857142,
+        "fraction_unknown_or_dialogue_delta": 0.14705882352941177,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "summary_state": 2,
+          "agent_role": 4,
+          "file_context": 1,
+          "test_failure_summary": 3,
+          "edit_diff": 1,
+          "raw_error_log": 3,
+          "assistant_delta": 36,
+          "dialogue_delta": 10,
+          "failure_summary": 2,
+          "web_result": 2,
+          "tool_observation": 2
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 241,
+          "min": 1,
+          "p50": 2,
+          "p90": 11,
+          "max": 17,
+          "mean": 3.6307053941908713
+        },
+        "delayed_reuse_ratio": 0.1078838174273859,
+        "cross_agent_reuse_ratio": 0.8857142857142857,
+        "high_value_delayed_reuse_count": 26,
+        "LRU_regret_candidate_count": 23,
+        "has_asg_opportunity": true
+      }
+    },
+    {
+      "trace_idx": 11,
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "basic": {
+        "num_events": 74,
+        "num_state_events": 31,
+        "num_llm_events": 32,
+        "num_tool_events": 11,
+        "num_agents": 4,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": false,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit": 32
+        },
+        "average_input_state_count": 9.5625,
+        "average_accumulated_context_tokens": 11169.0,
+        "monotonic_context_growth_score": 0.7419354838709677
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.0,
+        "fraction_file_context_states": 0.06451612903225806,
+        "fraction_failure_states": 0.06451612903225806,
+        "fraction_unknown_or_dialogue_delta": 0.16216216216216217,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "summary_state": 2,
+          "agent_role": 4,
+          "file_context": 2,
+          "test_failure_summary": 3,
+          "edit_diff": 1,
+          "raw_error_log": 3,
+          "assistant_delta": 38,
+          "dialogue_delta": 12,
+          "failure_summary": 3,
+          "web_result": 2,
+          "tool_observation": 2
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 259,
+          "min": 1,
+          "p50": 2,
+          "p90": 13,
+          "max": 20,
+          "mean": 3.8803088803088803
+        },
+        "delayed_reuse_ratio": 0.10810810810810811,
+        "cross_agent_reuse_ratio": 0.9,
+        "high_value_delayed_reuse_count": 28,
+        "LRU_regret_candidate_count": 27,
+        "has_asg_opportunity": true
+      }
+    },
+    {
+      "trace_idx": 12,
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "basic": {
+        "num_events": 30,
+        "num_state_events": 11,
+        "num_llm_events": 14,
+        "num_tool_events": 5,
+        "num_agents": 2,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": false,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit": 14
+        },
+        "average_input_state_count": 5.928571428571429,
+        "average_accumulated_context_tokens": 3565.714285714286,
+        "monotonic_context_growth_score": 1.0
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.0,
+        "fraction_file_context_states": 0.09090909090909091,
+        "fraction_failure_states": 0.09090909090909091,
+        "fraction_unknown_or_dialogue_delta": 0.06666666666666667,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "summary_state": 1,
+          "agent_role": 2,
+          "file_context": 1,
+          "test_failure_summary": 2,
+          "assistant_delta": 16,
+          "dialogue_delta": 2,
+          "failure_summary": 1,
+          "raw_error_log": 1,
+          "web_result": 1,
+          "tool_observation": 1
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 63,
+          "min": 1,
+          "p50": 2,
+          "p90": 3,
+          "max": 3,
+          "mean": 1.8253968253968254
+        },
+        "delayed_reuse_ratio": 0.0,
+        "cross_agent_reuse_ratio": 0.42857142857142855,
+        "high_value_delayed_reuse_count": 0,
+        "LRU_regret_candidate_count": 0,
+        "has_asg_opportunity": true
+      }
+    },
+    {
+      "trace_idx": 13,
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "basic": {
+        "num_events": 32,
+        "num_state_events": 12,
+        "num_llm_events": 15,
+        "num_tool_events": 5,
+        "num_agents": 2,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": false,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit": 15
+        },
+        "average_input_state_count": 5.933333333333334,
+        "average_accumulated_context_tokens": 3557.3333333333335,
+        "monotonic_context_growth_score": 1.0
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.0,
+        "fraction_file_context_states": 0.08333333333333333,
+        "fraction_failure_states": 0.08333333333333333,
+        "fraction_unknown_or_dialogue_delta": 0.09375,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "summary_state": 1,
+          "agent_role": 2,
+          "file_context": 1,
+          "test_failure_summary": 2,
+          "assistant_delta": 17,
+          "dialogue_delta": 3,
+          "failure_summary": 1,
+          "raw_error_log": 1,
+          "web_result": 1,
+          "tool_observation": 1
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 68,
+          "min": 1,
+          "p50": 2,
+          "p90": 3,
+          "max": 3,
+          "mean": 1.8676470588235294
+        },
+        "delayed_reuse_ratio": 0.0,
+        "cross_agent_reuse_ratio": 0.42857142857142855,
+        "high_value_delayed_reuse_count": 0,
+        "LRU_regret_candidate_count": 0,
+        "has_asg_opportunity": true
+      }
+    },
+    {
+      "trace_idx": 14,
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "basic": {
+        "num_events": 32,
+        "num_state_events": 11,
+        "num_llm_events": 16,
+        "num_tool_events": 5,
+        "num_agents": 2,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": false,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit": 16
+        },
+        "average_input_state_count": 5.9375,
+        "average_accumulated_context_tokens": 3567.0,
+        "monotonic_context_growth_score": 1.0
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.0,
+        "fraction_file_context_states": 0.09090909090909091,
+        "fraction_failure_states": 0.09090909090909091,
+        "fraction_unknown_or_dialogue_delta": 0.0625,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "summary_state": 1,
+          "agent_role": 2,
+          "file_context": 1,
+          "test_failure_summary": 2,
+          "assistant_delta": 18,
+          "dialogue_delta": 2,
+          "failure_summary": 1,
+          "raw_error_log": 1,
+          "web_result": 1,
+          "tool_observation": 1
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 73,
+          "min": 1,
+          "p50": 2,
+          "p90": 3,
+          "max": 3,
+          "mean": 1.8630136986301369
+        },
+        "delayed_reuse_ratio": 0.0,
+        "cross_agent_reuse_ratio": 0.42857142857142855,
+        "high_value_delayed_reuse_count": 0,
+        "LRU_regret_candidate_count": 0,
+        "has_asg_opportunity": true
+      }
+    },
+    {
+      "trace_idx": 15,
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "basic": {
+        "num_events": 31,
+        "num_state_events": 12,
+        "num_llm_events": 14,
+        "num_tool_events": 5,
+        "num_agents": 2,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": false,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit": 14
+        },
+        "average_input_state_count": 5.928571428571429,
+        "average_accumulated_context_tokens": 3565.714285714286,
+        "monotonic_context_growth_score": 1.0
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.0,
+        "fraction_file_context_states": 0.08333333333333333,
+        "fraction_failure_states": 0.08333333333333333,
+        "fraction_unknown_or_dialogue_delta": 0.0967741935483871,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "summary_state": 1,
+          "agent_role": 2,
+          "file_context": 1,
+          "test_failure_summary": 2,
+          "assistant_delta": 16,
+          "dialogue_delta": 3,
+          "failure_summary": 1,
+          "raw_error_log": 1,
+          "web_result": 1,
+          "tool_observation": 1
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 63,
+          "min": 1,
+          "p50": 2,
+          "p90": 3,
+          "max": 3,
+          "mean": 1.8253968253968254
+        },
+        "delayed_reuse_ratio": 0.0,
+        "cross_agent_reuse_ratio": 0.42857142857142855,
+        "high_value_delayed_reuse_count": 0,
+        "LRU_regret_candidate_count": 0,
+        "has_asg_opportunity": true
+      }
+    },
+    {
+      "trace_idx": 16,
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "basic": {
+        "num_events": 31,
+        "num_state_events": 11,
+        "num_llm_events": 15,
+        "num_tool_events": 5,
+        "num_agents": 2,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": false,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit": 15
+        },
+        "average_input_state_count": 5.933333333333334,
+        "average_accumulated_context_tokens": 3557.3333333333335,
+        "monotonic_context_growth_score": 1.0
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.0,
+        "fraction_file_context_states": 0.09090909090909091,
+        "fraction_failure_states": 0.09090909090909091,
+        "fraction_unknown_or_dialogue_delta": 0.06451612903225806,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "summary_state": 1,
+          "agent_role": 2,
+          "file_context": 1,
+          "test_failure_summary": 2,
+          "assistant_delta": 17,
+          "dialogue_delta": 2,
+          "failure_summary": 1,
+          "raw_error_log": 1,
+          "web_result": 1,
+          "tool_observation": 1
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 68,
+          "min": 1,
+          "p50": 2,
+          "p90": 3,
+          "max": 3,
+          "mean": 1.8676470588235294
+        },
+        "delayed_reuse_ratio": 0.0,
+        "cross_agent_reuse_ratio": 0.42857142857142855,
+        "high_value_delayed_reuse_count": 0,
+        "LRU_regret_candidate_count": 0,
+        "has_asg_opportunity": true
+      }
+    },
+    {
+      "trace_idx": 17,
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "basic": {
+        "num_events": 33,
+        "num_state_events": 12,
+        "num_llm_events": 16,
+        "num_tool_events": 5,
+        "num_agents": 2,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": false,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit": 16
+        },
+        "average_input_state_count": 5.9375,
+        "average_accumulated_context_tokens": 3567.0,
+        "monotonic_context_growth_score": 1.0
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.0,
+        "fraction_file_context_states": 0.08333333333333333,
+        "fraction_failure_states": 0.08333333333333333,
+        "fraction_unknown_or_dialogue_delta": 0.09090909090909091,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "summary_state": 1,
+          "agent_role": 2,
+          "file_context": 1,
+          "test_failure_summary": 2,
+          "assistant_delta": 18,
+          "dialogue_delta": 3,
+          "failure_summary": 1,
+          "raw_error_log": 1,
+          "web_result": 1,
+          "tool_observation": 1
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 73,
+          "min": 1,
+          "p50": 2,
+          "p90": 3,
+          "max": 3,
+          "mean": 1.8630136986301369
+        },
+        "delayed_reuse_ratio": 0.0,
+        "cross_agent_reuse_ratio": 0.42857142857142855,
+        "high_value_delayed_reuse_count": 0,
+        "LRU_regret_candidate_count": 0,
+        "has_asg_opportunity": true
+      }
+    },
+    {
+      "trace_idx": 18,
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "basic": {
+        "num_events": 105,
+        "num_state_events": 45,
+        "num_llm_events": 40,
+        "num_tool_events": 20,
+        "num_agents": 6,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": false,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit": 40
+        },
+        "average_input_state_count": 9.75,
+        "average_accumulated_context_tokens": 10086.8,
+        "monotonic_context_growth_score": 0.7948717948717948
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.0,
+        "fraction_file_context_states": 0.044444444444444446,
+        "fraction_failure_states": 0.06666666666666667,
+        "fraction_unknown_or_dialogue_delta": 0.17142857142857143,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "summary_state": 2,
+          "agent_role": 6,
+          "file_context": 2,
+          "test_failure_summary": 6,
+          "edit_diff": 2,
+          "raw_error_log": 5,
+          "assistant_delta": 50,
+          "dialogue_delta": 18,
+          "failure_summary": 5,
+          "web_result": 4,
+          "tool_observation": 3
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 318,
+          "min": 1,
+          "p50": 2,
+          "p90": 18,
+          "max": 36,
+          "mean": 5.716981132075472
+        },
+        "delayed_reuse_ratio": 0.22012578616352202,
+        "cross_agent_reuse_ratio": 0.8113207547169812,
+        "high_value_delayed_reuse_count": 70,
+        "LRU_regret_candidate_count": 37,
+        "has_asg_opportunity": true
+      }
+    },
+    {
+      "trace_idx": 19,
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "basic": {
+        "num_events": 112,
+        "num_state_events": 49,
+        "num_llm_events": 42,
+        "num_tool_events": 21,
+        "num_agents": 6,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": false,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit": 42
+        },
+        "average_input_state_count": 9.785714285714286,
+        "average_accumulated_context_tokens": 11011.42857142857,
+        "monotonic_context_growth_score": 0.7804878048780488
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.0,
+        "fraction_file_context_states": 0.04081632653061224,
+        "fraction_failure_states": 0.061224489795918366,
+        "fraction_unknown_or_dialogue_delta": 0.1875,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "summary_state": 2,
+          "agent_role": 6,
+          "file_context": 2,
+          "test_failure_summary": 6,
+          "edit_diff": 2,
+          "raw_error_log": 5,
+          "assistant_delta": 53,
+          "dialogue_delta": 21,
+          "failure_summary": 5,
+          "web_result": 4,
+          "tool_observation": 4
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 334,
+          "min": 1,
+          "p50": 2,
+          "p90": 18,
+          "max": 43,
+          "mean": 5.793413173652695
+        },
+        "delayed_reuse_ratio": 0.2155688622754491,
+        "cross_agent_reuse_ratio": 0.8421052631578947,
+        "high_value_delayed_reuse_count": 72,
+        "LRU_regret_candidate_count": 36,
+        "has_asg_opportunity": true
+      }
+    },
+    {
+      "trace_idx": 20,
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "basic": {
+        "num_events": 120,
+        "num_state_events": 53,
+        "num_llm_events": 44,
+        "num_tool_events": 23,
+        "num_agents": 6,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": false,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit": 44
+        },
+        "average_input_state_count": 9.795454545454545,
+        "average_accumulated_context_tokens": 11953.818181818182,
+        "monotonic_context_growth_score": 0.7906976744186046
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.0,
+        "fraction_file_context_states": 0.03773584905660377,
+        "fraction_failure_states": 0.05660377358490566,
+        "fraction_unknown_or_dialogue_delta": 0.2,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "summary_state": 2,
+          "agent_role": 6,
+          "file_context": 2,
+          "test_failure_summary": 7,
+          "edit_diff": 2,
+          "raw_error_log": 5,
+          "assistant_delta": 56,
+          "dialogue_delta": 24,
+          "failure_summary": 5,
+          "web_result": 5,
+          "tool_observation": 4
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 350,
+          "min": 1,
+          "p50": 2,
+          "p90": 17,
+          "max": 49,
+          "mean": 5.78
+        },
+        "delayed_reuse_ratio": 0.21142857142857144,
+        "cross_agent_reuse_ratio": 0.8688524590163934,
+        "high_value_delayed_reuse_count": 74,
+        "LRU_regret_candidate_count": 34,
+        "has_asg_opportunity": true
+      }
+    },
+    {
+      "trace_idx": 21,
+      "quality_label": "high",
+      "exclusion_reasons": [],
+      "basic": {
+        "num_events": 126,
+        "num_state_events": 57,
+        "num_llm_events": 46,
+        "num_tool_events": 23,
+        "num_agents": 6,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": false,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit": 46
+        },
+        "average_input_state_count": 9.826086956521738,
+        "average_accumulated_context_tokens": 12900.869565217392,
+        "monotonic_context_growth_score": 0.8
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.0,
+        "fraction_file_context_states": 0.03508771929824561,
+        "fraction_failure_states": 0.05263157894736842,
+        "fraction_unknown_or_dialogue_delta": 0.20634920634920634,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "summary_state": 2,
+          "agent_role": 6,
+          "file_context": 2,
+          "test_failure_summary": 7,
+          "edit_diff": 2,
+          "raw_error_log": 5,
+          "assistant_delta": 60,
+          "dialogue_delta": 26,
+          "failure_summary": 5,
+          "web_result": 5,
+          "tool_observation": 4
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 366,
+          "min": 1,
+          "p50": 2,
+          "p90": 15,
+          "max": 54,
+          "mean": 5.683060109289618
+        },
+        "delayed_reuse_ratio": 0.20765027322404372,
+        "cross_agent_reuse_ratio": 0.8923076923076924,
+        "high_value_delayed_reuse_count": 76,
+        "LRU_regret_candidate_count": 32,
+        "has_asg_opportunity": true
+      }
+    }
+  ]
+}

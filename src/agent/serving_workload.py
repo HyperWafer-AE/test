@@ -8,6 +8,34 @@ from pathlib import Path
 from .trace_loader import load_trace_dir
 
 
+def compose_traces(
+    traces,
+    arrival_model: str,
+    concurrency: int,
+    seed: int = 0,
+):
+    """Compose single-workflow traces into one in-memory serving trace.
+
+    State ids and agent ids are namespaced per workflow so interleaving cannot
+    create accidental KV equality across independent public traces.
+    """
+
+    if not traces:
+        return []
+    arrivals = _arrival_times(len(traces), arrival_model, concurrency, seed=seed)
+    workflow_events = [
+        _namespace_trace(trace, workflow_id, arrivals[workflow_id], arrival_model)
+        for workflow_id, trace in enumerate(traces)
+    ]
+    return _interleave(workflow_events, arrivals, arrival_model, concurrency)
+
+
+def compose_report(events, num_workflows: int, concurrency: int, arrival_model: str) -> dict:
+    report = _report(events, num_workflows, concurrency, arrival_model)
+    report["status"] = "composed"
+    return report
+
+
 def compose_serving_workload(trace_dir, trace_format: str, arrival_model: str, concurrency: int, output):
     output = Path(output)
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -26,42 +54,67 @@ def compose_serving_workload(trace_dir, trace_format: str, arrival_model: str, c
         output.write_text("[]", encoding="utf-8")
         report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
         return report
-    arrivals = _arrival_times(len(traces), arrival_model, concurrency)
-    workflow_events = []
-    for workflow_id, trace in enumerate(traces):
-        namespaced = []
-        for local_idx, event in enumerate(trace):
-            item = dict(event)
-            metadata = dict(item.get("metadata") or {})
-            metadata.update(
-                {
-                    "source_trace_id": workflow_id,
-                    "workflow_id": f"workflow_{workflow_id}",
-                    "arrival_time": arrivals[workflow_id],
-                    "active_workflow_id": f"workflow_{workflow_id}",
-                    "composition_model": arrival_model,
-                    "workflow_local_event_index": local_idx,
-                }
-            )
-            item["metadata"] = metadata
-            namespaced.append(item)
-        workflow_events.append(namespaced)
-    composed = _interleave(workflow_events, arrivals, arrival_model, concurrency)
+    composed = compose_traces(traces, arrival_model, concurrency)
     output.write_text(json.dumps(composed, indent=2), encoding="utf-8")
-    report = _report(composed, len(traces), concurrency, arrival_model)
-    report["status"] = "composed"
+    report = compose_report(composed, len(traces), concurrency, arrival_model)
     report["output"] = str(output)
     report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
     return report
 
 
-def _arrival_times(num_workflows: int, arrival_model: str, concurrency: int):
+def _namespace_trace(trace, workflow_id: int, arrival_time: int, arrival_model: str):
+    state_map = {}
+    agent_map = {}
+
+    def map_state(state_id):
+        if state_id not in state_map:
+            state_map[state_id] = f"workflow{workflow_id}:{state_id}"
+        return state_map[state_id]
+
+    def map_agent(agent):
+        if agent not in agent_map:
+            agent_map[agent] = f"workflow{workflow_id}_{agent}"
+        return agent_map[agent]
+
+    namespaced = []
+    for local_idx, event in enumerate(trace):
+        item = dict(event)
+        if item.get("type") == "state":
+            item["state_id"] = map_state(item["state_id"])
+            if item.get("owner") not in {"shared", None}:
+                item["owner"] = map_agent(item["owner"])
+        elif item.get("type") == "llm":
+            item["agent"] = map_agent(item.get("agent", "agent_0"))
+            item["input_state_ids"] = [map_state(state_id) for state_id in item.get("input_state_ids", [])]
+            if "new_state_id" in item:
+                item["new_state_id"] = map_state(item["new_state_id"])
+        elif item.get("type") == "tool":
+            item["agent"] = map_agent(item.get("agent", "agent_0"))
+            if "new_state_id" in item:
+                item["new_state_id"] = map_state(item["new_state_id"])
+        metadata = dict(item.get("metadata") or {})
+        metadata.update(
+            {
+                "source_trace_id": workflow_id,
+                "workflow_id": f"workflow_{workflow_id}",
+                "arrival_time": arrival_time,
+                "active_workflow_id": f"workflow_{workflow_id}",
+                "composition_model": arrival_model,
+                "workflow_local_event_index": local_idx,
+            }
+        )
+        item["metadata"] = metadata
+        namespaced.append(item)
+    return namespaced
+
+
+def _arrival_times(num_workflows: int, arrival_model: str, concurrency: int, seed: int = 0):
     if arrival_model == "burst":
         return [0 for _ in range(num_workflows)]
     if arrival_model == "staggered":
         return [idx * max(1, concurrency // 2) for idx in range(num_workflows)]
     if arrival_model == "poisson":
-        rng = random.Random(0)
+        rng = random.Random(seed)
         current = 0.0
         arrivals = []
         for _ in range(num_workflows):
