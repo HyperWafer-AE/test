@@ -66,7 +66,7 @@ from .state_manager import (
     NoCacheStateManager,
 )
 from .trace_loader import load_trace_dir, load_trace_file
-from .trace_profile import delayed_reuse_by_trace
+from .trace_profile import delayed_reuse_by_trace, profile_traces
 
 
 REAL_V2_POLICIES = (
@@ -74,6 +74,7 @@ REAL_V2_POLICIES = (
     "lru-basic",
     "lru-system",
     "kvflow-like",
+    "asg-retention-v2-graph-only",
     "asg-retention-v2-online",
     "asg-retention-v2-oracle",
     "asg-placement-v2-online",
@@ -108,9 +109,16 @@ def load_traces_from_args(args):
             max_traces=args.max_traces,
             min_turns=args.min_turns,
             filter_success=args.filter_success,
+            reject_accumulated_fallback=args.reject_accumulated_fallback,
         )
     if args.trace_file:
-        return [load_trace_file(args.trace_file, trace_format=args.trace_format)]
+        return [
+            load_trace_file(
+                args.trace_file,
+                trace_format=args.trace_format,
+                reject_accumulated_fallback=args.reject_accumulated_fallback,
+            )
+        ]
     raise ValueError("Provide --trace-dir or --trace-file")
 
 
@@ -174,6 +182,7 @@ def make_state_manager(policy: str, memory_budget_bytes: int, model: ModelProfil
     if policy == "kvflow-like":
         return KVFlowLikeStateManager(memory_budget_bytes)
     manager_cls = {
+        "asg-retention-v2-graph-only": ASGRetentionV2StateManager,
         "asg-retention-v2-online": ASGRetentionV2StateManager,
         "asg-retention-v2-oracle": ASGRetentionV2StateManager,
         "asg-placement-v2-online": ASGPlacementV2StateManager,
@@ -197,6 +206,7 @@ def policy_backend_name(policy: str) -> str:
         "lru-basic": "lru",
         "lru-system": "lru",
         "kvflow-like": "kvflow",
+        "asg-retention-v2-graph-only": "asg-retention-v2",
         "asg-retention-v2-online": "asg-retention-v2",
         "asg-retention-v2-oracle": "asg-oracle-retention",
         "asg-placement-v2-online": "asg-placement-v2",
@@ -204,7 +214,82 @@ def policy_backend_name(policy: str) -> str:
     }[policy]
 
 
-def run_real_policy(policy: str, args, trace, predictor, num_traces: int, regret_state_ids: set):
+def _estimator_mode_for(policy: str, args) -> str:
+    if policy == "asg-retention-v2-oracle":
+        return "oracle"
+    if policy in {
+        "asg-retention-v2-online",
+        "asg-placement-v2-online",
+        "asg-prefetch-v2-online",
+    }:
+        return args.prediction_mode
+    return "none"
+
+
+def _baseline_class_for(policy: str) -> str:
+    if policy in {"nocache", "lru-basic"}:
+        return "basic"
+    if policy in {"lru-system", "kvflow-like"}:
+        return "system"
+    if policy == "asg-retention-v2-oracle":
+        return "oracle"
+    if policy.startswith("asg-"):
+        return "asg"
+    return "unknown"
+
+
+def prompt_quality_summary(trace) -> dict:
+    prompt_modes = Counter()
+    full_history_count = 0
+    growth_scores = []
+    num_llm = 0
+    for event in trace:
+        if event.get("type") != "llm":
+            continue
+        num_llm += 1
+        metadata = event.get("metadata") or {}
+        prompt_modes[metadata.get("prompt_reconstruction", "unknown")] += 1
+        if metadata.get("full_history_likely"):
+            full_history_count += 1
+        if "monotonic_context_growth_score" in metadata:
+            growth_scores.append(float(metadata.get("monotonic_context_growth_score") or 0.0))
+    return {
+        "num_llm_events": num_llm,
+        "prompt_reconstruction_distribution": dict(prompt_modes),
+        "full_history_likely_ratio": full_history_count / num_llm if num_llm else 0.0,
+        "mean_monotonic_context_growth_score": (
+            sum(growth_scores) / len(growth_scores) if growth_scores else 0.0
+        ),
+    }
+
+
+def _prompt_quality_label(summary: dict) -> str:
+    num_llm = int(summary.get("num_llm_events", 0))
+    if num_llm <= 0:
+        return "no_llm_events"
+    prompt_modes = summary.get("prompt_reconstruction_distribution") or {}
+    dominant_mode, dominant_count = max(prompt_modes.items(), key=lambda item: item[1]) if prompt_modes else ("unknown", 0)
+    full_history_ratio = float(summary.get("full_history_likely_ratio", 0.0))
+    if prompt_modes.get("accumulated_fallback", 0) / num_llm > 0.5:
+        return "accumulated_fallback"
+    if full_history_ratio >= 0.5:
+        return f"{dominant_mode}_full_history_risk"
+    if dominant_count / num_llm >= 0.9:
+        return dominant_mode
+    return "mixed"
+
+
+def run_real_policy(
+    policy: str,
+    args,
+    trace,
+    predictor,
+    num_traces: int,
+    regret_state_tokens: dict,
+    prompt_quality: dict,
+    selected_trace_count=None,
+    delayed_reuse_ratio=None,
+):
     model = build_model(args)
     hardware = build_hardware(args.cfg, args.topology)
     if hasattr(hardware, "frequency"):
@@ -223,16 +308,24 @@ def run_real_policy(policy: str, args, trace, predictor, num_traces: int, regret
     prefetch_enabled = policy == "asg-prefetch-v2-online"
     oracle_future = policy == "asg-retention-v2-oracle"
     is_asg_policy = policy.startswith("asg-")
+    estimator_mode = _estimator_mode_for(policy, args)
+    active_predictor = predictor if estimator_mode in {PredictionMode.HEURISTIC, PredictionMode.TRACE_STATS} else None
     static_replica = policy != "lru-basic" and not args.disable_static_replica
-    compression = is_asg_policy and not args.disable_observation_compression
+    common_compression = args.enable_common_observation_compression and not args.disable_observation_compression
+    asg_specific_compression = (
+        is_asg_policy
+        and args.enable_asg_observation_compression
+        and not args.disable_observation_compression
+    )
+    compression = common_compression or asg_specific_compression
     compression_threshold = (
         args.asg_large_observation_token_threshold
-        if is_asg_policy
+        if asg_specific_compression
         else args.large_observation_token_threshold
     )
     compression_ratio = (
         args.asg_observation_compression_ratio
-        if is_asg_policy
+        if asg_specific_compression
         else args.observation_compression_ratio
     )
 
@@ -257,18 +350,34 @@ def run_real_policy(policy: str, args, trace, predictor, num_traces: int, regret
         future_horizon=args.horizon,
         oracle_future=oracle_future,
         comm_cost_model=args.comm_cost_model,
-        demand_predictor=None if oracle_future else predictor,
+        demand_predictor=active_predictor,
         enable_static_replica=static_replica,
     )
     events_dict, graph, metrics = builder.build(trace)
     total_cycles, pure_comp_cycles, pure_comm_cycles = collective_event_driver(events_dict, hardware)
     postprocess_agent_events(events_dict, metrics, total_cycles, pure_comp_cycles, pure_comm_cycles)
     retained_types = Counter(state.state_type for state in graph.states.values() if state.resident)
-    regret_preserved = sum(1 for state_id in regret_state_ids if state_id in graph.states and graph.states[state_id].resident)
+    regret_preserved = sum(1 for state_id in regret_state_tokens if state_id in graph.states and graph.states[state_id].resident)
+    regret_tokens_preserved = sum(
+        int(tokens)
+        for state_id, tokens in regret_state_tokens.items()
+        if state_id in graph.states and graph.states[state_id].resident
+    )
     return {
         "policy": policy,
-        "prediction_mode": "oracle" if oracle_future else args.prediction_mode,
+        "prediction_mode": estimator_mode,
+        "estimator_mode": estimator_mode,
+        "asg_builder_enabled": is_asg_policy,
+        "oracle_future": oracle_future,
+        "baseline_class": _baseline_class_for(policy),
+        "prompt_reconstruction_quality": prompt_quality,
+        "prompt_reconstruction_quality_label": _prompt_quality_label(prompt_quality),
+        "observation_compression_class": (
+            "asg_specific" if asg_specific_compression else "common" if common_compression else "none"
+        ),
         "num_traces": num_traces,
+        "selected_trace_count": selected_trace_count,
+        "delayed_reuse_ratio": delayed_reuse_ratio,
         "concurrency": args.concurrency,
         "memory_budget": args.memory_budget_gb,
         "timing": {
@@ -279,6 +388,7 @@ def run_real_policy(policy: str, args, trace, predictor, num_traces: int, regret
         "agent_metrics": metrics.to_dict(),
         "retained_state_type_distribution": dict(retained_types),
         "LRU_regret_states_preserved": regret_preserved,
+        "LRU_regret_tokens_preserved": regret_tokens_preserved,
         "event_stats": {
             "busybarn_events": len(events_dict),
             "asg_states": len(graph.states),
@@ -287,7 +397,7 @@ def run_real_policy(policy: str, args, trace, predictor, num_traces: int, regret
     }
 
 
-def regret_candidate_ids(trace, horizon: int = 16, min_tokens: int = 128) -> set:
+def regret_candidate_tokens(trace, horizon: int = 16, min_tokens: int = 128) -> dict:
     state_tokens = {}
     for event in trace:
         if event.get("type") == "state":
@@ -297,14 +407,18 @@ def regret_candidate_ids(trace, horizon: int = 16, min_tokens: int = 128) -> set
         elif event.get("type") == "llm":
             state_tokens[event["new_state_id"]] = int(event.get("output_tokens", 1))
     llm_steps = [(idx, event) for idx, event in enumerate(trace) if event.get("type") == "llm"]
-    candidates = set()
+    candidates = {}
     for pos, (step_idx, event) in enumerate(llm_steps):
         for state_id in event.get("input_state_ids", []):
             future = llm_steps[pos + 1 : pos + horizon + 1]
             reused = any(state_id in future_event.get("input_state_ids", []) for _, future_event in future)
             if reused and state_tokens.get(state_id, 0) >= min_tokens:
-                candidates.add(state_id)
+                candidates[state_id] = int(state_tokens.get(state_id, 0))
     return candidates
+
+
+def regret_candidate_ids(trace, horizon: int = 16, min_tokens: int = 128) -> set:
+    return set(regret_candidate_tokens(trace, horizon=horizon, min_tokens=min_tokens))
 
 
 def write_summary_csv(path, results):
@@ -313,7 +427,15 @@ def write_summary_csv(path, results):
     fields = [
         "policy",
         "prediction_mode",
+        "estimator_mode",
+        "asg_builder_enabled",
+        "oracle_future",
+        "baseline_class",
+        "prompt_reconstruction_quality",
+        "observation_compression_class",
         "num_traces",
+        "selected_trace_count",
+        "delayed_reuse_ratio",
         "concurrency",
         "memory_budget",
         "effective_prefill_tokens",
@@ -333,6 +455,7 @@ def write_summary_csv(path, results):
         "remote_state_hits",
         "retained_state_type_distribution",
         "LRU_regret_states_preserved",
+        "LRU_regret_tokens_preserved",
         "oracle_gap",
     ]
     path = Path(path)
@@ -346,7 +469,15 @@ def write_summary_csv(path, results):
                 {
                     "policy": result["policy"],
                     "prediction_mode": result["prediction_mode"],
+                    "estimator_mode": result["estimator_mode"],
+                    "asg_builder_enabled": result["asg_builder_enabled"],
+                    "oracle_future": result["oracle_future"],
+                    "baseline_class": result["baseline_class"],
+                    "prompt_reconstruction_quality": result["prompt_reconstruction_quality_label"],
+                    "observation_compression_class": result["observation_compression_class"],
                     "num_traces": result["num_traces"],
+                    "selected_trace_count": result.get("selected_trace_count", ""),
+                    "delayed_reuse_ratio": result.get("delayed_reuse_ratio", ""),
                     "concurrency": result["concurrency"],
                     "memory_budget": result["memory_budget"],
                     "effective_prefill_tokens": metrics["effective_prefill_tokens"],
@@ -366,6 +497,7 @@ def write_summary_csv(path, results):
                     "remote_state_hits": metrics["remote_state_hits"],
                     "retained_state_type_distribution": json.dumps(result["retained_state_type_distribution"], sort_keys=True),
                     "LRU_regret_states_preserved": result["LRU_regret_states_preserved"],
+                    "LRU_regret_tokens_preserved": result["LRU_regret_tokens_preserved"],
                     "oracle_gap": _oracle_gap(metrics["effective_prefill_tokens"], lru_eff, oracle_eff),
                 }
             )
@@ -384,13 +516,41 @@ def _oracle_gap(value, lru_value, oracle_value):
     return (value - oracle_value) / (lru_value - oracle_value)
 
 
+def write_missing_report(args, output_dir: Path) -> Path:
+    report = {
+        "status": "missing_real_trace_data",
+        "trace_dir": args.trace_dir,
+        "trace_file": args.trace_file,
+        "trace_format": args.trace_format,
+        "message": "No loadable real trace files were found. No policy replay results were generated.",
+    }
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    local_report = output_dir / "real_trace_missing_report.json"
+    local_report.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    canonical_report = _repo_root() / "agent_results" / "real_trace_missing_report.json"
+    canonical_report.parent.mkdir(parents=True, exist_ok=True)
+    if canonical_report.resolve() != local_report.resolve():
+        canonical_report.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    return local_report
+
+
 def run_suite(args, traces, output_dir: Path, policies=REAL_V2_POLICIES):
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
     combined_trace = interleave_traces(traces, args.concurrency)
     if not combined_trace:
         raise ValueError("No trace events to replay.")
     train_traces = traces
     if args.train_trace_dir:
-        train_traces = load_trace_dir(args.train_trace_dir, trace_format=args.trace_format, max_traces=args.max_traces)
+        train_traces = load_trace_dir(
+            args.train_trace_dir,
+            trace_format=args.trace_format,
+            max_traces=args.max_traces,
+            min_turns=args.min_turns,
+            filter_success=args.filter_success,
+            reject_accumulated_fallback=args.reject_accumulated_fallback,
+        )
     stats = fit_trace_stats(train_traces, horizon=args.horizon) if args.prediction_mode == PredictionMode.TRACE_STATS else None
     predictor = DemandPredictor(
         mode=args.prediction_mode,
@@ -402,10 +562,22 @@ def run_suite(args, traces, output_dir: Path, policies=REAL_V2_POLICIES):
         json.dumps(prediction_diagnostics(combined_trace, predictor, args.horizon), indent=2),
         encoding="utf-8",
     )
-    regret_ids = regret_candidate_ids(combined_trace, horizon=args.horizon)
+    prompt_quality = prompt_quality_summary(combined_trace)
+    dataset_profile = profile_traces(traces, delayed_reuse_k=max(1, args.horizon // 2))
+    regret_tokens = regret_candidate_tokens(combined_trace, horizon=args.horizon)
     results = []
     for policy in policies:
-        result = run_real_policy(policy, args, combined_trace, predictor, len(traces), regret_ids)
+        result = run_real_policy(
+            policy,
+            args,
+            combined_trace,
+            predictor,
+            len(traces),
+            regret_tokens,
+            prompt_quality,
+            selected_trace_count=getattr(args, "selected_trace_count", None),
+            delayed_reuse_ratio=dataset_profile.get("delayed_reuse_ratio"),
+        )
         results.append(result)
         (output_dir / f"{policy}.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
     write_summary_csv(output_dir / "summary.csv", results)
@@ -475,7 +647,9 @@ def prediction_diagnostics(trace, predictor: DemandPredictor, horizon: int = 16)
 
 
 def write_delayed_reuse_subset(args, traces, output_dir: Path):
-    rows = delayed_reuse_by_trace(traces, delayed_reuse_k=args.horizon // 2)
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    rows = delayed_reuse_by_trace(traces, delayed_reuse_k=max(1, args.horizon // 2))
     ratios = sorted(row["delayed_reuse_ratio"] for row in rows)
     median_ratio = ratios[len(ratios) // 2] if ratios else 0.0
     selected = [traces[row["trace_idx"]] for row in rows if row["delayed_reuse_ratio"] > median_ratio]
@@ -484,19 +658,27 @@ def write_delayed_reuse_subset(args, traces, output_dir: Path):
         "selected_trace_count": len(selected),
         "total_trace_count": len(traces),
         "rows": rows,
+        "warning": "" if selected else "No trace exceeded the median delayed-reuse ratio; subset replay was skipped.",
     }
     (output_dir / "delayed_reuse_subset.json").write_text(json.dumps(metadata, indent=2), encoding="utf-8")
+    subset_output = output_dir / "delayed_reuse_subset"
+    subset_output.mkdir(parents=True, exist_ok=True)
     if not selected:
+        write_summary_csv(subset_output / "summary.csv", [])
         return
     subset_args = SimpleNamespace(**vars(args))
-    subset_args.output_dir = str(output_dir / "delayed_reuse_subset")
-    subset_output = Path(subset_args.output_dir)
-    subset_output.mkdir(parents=True, exist_ok=True)
+    subset_args.output_dir = str(subset_output)
+    subset_args.selected_trace_count = len(selected)
     run_suite(
         subset_args,
         selected,
         subset_output,
-        policies=("lru-system", "asg-retention-v2-online", "asg-retention-v2-oracle"),
+        policies=(
+            "lru-system",
+            "asg-retention-v2-graph-only",
+            "asg-retention-v2-online",
+            "asg-retention-v2-oracle",
+        ),
     )
 
 
@@ -508,6 +690,7 @@ def parse_args(argv=None):
     parser.add_argument("--max-traces", type=int)
     parser.add_argument("--min-turns", type=int, default=0)
     parser.add_argument("--filter-success", choices=("all", "success", "fail"), default="all")
+    parser.add_argument("--reject-accumulated-fallback", action="store_true")
     parser.add_argument("--train-trace-dir")
     parser.add_argument("--prediction-mode", choices=(PredictionMode.ORACLE, PredictionMode.HEURISTIC, PredictionMode.TRACE_STATS), default=PredictionMode.HEURISTIC)
     parser.add_argument("--horizon", type=int, default=16)
@@ -536,6 +719,8 @@ def parse_args(argv=None):
     parser.add_argument("--max-prefetch-bytes", type=int, default=536870912)
     parser.add_argument("--prefetch-wait-fraction", type=float, default=0.8)
     parser.add_argument("--disable-static-replica", action="store_true")
+    parser.add_argument("--enable-common-observation-compression", action="store_true")
+    parser.add_argument("--enable-asg-observation-compression", action="store_true")
     parser.add_argument("--disable-observation-compression", action="store_true")
     parser.add_argument("--large-observation-token-threshold", type=int, default=2048)
     parser.add_argument("--observation-compression-ratio", type=float, default=0.25)
@@ -551,9 +736,13 @@ def parse_args(argv=None):
 
 def main(argv=None):
     args = parse_args(argv)
-    traces = load_traces_from_args(args)
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
+    traces = load_traces_from_args(args)
+    if not traces:
+        missing_report = write_missing_report(args, output_dir)
+        print(f"No loadable real traces found. Wrote missing-data report to {missing_report}")
+        return []
     results = run_suite(args, traces, output_dir)
     write_delayed_reuse_subset(args, traces, output_dir)
     print(f"Wrote {len(results)} real-trace policy results to {output_dir}")

@@ -16,7 +16,7 @@ SUPPORTED_TRACE_FORMATS = {
 }
 
 
-def load_trace_file(path, trace_format: str = "auto") -> List[dict]:
+def load_trace_file(path, trace_format: str = "auto", reject_accumulated_fallback: bool = False) -> List[dict]:
     path = Path(path)
     if trace_format not in SUPPORTED_TRACE_FORMATS:
         raise ValueError(f"Unsupported trace format: {trace_format}")
@@ -26,11 +26,16 @@ def load_trace_file(path, trace_format: str = "auto") -> List[dict]:
     if path.suffix.lower() == ".jsonl":
         records = _read_jsonl(path)
         if fmt == "normalized_jsonl":
-            return normalize_jsonl_records(records, trace_format=fmt, source_id=path.stem)
-        return normalize_jsonl_records(records, trace_format=fmt, source_id=path.stem)
+            trace = normalize_jsonl_records(records, trace_format=fmt, source_id=path.stem)
+        else:
+            trace = normalize_jsonl_records(records, trace_format=fmt, source_id=path.stem)
+        _reject_if_accumulated_fallback(path, trace, reject_accumulated_fallback)
+        return trace
     if path.suffix.lower() == ".json":
         payload = json.loads(path.read_text(encoding="utf-8-sig"))
-        return normalize_payload(payload, trace_format=fmt, source_id=path.stem)
+        trace = normalize_payload(payload, trace_format=fmt, source_id=path.stem)
+        _reject_if_accumulated_fallback(path, trace, reject_accumulated_fallback)
+        return trace
     raise ValueError(
         f"Unsupported file extension for {path}. Convert source trajectories to JSON/JSONL first."
     )
@@ -42,6 +47,7 @@ def load_trace_dir(
     max_traces: Optional[int] = None,
     min_turns: int = 0,
     filter_success: str = "all",
+    reject_accumulated_fallback: bool = False,
 ) -> List[List[dict]]:
     path = Path(path)
     if not path.exists():
@@ -56,7 +62,11 @@ def load_trace_dir(
     traces = []
     for file_path in files:
         try:
-            trace = load_trace_file(file_path, trace_format=trace_format)
+            trace = load_trace_file(
+                file_path,
+                trace_format=trace_format,
+                reject_accumulated_fallback=reject_accumulated_fallback,
+            )
         except Exception as exc:
             if trace_format != "auto":
                 raise
@@ -151,6 +161,24 @@ def _success_filter_ok(trace: List[dict], filter_success: str) -> bool:
         return True
     success = any(bool(value) for value in values)
     return success if filter_success == "success" else not success
+
+
+def _reject_if_accumulated_fallback(path: Path, trace: List[dict], reject: bool):
+    if not reject:
+        return
+    llm_events = [event for event in trace if event.get("type") == "llm"]
+    if not llm_events:
+        return
+    fallback = [
+        event
+        for event in llm_events
+        if (event.get("metadata") or {}).get("prompt_reconstruction") == "accumulated_fallback"
+    ]
+    if len(fallback) / len(llm_events) > 0.5:
+        raise ValueError(
+            f"{path} uses accumulated_fallback prompt reconstruction for "
+            f"{len(fallback)}/{len(llm_events)} LLM events"
+        )
 
 
 def expected_source_format_notes() -> dict:

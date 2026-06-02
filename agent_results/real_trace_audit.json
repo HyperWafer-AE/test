@@ -1,0 +1,186 @@
+{
+  "num_loaded_traces": 3,
+  "num_high_quality_traces": 0,
+  "num_low_quality_traces": 3,
+  "min_turns": 4,
+  "allow_reconstructed_full_history": false,
+  "delayed_reuse_k": 8,
+  "exclusion_reason_counts": {
+    "reconstructed_full_history_likely": 3
+  },
+  "real_trace_data_available": true,
+  "high_quality_real_trace_available": false,
+  "warning": "No high-quality traces under current criteria; report sample/low-quality results only.",
+  "traces": [
+    {
+      "trace_idx": 0,
+      "quality_label": "low",
+      "exclusion_reasons": [
+        "reconstructed_full_history_likely"
+      ],
+      "basic": {
+        "num_events": 53,
+        "num_state_events": 3,
+        "num_llm_events": 25,
+        "num_tool_events": 25,
+        "num_agents": 1,
+        "success": false
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": false,
+        "reconstructed_from_messages": true,
+        "reconstructed_full_history_likely": true,
+        "prompt_reconstruction_distribution": {
+          "message_history": 25
+        },
+        "average_input_state_count": 26.0,
+        "average_accumulated_context_tokens": 8791.12,
+        "monotonic_context_growth_score": 1.0
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 0.0,
+        "fraction_tool_states": 0.0,
+        "fraction_file_context_states": 0.0,
+        "fraction_failure_states": 0.0,
+        "fraction_unknown_or_dialogue_delta": 0.0
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 600,
+          "min": 2,
+          "p50": 2,
+          "p90": 2,
+          "max": 2,
+          "mean": 2.0
+        },
+        "delayed_reuse_ratio": 0.0,
+        "cross_agent_reuse_ratio": 0.0,
+        "high_value_delayed_reuse_count": 0,
+        "LRU_regret_candidate_count": 0
+      }
+    },
+    {
+      "trace_idx": 1,
+      "quality_label": "low",
+      "exclusion_reasons": [
+        "reconstructed_full_history_likely"
+      ],
+      "basic": {
+        "num_events": 85,
+        "num_state_events": 3,
+        "num_llm_events": 41,
+        "num_tool_events": 41,
+        "num_agents": 1,
+        "success": false
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": false,
+        "reconstructed_from_messages": true,
+        "reconstructed_full_history_likely": true,
+        "prompt_reconstruction_distribution": {
+          "message_history": 41
+        },
+        "average_input_state_count": 42.0,
+        "average_accumulated_context_tokens": 12723.609756097561,
+        "monotonic_context_growth_score": 1.0
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 0.0,
+        "fraction_tool_states": 0.0,
+        "fraction_file_context_states": 0.0,
+        "fraction_failure_states": 0.0,
+        "fraction_unknown_or_dialogue_delta": 0.0
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 1640,
+          "min": 2,
+          "p50": 2,
+          "p90": 2,
+          "max": 2,
+          "mean": 2.0
+        },
+        "delayed_reuse_ratio": 0.0,
+        "cross_agent_reuse_ratio": 0.0,
+        "high_value_delayed_reuse_count": 0,
+        "LRU_regret_candidate_count": 0
+      }
+    },
+    {
+      "trace_idx": 2,
+      "quality_label": "low",
+      "exclusion_reasons": [
+        "reconstructed_full_history_likely"
+      ],
+      "basic": {
+        "num_events": 77,
+        "num_state_events": 3,
+        "num_llm_events": 37,
+        "num_tool_events": 37,
+        "num_agents": 1,
+        "success": false
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": false,
+        "reconstructed_from_messages": true,
+        "reconstructed_full_history_likely": true,
+        "prompt_reconstruction_distribution": {
+          "message_history": 37
+        },
+        "average_input_state_count": 38.0,
+        "average_accumulated_context_tokens": 9180.108108108108,
+        "monotonic_context_growth_score": 1.0
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 0.0,
+        "fraction_tool_states": 0.0,
+        "fraction_file_context_states": 0.0,
+        "fraction_failure_states": 0.0,
+        "fraction_unknown_or_dialogue_delta": 0.0
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 1332,
+          "min": 2,
+          "p50": 2,
+          "p90": 2,
+          "max": 2,
+          "mean": 2.0
+        },
+        "delayed_reuse_ratio": 0.0,
+        "cross_agent_reuse_ratio": 0.0,
+        "high_value_delayed_reuse_count": 0,
+        "LRU_regret_candidate_count": 0
+      }
+    }
+  ],
+  "delayed_reuse_by_trace": [
+    {
+      "trace_idx": 0,
+      "delayed_reuse_ratio": 0.0,
+      "num_reuses": 600,
+      "high_value_delayed_reuse_tokens": 0,
+      "LRU_regret_candidate_count": 0
+    },
+    {
+      "trace_idx": 1,
+      "delayed_reuse_ratio": 0.0,
+      "num_reuses": 1640,
+      "high_value_delayed_reuse_tokens": 0,
+      "LRU_regret_candidate_count": 0
+    },
+    {
+      "trace_idx": 2,
+      "delayed_reuse_ratio": 0.0,
+      "num_reuses": 1332,
+      "high_value_delayed_reuse_tokens": 0,
+      "LRU_regret_candidate_count": 0
+    }
+  ]
+}

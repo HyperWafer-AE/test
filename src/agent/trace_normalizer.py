@@ -16,18 +16,21 @@ def normalize_payload(payload, trace_format: str = "auto", source_id: str = "tra
         first_row = payload["rows"][0]
         payload = first_row.get("row", first_row)
     if _looks_like_normalized_trace(payload):
-        return validate_trace(list(payload))
+        return _annotate_prompt_quality(validate_trace(list(payload)), default_reconstruction="explicit")
     if isinstance(payload, dict) and _looks_like_normalized_trace(payload.get("events")):
-        return validate_trace(payload["events"])
+        return _annotate_prompt_quality(validate_trace(payload["events"]), default_reconstruction="explicit")
     if trace_format == "normalized_json":
-        return validate_trace(payload if isinstance(payload, list) else payload.get("events", []))
+        return _annotate_prompt_quality(
+            validate_trace(payload if isinstance(payload, list) else payload.get("events", [])),
+            default_reconstruction="explicit",
+        )
     return normalize_generic_react(payload, source_id=source_id, trace_format=trace_format)
 
 
 def normalize_jsonl_records(records: Iterable[dict], trace_format: str = "auto", source_id: str = "trace") -> List[dict]:
     records = list(records)
     if _looks_like_normalized_trace(records):
-        return validate_trace(records)
+        return _annotate_prompt_quality(validate_trace(records), default_reconstruction="explicit")
     return normalize_generic_react(records, source_id=source_id, trace_format=trace_format)
 
 
@@ -135,7 +138,10 @@ def _success_from_payload(payload) -> Optional[bool]:
 def normalize_generic_react(payload, source_id: str, trace_format: str = "auto") -> List[dict]:
     payload = _decode_maybe_json(payload)
     if isinstance(payload, dict) and _is_message_trajectory(payload.get("messages")):
-        return validate_trace(_normalize_message_trajectory(payload, source_id, trace_format))
+        return _annotate_prompt_quality(
+            validate_trace(_normalize_message_trajectory(payload, source_id, trace_format)),
+            default_reconstruction="message_history",
+        )
     events = []
     current_states = []
     seen_state_ids = set()
@@ -151,13 +157,14 @@ def normalize_generic_react(payload, source_id: str, trace_format: str = "auto")
         messages = _extract_messages(step)
         if messages:
             state_events = segment_messages(messages, source_id=f"{source_id}:turn{turn}", agent=agent)
+            input_ids = []
             for state in state_events:
                 if state["state_id"] not in seen_state_ids:
                     state["metadata"].setdefault("trace_format", trace_format)
                     events.append(state)
                     seen_state_ids.add(state["state_id"])
-                current_states.append(state["state_id"])
-            current_states = list(dict.fromkeys(current_states))
+                input_ids.append(state["state_id"])
+            input_ids = list(dict.fromkeys(input_ids))
 
             assistant_text = _extract_assistant_text(step)
             event_id = _event_id(source_id, "llm", turn)
@@ -167,16 +174,21 @@ def normalize_generic_react(payload, source_id: str, trace_format: str = "auto")
                     event_id=event_id,
                     agent=agent,
                     turn=turn,
-                    input_state_ids=list(current_states),
+                    input_state_ids=list(input_ids),
                     input_segments=state_events,
                     append_tokens=estimate_tokens(messages[-1].get("content", "")),
                     output_tokens=estimate_tokens(assistant_text),
                     new_state_id=output_state_id,
                     phase=_phase_from_step(step),
-                    metadata={"raw": step, "trace_success": trace_success, "trace_format": trace_format},
+                    metadata={
+                        "raw": step,
+                        "trace_success": trace_success,
+                        "trace_format": trace_format,
+                        "prompt_reconstruction": "message_history",
+                    },
                 ).to_dict()
             )
-            current_states.append(output_state_id)
+            current_states = list(dict.fromkeys(input_ids + [output_state_id]))
         elif isinstance(step, dict) and (step.get("thought") or step.get("action")) and current_states:
             assistant_text = "\n".join(str(step.get(key, "")) for key in ("thought", "action") if step.get(key))
             event_id = _event_id(source_id, "llm", turn)
@@ -191,7 +203,12 @@ def normalize_generic_react(payload, source_id: str, trace_format: str = "auto")
                     output_tokens=estimate_tokens(assistant_text),
                     new_state_id=output_state_id,
                     phase=_phase_from_step(step),
-                    metadata={"raw": step, "trace_success": trace_success, "trace_format": trace_format},
+                    metadata={
+                        "raw": step,
+                        "trace_success": trace_success,
+                        "trace_format": trace_format,
+                        "prompt_reconstruction": "accumulated_fallback",
+                    },
                 ).to_dict()
             )
             current_states.append(output_state_id)
@@ -226,7 +243,7 @@ def normalize_generic_react(payload, source_id: str, trace_format: str = "auto")
             )
             current_states.append(state["state_id"])
 
-    return validate_trace(events)
+    return _annotate_prompt_quality(validate_trace(events), default_reconstruction="accumulated_fallback")
 
 
 def _is_message_trajectory(messages) -> bool:
@@ -286,7 +303,12 @@ def _normalize_message_trajectory(payload: dict, source_id: str, trace_format: s
                     output_tokens=estimate_tokens(content),
                     new_state_id=output_state_id,
                     phase=_phase_from_text(content),
-                    metadata={"raw": message, "trace_success": trace_success, "trace_format": trace_format},
+                    metadata={
+                        "raw": message,
+                        "trace_success": trace_success,
+                        "trace_format": trace_format,
+                        "prompt_reconstruction": "message_history",
+                    },
                 ).to_dict()
             )
             current_states.append(output_state_id)
@@ -330,6 +352,68 @@ def _normalize_message_trajectory(payload: dict, source_id: str, trace_format: s
                 current_states.append(state["state_id"])
                 last_user_text = str(content)
     return events
+
+
+def _annotate_prompt_quality(trace: List[dict], default_reconstruction: str = "explicit") -> List[dict]:
+    """Annotate LLM prompt provenance and full-history risk.
+
+    Public agent logs vary from exact normalized prompt segments to lossy message
+    histories. The evaluator must know which case it is using before making
+    real-trace claims.
+    """
+    trace = [dict(event) for event in trace]
+    llm_events = [event for event in trace if event.get("type") == "llm"]
+    input_counts = [len(event.get("input_state_ids", [])) for event in llm_events]
+    token_lookup = _state_token_lookup(trace)
+    context_tokens = [
+        sum(token_lookup.get(state_id, 1) for state_id in event.get("input_state_ids", []))
+        for event in llm_events
+    ]
+    growth_score = _monotonic_growth_score(input_counts)
+    full_history_trace = len(input_counts) >= 4 and growth_score >= 0.8 and input_counts[-1] > input_counts[0]
+    token_growth_trace = (
+        len(context_tokens) >= 4
+        and _monotonic_growth_score(context_tokens) >= 0.8
+        and context_tokens[-1] > context_tokens[0]
+    )
+    for event in trace:
+        if event.get("type") != "llm":
+            continue
+        metadata = dict(event.get("metadata") or {})
+        reconstruction = metadata.get("prompt_reconstruction")
+        if reconstruction is None:
+            reconstruction = "explicit" if event.get("input_segments") else default_reconstruction
+        metadata["prompt_reconstruction"] = reconstruction
+        metadata["monotonic_context_growth_score"] = growth_score
+        metadata["full_history_likely"] = bool(
+            reconstruction == "accumulated_fallback" or full_history_trace or token_growth_trace
+        )
+        event["metadata"] = metadata
+    return trace
+
+
+def _state_token_lookup(trace: List[dict]) -> dict:
+    tokens = {}
+    for event in trace:
+        if event.get("type") == "state":
+            tokens[event["state_id"]] = int(event.get("tokens", 1))
+        elif event.get("type") == "tool":
+            tokens[event["new_state_id"]] = int(event.get("output_tokens", 1))
+        elif event.get("type") == "llm":
+            tokens[event["new_state_id"]] = int(event.get("output_tokens", 1))
+    return tokens
+
+
+def _monotonic_growth_score(values: List[int]) -> float:
+    if len(values) <= 1:
+        return 0.0
+    comparisons = 0
+    non_decreasing = 0
+    for left, right in zip(values, values[1:]):
+        comparisons += 1
+        if right >= left:
+            non_decreasing += 1
+    return non_decreasing / comparisons if comparisons else 0.0
 
 
 def _looks_like_observation(content: object) -> bool:

@@ -4,7 +4,7 @@ from typing import Dict, List, Optional, Set
 
 
 class FutureDemandIndex:
-    """Oracle-only index over synthetic future state consumers."""
+    """Oracle-only index over replay-trace future state consumers."""
 
     def __init__(self, trace: list[dict], horizon: int = 16):
         self.trace = trace
