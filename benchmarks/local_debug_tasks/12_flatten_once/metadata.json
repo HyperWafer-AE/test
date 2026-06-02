@@ -1,0 +1,11 @@
+{
+  "task_id": "flatten_once",
+  "module": "data_cleaner.py",
+  "issue": "flatten_once should flatten one nesting level",
+  "expected_command": "python -m pytest -q",
+  "patch": {
+    "path": "data_cleaner.py",
+    "old": "return [items]",
+    "new": "return [x for group in items for x in group]"
+  }
+}

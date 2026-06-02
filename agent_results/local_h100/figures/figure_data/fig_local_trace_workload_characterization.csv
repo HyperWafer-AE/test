@@ -1,0 +1,9 @@
+state_type,mean_tokens
+system_prefix,17.0
+task_prefix,20.442307692307693
+agent_role,12.0
+assistant_delta,48.0
+file_context,71.26923076923077
+test_failure_summary,136.94117647058823
+edit_diff,30.384615384615383
+tool_observation,71.0

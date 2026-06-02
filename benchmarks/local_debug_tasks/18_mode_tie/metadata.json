@@ -1,0 +1,11 @@
+{
+  "task_id": "mode_tie",
+  "module": "stats.py",
+  "issue": "mode should choose earliest value on tie",
+  "expected_command": "python -m pytest -q",
+  "patch": {
+    "path": "stats.py",
+    "old": "return sorted(counts, key=counts.get)[-1]",
+    "new": "return max(counts, key=lambda x: (counts[x], -values.index(x)))"
+  }
+}

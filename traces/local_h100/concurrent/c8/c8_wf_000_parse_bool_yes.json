@@ -1,0 +1,1602 @@
+[
+  {
+    "state_id": "state_8d5f5556bd9936e9cd",
+    "state_type": "system_prefix",
+    "owner": "shared",
+    "tokens": 17,
+    "semantic_key": "system:c8_wf_000_parse_bool_yes",
+    "exact_token_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+    "metadata": {
+      "scope": "static_prefix",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+      "text_preview": "You are a coding agent. Use explicit state references, inspect files, run tests, and repair the bug.",
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "state_id": "state_f3fa8c85af3067bea1",
+    "state_type": "task_prefix",
+    "owner": "shared",
+    "tokens": 19,
+    "semantic_key": "task:c8_wf_000_parse_bool_yes",
+    "exact_token_hash": "de303e8150fa3809cf304edc1a117bf4cf611058cb162c9d52d4534f276ceaa9",
+    "metadata": {
+      "scope": "issue",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "de303e8150fa3809cf304edc1a117bf4cf611058cb162c9d52d4534f276ceaa9",
+      "text_preview": "Bug report: parse_bool should accept yes/no values.\n\nRun `python -m pytest -q` and patch `config_parser.py` so the test passes.",
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "state_id": "state_670deb33766ee04ba3",
+    "state_type": "agent_role",
+    "owner": "agent_0",
+    "tokens": 12,
+    "semantic_key": "role:c8_wf_000_parse_bool_yes:agent_0",
+    "exact_token_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+    "metadata": {
+      "framework": "local_react_coding_agent",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+      "text_preview": "Agent role: local_react_coding_agent. Prefer concise plans, concrete file references, and test-driven repair.",
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "state_id": "state_86ec51d6d1d71e248e",
+    "state_type": "assistant_delta",
+    "owner": "agent_0",
+    "tokens": 33,
+    "semantic_key": "assistant:llm_plan_c8_wf_000_parse_bool_yes",
+    "exact_token_hash": "6553b78d6330b571320d19d46ae77b9dd7c6d321feb40164661a6917e6762d74",
+    "producer_event_id": "llm_plan_c8_wf_000_parse_bool_yes",
+    "metadata": {
+      "phase": "planning",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "6553b78d6330b571320d19d46ae77b9dd7c6d321feb40164661a6917e6762d74",
+      "text_preview": "### Summarize the Bug:\nThe bug report indicates that the `parse_bool` function in the codebase is not correctly handling \"yes\" and \"no\" values as boolean inputs. Specifically, the function should accept \"yes\" as",
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "event_id": "llm_plan_c8_wf_000_parse_bool_yes",
+    "agent": "agent_0",
+    "turn": 1,
+    "input_state_ids": [
+      "state_8d5f5556bd9936e9cd",
+      "state_f3fa8c85af3067bea1",
+      "state_670deb33766ee04ba3"
+    ],
+    "append_tokens": 248,
+    "output_tokens": 48,
+    "new_state_id": "state_86ec51d6d1d71e248e",
+    "new_state_type": "assistant_delta",
+    "timestamp_start": 1780409651.3496823,
+    "timestamp_end": 1780409657.1849828,
+    "input_segments": [
+      {
+        "state_id": "state_8d5f5556bd9936e9cd",
+        "state_type": "system_prefix",
+        "owner": "shared",
+        "tokens": 17,
+        "text_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+        "semantic_key": "system:c8_wf_000_parse_bool_yes",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "static_prefix",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_f3fa8c85af3067bea1",
+        "state_type": "task_prefix",
+        "owner": "shared",
+        "tokens": 19,
+        "text_hash": "de303e8150fa3809cf304edc1a117bf4cf611058cb162c9d52d4534f276ceaa9",
+        "semantic_key": "task:c8_wf_000_parse_bool_yes",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "issue",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_670deb33766ee04ba3",
+        "state_type": "agent_role",
+        "owner": "agent_0",
+        "tokens": 12,
+        "text_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+        "semantic_key": "role:c8_wf_000_parse_bool_yes:agent_0",
+        "producer_event_id": null,
+        "metadata": {
+          "framework": "local_react_coding_agent",
+          "tokenizer": "fallback:whitespace"
+        }
+      }
+    ],
+    "phase": "planning",
+    "metadata": {
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "history_mode": "selective_state",
+      "prompt_reconstruction": "explicit_selective_state",
+      "full_history_likely": false,
+      "tokenizer": "fallback:whitespace",
+      "request_id": "5c78aab3d50443c59519b0ca5eebf152",
+      "error": null,
+      "step_id": "llm_plan",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "llm"
+  },
+  {
+    "state_id": "state_6863bf68265bea699d",
+    "state_type": "file_context",
+    "owner": "agent_0",
+    "tokens": 6,
+    "semantic_key": "tool:Glob:d0b65d3386161d38",
+    "exact_token_hash": "d07043c0a2b19284d64eb664dec0e87325645f2ab889c9cb92a2e95293bac284",
+    "producer_event_id": "tool_786f88cbbc29",
+    "metadata": {
+      "tool": "Glob",
+      "status": "ok",
+      "paths": [
+        "config_parser.py",
+        "data_cleaner.py",
+        "math_utils.py",
+        "stats.py",
+        "tests/test_parse_bool_yes.py",
+        "text_utils.py"
+      ],
+      "full_output_path": null,
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "d07043c0a2b19284d64eb664dec0e87325645f2ab889c9cb92a2e95293bac284",
+      "text_preview": "config_parser.py\ndata_cleaner.py\nmath_utils.py\nstats.py\ntests/test_parse_bool_yes.py\ntext_utils.py",
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "type": "tool",
+    "event_id": "tool_786f88cbbc29",
+    "agent": "agent_0",
+    "turn": 1,
+    "tool": "Glob",
+    "latency": 32,
+    "output_tokens": 6,
+    "status": "ok",
+    "new_state_id": "state_6863bf68265bea699d",
+    "new_state_type": "file_context",
+    "timestamp_start": 1780409657.1892538,
+    "timestamp_end": 1780409657.2220302,
+    "metadata": {
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "step_id": "tool_glob",
+      "args": {
+        "pattern": "**/*.py"
+      },
+      "latency_ms": 32.7763557434082,
+      "stdout_stderr_hash": "ba51ed5afd348721282b2e437b054c2dec4759d48590b6b8ce0c7f34fb98c394",
+      "truncated_output": "config_parser.py\ndata_cleaner.py\nmath_utils.py\nstats.py\ntests/test_parse_bool_yes.py\ntext_utils.py",
+      "paths": [
+        "config_parser.py",
+        "data_cleaner.py",
+        "math_utils.py",
+        "stats.py",
+        "tests/test_parse_bool_yes.py",
+        "text_utils.py"
+      ],
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    }
+  },
+  {
+    "state_id": "state_da5740ab2a492beb96",
+    "state_type": "assistant_delta",
+    "owner": "agent_0",
+    "tokens": 36,
+    "semantic_key": "assistant:llm_after_glob_c8_wf_000_parse_bool_yes",
+    "exact_token_hash": "43da65e4fdc88133085b8ad6c776e78f4db82082329c7e351c4c7d9124da0829",
+    "producer_event_id": "llm_after_glob_c8_wf_000_parse_bool_yes",
+    "metadata": {
+      "phase": "localization",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "43da65e4fdc88133085b8ad6c776e78f4db82082329c7e351c4c7d9124da0829",
+      "text_preview": "### Step 1: Identify the Relevant Source File\n\nFrom the file listing provided in the `file_context` state, the most relevant source file to address the bug is:\n\n- **config_parser.py**\n\nThis file likely contains the implementation of",
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "event_id": "llm_after_glob_c8_wf_000_parse_bool_yes",
+    "agent": "agent_0",
+    "turn": 2,
+    "input_state_ids": [
+      "state_8d5f5556bd9936e9cd",
+      "state_f3fa8c85af3067bea1",
+      "state_670deb33766ee04ba3",
+      "state_6863bf68265bea699d",
+      "state_86ec51d6d1d71e248e"
+    ],
+    "append_tokens": 418,
+    "output_tokens": 48,
+    "new_state_id": "state_da5740ab2a492beb96",
+    "new_state_type": "assistant_delta",
+    "timestamp_start": 1780409657.2245612,
+    "timestamp_end": 1780409662.9883068,
+    "input_segments": [
+      {
+        "state_id": "state_8d5f5556bd9936e9cd",
+        "state_type": "system_prefix",
+        "owner": "shared",
+        "tokens": 17,
+        "text_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+        "semantic_key": "system:c8_wf_000_parse_bool_yes",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "static_prefix",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_f3fa8c85af3067bea1",
+        "state_type": "task_prefix",
+        "owner": "shared",
+        "tokens": 19,
+        "text_hash": "de303e8150fa3809cf304edc1a117bf4cf611058cb162c9d52d4534f276ceaa9",
+        "semantic_key": "task:c8_wf_000_parse_bool_yes",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "issue",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_670deb33766ee04ba3",
+        "state_type": "agent_role",
+        "owner": "agent_0",
+        "tokens": 12,
+        "text_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+        "semantic_key": "role:c8_wf_000_parse_bool_yes:agent_0",
+        "producer_event_id": null,
+        "metadata": {
+          "framework": "local_react_coding_agent",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_6863bf68265bea699d",
+        "state_type": "file_context",
+        "owner": "agent_0",
+        "tokens": 6,
+        "text_hash": "d07043c0a2b19284d64eb664dec0e87325645f2ab889c9cb92a2e95293bac284",
+        "semantic_key": "tool:Glob:d0b65d3386161d38",
+        "producer_event_id": "tool_786f88cbbc29",
+        "metadata": {
+          "tool": "Glob",
+          "status": "ok",
+          "paths": [
+            "config_parser.py",
+            "data_cleaner.py",
+            "math_utils.py",
+            "stats.py",
+            "tests/test_parse_bool_yes.py",
+            "text_utils.py"
+          ],
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_86ec51d6d1d71e248e",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 33,
+        "text_hash": "6553b78d6330b571320d19d46ae77b9dd7c6d321feb40164661a6917e6762d74",
+        "semantic_key": "assistant:llm_plan_c8_wf_000_parse_bool_yes",
+        "producer_event_id": "llm_plan_c8_wf_000_parse_bool_yes",
+        "metadata": {
+          "phase": "planning",
+          "tokenizer": "fallback:whitespace"
+        }
+      }
+    ],
+    "phase": "localization",
+    "metadata": {
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "history_mode": "selective_state",
+      "prompt_reconstruction": "explicit_selective_state",
+      "full_history_likely": false,
+      "tokenizer": "fallback:whitespace",
+      "request_id": "0971cde2e8874e78972d64451672adcc",
+      "error": null,
+      "step_id": "llm_after_glob",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "llm"
+  },
+  {
+    "state_id": "state_93ca5a9852bc82e795",
+    "state_type": "file_context",
+    "owner": "agent_0",
+    "tokens": 114,
+    "semantic_key": "file:config_parser.py:1-23:252756d6fe21afea",
+    "exact_token_hash": "a9b34f7589c9cceb57d536656fc19909efd3c22c6f18ade1ba182ec8a83594bb",
+    "producer_event_id": "tool_c4cc18831d61",
+    "metadata": {
+      "tool": "Read",
+      "status": "ok",
+      "path": "config_parser.py",
+      "line_range": "1-23",
+      "version": "252756d6fe21afea",
+      "full_output_path": null,
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "a9b34f7589c9cceb57d536656fc19909efd3c22c6f18ade1ba182ec8a83594bb",
+      "text_preview": "1: \"\"\"Configuration parsing helpers used by command-line tools.\n2: \n3: This file is intentionally verbose enough for Agent-on-Wafer state traces.\n4: It contains repeated descriptions of configuration semantics: user overrides\n5: should win, blank values should be safe, and optional flags should fall back\n6: to defaults. Coding agents should use the test failure and this file_context\n7: state across several turns rather than carrying a full message transcript.\n8: \"\"\"\n9: \n10: def parse_bool(value):\n11:     re",
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "type": "tool",
+    "event_id": "tool_c4cc18831d61",
+    "agent": "agent_0",
+    "turn": 2,
+    "tool": "Read",
+    "latency": 7,
+    "output_tokens": 114,
+    "status": "ok",
+    "new_state_id": "state_93ca5a9852bc82e795",
+    "new_state_type": "file_context",
+    "timestamp_start": 1780409662.9906504,
+    "timestamp_end": 1780409662.9977841,
+    "metadata": {
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "step_id": "tool_read_source",
+      "args": {
+        "path": "config_parser.py",
+        "start_line": 1,
+        "end_line": 23
+      },
+      "latency_ms": 7.133722305297852,
+      "stdout_stderr_hash": "b046e0c065b197ba37f7af17684121ed482f44620726c1ae0db4011b88a98001",
+      "truncated_output": "1: \"\"\"Configuration parsing helpers used by command-line tools.\n2: \n3: This file is intentionally verbose enough for Agent-on-Wafer state traces.\n4: It contains repeated descriptions of configuration semantics: user overrides\n5: should win, blank values should be safe, and optional flags should fall back\n6: to defaults. Coding agents should use the test failure and this file_context\n7: state across several turns rather than carrying a full message transcript.\n8: \"\"\"\n9: \n10: def parse_bool(value):\n11:     return value.lower() in ('true', '1')\n12: \n13: def parse_int(value, default=0):\n14:     return int(value)\n15: \n16: def merge_config(base, override):\n17:     return {**override, **base}\n18: \n19: def parse_list(value):\n20:     return value.split(',')\n21: \n22: def read_flag(data, name, default=False):\n23:     return data[name]",
+      "path": "config_parser.py",
+      "line_range": "1-23",
+      "version": "252756d6fe21afea",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    }
+  },
+  {
+    "state_id": "state_66cc3a5ed76e9f7841",
+    "state_type": "assistant_delta",
+    "owner": "agent_0",
+    "tokens": 25,
+    "semantic_key": "assistant:llm_after_read_c8_wf_000_parse_bool_yes",
+    "exact_token_hash": "146239f887350969e43607f79625d25e06b0409db0726f5065bb86b501deae06",
+    "producer_event_id": "llm_after_read_c8_wf_000_parse_bool_yes",
+    "metadata": {
+      "phase": "localization",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "146239f887350969e43607f79625d25e06b0409db0726f5065bb86b501deae06",
+      "text_preview": "### Step 1: Analyze the `parse_bool` Function\n\nThe `parse_bool` function is defined in the `config_parser.py` file as follows:\n\n```python\ndef parse_bool(value):\n    return value.lower() in ('",
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "event_id": "llm_after_read_c8_wf_000_parse_bool_yes",
+    "agent": "agent_0",
+    "turn": 3,
+    "input_state_ids": [
+      "state_8d5f5556bd9936e9cd",
+      "state_f3fa8c85af3067bea1",
+      "state_670deb33766ee04ba3",
+      "state_93ca5a9852bc82e795",
+      "state_86ec51d6d1d71e248e",
+      "state_da5740ab2a492beb96"
+    ],
+    "append_tokens": 706,
+    "output_tokens": 48,
+    "new_state_id": "state_66cc3a5ed76e9f7841",
+    "new_state_type": "assistant_delta",
+    "timestamp_start": 1780409662.9985385,
+    "timestamp_end": 1780409669.3516426,
+    "input_segments": [
+      {
+        "state_id": "state_8d5f5556bd9936e9cd",
+        "state_type": "system_prefix",
+        "owner": "shared",
+        "tokens": 17,
+        "text_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+        "semantic_key": "system:c8_wf_000_parse_bool_yes",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "static_prefix",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_f3fa8c85af3067bea1",
+        "state_type": "task_prefix",
+        "owner": "shared",
+        "tokens": 19,
+        "text_hash": "de303e8150fa3809cf304edc1a117bf4cf611058cb162c9d52d4534f276ceaa9",
+        "semantic_key": "task:c8_wf_000_parse_bool_yes",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "issue",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_670deb33766ee04ba3",
+        "state_type": "agent_role",
+        "owner": "agent_0",
+        "tokens": 12,
+        "text_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+        "semantic_key": "role:c8_wf_000_parse_bool_yes:agent_0",
+        "producer_event_id": null,
+        "metadata": {
+          "framework": "local_react_coding_agent",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_93ca5a9852bc82e795",
+        "state_type": "file_context",
+        "owner": "agent_0",
+        "tokens": 114,
+        "text_hash": "a9b34f7589c9cceb57d536656fc19909efd3c22c6f18ade1ba182ec8a83594bb",
+        "semantic_key": "file:config_parser.py:1-23:252756d6fe21afea",
+        "producer_event_id": "tool_c4cc18831d61",
+        "metadata": {
+          "tool": "Read",
+          "status": "ok",
+          "path": "config_parser.py",
+          "line_range": "1-23",
+          "version": "252756d6fe21afea",
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_86ec51d6d1d71e248e",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 33,
+        "text_hash": "6553b78d6330b571320d19d46ae77b9dd7c6d321feb40164661a6917e6762d74",
+        "semantic_key": "assistant:llm_plan_c8_wf_000_parse_bool_yes",
+        "producer_event_id": "llm_plan_c8_wf_000_parse_bool_yes",
+        "metadata": {
+          "phase": "planning",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_da5740ab2a492beb96",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 36,
+        "text_hash": "43da65e4fdc88133085b8ad6c776e78f4db82082329c7e351c4c7d9124da0829",
+        "semantic_key": "assistant:llm_after_glob_c8_wf_000_parse_bool_yes",
+        "producer_event_id": "llm_after_glob_c8_wf_000_parse_bool_yes",
+        "metadata": {
+          "phase": "localization",
+          "tokenizer": "fallback:whitespace"
+        }
+      }
+    ],
+    "phase": "localization",
+    "metadata": {
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "history_mode": "selective_state",
+      "prompt_reconstruction": "explicit_selective_state",
+      "full_history_likely": false,
+      "tokenizer": "fallback:whitespace",
+      "request_id": "3a93e0e1624d4d0bbcda7c5f999e6e85",
+      "error": null,
+      "step_id": "llm_after_read",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "llm"
+  },
+  {
+    "state_id": "state_4d917a3ef7a5fc01b0",
+    "state_type": "file_context",
+    "owner": "agent_0",
+    "tokens": 100,
+    "semantic_key": "tool:Grep:684511c5e387d375",
+    "exact_token_hash": "c14b2cf50c69f357f8a073c7340093f59539794cef6ddab961aed8391366da49",
+    "producer_event_id": "tool_9070a91bd3fc",
+    "metadata": {
+      "tool": "Grep",
+      "status": "ok",
+      "full_output_path": null,
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "c14b2cf50c69f357f8a073c7340093f59539794cef6ddab961aed8391366da49",
+      "text_preview": "config_parser.py:11:    return value.lower() in ('true', '1')\nconfig_parser.py:14:    return int(value)\nconfig_parser.py:17:    return {**override, **base}\nconfig_parser.py:20:    return value.split(',')\nconfig_parser.py:23:    return data[name]\ndata_cleaner.py:10:    return sorted(set(items))\ndata_cleaner.py:13:    return items[len(items)-n:len(items)-1]\ndata_cleaner.py:16:    return [items]\ndata_cleaner.py:19:    return [items[i:i+size] for i in range(0, len(items)-size, size)]\nmath_utils.py:12:    return",
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "type": "tool",
+    "event_id": "tool_9070a91bd3fc",
+    "agent": "agent_0",
+    "turn": 3,
+    "tool": "Grep",
+    "latency": 27,
+    "output_tokens": 100,
+    "status": "ok",
+    "new_state_id": "state_4d917a3ef7a5fc01b0",
+    "new_state_type": "file_context",
+    "timestamp_start": 1780409669.3558931,
+    "timestamp_end": 1780409669.3831532,
+    "metadata": {
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "step_id": "tool_grep",
+      "args": {
+        "pattern": "return",
+        "include": "*.py"
+      },
+      "latency_ms": 27.26006507873535,
+      "stdout_stderr_hash": "01b7538088b18459fc94ec4d4ed3276fb477d6ab591238cf62ee2d50895aa7a9",
+      "truncated_output": "config_parser.py:11:    return value.lower() in ('true', '1')\nconfig_parser.py:14:    return int(value)\nconfig_parser.py:17:    return {**override, **base}\nconfig_parser.py:20:    return value.split(',')\nconfig_parser.py:23:    return data[name]\ndata_cleaner.py:10:    return sorted(set(items))\ndata_cleaner.py:13:    return items[len(items)-n:len(items)-1]\ndata_cleaner.py:16:    return [items]\ndata_cleaner.py:19:    return [items[i:i+size] for i in range(0, len(items)-size, size)]\nmath_utils.py:12:    return value\nmath_utils.py:15:    return numerator / denominator\nmath_utils.py:18:    return part / total * 100\nstats.py:11:    return sum(values) / len(values)\nstats.py:16:    return values[mid + 1]\nstats.py:20:    return sum((x - avg) ** 2 for x in values) / (len(values) - 1)\nstats.py:24:    return sorted(counts, key=counts.get)[-1]\ntext_utils.py:11:    return text.lower().replace(' ', '-')\ntext_utils.py:14:    return value.strip().lower()\ntext_utils.py:17:    return len(text.split())\nte",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    }
+  },
+  {
+    "state_id": "state_281b0b66ddbd558025",
+    "state_type": "assistant_delta",
+    "owner": "agent_0",
+    "tokens": 37,
+    "semantic_key": "assistant:llm_before_test_c8_wf_000_parse_bool_yes",
+    "exact_token_hash": "af3d0d658dc166845785e6d3e0193a4df3a11c8bf5f7002039ccadc035b249c0",
+    "producer_event_id": "llm_before_test_c8_wf_000_parse_bool_yes",
+    "metadata": {
+      "phase": "testing",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "af3d0d658dc166845785e6d3e0193a4df3a11c8bf5f7002039ccadc035b249c0",
+      "text_preview": "### Predict the Failing Unit Test Output\n\nTo predict what the failing unit test will show, let's analyze the current behavior of the `parse_bool` function and how it fails to handle \"yes\" and \"no\" values as boolean",
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "event_id": "llm_before_test_c8_wf_000_parse_bool_yes",
+    "agent": "agent_0",
+    "turn": 4,
+    "input_state_ids": [
+      "state_8d5f5556bd9936e9cd",
+      "state_f3fa8c85af3067bea1",
+      "state_670deb33766ee04ba3",
+      "state_93ca5a9852bc82e795",
+      "state_86ec51d6d1d71e248e",
+      "state_da5740ab2a492beb96",
+      "state_66cc3a5ed76e9f7841"
+    ],
+    "append_tokens": 799,
+    "output_tokens": 48,
+    "new_state_id": "state_281b0b66ddbd558025",
+    "new_state_type": "assistant_delta",
+    "timestamp_start": 1780409669.3879333,
+    "timestamp_end": 1780409675.0947196,
+    "input_segments": [
+      {
+        "state_id": "state_8d5f5556bd9936e9cd",
+        "state_type": "system_prefix",
+        "owner": "shared",
+        "tokens": 17,
+        "text_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+        "semantic_key": "system:c8_wf_000_parse_bool_yes",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "static_prefix",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_f3fa8c85af3067bea1",
+        "state_type": "task_prefix",
+        "owner": "shared",
+        "tokens": 19,
+        "text_hash": "de303e8150fa3809cf304edc1a117bf4cf611058cb162c9d52d4534f276ceaa9",
+        "semantic_key": "task:c8_wf_000_parse_bool_yes",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "issue",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_670deb33766ee04ba3",
+        "state_type": "agent_role",
+        "owner": "agent_0",
+        "tokens": 12,
+        "text_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+        "semantic_key": "role:c8_wf_000_parse_bool_yes:agent_0",
+        "producer_event_id": null,
+        "metadata": {
+          "framework": "local_react_coding_agent",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_93ca5a9852bc82e795",
+        "state_type": "file_context",
+        "owner": "agent_0",
+        "tokens": 114,
+        "text_hash": "a9b34f7589c9cceb57d536656fc19909efd3c22c6f18ade1ba182ec8a83594bb",
+        "semantic_key": "file:config_parser.py:1-23:252756d6fe21afea",
+        "producer_event_id": "tool_c4cc18831d61",
+        "metadata": {
+          "tool": "Read",
+          "status": "ok",
+          "path": "config_parser.py",
+          "line_range": "1-23",
+          "version": "252756d6fe21afea",
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_86ec51d6d1d71e248e",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 33,
+        "text_hash": "6553b78d6330b571320d19d46ae77b9dd7c6d321feb40164661a6917e6762d74",
+        "semantic_key": "assistant:llm_plan_c8_wf_000_parse_bool_yes",
+        "producer_event_id": "llm_plan_c8_wf_000_parse_bool_yes",
+        "metadata": {
+          "phase": "planning",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_da5740ab2a492beb96",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 36,
+        "text_hash": "43da65e4fdc88133085b8ad6c776e78f4db82082329c7e351c4c7d9124da0829",
+        "semantic_key": "assistant:llm_after_glob_c8_wf_000_parse_bool_yes",
+        "producer_event_id": "llm_after_glob_c8_wf_000_parse_bool_yes",
+        "metadata": {
+          "phase": "localization",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_66cc3a5ed76e9f7841",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 25,
+        "text_hash": "146239f887350969e43607f79625d25e06b0409db0726f5065bb86b501deae06",
+        "semantic_key": "assistant:llm_after_read_c8_wf_000_parse_bool_yes",
+        "producer_event_id": "llm_after_read_c8_wf_000_parse_bool_yes",
+        "metadata": {
+          "phase": "localization",
+          "tokenizer": "fallback:whitespace"
+        }
+      }
+    ],
+    "phase": "testing",
+    "metadata": {
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "history_mode": "selective_state",
+      "prompt_reconstruction": "explicit_selective_state",
+      "full_history_likely": false,
+      "tokenizer": "fallback:whitespace",
+      "request_id": "4b312b012a974bc3a87747bc540737fe",
+      "error": null,
+      "step_id": "llm_before_test",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "llm"
+  },
+  {
+    "state_id": "state_a040f06c88ea3763e1",
+    "state_type": "test_failure_summary",
+    "owner": "agent_0",
+    "tokens": 109,
+    "semantic_key": "command:python -m pytest -q:failed",
+    "exact_token_hash": "61e1da4fa3d3f2797a18afb062c16b2dcaadc3452114fee70b0b423fff6ffd30",
+    "producer_event_id": "tool_77c6bd5683fa",
+    "metadata": {
+      "tool": "Pytest",
+      "status": "failed",
+      "command": "python -m pytest -q",
+      "exit_code": 1,
+      "full_output_path": null,
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "61e1da4fa3d3f2797a18afb062c16b2dcaadc3452114fee70b0b423fff6ffd30",
+      "text_preview": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_____________________________ test_parse_bool_yes ______________________________\n\n    def test_parse_bool_yes():\n>       assert parse_bool('yes') is True\nE       AssertionError: assert False is True\nE        +  where False = parse_bool('yes')\n\ntests/test_parse_bool_yes.py:4: AssertionError\n=========================== short test summary info ========",
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "type": "tool",
+    "event_id": "tool_77c6bd5683fa",
+    "agent": "agent_0",
+    "turn": 4,
+    "tool": "Pytest",
+    "latency": 296,
+    "output_tokens": 109,
+    "status": "failed",
+    "new_state_id": "state_a040f06c88ea3763e1",
+    "new_state_type": "test_failure_summary",
+    "timestamp_start": 1780409675.0979164,
+    "timestamp_end": 1780409675.3947544,
+    "metadata": {
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "step_id": "tool_pytest_fail",
+      "args": {
+        "command": "python -m pytest -q",
+        "timeout": 30
+      },
+      "latency_ms": 296.83804512023926,
+      "stdout_stderr_hash": "42c0fcd3b0c7d6e36096fee66a35e182335a702488c4afe76fef5a59f6294bd0",
+      "truncated_output": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_____________________________ test_parse_bool_yes ______________________________\n\n    def test_parse_bool_yes():\n>       assert parse_bool('yes') is True\nE       AssertionError: assert False is True\nE        +  where False = parse_bool('yes')\n\ntests/test_parse_bool_yes.py:4: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_parse_bool_yes.py::test_parse_bool_yes - AssertionError: as...\n1 failed in 0.03s\n\nSTDERR:\n/home/duzc/miniconda3/lib/python3.12/site-packages/pytest_asyncio/plugin.py:247: PytestDeprecationWarning: The configuration option \"asyncio_default_fixture_loop_scope\" is unset.\nThe event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to",
+      "command": "python -m pytest -q",
+      "exit_code": 1,
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    }
+  },
+  {
+    "state_id": "state_5e33f314a1ea5c9a51",
+    "state_type": "assistant_delta",
+    "owner": "agent_0",
+    "tokens": 30,
+    "semantic_key": "assistant:llm_after_failure_c8_wf_000_parse_bool_yes",
+    "exact_token_hash": "1f44eaa3769d608bccbd9b194f785e2f5058ce4ab5c3da412fdb5c68db6c458c",
+    "producer_event_id": "llm_after_failure_c8_wf_000_parse_bool_yes",
+    "metadata": {
+      "phase": "diagnosis",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "1f44eaa3769d608bccbd9b194f785e2f5058ce4ab5c3da412fdb5c68db6c458c",
+      "text_preview": "### Step 1: Analyze the Failure Summary\n\nFrom the failure summary, we observe the following:\n- The test `test_parse_bool_yes` is failing.\n- The assertion `assert parse_bool('yes') is True` is not",
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "event_id": "llm_after_failure_c8_wf_000_parse_bool_yes",
+    "agent": "agent_0",
+    "turn": 5,
+    "input_state_ids": [
+      "state_8d5f5556bd9936e9cd",
+      "state_f3fa8c85af3067bea1",
+      "state_670deb33766ee04ba3",
+      "state_a040f06c88ea3763e1",
+      "state_86ec51d6d1d71e248e",
+      "state_da5740ab2a492beb96",
+      "state_66cc3a5ed76e9f7841",
+      "state_281b0b66ddbd558025"
+    ],
+    "append_tokens": 915,
+    "output_tokens": 48,
+    "new_state_id": "state_5e33f314a1ea5c9a51",
+    "new_state_type": "assistant_delta",
+    "timestamp_start": 1780409675.3955016,
+    "timestamp_end": 1780409682.637846,
+    "input_segments": [
+      {
+        "state_id": "state_8d5f5556bd9936e9cd",
+        "state_type": "system_prefix",
+        "owner": "shared",
+        "tokens": 17,
+        "text_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+        "semantic_key": "system:c8_wf_000_parse_bool_yes",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "static_prefix",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_f3fa8c85af3067bea1",
+        "state_type": "task_prefix",
+        "owner": "shared",
+        "tokens": 19,
+        "text_hash": "de303e8150fa3809cf304edc1a117bf4cf611058cb162c9d52d4534f276ceaa9",
+        "semantic_key": "task:c8_wf_000_parse_bool_yes",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "issue",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_670deb33766ee04ba3",
+        "state_type": "agent_role",
+        "owner": "agent_0",
+        "tokens": 12,
+        "text_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+        "semantic_key": "role:c8_wf_000_parse_bool_yes:agent_0",
+        "producer_event_id": null,
+        "metadata": {
+          "framework": "local_react_coding_agent",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_a040f06c88ea3763e1",
+        "state_type": "test_failure_summary",
+        "owner": "agent_0",
+        "tokens": 109,
+        "text_hash": "61e1da4fa3d3f2797a18afb062c16b2dcaadc3452114fee70b0b423fff6ffd30",
+        "semantic_key": "command:python -m pytest -q:failed",
+        "producer_event_id": "tool_77c6bd5683fa",
+        "metadata": {
+          "tool": "Pytest",
+          "status": "failed",
+          "command": "python -m pytest -q",
+          "exit_code": 1,
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_86ec51d6d1d71e248e",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 33,
+        "text_hash": "6553b78d6330b571320d19d46ae77b9dd7c6d321feb40164661a6917e6762d74",
+        "semantic_key": "assistant:llm_plan_c8_wf_000_parse_bool_yes",
+        "producer_event_id": "llm_plan_c8_wf_000_parse_bool_yes",
+        "metadata": {
+          "phase": "planning",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_da5740ab2a492beb96",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 36,
+        "text_hash": "43da65e4fdc88133085b8ad6c776e78f4db82082329c7e351c4c7d9124da0829",
+        "semantic_key": "assistant:llm_after_glob_c8_wf_000_parse_bool_yes",
+        "producer_event_id": "llm_after_glob_c8_wf_000_parse_bool_yes",
+        "metadata": {
+          "phase": "localization",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_66cc3a5ed76e9f7841",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 25,
+        "text_hash": "146239f887350969e43607f79625d25e06b0409db0726f5065bb86b501deae06",
+        "semantic_key": "assistant:llm_after_read_c8_wf_000_parse_bool_yes",
+        "producer_event_id": "llm_after_read_c8_wf_000_parse_bool_yes",
+        "metadata": {
+          "phase": "localization",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_281b0b66ddbd558025",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 37,
+        "text_hash": "af3d0d658dc166845785e6d3e0193a4df3a11c8bf5f7002039ccadc035b249c0",
+        "semantic_key": "assistant:llm_before_test_c8_wf_000_parse_bool_yes",
+        "producer_event_id": "llm_before_test_c8_wf_000_parse_bool_yes",
+        "metadata": {
+          "phase": "testing",
+          "tokenizer": "fallback:whitespace"
+        }
+      }
+    ],
+    "phase": "diagnosis",
+    "metadata": {
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "history_mode": "selective_state",
+      "prompt_reconstruction": "explicit_selective_state",
+      "full_history_likely": false,
+      "tokenizer": "fallback:whitespace",
+      "request_id": "962a503d2b0f458cb3d551676b547389",
+      "error": null,
+      "step_id": "llm_after_failure",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "llm"
+  },
+  {
+    "state_id": "state_3b47da21d52568654b",
+    "state_type": "assistant_delta",
+    "owner": "agent_0",
+    "tokens": 36,
+    "semantic_key": "assistant:llm_before_patch_c8_wf_000_parse_bool_yes",
+    "exact_token_hash": "c34be8013eca5e2a332ea132e39f1baad1cfc792c7d310d0d44706ccfe8c3308",
+    "producer_event_id": "llm_before_patch_c8_wf_000_parse_bool_yes",
+    "metadata": {
+      "phase": "editing",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "c34be8013eca5e2a332ea132e39f1baad1cfc792c7d310d0d44706ccfe8c3308",
+      "text_preview": "### Step 1: Confirm the Edit Target\n\nThe edit target is the `parse_bool` function in the `config_parser.py` file. This function is responsible for parsing boolean values, and the bug report indicates that it should accept \"",
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "event_id": "llm_before_patch_c8_wf_000_parse_bool_yes",
+    "agent": "agent_0",
+    "turn": 6,
+    "input_state_ids": [
+      "state_8d5f5556bd9936e9cd",
+      "state_f3fa8c85af3067bea1",
+      "state_670deb33766ee04ba3",
+      "state_a040f06c88ea3763e1",
+      "state_da5740ab2a492beb96",
+      "state_66cc3a5ed76e9f7841",
+      "state_281b0b66ddbd558025",
+      "state_5e33f314a1ea5c9a51"
+    ],
+    "append_tokens": 918,
+    "output_tokens": 48,
+    "new_state_id": "state_3b47da21d52568654b",
+    "new_state_type": "assistant_delta",
+    "timestamp_start": 1780409682.650569,
+    "timestamp_end": 1780409688.9972777,
+    "input_segments": [
+      {
+        "state_id": "state_8d5f5556bd9936e9cd",
+        "state_type": "system_prefix",
+        "owner": "shared",
+        "tokens": 17,
+        "text_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+        "semantic_key": "system:c8_wf_000_parse_bool_yes",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "static_prefix",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_f3fa8c85af3067bea1",
+        "state_type": "task_prefix",
+        "owner": "shared",
+        "tokens": 19,
+        "text_hash": "de303e8150fa3809cf304edc1a117bf4cf611058cb162c9d52d4534f276ceaa9",
+        "semantic_key": "task:c8_wf_000_parse_bool_yes",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "issue",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_670deb33766ee04ba3",
+        "state_type": "agent_role",
+        "owner": "agent_0",
+        "tokens": 12,
+        "text_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+        "semantic_key": "role:c8_wf_000_parse_bool_yes:agent_0",
+        "producer_event_id": null,
+        "metadata": {
+          "framework": "local_react_coding_agent",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_a040f06c88ea3763e1",
+        "state_type": "test_failure_summary",
+        "owner": "agent_0",
+        "tokens": 109,
+        "text_hash": "61e1da4fa3d3f2797a18afb062c16b2dcaadc3452114fee70b0b423fff6ffd30",
+        "semantic_key": "command:python -m pytest -q:failed",
+        "producer_event_id": "tool_77c6bd5683fa",
+        "metadata": {
+          "tool": "Pytest",
+          "status": "failed",
+          "command": "python -m pytest -q",
+          "exit_code": 1,
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_da5740ab2a492beb96",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 36,
+        "text_hash": "43da65e4fdc88133085b8ad6c776e78f4db82082329c7e351c4c7d9124da0829",
+        "semantic_key": "assistant:llm_after_glob_c8_wf_000_parse_bool_yes",
+        "producer_event_id": "llm_after_glob_c8_wf_000_parse_bool_yes",
+        "metadata": {
+          "phase": "localization",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_66cc3a5ed76e9f7841",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 25,
+        "text_hash": "146239f887350969e43607f79625d25e06b0409db0726f5065bb86b501deae06",
+        "semantic_key": "assistant:llm_after_read_c8_wf_000_parse_bool_yes",
+        "producer_event_id": "llm_after_read_c8_wf_000_parse_bool_yes",
+        "metadata": {
+          "phase": "localization",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_281b0b66ddbd558025",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 37,
+        "text_hash": "af3d0d658dc166845785e6d3e0193a4df3a11c8bf5f7002039ccadc035b249c0",
+        "semantic_key": "assistant:llm_before_test_c8_wf_000_parse_bool_yes",
+        "producer_event_id": "llm_before_test_c8_wf_000_parse_bool_yes",
+        "metadata": {
+          "phase": "testing",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_5e33f314a1ea5c9a51",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 30,
+        "text_hash": "1f44eaa3769d608bccbd9b194f785e2f5058ce4ab5c3da412fdb5c68db6c458c",
+        "semantic_key": "assistant:llm_after_failure_c8_wf_000_parse_bool_yes",
+        "producer_event_id": "llm_after_failure_c8_wf_000_parse_bool_yes",
+        "metadata": {
+          "phase": "diagnosis",
+          "tokenizer": "fallback:whitespace"
+        }
+      }
+    ],
+    "phase": "editing",
+    "metadata": {
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "history_mode": "selective_state",
+      "prompt_reconstruction": "explicit_selective_state",
+      "full_history_likely": false,
+      "tokenizer": "fallback:whitespace",
+      "request_id": "035521bc8c184316bfee5cdeadded9e8",
+      "error": null,
+      "step_id": "llm_before_patch",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "llm"
+  },
+  {
+    "state_id": "state_5a0e838b31c84315b7",
+    "state_type": "edit_diff",
+    "owner": "agent_0",
+    "tokens": 31,
+    "semantic_key": "file:config_parser.py:all:workspace",
+    "exact_token_hash": "97c92c89f56cc350507f6ed4d6a10598e28c0e509c2b0fd60bbc3bd5016439fa",
+    "producer_event_id": "tool_afc1f1f48f9f",
+    "metadata": {
+      "tool": "Edit",
+      "status": "ok",
+      "path": "config_parser.py",
+      "error_type": null,
+      "full_output_path": null,
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "97c92c89f56cc350507f6ed4d6a10598e28c0e509c2b0fd60bbc3bd5016439fa",
+      "text_preview": "--- a/config_parser.py\n+++ b/config_parser.py\n@@ -8,7 +8,7 @@\n \"\"\"\n \n def parse_bool(value):\n-    return value.lower() in ('true', '1')\n+    return value.lower() in ('true', '1', 'yes', 'y', 'on')\n \n def parse_int(value, default=0):\n     return int(value)",
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "type": "tool",
+    "event_id": "tool_afc1f1f48f9f",
+    "agent": "agent_0",
+    "turn": 6,
+    "tool": "Edit",
+    "latency": 12,
+    "output_tokens": 31,
+    "status": "ok",
+    "new_state_id": "state_5a0e838b31c84315b7",
+    "new_state_type": "edit_diff",
+    "timestamp_start": 1780409689.0056076,
+    "timestamp_end": 1780409689.0180511,
+    "metadata": {
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "step_id": "tool_edit",
+      "args": {
+        "path": "config_parser.py",
+        "old_hash": "7f1bdf54670f44761029b38681d403398691c33c727b4f313c5885cfc79fcdd2",
+        "new_hash": "e5f501706152ff018dd32e7198167af54b9d3ab42a0fe4f02a7b99e96c9a4105"
+      },
+      "latency_ms": 12.44354248046875,
+      "stdout_stderr_hash": "42c357d4b1630b0b0bf1e0d67c088f4ddadf3ccfd7dad69f63f84924e4e9dbac",
+      "truncated_output": "--- a/config_parser.py\n+++ b/config_parser.py\n@@ -8,7 +8,7 @@\n \"\"\"\n \n def parse_bool(value):\n-    return value.lower() in ('true', '1')\n+    return value.lower() in ('true', '1', 'yes', 'y', 'on')\n \n def parse_int(value, default=0):\n     return int(value)",
+      "path": "config_parser.py",
+      "error_type": null,
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    }
+  },
+  {
+    "state_id": "state_f011cb3aee442ed748",
+    "state_type": "assistant_delta",
+    "owner": "agent_0",
+    "tokens": 24,
+    "semantic_key": "assistant:llm_after_patch_c8_wf_000_parse_bool_yes",
+    "exact_token_hash": "bcdf00cacbc5ed54229745d05f15d7fbf414c8f801c3511b3d9d059de3605b94",
+    "producer_event_id": "llm_after_patch_c8_wf_000_parse_bool_yes",
+    "metadata": {
+      "phase": "review",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "bcdf00cacbc5ed54229745d05f15d7fbf414c8f801c3511b3d9d059de3605b94",
+      "text_preview": "### Step 1: Review the Patch Diff\n\nThe patch diff shows the following change in `config_parser.py`:\n\n```diff\n--- a/config_parser.py\n+++ b/config_parser.py\n@@ -8,7 +8,7",
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "event_id": "llm_after_patch_c8_wf_000_parse_bool_yes",
+    "agent": "agent_0",
+    "turn": 7,
+    "input_state_ids": [
+      "state_8d5f5556bd9936e9cd",
+      "state_f3fa8c85af3067bea1",
+      "state_670deb33766ee04ba3",
+      "state_5a0e838b31c84315b7",
+      "state_a040f06c88ea3763e1",
+      "state_281b0b66ddbd558025",
+      "state_5e33f314a1ea5c9a51",
+      "state_3b47da21d52568654b"
+    ],
+    "append_tokens": 944,
+    "output_tokens": 48,
+    "new_state_id": "state_f011cb3aee442ed748",
+    "new_state_type": "assistant_delta",
+    "timestamp_start": 1780409689.0217197,
+    "timestamp_end": 1780409695.9026608,
+    "input_segments": [
+      {
+        "state_id": "state_8d5f5556bd9936e9cd",
+        "state_type": "system_prefix",
+        "owner": "shared",
+        "tokens": 17,
+        "text_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+        "semantic_key": "system:c8_wf_000_parse_bool_yes",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "static_prefix",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_f3fa8c85af3067bea1",
+        "state_type": "task_prefix",
+        "owner": "shared",
+        "tokens": 19,
+        "text_hash": "de303e8150fa3809cf304edc1a117bf4cf611058cb162c9d52d4534f276ceaa9",
+        "semantic_key": "task:c8_wf_000_parse_bool_yes",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "issue",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_670deb33766ee04ba3",
+        "state_type": "agent_role",
+        "owner": "agent_0",
+        "tokens": 12,
+        "text_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+        "semantic_key": "role:c8_wf_000_parse_bool_yes:agent_0",
+        "producer_event_id": null,
+        "metadata": {
+          "framework": "local_react_coding_agent",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_5a0e838b31c84315b7",
+        "state_type": "edit_diff",
+        "owner": "agent_0",
+        "tokens": 31,
+        "text_hash": "97c92c89f56cc350507f6ed4d6a10598e28c0e509c2b0fd60bbc3bd5016439fa",
+        "semantic_key": "file:config_parser.py:all:workspace",
+        "producer_event_id": "tool_afc1f1f48f9f",
+        "metadata": {
+          "tool": "Edit",
+          "status": "ok",
+          "path": "config_parser.py",
+          "error_type": null,
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_a040f06c88ea3763e1",
+        "state_type": "test_failure_summary",
+        "owner": "agent_0",
+        "tokens": 109,
+        "text_hash": "61e1da4fa3d3f2797a18afb062c16b2dcaadc3452114fee70b0b423fff6ffd30",
+        "semantic_key": "command:python -m pytest -q:failed",
+        "producer_event_id": "tool_77c6bd5683fa",
+        "metadata": {
+          "tool": "Pytest",
+          "status": "failed",
+          "command": "python -m pytest -q",
+          "exit_code": 1,
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_281b0b66ddbd558025",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 37,
+        "text_hash": "af3d0d658dc166845785e6d3e0193a4df3a11c8bf5f7002039ccadc035b249c0",
+        "semantic_key": "assistant:llm_before_test_c8_wf_000_parse_bool_yes",
+        "producer_event_id": "llm_before_test_c8_wf_000_parse_bool_yes",
+        "metadata": {
+          "phase": "testing",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_5e33f314a1ea5c9a51",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 30,
+        "text_hash": "1f44eaa3769d608bccbd9b194f785e2f5058ce4ab5c3da412fdb5c68db6c458c",
+        "semantic_key": "assistant:llm_after_failure_c8_wf_000_parse_bool_yes",
+        "producer_event_id": "llm_after_failure_c8_wf_000_parse_bool_yes",
+        "metadata": {
+          "phase": "diagnosis",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_3b47da21d52568654b",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 36,
+        "text_hash": "c34be8013eca5e2a332ea132e39f1baad1cfc792c7d310d0d44706ccfe8c3308",
+        "semantic_key": "assistant:llm_before_patch_c8_wf_000_parse_bool_yes",
+        "producer_event_id": "llm_before_patch_c8_wf_000_parse_bool_yes",
+        "metadata": {
+          "phase": "editing",
+          "tokenizer": "fallback:whitespace"
+        }
+      }
+    ],
+    "phase": "review",
+    "metadata": {
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "history_mode": "selective_state",
+      "prompt_reconstruction": "explicit_selective_state",
+      "full_history_likely": false,
+      "tokenizer": "fallback:whitespace",
+      "request_id": "76fa2972e7fb4c83a659b0be48ea22cc",
+      "error": null,
+      "step_id": "llm_after_patch",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "llm"
+  },
+  {
+    "state_id": "state_83353ae2f0261561ac",
+    "state_type": "tool_observation",
+    "owner": "agent_0",
+    "tokens": 71,
+    "semantic_key": "command:python -m pytest -q:ok",
+    "exact_token_hash": "107c26a6ca2cdadba5a6e11e151e364e3d29a07b571c16a71809eeb8aa7b5ee6",
+    "producer_event_id": "tool_8716f6cec755",
+    "metadata": {
+      "tool": "Pytest",
+      "status": "ok",
+      "command": "python -m pytest -q",
+      "exit_code": 0,
+      "full_output_path": null,
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "107c26a6ca2cdadba5a6e11e151e364e3d29a07b571c16a71809eeb8aa7b5ee6",
+      "text_preview": ".                                                                        [100%]\n1 passed in 0.02s\n\nSTDERR:\n/home/duzc/miniconda3/lib/python3.12/site-packages/pytest_asyncio/plugin.py:247: PytestDeprecationWarning: The configuration option \"asyncio_default_fixture_loop_scope\" is unset.\nThe event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop ",
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "type": "tool",
+    "event_id": "tool_8716f6cec755",
+    "agent": "agent_0",
+    "turn": 7,
+    "tool": "Pytest",
+    "latency": 282,
+    "output_tokens": 71,
+    "status": "ok",
+    "new_state_id": "state_83353ae2f0261561ac",
+    "new_state_type": "tool_observation",
+    "timestamp_start": 1780409695.910939,
+    "timestamp_end": 1780409696.1939225,
+    "metadata": {
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "step_id": "tool_pytest_final",
+      "args": {
+        "command": "python -m pytest -q",
+        "timeout": 30
+      },
+      "latency_ms": 282.98354148864746,
+      "stdout_stderr_hash": "78effc0de3605376a39cd73a25c9da1e0cbb68c9cb83820dc19eedcc1ed12e34",
+      "truncated_output": ".                                                                        [100%]\n1 passed in 0.02s\n\nSTDERR:\n/home/duzc/miniconda3/lib/python3.12/site-packages/pytest_asyncio/plugin.py:247: PytestDeprecationWarning: The configuration option \"asyncio_default_fixture_loop_scope\" is unset.\nThe event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: \"function\", \"class\", \"module\", \"package\", \"session\"\n\n  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))\n",
+      "command": "python -m pytest -q",
+      "exit_code": 0,
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    }
+  },
+  {
+    "state_id": "state_e1361ddac584cac1bd",
+    "state_type": "assistant_delta",
+    "owner": "agent_0",
+    "tokens": 33,
+    "semantic_key": "assistant:llm_final_c8_wf_000_parse_bool_yes",
+    "exact_token_hash": "ff6edb3a498d46323ea25c31585460eff862d79ee0cc243b8a4cbf5c3960edc7",
+    "producer_event_id": "llm_final_c8_wf_000_parse_bool_yes",
+    "metadata": {
+      "phase": "final",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "ff6edb3a498d46323ea25c31585460eff862d79ee0cc243b8a4cbf5c3960edc7",
+      "text_preview": "### Final Status Summary\n\n#### **Bug Description**\nThe `parse_bool` function in `config_parser.py` was not correctly handling boolean values such as \"yes\" or \"no.\" The bug report specified that the function should accept \"yes",
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "event_id": "llm_final_c8_wf_000_parse_bool_yes",
+    "agent": "agent_0",
+    "turn": 8,
+    "input_state_ids": [
+      "state_8d5f5556bd9936e9cd",
+      "state_f3fa8c85af3067bea1",
+      "state_670deb33766ee04ba3",
+      "state_93ca5a9852bc82e795",
+      "state_a040f06c88ea3763e1",
+      "state_5a0e838b31c84315b7",
+      "state_3b47da21d52568654b",
+      "state_f011cb3aee442ed748",
+      "state_83353ae2f0261561ac"
+    ],
+    "append_tokens": 1321,
+    "output_tokens": 48,
+    "new_state_id": "state_e1361ddac584cac1bd",
+    "new_state_type": "assistant_delta",
+    "timestamp_start": 1780409696.1946728,
+    "timestamp_end": 1780409701.8524096,
+    "input_segments": [
+      {
+        "state_id": "state_8d5f5556bd9936e9cd",
+        "state_type": "system_prefix",
+        "owner": "shared",
+        "tokens": 17,
+        "text_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+        "semantic_key": "system:c8_wf_000_parse_bool_yes",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "static_prefix",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_f3fa8c85af3067bea1",
+        "state_type": "task_prefix",
+        "owner": "shared",
+        "tokens": 19,
+        "text_hash": "de303e8150fa3809cf304edc1a117bf4cf611058cb162c9d52d4534f276ceaa9",
+        "semantic_key": "task:c8_wf_000_parse_bool_yes",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "issue",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_670deb33766ee04ba3",
+        "state_type": "agent_role",
+        "owner": "agent_0",
+        "tokens": 12,
+        "text_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+        "semantic_key": "role:c8_wf_000_parse_bool_yes:agent_0",
+        "producer_event_id": null,
+        "metadata": {
+          "framework": "local_react_coding_agent",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_93ca5a9852bc82e795",
+        "state_type": "file_context",
+        "owner": "agent_0",
+        "tokens": 114,
+        "text_hash": "a9b34f7589c9cceb57d536656fc19909efd3c22c6f18ade1ba182ec8a83594bb",
+        "semantic_key": "file:config_parser.py:1-23:252756d6fe21afea",
+        "producer_event_id": "tool_c4cc18831d61",
+        "metadata": {
+          "tool": "Read",
+          "status": "ok",
+          "path": "config_parser.py",
+          "line_range": "1-23",
+          "version": "252756d6fe21afea",
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_a040f06c88ea3763e1",
+        "state_type": "test_failure_summary",
+        "owner": "agent_0",
+        "tokens": 109,
+        "text_hash": "61e1da4fa3d3f2797a18afb062c16b2dcaadc3452114fee70b0b423fff6ffd30",
+        "semantic_key": "command:python -m pytest -q:failed",
+        "producer_event_id": "tool_77c6bd5683fa",
+        "metadata": {
+          "tool": "Pytest",
+          "status": "failed",
+          "command": "python -m pytest -q",
+          "exit_code": 1,
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_5a0e838b31c84315b7",
+        "state_type": "edit_diff",
+        "owner": "agent_0",
+        "tokens": 31,
+        "text_hash": "97c92c89f56cc350507f6ed4d6a10598e28c0e509c2b0fd60bbc3bd5016439fa",
+        "semantic_key": "file:config_parser.py:all:workspace",
+        "producer_event_id": "tool_afc1f1f48f9f",
+        "metadata": {
+          "tool": "Edit",
+          "status": "ok",
+          "path": "config_parser.py",
+          "error_type": null,
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_3b47da21d52568654b",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 36,
+        "text_hash": "c34be8013eca5e2a332ea132e39f1baad1cfc792c7d310d0d44706ccfe8c3308",
+        "semantic_key": "assistant:llm_before_patch_c8_wf_000_parse_bool_yes",
+        "producer_event_id": "llm_before_patch_c8_wf_000_parse_bool_yes",
+        "metadata": {
+          "phase": "editing",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_f011cb3aee442ed748",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 24,
+        "text_hash": "bcdf00cacbc5ed54229745d05f15d7fbf414c8f801c3511b3d9d059de3605b94",
+        "semantic_key": "assistant:llm_after_patch_c8_wf_000_parse_bool_yes",
+        "producer_event_id": "llm_after_patch_c8_wf_000_parse_bool_yes",
+        "metadata": {
+          "phase": "review",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_83353ae2f0261561ac",
+        "state_type": "tool_observation",
+        "owner": "agent_0",
+        "tokens": 71,
+        "text_hash": "107c26a6ca2cdadba5a6e11e151e364e3d29a07b571c16a71809eeb8aa7b5ee6",
+        "semantic_key": "command:python -m pytest -q:ok",
+        "producer_event_id": "tool_8716f6cec755",
+        "metadata": {
+          "tool": "Pytest",
+          "status": "ok",
+          "command": "python -m pytest -q",
+          "exit_code": 0,
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      }
+    ],
+    "phase": "final",
+    "metadata": {
+      "workflow_id": "c8_wf_000_parse_bool_yes",
+      "history_mode": "selective_state",
+      "prompt_reconstruction": "explicit_selective_state",
+      "full_history_likely": false,
+      "tokenizer": "fallback:whitespace",
+      "request_id": "da023b52fced4944b0921914df1805b9",
+      "error": null,
+      "step_id": "llm_final",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "llm"
+  }
+]

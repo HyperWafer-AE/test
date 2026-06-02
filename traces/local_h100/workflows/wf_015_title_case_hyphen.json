@@ -1,0 +1,1602 @@
+[
+  {
+    "state_id": "state_cf58e0da68eea2d6a0",
+    "state_type": "system_prefix",
+    "owner": "shared",
+    "tokens": 17,
+    "semantic_key": "system:wf_015_title_case_hyphen",
+    "exact_token_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+    "metadata": {
+      "scope": "static_prefix",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+      "text_preview": "You are a coding agent. Use explicit state references, inspect files, run tests, and repair the bug.",
+      "workflow_id": "wf_015_title_case_hyphen",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "state_id": "state_a57192df18dda2ed1b",
+    "state_type": "task_prefix",
+    "owner": "shared",
+    "tokens": 20,
+    "semantic_key": "task:wf_015_title_case_hyphen",
+    "exact_token_hash": "9c32030d1e4cd20fdf919b77093a04cc55da952dcddefecbd5de15f9ae7f4b7a",
+    "metadata": {
+      "scope": "issue",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "9c32030d1e4cd20fdf919b77093a04cc55da952dcddefecbd5de15f9ae7f4b7a",
+      "text_preview": "Bug report: title_words should treat hyphen as separator.\n\nRun `python -m pytest -q` and patch `text_utils.py` so the test passes.",
+      "workflow_id": "wf_015_title_case_hyphen",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "state_id": "state_8f87e81c330d86e477",
+    "state_type": "agent_role",
+    "owner": "agent_0",
+    "tokens": 12,
+    "semantic_key": "role:wf_015_title_case_hyphen:agent_0",
+    "exact_token_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+    "metadata": {
+      "framework": "local_react_coding_agent",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+      "text_preview": "Agent role: local_react_coding_agent. Prefer concise plans, concrete file references, and test-driven repair.",
+      "workflow_id": "wf_015_title_case_hyphen",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "state_id": "state_97e6ae594c067abd19",
+    "state_type": "assistant_delta",
+    "owner": "agent_0",
+    "tokens": 35,
+    "semantic_key": "assistant:llm_plan_wf_015_title_case_hyphen",
+    "exact_token_hash": "6031797db8f6d2327de25a5f04bddbc1107041b5823f07d60f11b3a960fc9e2c",
+    "producer_event_id": "llm_plan_wf_015_title_case_hyphen",
+    "metadata": {
+      "phase": "planning",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "6031797db8f6d2327de25a5f04bddbc1107041b5823f07d60f11b3a960fc9e2c",
+      "text_preview": "### Summarize the Bug:\nThe bug report indicates that the `title_words` function in the codebase is not correctly treating hyphens as separators when processing text. As a result, words separated by hyphens are not being",
+      "workflow_id": "wf_015_title_case_hyphen",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "event_id": "llm_plan_wf_015_title_case_hyphen",
+    "agent": "agent_0",
+    "turn": 1,
+    "input_state_ids": [
+      "state_cf58e0da68eea2d6a0",
+      "state_a57192df18dda2ed1b",
+      "state_8f87e81c330d86e477"
+    ],
+    "append_tokens": 252,
+    "output_tokens": 48,
+    "new_state_id": "state_97e6ae594c067abd19",
+    "new_state_type": "assistant_delta",
+    "timestamp_start": 1780403854.4013002,
+    "timestamp_end": 1780403857.0831819,
+    "input_segments": [
+      {
+        "state_id": "state_cf58e0da68eea2d6a0",
+        "state_type": "system_prefix",
+        "owner": "shared",
+        "tokens": 17,
+        "text_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+        "semantic_key": "system:wf_015_title_case_hyphen",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "static_prefix",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_a57192df18dda2ed1b",
+        "state_type": "task_prefix",
+        "owner": "shared",
+        "tokens": 20,
+        "text_hash": "9c32030d1e4cd20fdf919b77093a04cc55da952dcddefecbd5de15f9ae7f4b7a",
+        "semantic_key": "task:wf_015_title_case_hyphen",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "issue",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_8f87e81c330d86e477",
+        "state_type": "agent_role",
+        "owner": "agent_0",
+        "tokens": 12,
+        "text_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+        "semantic_key": "role:wf_015_title_case_hyphen:agent_0",
+        "producer_event_id": null,
+        "metadata": {
+          "framework": "local_react_coding_agent",
+          "tokenizer": "fallback:whitespace"
+        }
+      }
+    ],
+    "phase": "planning",
+    "metadata": {
+      "workflow_id": "wf_015_title_case_hyphen",
+      "history_mode": "selective_state",
+      "prompt_reconstruction": "explicit_selective_state",
+      "full_history_likely": false,
+      "tokenizer": "fallback:whitespace",
+      "request_id": "97aab181d75b429e8dad7b27669e2e1d",
+      "error": null,
+      "step_id": "llm_plan",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "llm"
+  },
+  {
+    "state_id": "state_181c75397c2b51a1ee",
+    "state_type": "file_context",
+    "owner": "agent_0",
+    "tokens": 6,
+    "semantic_key": "tool:Glob:9d73daba65f6cca4",
+    "exact_token_hash": "ad4ed0f85d396d1f8c9b22b96f8b74cb228f52476486460bb4ac65563cf816ad",
+    "producer_event_id": "tool_3d95062cf4f9",
+    "metadata": {
+      "tool": "Glob",
+      "status": "ok",
+      "paths": [
+        "config_parser.py",
+        "data_cleaner.py",
+        "math_utils.py",
+        "stats.py",
+        "tests/test_title_case_hyphen.py",
+        "text_utils.py"
+      ],
+      "full_output_path": null,
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "ad4ed0f85d396d1f8c9b22b96f8b74cb228f52476486460bb4ac65563cf816ad",
+      "text_preview": "config_parser.py\ndata_cleaner.py\nmath_utils.py\nstats.py\ntests/test_title_case_hyphen.py\ntext_utils.py",
+      "workflow_id": "wf_015_title_case_hyphen",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "type": "tool",
+    "event_id": "tool_3d95062cf4f9",
+    "agent": "agent_0",
+    "turn": 1,
+    "tool": "Glob",
+    "latency": 2,
+    "output_tokens": 6,
+    "status": "ok",
+    "new_state_id": "state_181c75397c2b51a1ee",
+    "new_state_type": "file_context",
+    "timestamp_start": 1780403857.0840375,
+    "timestamp_end": 1780403857.0865943,
+    "metadata": {
+      "workflow_id": "wf_015_title_case_hyphen",
+      "step_id": "tool_glob",
+      "args": {
+        "pattern": "**/*.py"
+      },
+      "latency_ms": 2.5568008422851562,
+      "stdout_stderr_hash": "75a6a3869f96237387c90a3967093218370b9081e5898b971680a3f183dad864",
+      "truncated_output": "config_parser.py\ndata_cleaner.py\nmath_utils.py\nstats.py\ntests/test_title_case_hyphen.py\ntext_utils.py",
+      "paths": [
+        "config_parser.py",
+        "data_cleaner.py",
+        "math_utils.py",
+        "stats.py",
+        "tests/test_title_case_hyphen.py",
+        "text_utils.py"
+      ],
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    }
+  },
+  {
+    "state_id": "state_a785fbd58aa5089a76",
+    "state_type": "assistant_delta",
+    "owner": "agent_0",
+    "tokens": 39,
+    "semantic_key": "assistant:llm_after_glob_wf_015_title_case_hyphen",
+    "exact_token_hash": "2527d33df90bc721d73115585f98813d5a172dc02f73acb19bd8fb95f09fd2d7",
+    "producer_event_id": "llm_after_glob_wf_015_title_case_hyphen",
+    "metadata": {
+      "phase": "localization",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "2527d33df90bc721d73115585f98813d5a172dc02f73acb19bd8fb95f09fd2d7",
+      "text_preview": "### Step 1: Identify the Relevant Source File\n\nThe bug report specifies that the issue is related to the `title_words` function, which is likely implemented in one of the source files. Based on the file listing provided:\n\n- **",
+      "workflow_id": "wf_015_title_case_hyphen",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "event_id": "llm_after_glob_wf_015_title_case_hyphen",
+    "agent": "agent_0",
+    "turn": 2,
+    "input_state_ids": [
+      "state_cf58e0da68eea2d6a0",
+      "state_a57192df18dda2ed1b",
+      "state_8f87e81c330d86e477",
+      "state_181c75397c2b51a1ee",
+      "state_97e6ae594c067abd19"
+    ],
+    "append_tokens": 420,
+    "output_tokens": 48,
+    "new_state_id": "state_a785fbd58aa5089a76",
+    "new_state_type": "assistant_delta",
+    "timestamp_start": 1780403857.0872238,
+    "timestamp_end": 1780403859.756042,
+    "input_segments": [
+      {
+        "state_id": "state_cf58e0da68eea2d6a0",
+        "state_type": "system_prefix",
+        "owner": "shared",
+        "tokens": 17,
+        "text_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+        "semantic_key": "system:wf_015_title_case_hyphen",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "static_prefix",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_a57192df18dda2ed1b",
+        "state_type": "task_prefix",
+        "owner": "shared",
+        "tokens": 20,
+        "text_hash": "9c32030d1e4cd20fdf919b77093a04cc55da952dcddefecbd5de15f9ae7f4b7a",
+        "semantic_key": "task:wf_015_title_case_hyphen",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "issue",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_8f87e81c330d86e477",
+        "state_type": "agent_role",
+        "owner": "agent_0",
+        "tokens": 12,
+        "text_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+        "semantic_key": "role:wf_015_title_case_hyphen:agent_0",
+        "producer_event_id": null,
+        "metadata": {
+          "framework": "local_react_coding_agent",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_181c75397c2b51a1ee",
+        "state_type": "file_context",
+        "owner": "agent_0",
+        "tokens": 6,
+        "text_hash": "ad4ed0f85d396d1f8c9b22b96f8b74cb228f52476486460bb4ac65563cf816ad",
+        "semantic_key": "tool:Glob:9d73daba65f6cca4",
+        "producer_event_id": "tool_3d95062cf4f9",
+        "metadata": {
+          "tool": "Glob",
+          "status": "ok",
+          "paths": [
+            "config_parser.py",
+            "data_cleaner.py",
+            "math_utils.py",
+            "stats.py",
+            "tests/test_title_case_hyphen.py",
+            "text_utils.py"
+          ],
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_97e6ae594c067abd19",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 35,
+        "text_hash": "6031797db8f6d2327de25a5f04bddbc1107041b5823f07d60f11b3a960fc9e2c",
+        "semantic_key": "assistant:llm_plan_wf_015_title_case_hyphen",
+        "producer_event_id": "llm_plan_wf_015_title_case_hyphen",
+        "metadata": {
+          "phase": "planning",
+          "tokenizer": "fallback:whitespace"
+        }
+      }
+    ],
+    "phase": "localization",
+    "metadata": {
+      "workflow_id": "wf_015_title_case_hyphen",
+      "history_mode": "selective_state",
+      "prompt_reconstruction": "explicit_selective_state",
+      "full_history_likely": false,
+      "tokenizer": "fallback:whitespace",
+      "request_id": "c68c21eca3124f60b5515573fd8bd01b",
+      "error": null,
+      "step_id": "llm_after_glob",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "llm"
+  },
+  {
+    "state_id": "state_dfd1cca9008d071be5",
+    "state_type": "file_context",
+    "owner": "agent_0",
+    "tokens": 97,
+    "semantic_key": "file:text_utils.py:1-20:923f7acbf4bbfd4f",
+    "exact_token_hash": "35eb77f34fcaf2113c8907f2bd17b7362c899ec7b75f07154a7ee7edc9e33199",
+    "producer_event_id": "tool_361372890460",
+    "metadata": {
+      "tool": "Read",
+      "status": "ok",
+      "path": "text_utils.py",
+      "line_range": "1-20",
+      "version": "923f7acbf4bbfd4f",
+      "full_output_path": null,
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "35eb77f34fcaf2113c8907f2bd17b7362c899ec7b75f07154a7ee7edc9e33199",
+      "text_preview": "1: \"\"\"Text normalization helpers.\n2: \n3: This file creates realistic search/read/edit behavior for local coding-agent\n4: trace collection. The comments repeat the semantic intent of each function:\n5: normalize whitespace, handle missing values, count robustly, and avoid\n6: full-history prompt reconstruction. File states from this module are reused\n7: after several tool and LLM turns to exercise delayed state residency.\n8: \"\"\"\n9: \n10: def slugify(text):\n11:     return text.lower().replace(' ', '-')\n12: \n13: ",
+      "workflow_id": "wf_015_title_case_hyphen",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "type": "tool",
+    "event_id": "tool_361372890460",
+    "agent": "agent_0",
+    "turn": 2,
+    "tool": "Read",
+    "latency": 0,
+    "output_tokens": 97,
+    "status": "ok",
+    "new_state_id": "state_dfd1cca9008d071be5",
+    "new_state_type": "file_context",
+    "timestamp_start": 1780403859.756936,
+    "timestamp_end": 1780403859.7572107,
+    "metadata": {
+      "workflow_id": "wf_015_title_case_hyphen",
+      "step_id": "tool_read_source",
+      "args": {
+        "path": "text_utils.py",
+        "start_line": 1,
+        "end_line": 20
+      },
+      "latency_ms": 0.274658203125,
+      "stdout_stderr_hash": "5a72a9169ee1498e85d4c264f4f64dc529f64700b245e16a4bea345656ba1d23",
+      "truncated_output": "1: \"\"\"Text normalization helpers.\n2: \n3: This file creates realistic search/read/edit behavior for local coding-agent\n4: trace collection. The comments repeat the semantic intent of each function:\n5: normalize whitespace, handle missing values, count robustly, and avoid\n6: full-history prompt reconstruction. File states from this module are reused\n7: after several tool and LLM turns to exercise delayed state residency.\n8: \"\"\"\n9: \n10: def slugify(text):\n11:     return text.lower().replace(' ', '-')\n12: \n13: def normalize(value):\n14:     return value.strip().lower()\n15: \n16: def count_words(text):\n17:     return len(text.split())\n18: \n19: def title_words(text):\n20:     return ' '.join(w.capitalize() for w in text.split())",
+      "path": "text_utils.py",
+      "line_range": "1-20",
+      "version": "923f7acbf4bbfd4f",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    }
+  },
+  {
+    "state_id": "state_b918e702bf1f4cae2c",
+    "state_type": "assistant_delta",
+    "owner": "agent_0",
+    "tokens": 29,
+    "semantic_key": "assistant:llm_after_read_wf_015_title_case_hyphen",
+    "exact_token_hash": "d332a21219a20f7839ae8e816a83f17b56e4a663d5532614573e167bf0613096",
+    "producer_event_id": "llm_after_read_wf_015_title_case_hyphen",
+    "metadata": {
+      "phase": "localization",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "d332a21219a20f7839ae8e816a83f17b56e4a663d5532614573e167bf0613096",
+      "text_preview": "### Step 1: Analyze the `title_words` Function\n\nThe `title_words` function is defined in the `text_utils.py` file (as shown in the provided snippet). Here is the relevant code:\n\n```python\ndef",
+      "workflow_id": "wf_015_title_case_hyphen",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "event_id": "llm_after_read_wf_015_title_case_hyphen",
+    "agent": "agent_0",
+    "turn": 3,
+    "input_state_ids": [
+      "state_cf58e0da68eea2d6a0",
+      "state_a57192df18dda2ed1b",
+      "state_8f87e81c330d86e477",
+      "state_dfd1cca9008d071be5",
+      "state_97e6ae594c067abd19",
+      "state_a785fbd58aa5089a76"
+    ],
+    "append_tokens": 669,
+    "output_tokens": 48,
+    "new_state_id": "state_b918e702bf1f4cae2c",
+    "new_state_type": "assistant_delta",
+    "timestamp_start": 1780403859.7577722,
+    "timestamp_end": 1780403862.4865294,
+    "input_segments": [
+      {
+        "state_id": "state_cf58e0da68eea2d6a0",
+        "state_type": "system_prefix",
+        "owner": "shared",
+        "tokens": 17,
+        "text_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+        "semantic_key": "system:wf_015_title_case_hyphen",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "static_prefix",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_a57192df18dda2ed1b",
+        "state_type": "task_prefix",
+        "owner": "shared",
+        "tokens": 20,
+        "text_hash": "9c32030d1e4cd20fdf919b77093a04cc55da952dcddefecbd5de15f9ae7f4b7a",
+        "semantic_key": "task:wf_015_title_case_hyphen",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "issue",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_8f87e81c330d86e477",
+        "state_type": "agent_role",
+        "owner": "agent_0",
+        "tokens": 12,
+        "text_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+        "semantic_key": "role:wf_015_title_case_hyphen:agent_0",
+        "producer_event_id": null,
+        "metadata": {
+          "framework": "local_react_coding_agent",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_dfd1cca9008d071be5",
+        "state_type": "file_context",
+        "owner": "agent_0",
+        "tokens": 97,
+        "text_hash": "35eb77f34fcaf2113c8907f2bd17b7362c899ec7b75f07154a7ee7edc9e33199",
+        "semantic_key": "file:text_utils.py:1-20:923f7acbf4bbfd4f",
+        "producer_event_id": "tool_361372890460",
+        "metadata": {
+          "tool": "Read",
+          "status": "ok",
+          "path": "text_utils.py",
+          "line_range": "1-20",
+          "version": "923f7acbf4bbfd4f",
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_97e6ae594c067abd19",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 35,
+        "text_hash": "6031797db8f6d2327de25a5f04bddbc1107041b5823f07d60f11b3a960fc9e2c",
+        "semantic_key": "assistant:llm_plan_wf_015_title_case_hyphen",
+        "producer_event_id": "llm_plan_wf_015_title_case_hyphen",
+        "metadata": {
+          "phase": "planning",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_a785fbd58aa5089a76",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 39,
+        "text_hash": "2527d33df90bc721d73115585f98813d5a172dc02f73acb19bd8fb95f09fd2d7",
+        "semantic_key": "assistant:llm_after_glob_wf_015_title_case_hyphen",
+        "producer_event_id": "llm_after_glob_wf_015_title_case_hyphen",
+        "metadata": {
+          "phase": "localization",
+          "tokenizer": "fallback:whitespace"
+        }
+      }
+    ],
+    "phase": "localization",
+    "metadata": {
+      "workflow_id": "wf_015_title_case_hyphen",
+      "history_mode": "selective_state",
+      "prompt_reconstruction": "explicit_selective_state",
+      "full_history_likely": false,
+      "tokenizer": "fallback:whitespace",
+      "request_id": "1bb4c50a57c24dde9d6396413c90e653",
+      "error": null,
+      "step_id": "llm_after_read",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "llm"
+  },
+  {
+    "state_id": "state_b47afd8c76b87fc513",
+    "state_type": "file_context",
+    "owner": "agent_0",
+    "tokens": 100,
+    "semantic_key": "tool:Grep:684511c5e387d375",
+    "exact_token_hash": "c14b2cf50c69f357f8a073c7340093f59539794cef6ddab961aed8391366da49",
+    "producer_event_id": "tool_d3cba21a1c05",
+    "metadata": {
+      "tool": "Grep",
+      "status": "ok",
+      "full_output_path": null,
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "c14b2cf50c69f357f8a073c7340093f59539794cef6ddab961aed8391366da49",
+      "text_preview": "config_parser.py:11:    return value.lower() in ('true', '1')\nconfig_parser.py:14:    return int(value)\nconfig_parser.py:17:    return {**override, **base}\nconfig_parser.py:20:    return value.split(',')\nconfig_parser.py:23:    return data[name]\ndata_cleaner.py:10:    return sorted(set(items))\ndata_cleaner.py:13:    return items[len(items)-n:len(items)-1]\ndata_cleaner.py:16:    return [items]\ndata_cleaner.py:19:    return [items[i:i+size] for i in range(0, len(items)-size, size)]\nmath_utils.py:12:    return",
+      "workflow_id": "wf_015_title_case_hyphen",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "type": "tool",
+    "event_id": "tool_d3cba21a1c05",
+    "agent": "agent_0",
+    "turn": 3,
+    "tool": "Grep",
+    "latency": 2,
+    "output_tokens": 100,
+    "status": "ok",
+    "new_state_id": "state_b47afd8c76b87fc513",
+    "new_state_type": "file_context",
+    "timestamp_start": 1780403862.4874818,
+    "timestamp_end": 1780403862.490477,
+    "metadata": {
+      "workflow_id": "wf_015_title_case_hyphen",
+      "step_id": "tool_grep",
+      "args": {
+        "pattern": "return",
+        "include": "*.py"
+      },
+      "latency_ms": 2.9952526092529297,
+      "stdout_stderr_hash": "01b7538088b18459fc94ec4d4ed3276fb477d6ab591238cf62ee2d50895aa7a9",
+      "truncated_output": "config_parser.py:11:    return value.lower() in ('true', '1')\nconfig_parser.py:14:    return int(value)\nconfig_parser.py:17:    return {**override, **base}\nconfig_parser.py:20:    return value.split(',')\nconfig_parser.py:23:    return data[name]\ndata_cleaner.py:10:    return sorted(set(items))\ndata_cleaner.py:13:    return items[len(items)-n:len(items)-1]\ndata_cleaner.py:16:    return [items]\ndata_cleaner.py:19:    return [items[i:i+size] for i in range(0, len(items)-size, size)]\nmath_utils.py:12:    return value\nmath_utils.py:15:    return numerator / denominator\nmath_utils.py:18:    return part / total * 100\nstats.py:11:    return sum(values) / len(values)\nstats.py:16:    return values[mid + 1]\nstats.py:20:    return sum((x - avg) ** 2 for x in values) / (len(values) - 1)\nstats.py:24:    return sorted(counts, key=counts.get)[-1]\ntext_utils.py:11:    return text.lower().replace(' ', '-')\ntext_utils.py:14:    return value.strip().lower()\ntext_utils.py:17:    return len(text.split())\nte",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    }
+  },
+  {
+    "state_id": "state_4345d854b251bcdc93",
+    "state_type": "assistant_delta",
+    "owner": "agent_0",
+    "tokens": 38,
+    "semantic_key": "assistant:llm_before_test_wf_015_title_case_hyphen",
+    "exact_token_hash": "f3ca97be895b25f85135a85424ee6c2ea543a94f5bcc6924febf1416a55312af",
+    "producer_event_id": "llm_before_test_wf_015_title_case_hyphen",
+    "metadata": {
+      "phase": "testing",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "f3ca97be895b25f85135a85424ee6c2ea543a94f5bcc6924febf1416a55312af",
+      "text_preview": "### Predict the Failing Unit Test Output\n\nTo predict what the failing unit test will show, let's analyze the current behavior of the `title_words` function and how it fails to handle hyphens as separators.\n\n#### Current Behavior of",
+      "workflow_id": "wf_015_title_case_hyphen",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "event_id": "llm_before_test_wf_015_title_case_hyphen",
+    "agent": "agent_0",
+    "turn": 4,
+    "input_state_ids": [
+      "state_cf58e0da68eea2d6a0",
+      "state_a57192df18dda2ed1b",
+      "state_8f87e81c330d86e477",
+      "state_dfd1cca9008d071be5",
+      "state_97e6ae594c067abd19",
+      "state_a785fbd58aa5089a76",
+      "state_b918e702bf1f4cae2c"
+    ],
+    "append_tokens": 760,
+    "output_tokens": 48,
+    "new_state_id": "state_4345d854b251bcdc93",
+    "new_state_type": "assistant_delta",
+    "timestamp_start": 1780403862.4911113,
+    "timestamp_end": 1780403865.205647,
+    "input_segments": [
+      {
+        "state_id": "state_cf58e0da68eea2d6a0",
+        "state_type": "system_prefix",
+        "owner": "shared",
+        "tokens": 17,
+        "text_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+        "semantic_key": "system:wf_015_title_case_hyphen",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "static_prefix",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_a57192df18dda2ed1b",
+        "state_type": "task_prefix",
+        "owner": "shared",
+        "tokens": 20,
+        "text_hash": "9c32030d1e4cd20fdf919b77093a04cc55da952dcddefecbd5de15f9ae7f4b7a",
+        "semantic_key": "task:wf_015_title_case_hyphen",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "issue",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_8f87e81c330d86e477",
+        "state_type": "agent_role",
+        "owner": "agent_0",
+        "tokens": 12,
+        "text_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+        "semantic_key": "role:wf_015_title_case_hyphen:agent_0",
+        "producer_event_id": null,
+        "metadata": {
+          "framework": "local_react_coding_agent",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_dfd1cca9008d071be5",
+        "state_type": "file_context",
+        "owner": "agent_0",
+        "tokens": 97,
+        "text_hash": "35eb77f34fcaf2113c8907f2bd17b7362c899ec7b75f07154a7ee7edc9e33199",
+        "semantic_key": "file:text_utils.py:1-20:923f7acbf4bbfd4f",
+        "producer_event_id": "tool_361372890460",
+        "metadata": {
+          "tool": "Read",
+          "status": "ok",
+          "path": "text_utils.py",
+          "line_range": "1-20",
+          "version": "923f7acbf4bbfd4f",
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_97e6ae594c067abd19",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 35,
+        "text_hash": "6031797db8f6d2327de25a5f04bddbc1107041b5823f07d60f11b3a960fc9e2c",
+        "semantic_key": "assistant:llm_plan_wf_015_title_case_hyphen",
+        "producer_event_id": "llm_plan_wf_015_title_case_hyphen",
+        "metadata": {
+          "phase": "planning",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_a785fbd58aa5089a76",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 39,
+        "text_hash": "2527d33df90bc721d73115585f98813d5a172dc02f73acb19bd8fb95f09fd2d7",
+        "semantic_key": "assistant:llm_after_glob_wf_015_title_case_hyphen",
+        "producer_event_id": "llm_after_glob_wf_015_title_case_hyphen",
+        "metadata": {
+          "phase": "localization",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_b918e702bf1f4cae2c",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 29,
+        "text_hash": "d332a21219a20f7839ae8e816a83f17b56e4a663d5532614573e167bf0613096",
+        "semantic_key": "assistant:llm_after_read_wf_015_title_case_hyphen",
+        "producer_event_id": "llm_after_read_wf_015_title_case_hyphen",
+        "metadata": {
+          "phase": "localization",
+          "tokenizer": "fallback:whitespace"
+        }
+      }
+    ],
+    "phase": "testing",
+    "metadata": {
+      "workflow_id": "wf_015_title_case_hyphen",
+      "history_mode": "selective_state",
+      "prompt_reconstruction": "explicit_selective_state",
+      "full_history_likely": false,
+      "tokenizer": "fallback:whitespace",
+      "request_id": "02e66d9f3bc941f992dc4023e460a1c5",
+      "error": null,
+      "step_id": "llm_before_test",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "llm"
+  },
+  {
+    "state_id": "state_801fbb50ed14de7ed5",
+    "state_type": "test_failure_summary",
+    "owner": "agent_0",
+    "tokens": 119,
+    "semantic_key": "command:python -m pytest -q:failed",
+    "exact_token_hash": "6b976c5c0062acfe0a918cc1d4e437be8cfaa2c61a67e093c4d0db3d59f7c498",
+    "producer_event_id": "tool_5e9041083adf",
+    "metadata": {
+      "tool": "Pytest",
+      "status": "failed",
+      "command": "python -m pytest -q",
+      "exit_code": 1,
+      "full_output_path": null,
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "6b976c5c0062acfe0a918cc1d4e437be8cfaa2c61a67e093c4d0db3d59f7c498",
+      "text_preview": "F                                                                        [100%]\n=================================== FAILURES ===================================\n______________________________ test_title_hyphen _______________________________\n\n    def test_title_hyphen():\n>       assert title_words('hello-world') == 'Hello World'\nE       AssertionError: assert 'Hello-world' == 'Hello World'\nE         \nE         - Hello World\nE         ?      ^^\nE         + Hello-world\nE         ?      ^^\n\ntests/test_title_ca",
+      "workflow_id": "wf_015_title_case_hyphen",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "type": "tool",
+    "event_id": "tool_5e9041083adf",
+    "agent": "agent_0",
+    "turn": 4,
+    "tool": "Pytest",
+    "latency": 324,
+    "output_tokens": 119,
+    "status": "failed",
+    "new_state_id": "state_801fbb50ed14de7ed5",
+    "new_state_type": "test_failure_summary",
+    "timestamp_start": 1780403865.2066371,
+    "timestamp_end": 1780403865.5310366,
+    "metadata": {
+      "workflow_id": "wf_015_title_case_hyphen",
+      "step_id": "tool_pytest_fail",
+      "args": {
+        "command": "python -m pytest -q",
+        "timeout": 30
+      },
+      "latency_ms": 324.399471282959,
+      "stdout_stderr_hash": "9deb8987b9b3a977ad33bf00798b188e07d793210d5019f74c53c3c63dd9c2bb",
+      "truncated_output": "F                                                                        [100%]\n=================================== FAILURES ===================================\n______________________________ test_title_hyphen _______________________________\n\n    def test_title_hyphen():\n>       assert title_words('hello-world') == 'Hello World'\nE       AssertionError: assert 'Hello-world' == 'Hello World'\nE         \nE         - Hello World\nE         ?      ^^\nE         + Hello-world\nE         ?      ^^\n\ntests/test_title_case_hyphen.py:4: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_title_case_hyphen.py::test_title_hyphen - AssertionError: a...\n1 failed in 0.03s\n\nSTDERR:\n/home/duzc/miniconda3/lib/python3.12/site-packages/pytest_asyncio/plugin.py:247: PytestDeprecationWarning: The configuration option \"asyncio_default_fixture_loop_scope\" is unset.\nThe event loop scope for asynchronous fixtures will default to the fixture caching scope.",
+      "command": "python -m pytest -q",
+      "exit_code": 1,
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    }
+  },
+  {
+    "state_id": "state_0a3a9549668d3bb41f",
+    "state_type": "assistant_delta",
+    "owner": "agent_0",
+    "tokens": 31,
+    "semantic_key": "assistant:llm_after_failure_wf_015_title_case_hyphen",
+    "exact_token_hash": "3603bdbb9a9d3ad6017a1dc0ecc9a8eaac1eb867c78aeaa571c5286a4c8404c7",
+    "producer_event_id": "llm_after_failure_wf_015_title_case_hyphen",
+    "metadata": {
+      "phase": "diagnosis",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "3603bdbb9a9d3ad6017a1dc0ecc9a8eaac1eb867c78aeaa571c5286a4c8404c7",
+      "text_preview": "### Step 1: Analyze the Bug and Test Failure\n\nFrom the test failure summary, we observe that the `title_words` function is not correctly handling hyphens as separators. Specifically:\n\n- **Input**: `'hello-world'",
+      "workflow_id": "wf_015_title_case_hyphen",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "event_id": "llm_after_failure_wf_015_title_case_hyphen",
+    "agent": "agent_0",
+    "turn": 5,
+    "input_state_ids": [
+      "state_cf58e0da68eea2d6a0",
+      "state_a57192df18dda2ed1b",
+      "state_8f87e81c330d86e477",
+      "state_801fbb50ed14de7ed5",
+      "state_97e6ae594c067abd19",
+      "state_a785fbd58aa5089a76",
+      "state_b918e702bf1f4cae2c",
+      "state_4345d854b251bcdc93"
+    ],
+    "append_tokens": 944,
+    "output_tokens": 48,
+    "new_state_id": "state_0a3a9549668d3bb41f",
+    "new_state_type": "assistant_delta",
+    "timestamp_start": 1780403865.5318,
+    "timestamp_end": 1780403868.3536406,
+    "input_segments": [
+      {
+        "state_id": "state_cf58e0da68eea2d6a0",
+        "state_type": "system_prefix",
+        "owner": "shared",
+        "tokens": 17,
+        "text_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+        "semantic_key": "system:wf_015_title_case_hyphen",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "static_prefix",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_a57192df18dda2ed1b",
+        "state_type": "task_prefix",
+        "owner": "shared",
+        "tokens": 20,
+        "text_hash": "9c32030d1e4cd20fdf919b77093a04cc55da952dcddefecbd5de15f9ae7f4b7a",
+        "semantic_key": "task:wf_015_title_case_hyphen",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "issue",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_8f87e81c330d86e477",
+        "state_type": "agent_role",
+        "owner": "agent_0",
+        "tokens": 12,
+        "text_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+        "semantic_key": "role:wf_015_title_case_hyphen:agent_0",
+        "producer_event_id": null,
+        "metadata": {
+          "framework": "local_react_coding_agent",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_801fbb50ed14de7ed5",
+        "state_type": "test_failure_summary",
+        "owner": "agent_0",
+        "tokens": 119,
+        "text_hash": "6b976c5c0062acfe0a918cc1d4e437be8cfaa2c61a67e093c4d0db3d59f7c498",
+        "semantic_key": "command:python -m pytest -q:failed",
+        "producer_event_id": "tool_5e9041083adf",
+        "metadata": {
+          "tool": "Pytest",
+          "status": "failed",
+          "command": "python -m pytest -q",
+          "exit_code": 1,
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_97e6ae594c067abd19",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 35,
+        "text_hash": "6031797db8f6d2327de25a5f04bddbc1107041b5823f07d60f11b3a960fc9e2c",
+        "semantic_key": "assistant:llm_plan_wf_015_title_case_hyphen",
+        "producer_event_id": "llm_plan_wf_015_title_case_hyphen",
+        "metadata": {
+          "phase": "planning",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_a785fbd58aa5089a76",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 39,
+        "text_hash": "2527d33df90bc721d73115585f98813d5a172dc02f73acb19bd8fb95f09fd2d7",
+        "semantic_key": "assistant:llm_after_glob_wf_015_title_case_hyphen",
+        "producer_event_id": "llm_after_glob_wf_015_title_case_hyphen",
+        "metadata": {
+          "phase": "localization",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_b918e702bf1f4cae2c",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 29,
+        "text_hash": "d332a21219a20f7839ae8e816a83f17b56e4a663d5532614573e167bf0613096",
+        "semantic_key": "assistant:llm_after_read_wf_015_title_case_hyphen",
+        "producer_event_id": "llm_after_read_wf_015_title_case_hyphen",
+        "metadata": {
+          "phase": "localization",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_4345d854b251bcdc93",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 38,
+        "text_hash": "f3ca97be895b25f85135a85424ee6c2ea543a94f5bcc6924febf1416a55312af",
+        "semantic_key": "assistant:llm_before_test_wf_015_title_case_hyphen",
+        "producer_event_id": "llm_before_test_wf_015_title_case_hyphen",
+        "metadata": {
+          "phase": "testing",
+          "tokenizer": "fallback:whitespace"
+        }
+      }
+    ],
+    "phase": "diagnosis",
+    "metadata": {
+      "workflow_id": "wf_015_title_case_hyphen",
+      "history_mode": "selective_state",
+      "prompt_reconstruction": "explicit_selective_state",
+      "full_history_likely": false,
+      "tokenizer": "fallback:whitespace",
+      "request_id": "31229e8a5bb14eff939a38e51270cfb6",
+      "error": null,
+      "step_id": "llm_after_failure",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "llm"
+  },
+  {
+    "state_id": "state_a2bd183e7d9c28c355",
+    "state_type": "assistant_delta",
+    "owner": "agent_0",
+    "tokens": 36,
+    "semantic_key": "assistant:llm_before_patch_wf_015_title_case_hyphen",
+    "exact_token_hash": "6683ff5ba9a0fd50ddc98490be8c0b6fe686317e650621390b8e057b6d1aeaca",
+    "producer_event_id": "llm_before_patch_wf_015_title_case_hyphen",
+    "metadata": {
+      "phase": "editing",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "6683ff5ba9a0fd50ddc98490be8c0b6fe686317e650621390b8e057b6d1aeaca",
+      "text_preview": "### Step 1: Confirm the Edit Target and Explain Why the Old Behavior is Wrong\n\n#### **Identify the Problem**\nThe bug report indicates that the `title_words` function does not treat hyphens as separators. This means that",
+      "workflow_id": "wf_015_title_case_hyphen",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "event_id": "llm_before_patch_wf_015_title_case_hyphen",
+    "agent": "agent_0",
+    "turn": 6,
+    "input_state_ids": [
+      "state_cf58e0da68eea2d6a0",
+      "state_a57192df18dda2ed1b",
+      "state_8f87e81c330d86e477",
+      "state_801fbb50ed14de7ed5",
+      "state_a785fbd58aa5089a76",
+      "state_b918e702bf1f4cae2c",
+      "state_4345d854b251bcdc93",
+      "state_0a3a9549668d3bb41f"
+    ],
+    "append_tokens": 948,
+    "output_tokens": 48,
+    "new_state_id": "state_a2bd183e7d9c28c355",
+    "new_state_type": "assistant_delta",
+    "timestamp_start": 1780403868.3548596,
+    "timestamp_end": 1780403871.1283813,
+    "input_segments": [
+      {
+        "state_id": "state_cf58e0da68eea2d6a0",
+        "state_type": "system_prefix",
+        "owner": "shared",
+        "tokens": 17,
+        "text_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+        "semantic_key": "system:wf_015_title_case_hyphen",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "static_prefix",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_a57192df18dda2ed1b",
+        "state_type": "task_prefix",
+        "owner": "shared",
+        "tokens": 20,
+        "text_hash": "9c32030d1e4cd20fdf919b77093a04cc55da952dcddefecbd5de15f9ae7f4b7a",
+        "semantic_key": "task:wf_015_title_case_hyphen",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "issue",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_8f87e81c330d86e477",
+        "state_type": "agent_role",
+        "owner": "agent_0",
+        "tokens": 12,
+        "text_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+        "semantic_key": "role:wf_015_title_case_hyphen:agent_0",
+        "producer_event_id": null,
+        "metadata": {
+          "framework": "local_react_coding_agent",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_801fbb50ed14de7ed5",
+        "state_type": "test_failure_summary",
+        "owner": "agent_0",
+        "tokens": 119,
+        "text_hash": "6b976c5c0062acfe0a918cc1d4e437be8cfaa2c61a67e093c4d0db3d59f7c498",
+        "semantic_key": "command:python -m pytest -q:failed",
+        "producer_event_id": "tool_5e9041083adf",
+        "metadata": {
+          "tool": "Pytest",
+          "status": "failed",
+          "command": "python -m pytest -q",
+          "exit_code": 1,
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_a785fbd58aa5089a76",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 39,
+        "text_hash": "2527d33df90bc721d73115585f98813d5a172dc02f73acb19bd8fb95f09fd2d7",
+        "semantic_key": "assistant:llm_after_glob_wf_015_title_case_hyphen",
+        "producer_event_id": "llm_after_glob_wf_015_title_case_hyphen",
+        "metadata": {
+          "phase": "localization",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_b918e702bf1f4cae2c",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 29,
+        "text_hash": "d332a21219a20f7839ae8e816a83f17b56e4a663d5532614573e167bf0613096",
+        "semantic_key": "assistant:llm_after_read_wf_015_title_case_hyphen",
+        "producer_event_id": "llm_after_read_wf_015_title_case_hyphen",
+        "metadata": {
+          "phase": "localization",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_4345d854b251bcdc93",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 38,
+        "text_hash": "f3ca97be895b25f85135a85424ee6c2ea543a94f5bcc6924febf1416a55312af",
+        "semantic_key": "assistant:llm_before_test_wf_015_title_case_hyphen",
+        "producer_event_id": "llm_before_test_wf_015_title_case_hyphen",
+        "metadata": {
+          "phase": "testing",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_0a3a9549668d3bb41f",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 31,
+        "text_hash": "3603bdbb9a9d3ad6017a1dc0ecc9a8eaac1eb867c78aeaa571c5286a4c8404c7",
+        "semantic_key": "assistant:llm_after_failure_wf_015_title_case_hyphen",
+        "producer_event_id": "llm_after_failure_wf_015_title_case_hyphen",
+        "metadata": {
+          "phase": "diagnosis",
+          "tokenizer": "fallback:whitespace"
+        }
+      }
+    ],
+    "phase": "editing",
+    "metadata": {
+      "workflow_id": "wf_015_title_case_hyphen",
+      "history_mode": "selective_state",
+      "prompt_reconstruction": "explicit_selective_state",
+      "full_history_likely": false,
+      "tokenizer": "fallback:whitespace",
+      "request_id": "bedcf546be5f44da961705d0b8ff7b02",
+      "error": null,
+      "step_id": "llm_before_patch",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "llm"
+  },
+  {
+    "state_id": "state_defbbde1e6b433d666",
+    "state_type": "edit_diff",
+    "owner": "agent_0",
+    "tokens": 30,
+    "semantic_key": "file:text_utils.py:all:workspace",
+    "exact_token_hash": "c23ab401216d8e2854df2c981acf9cf0cc68474723a2a3eba41dc20d2ade58d1",
+    "producer_event_id": "tool_4278452006f8",
+    "metadata": {
+      "tool": "Edit",
+      "status": "ok",
+      "path": "text_utils.py",
+      "error_type": null,
+      "full_output_path": null,
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "c23ab401216d8e2854df2c981acf9cf0cc68474723a2a3eba41dc20d2ade58d1",
+      "text_preview": "--- a/text_utils.py\n+++ b/text_utils.py\n@@ -17,4 +17,4 @@\n     return len(text.split())\n \n def title_words(text):\n-    return ' '.join(w.capitalize() for w in text.split())\n+    return ' '.join(w.capitalize() for w in text.replace('-', ' ').split())",
+      "workflow_id": "wf_015_title_case_hyphen",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "type": "tool",
+    "event_id": "tool_4278452006f8",
+    "agent": "agent_0",
+    "turn": 6,
+    "tool": "Edit",
+    "latency": 0,
+    "output_tokens": 30,
+    "status": "ok",
+    "new_state_id": "state_defbbde1e6b433d666",
+    "new_state_type": "edit_diff",
+    "timestamp_start": 1780403871.1294923,
+    "timestamp_end": 1780403871.1300967,
+    "metadata": {
+      "workflow_id": "wf_015_title_case_hyphen",
+      "step_id": "tool_edit",
+      "args": {
+        "path": "text_utils.py",
+        "old_hash": "2941c99de7b7f546416472ce58699348dd9fee57413407585c6e223d46c2e32e",
+        "new_hash": "e3f0f44ecd0a5600b306408a43498274cdb0942d4553b0f1c4a853e33b2d6c21"
+      },
+      "latency_ms": 0.6043910980224609,
+      "stdout_stderr_hash": "e0668a6a82d0293deba8220f66794a4c592c8c0a21223f1cc1dda64bfdd383e8",
+      "truncated_output": "--- a/text_utils.py\n+++ b/text_utils.py\n@@ -17,4 +17,4 @@\n     return len(text.split())\n \n def title_words(text):\n-    return ' '.join(w.capitalize() for w in text.split())\n+    return ' '.join(w.capitalize() for w in text.replace('-', ' ').split())",
+      "path": "text_utils.py",
+      "error_type": null,
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    }
+  },
+  {
+    "state_id": "state_bda0045169c59238c3",
+    "state_type": "assistant_delta",
+    "owner": "agent_0",
+    "tokens": 34,
+    "semantic_key": "assistant:llm_after_patch_wf_015_title_case_hyphen",
+    "exact_token_hash": "134e402773ed3ab745b2da879fa1350ce135c16faabec717d9056ae0f8619dc5",
+    "producer_event_id": "llm_after_patch_wf_015_title_case_hyphen",
+    "metadata": {
+      "phase": "review",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "134e402773ed3ab745b2da879fa1350ce135c16faabec717d9056ae0f8619dc5",
+      "text_preview": "### Step 1: Review the Patch Diff\n\nThe patch diff provided in the state indicates a change to the `title_words` function in `text_utils.py`. Here is the relevant part of the diff:\n\n```diff\n--- a/text",
+      "workflow_id": "wf_015_title_case_hyphen",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "event_id": "llm_after_patch_wf_015_title_case_hyphen",
+    "agent": "agent_0",
+    "turn": 7,
+    "input_state_ids": [
+      "state_cf58e0da68eea2d6a0",
+      "state_a57192df18dda2ed1b",
+      "state_8f87e81c330d86e477",
+      "state_defbbde1e6b433d666",
+      "state_801fbb50ed14de7ed5",
+      "state_4345d854b251bcdc93",
+      "state_0a3a9549668d3bb41f",
+      "state_a2bd183e7d9c28c355"
+    ],
+    "append_tokens": 959,
+    "output_tokens": 48,
+    "new_state_id": "state_bda0045169c59238c3",
+    "new_state_type": "assistant_delta",
+    "timestamp_start": 1780403871.130647,
+    "timestamp_end": 1780403873.9350698,
+    "input_segments": [
+      {
+        "state_id": "state_cf58e0da68eea2d6a0",
+        "state_type": "system_prefix",
+        "owner": "shared",
+        "tokens": 17,
+        "text_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+        "semantic_key": "system:wf_015_title_case_hyphen",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "static_prefix",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_a57192df18dda2ed1b",
+        "state_type": "task_prefix",
+        "owner": "shared",
+        "tokens": 20,
+        "text_hash": "9c32030d1e4cd20fdf919b77093a04cc55da952dcddefecbd5de15f9ae7f4b7a",
+        "semantic_key": "task:wf_015_title_case_hyphen",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "issue",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_8f87e81c330d86e477",
+        "state_type": "agent_role",
+        "owner": "agent_0",
+        "tokens": 12,
+        "text_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+        "semantic_key": "role:wf_015_title_case_hyphen:agent_0",
+        "producer_event_id": null,
+        "metadata": {
+          "framework": "local_react_coding_agent",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_defbbde1e6b433d666",
+        "state_type": "edit_diff",
+        "owner": "agent_0",
+        "tokens": 30,
+        "text_hash": "c23ab401216d8e2854df2c981acf9cf0cc68474723a2a3eba41dc20d2ade58d1",
+        "semantic_key": "file:text_utils.py:all:workspace",
+        "producer_event_id": "tool_4278452006f8",
+        "metadata": {
+          "tool": "Edit",
+          "status": "ok",
+          "path": "text_utils.py",
+          "error_type": null,
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_801fbb50ed14de7ed5",
+        "state_type": "test_failure_summary",
+        "owner": "agent_0",
+        "tokens": 119,
+        "text_hash": "6b976c5c0062acfe0a918cc1d4e437be8cfaa2c61a67e093c4d0db3d59f7c498",
+        "semantic_key": "command:python -m pytest -q:failed",
+        "producer_event_id": "tool_5e9041083adf",
+        "metadata": {
+          "tool": "Pytest",
+          "status": "failed",
+          "command": "python -m pytest -q",
+          "exit_code": 1,
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_4345d854b251bcdc93",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 38,
+        "text_hash": "f3ca97be895b25f85135a85424ee6c2ea543a94f5bcc6924febf1416a55312af",
+        "semantic_key": "assistant:llm_before_test_wf_015_title_case_hyphen",
+        "producer_event_id": "llm_before_test_wf_015_title_case_hyphen",
+        "metadata": {
+          "phase": "testing",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_0a3a9549668d3bb41f",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 31,
+        "text_hash": "3603bdbb9a9d3ad6017a1dc0ecc9a8eaac1eb867c78aeaa571c5286a4c8404c7",
+        "semantic_key": "assistant:llm_after_failure_wf_015_title_case_hyphen",
+        "producer_event_id": "llm_after_failure_wf_015_title_case_hyphen",
+        "metadata": {
+          "phase": "diagnosis",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_a2bd183e7d9c28c355",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 36,
+        "text_hash": "6683ff5ba9a0fd50ddc98490be8c0b6fe686317e650621390b8e057b6d1aeaca",
+        "semantic_key": "assistant:llm_before_patch_wf_015_title_case_hyphen",
+        "producer_event_id": "llm_before_patch_wf_015_title_case_hyphen",
+        "metadata": {
+          "phase": "editing",
+          "tokenizer": "fallback:whitespace"
+        }
+      }
+    ],
+    "phase": "review",
+    "metadata": {
+      "workflow_id": "wf_015_title_case_hyphen",
+      "history_mode": "selective_state",
+      "prompt_reconstruction": "explicit_selective_state",
+      "full_history_likely": false,
+      "tokenizer": "fallback:whitespace",
+      "request_id": "17b91f92416e4b8b9689314f792a54c4",
+      "error": null,
+      "step_id": "llm_after_patch",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "llm"
+  },
+  {
+    "state_id": "state_54863509d835debf6d",
+    "state_type": "tool_observation",
+    "owner": "agent_0",
+    "tokens": 71,
+    "semantic_key": "command:python -m pytest -q:ok",
+    "exact_token_hash": "29518090073b8294d2da1b07aac05f848314166d8adbea75d112c10f6ac577c0",
+    "producer_event_id": "tool_ea9e5b0c35bb",
+    "metadata": {
+      "tool": "Pytest",
+      "status": "ok",
+      "command": "python -m pytest -q",
+      "exit_code": 0,
+      "full_output_path": null,
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "29518090073b8294d2da1b07aac05f848314166d8adbea75d112c10f6ac577c0",
+      "text_preview": ".                                                                        [100%]\n1 passed in 0.01s\n\nSTDERR:\n/home/duzc/miniconda3/lib/python3.12/site-packages/pytest_asyncio/plugin.py:247: PytestDeprecationWarning: The configuration option \"asyncio_default_fixture_loop_scope\" is unset.\nThe event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop ",
+      "workflow_id": "wf_015_title_case_hyphen",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "type": "tool",
+    "event_id": "tool_ea9e5b0c35bb",
+    "agent": "agent_0",
+    "turn": 7,
+    "tool": "Pytest",
+    "latency": 303,
+    "output_tokens": 71,
+    "status": "ok",
+    "new_state_id": "state_54863509d835debf6d",
+    "new_state_type": "tool_observation",
+    "timestamp_start": 1780403873.9361167,
+    "timestamp_end": 1780403874.2400687,
+    "metadata": {
+      "workflow_id": "wf_015_title_case_hyphen",
+      "step_id": "tool_pytest_final",
+      "args": {
+        "command": "python -m pytest -q",
+        "timeout": 30
+      },
+      "latency_ms": 303.9519786834717,
+      "stdout_stderr_hash": "f95f1e2625f6ff9b78e3041955482c6abf0ed239353a88a8517af513374f87a7",
+      "truncated_output": ".                                                                        [100%]\n1 passed in 0.01s\n\nSTDERR:\n/home/duzc/miniconda3/lib/python3.12/site-packages/pytest_asyncio/plugin.py:247: PytestDeprecationWarning: The configuration option \"asyncio_default_fixture_loop_scope\" is unset.\nThe event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: \"function\", \"class\", \"module\", \"package\", \"session\"\n\n  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))\n",
+      "command": "python -m pytest -q",
+      "exit_code": 0,
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    }
+  },
+  {
+    "state_id": "state_5dd3256ecced93815c",
+    "state_type": "assistant_delta",
+    "owner": "agent_0",
+    "tokens": 29,
+    "semantic_key": "assistant:llm_final_wf_015_title_case_hyphen",
+    "exact_token_hash": "aa6161c0ed4b7b3355c843d0a571537bbc9017c30b10c4df258ad2850f9f85e6",
+    "producer_event_id": "llm_final_wf_015_title_case_hyphen",
+    "metadata": {
+      "phase": "final",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "aa6161c0ed4b7b3355c843d0a571537bbc9017c30b10c4df258ad2850f9f85e6",
+      "text_preview": "### Final Status Summary\n\n#### **Bug Description**\nThe `title_words` function in `text_utils.py` was not treating hyphens as word separators. As a result, when inputting text like `'hello-world'`, the function",
+      "workflow_id": "wf_015_title_case_hyphen",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "state"
+  },
+  {
+    "event_id": "llm_final_wf_015_title_case_hyphen",
+    "agent": "agent_0",
+    "turn": 8,
+    "input_state_ids": [
+      "state_cf58e0da68eea2d6a0",
+      "state_a57192df18dda2ed1b",
+      "state_8f87e81c330d86e477",
+      "state_dfd1cca9008d071be5",
+      "state_801fbb50ed14de7ed5",
+      "state_defbbde1e6b433d666",
+      "state_a2bd183e7d9c28c355",
+      "state_bda0045169c59238c3",
+      "state_54863509d835debf6d"
+    ],
+    "append_tokens": 1298,
+    "output_tokens": 48,
+    "new_state_id": "state_5dd3256ecced93815c",
+    "new_state_type": "assistant_delta",
+    "timestamp_start": 1780403874.2407734,
+    "timestamp_end": 1780403877.0879395,
+    "input_segments": [
+      {
+        "state_id": "state_cf58e0da68eea2d6a0",
+        "state_type": "system_prefix",
+        "owner": "shared",
+        "tokens": 17,
+        "text_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+        "semantic_key": "system:wf_015_title_case_hyphen",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "static_prefix",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_a57192df18dda2ed1b",
+        "state_type": "task_prefix",
+        "owner": "shared",
+        "tokens": 20,
+        "text_hash": "9c32030d1e4cd20fdf919b77093a04cc55da952dcddefecbd5de15f9ae7f4b7a",
+        "semantic_key": "task:wf_015_title_case_hyphen",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "issue",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_8f87e81c330d86e477",
+        "state_type": "agent_role",
+        "owner": "agent_0",
+        "tokens": 12,
+        "text_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+        "semantic_key": "role:wf_015_title_case_hyphen:agent_0",
+        "producer_event_id": null,
+        "metadata": {
+          "framework": "local_react_coding_agent",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_dfd1cca9008d071be5",
+        "state_type": "file_context",
+        "owner": "agent_0",
+        "tokens": 97,
+        "text_hash": "35eb77f34fcaf2113c8907f2bd17b7362c899ec7b75f07154a7ee7edc9e33199",
+        "semantic_key": "file:text_utils.py:1-20:923f7acbf4bbfd4f",
+        "producer_event_id": "tool_361372890460",
+        "metadata": {
+          "tool": "Read",
+          "status": "ok",
+          "path": "text_utils.py",
+          "line_range": "1-20",
+          "version": "923f7acbf4bbfd4f",
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_801fbb50ed14de7ed5",
+        "state_type": "test_failure_summary",
+        "owner": "agent_0",
+        "tokens": 119,
+        "text_hash": "6b976c5c0062acfe0a918cc1d4e437be8cfaa2c61a67e093c4d0db3d59f7c498",
+        "semantic_key": "command:python -m pytest -q:failed",
+        "producer_event_id": "tool_5e9041083adf",
+        "metadata": {
+          "tool": "Pytest",
+          "status": "failed",
+          "command": "python -m pytest -q",
+          "exit_code": 1,
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_defbbde1e6b433d666",
+        "state_type": "edit_diff",
+        "owner": "agent_0",
+        "tokens": 30,
+        "text_hash": "c23ab401216d8e2854df2c981acf9cf0cc68474723a2a3eba41dc20d2ade58d1",
+        "semantic_key": "file:text_utils.py:all:workspace",
+        "producer_event_id": "tool_4278452006f8",
+        "metadata": {
+          "tool": "Edit",
+          "status": "ok",
+          "path": "text_utils.py",
+          "error_type": null,
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_a2bd183e7d9c28c355",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 36,
+        "text_hash": "6683ff5ba9a0fd50ddc98490be8c0b6fe686317e650621390b8e057b6d1aeaca",
+        "semantic_key": "assistant:llm_before_patch_wf_015_title_case_hyphen",
+        "producer_event_id": "llm_before_patch_wf_015_title_case_hyphen",
+        "metadata": {
+          "phase": "editing",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_bda0045169c59238c3",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 34,
+        "text_hash": "134e402773ed3ab745b2da879fa1350ce135c16faabec717d9056ae0f8619dc5",
+        "semantic_key": "assistant:llm_after_patch_wf_015_title_case_hyphen",
+        "producer_event_id": "llm_after_patch_wf_015_title_case_hyphen",
+        "metadata": {
+          "phase": "review",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_54863509d835debf6d",
+        "state_type": "tool_observation",
+        "owner": "agent_0",
+        "tokens": 71,
+        "text_hash": "29518090073b8294d2da1b07aac05f848314166d8adbea75d112c10f6ac577c0",
+        "semantic_key": "command:python -m pytest -q:ok",
+        "producer_event_id": "tool_ea9e5b0c35bb",
+        "metadata": {
+          "tool": "Pytest",
+          "status": "ok",
+          "command": "python -m pytest -q",
+          "exit_code": 0,
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      }
+    ],
+    "phase": "final",
+    "metadata": {
+      "workflow_id": "wf_015_title_case_hyphen",
+      "history_mode": "selective_state",
+      "prompt_reconstruction": "explicit_selective_state",
+      "full_history_likely": false,
+      "tokenizer": "fallback:whitespace",
+      "request_id": "44eb6dea6d0d4f36b969ac74060e2112",
+      "error": null,
+      "step_id": "llm_final",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "llm"
+  }
+]

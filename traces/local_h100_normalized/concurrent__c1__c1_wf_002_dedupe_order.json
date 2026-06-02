@@ -1,0 +1,1670 @@
+[
+  {
+    "state_id": "state_e50d205b7b6942ab9e",
+    "state_type": "system_prefix",
+    "owner": "shared",
+    "tokens": 17,
+    "semantic_key": "system:c1_wf_002_dedupe_order",
+    "exact_token_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+    "metadata": {
+      "scope": "static_prefix",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+      "text_preview": "You are a coding agent. Use explicit state references, inspect files, run tests, and repair the bug.",
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks",
+      "semantic_key": "system:c1_wf_002_dedupe_order",
+      "exact_token_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2"
+    },
+    "type": "state",
+    "semantic_id": "system:c1_wf_002_dedupe_order",
+    "exact_kv_id": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2"
+  },
+  {
+    "state_id": "state_a1bef3da58c5473a04",
+    "state_type": "task_prefix",
+    "owner": "shared",
+    "tokens": 19,
+    "semantic_key": "task:c1_wf_002_dedupe_order",
+    "exact_token_hash": "d8931c9d79b546f0b06029caf2b562a36de4082ac9e71dd2fdcb9ef2ace2a783",
+    "metadata": {
+      "scope": "issue",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "d8931c9d79b546f0b06029caf2b562a36de4082ac9e71dd2fdcb9ef2ace2a783",
+      "text_preview": "Bug report: dedupe should preserve first-seen order.\n\nRun `python -m pytest -q` and patch `data_cleaner.py` so the test passes.",
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks",
+      "semantic_key": "task:c1_wf_002_dedupe_order",
+      "exact_token_hash": "d8931c9d79b546f0b06029caf2b562a36de4082ac9e71dd2fdcb9ef2ace2a783"
+    },
+    "type": "state",
+    "semantic_id": "task:c1_wf_002_dedupe_order",
+    "exact_kv_id": "d8931c9d79b546f0b06029caf2b562a36de4082ac9e71dd2fdcb9ef2ace2a783"
+  },
+  {
+    "state_id": "state_300fc9850448331c20",
+    "state_type": "agent_role",
+    "owner": "agent_0",
+    "tokens": 12,
+    "semantic_key": "role:c1_wf_002_dedupe_order:agent_0",
+    "exact_token_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+    "metadata": {
+      "framework": "local_react_coding_agent",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+      "text_preview": "Agent role: local_react_coding_agent. Prefer concise plans, concrete file references, and test-driven repair.",
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks",
+      "semantic_key": "role:c1_wf_002_dedupe_order:agent_0",
+      "exact_token_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a"
+    },
+    "type": "state",
+    "semantic_id": "role:c1_wf_002_dedupe_order:agent_0",
+    "exact_kv_id": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a"
+  },
+  {
+    "state_id": "state_e6f8dae2553ecec725",
+    "state_type": "assistant_delta",
+    "owner": "agent_0",
+    "tokens": 38,
+    "semantic_key": "assistant:llm_plan_c1_wf_002_dedupe_order",
+    "exact_token_hash": "874d8748850a34d3a37a307227d070092379ad440391a31e6e873e7c0f4f2bb5",
+    "producer_event_id": "llm_plan_c1_wf_002_dedupe_order",
+    "metadata": {
+      "phase": "planning",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "874d8748850a34d3a37a307227d070092379ad440391a31e6e873e7c0f4f2bb5",
+      "text_preview": "### Summarize the Bug:\nThe bug report indicates that the `dedupe` function in the code is not preserving the first-seen order of elements. This means that when duplicates are removed, the order of the remaining elements should reflect",
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks",
+      "semantic_key": "assistant:llm_plan_c1_wf_002_dedupe_order",
+      "exact_token_hash": "874d8748850a34d3a37a307227d070092379ad440391a31e6e873e7c0f4f2bb5"
+    },
+    "type": "state",
+    "semantic_id": "assistant:llm_plan_c1_wf_002_dedupe_order",
+    "exact_kv_id": "874d8748850a34d3a37a307227d070092379ad440391a31e6e873e7c0f4f2bb5"
+  },
+  {
+    "event_id": "llm_plan_c1_wf_002_dedupe_order",
+    "agent": "agent_0",
+    "turn": 1,
+    "input_state_ids": [
+      "state_e50d205b7b6942ab9e",
+      "state_a1bef3da58c5473a04",
+      "state_300fc9850448331c20"
+    ],
+    "append_tokens": 256,
+    "output_tokens": 48,
+    "new_state_id": "state_e6f8dae2553ecec725",
+    "new_state_type": "assistant_delta",
+    "timestamp_start": 1780409329.8694215,
+    "timestamp_end": 1780409332.5693102,
+    "input_segments": [
+      {
+        "state_id": "state_e50d205b7b6942ab9e",
+        "state_type": "system_prefix",
+        "owner": "shared",
+        "tokens": 17,
+        "text_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+        "semantic_key": "system:c1_wf_002_dedupe_order",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "static_prefix",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_a1bef3da58c5473a04",
+        "state_type": "task_prefix",
+        "owner": "shared",
+        "tokens": 19,
+        "text_hash": "d8931c9d79b546f0b06029caf2b562a36de4082ac9e71dd2fdcb9ef2ace2a783",
+        "semantic_key": "task:c1_wf_002_dedupe_order",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "issue",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_300fc9850448331c20",
+        "state_type": "agent_role",
+        "owner": "agent_0",
+        "tokens": 12,
+        "text_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+        "semantic_key": "role:c1_wf_002_dedupe_order:agent_0",
+        "producer_event_id": null,
+        "metadata": {
+          "framework": "local_react_coding_agent",
+          "tokenizer": "fallback:whitespace"
+        }
+      }
+    ],
+    "phase": "planning",
+    "metadata": {
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "history_mode": "selective_state",
+      "prompt_reconstruction": "explicit_selective_state",
+      "full_history_likely": false,
+      "tokenizer": "fallback:whitespace",
+      "request_id": "36129feed32843dcbf5b4a08ab178940",
+      "error": null,
+      "step_id": "llm_plan",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "llm"
+  },
+  {
+    "state_id": "state_3e4f7826636b5f9359",
+    "state_type": "file_context",
+    "owner": "agent_0",
+    "tokens": 6,
+    "semantic_key": "tool:Glob:8ec448e30a4b0420",
+    "exact_token_hash": "802fbed206642b2df6a05a9cd62ca3e07bc55016b3f7da76080c85e3146e0f41",
+    "producer_event_id": "tool_cc793aedfbec",
+    "metadata": {
+      "tool": "Glob",
+      "status": "ok",
+      "paths": [
+        "config_parser.py",
+        "data_cleaner.py",
+        "math_utils.py",
+        "stats.py",
+        "tests/test_dedupe_order.py",
+        "text_utils.py"
+      ],
+      "full_output_path": null,
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "802fbed206642b2df6a05a9cd62ca3e07bc55016b3f7da76080c85e3146e0f41",
+      "text_preview": "config_parser.py\ndata_cleaner.py\nmath_utils.py\nstats.py\ntests/test_dedupe_order.py\ntext_utils.py",
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks",
+      "semantic_key": "tool:Glob:8ec448e30a4b0420",
+      "exact_token_hash": "802fbed206642b2df6a05a9cd62ca3e07bc55016b3f7da76080c85e3146e0f41"
+    },
+    "type": "state",
+    "semantic_id": "tool:Glob:8ec448e30a4b0420",
+    "exact_kv_id": "802fbed206642b2df6a05a9cd62ca3e07bc55016b3f7da76080c85e3146e0f41"
+  },
+  {
+    "type": "tool",
+    "event_id": "tool_cc793aedfbec",
+    "agent": "agent_0",
+    "turn": 1,
+    "tool": "Glob",
+    "latency": 3,
+    "output_tokens": 6,
+    "status": "ok",
+    "new_state_id": "state_3e4f7826636b5f9359",
+    "new_state_type": "file_context",
+    "timestamp_start": 1780409332.5702624,
+    "timestamp_end": 1780409332.5734267,
+    "metadata": {
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "step_id": "tool_glob",
+      "args": {
+        "pattern": "**/*.py"
+      },
+      "latency_ms": 3.1642913818359375,
+      "stdout_stderr_hash": "92d18bea4d37a3ac1c9ed27c59189af3d9e20749f90e8ad36ba5d08c6edea07e",
+      "truncated_output": "config_parser.py\ndata_cleaner.py\nmath_utils.py\nstats.py\ntests/test_dedupe_order.py\ntext_utils.py",
+      "paths": [
+        "config_parser.py",
+        "data_cleaner.py",
+        "math_utils.py",
+        "stats.py",
+        "tests/test_dedupe_order.py",
+        "text_utils.py"
+      ],
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    }
+  },
+  {
+    "state_id": "state_020289c3520440abe4",
+    "state_type": "assistant_delta",
+    "owner": "agent_0",
+    "tokens": 37,
+    "semantic_key": "assistant:llm_after_glob_c1_wf_002_dedupe_order",
+    "exact_token_hash": "3235f3461f3c354d628371009444c6fbc1a06142162bafbefc61616887121c92",
+    "producer_event_id": "llm_after_glob_c1_wf_002_dedupe_order",
+    "metadata": {
+      "phase": "localization",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "3235f3461f3c354d628371009444c6fbc1a06142162bafbefc61616887121c92",
+      "text_preview": "### Step 1: Identify the Relevant Source File\n\nFrom the file listing provided in the `file_context` state, we need to identify which file is most likely related to the `dedupe` function mentioned in the bug report. The",
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks",
+      "semantic_key": "assistant:llm_after_glob_c1_wf_002_dedupe_order",
+      "exact_token_hash": "3235f3461f3c354d628371009444c6fbc1a06142162bafbefc61616887121c92"
+    },
+    "type": "state",
+    "semantic_id": "assistant:llm_after_glob_c1_wf_002_dedupe_order",
+    "exact_kv_id": "3235f3461f3c354d628371009444c6fbc1a06142162bafbefc61616887121c92"
+  },
+  {
+    "event_id": "llm_after_glob_c1_wf_002_dedupe_order",
+    "agent": "agent_0",
+    "turn": 2,
+    "input_state_ids": [
+      "state_e50d205b7b6942ab9e",
+      "state_a1bef3da58c5473a04",
+      "state_300fc9850448331c20",
+      "state_3e4f7826636b5f9359",
+      "state_e6f8dae2553ecec725"
+    ],
+    "append_tokens": 426,
+    "output_tokens": 48,
+    "new_state_id": "state_020289c3520440abe4",
+    "new_state_type": "assistant_delta",
+    "timestamp_start": 1780409332.57414,
+    "timestamp_end": 1780409335.27027,
+    "input_segments": [
+      {
+        "state_id": "state_e50d205b7b6942ab9e",
+        "state_type": "system_prefix",
+        "owner": "shared",
+        "tokens": 17,
+        "text_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+        "semantic_key": "system:c1_wf_002_dedupe_order",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "static_prefix",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_a1bef3da58c5473a04",
+        "state_type": "task_prefix",
+        "owner": "shared",
+        "tokens": 19,
+        "text_hash": "d8931c9d79b546f0b06029caf2b562a36de4082ac9e71dd2fdcb9ef2ace2a783",
+        "semantic_key": "task:c1_wf_002_dedupe_order",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "issue",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_300fc9850448331c20",
+        "state_type": "agent_role",
+        "owner": "agent_0",
+        "tokens": 12,
+        "text_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+        "semantic_key": "role:c1_wf_002_dedupe_order:agent_0",
+        "producer_event_id": null,
+        "metadata": {
+          "framework": "local_react_coding_agent",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_3e4f7826636b5f9359",
+        "state_type": "file_context",
+        "owner": "agent_0",
+        "tokens": 6,
+        "text_hash": "802fbed206642b2df6a05a9cd62ca3e07bc55016b3f7da76080c85e3146e0f41",
+        "semantic_key": "tool:Glob:8ec448e30a4b0420",
+        "producer_event_id": "tool_cc793aedfbec",
+        "metadata": {
+          "tool": "Glob",
+          "status": "ok",
+          "paths": [
+            "config_parser.py",
+            "data_cleaner.py",
+            "math_utils.py",
+            "stats.py",
+            "tests/test_dedupe_order.py",
+            "text_utils.py"
+          ],
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_e6f8dae2553ecec725",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 38,
+        "text_hash": "874d8748850a34d3a37a307227d070092379ad440391a31e6e873e7c0f4f2bb5",
+        "semantic_key": "assistant:llm_plan_c1_wf_002_dedupe_order",
+        "producer_event_id": "llm_plan_c1_wf_002_dedupe_order",
+        "metadata": {
+          "phase": "planning",
+          "tokenizer": "fallback:whitespace"
+        }
+      }
+    ],
+    "phase": "localization",
+    "metadata": {
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "history_mode": "selective_state",
+      "prompt_reconstruction": "explicit_selective_state",
+      "full_history_likely": false,
+      "tokenizer": "fallback:whitespace",
+      "request_id": "93c82d8d01854e7591d3adab113e73f5",
+      "error": null,
+      "step_id": "llm_after_glob",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "llm"
+  },
+  {
+    "state_id": "state_c668e3c9cdaefd9d7f",
+    "state_type": "file_context",
+    "owner": "agent_0",
+    "tokens": 94,
+    "semantic_key": "file:data_cleaner.py:1-19:32f910f9ab6c1451",
+    "exact_token_hash": "a2aba03269bf3dc2aec3c35dcde17af69d53ae92e3d735c52fa725bd8b4895c6",
+    "producer_event_id": "tool_62b5c7decb95",
+    "metadata": {
+      "tool": "Read",
+      "status": "ok",
+      "path": "data_cleaner.py",
+      "line_range": "1-19",
+      "version": "32f910f9ab6c1451",
+      "full_output_path": null,
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "a2aba03269bf3dc2aec3c35dcde17af69d53ae92e3d735c52fa725bd8b4895c6",
+      "text_preview": "1: \"\"\"Data cleaning helpers for pipeline tests.\n2: \n3: These helpers intentionally include a few subtle off-by-one and ordering bugs.\n4: Trace collection uses this module to generate reusable file_context and\n5: edit_diff states. The content is longer than needed for the functions so the\n6: resulting prompt segments are substantial enough to stress cache retention.\n7: \"\"\"\n8: \n9: def dedupe(items):\n10:     return sorted(set(items))\n11: \n12: def tail(items, n):\n13:     return items[len(items)-n:len(items)-1]\n",
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks",
+      "semantic_key": "file:data_cleaner.py:1-19:32f910f9ab6c1451",
+      "exact_token_hash": "a2aba03269bf3dc2aec3c35dcde17af69d53ae92e3d735c52fa725bd8b4895c6"
+    },
+    "type": "state",
+    "semantic_id": "file:data_cleaner.py:1-19:32f910f9ab6c1451",
+    "exact_kv_id": "a2aba03269bf3dc2aec3c35dcde17af69d53ae92e3d735c52fa725bd8b4895c6"
+  },
+  {
+    "type": "tool",
+    "event_id": "tool_62b5c7decb95",
+    "agent": "agent_0",
+    "turn": 2,
+    "tool": "Read",
+    "latency": 0,
+    "output_tokens": 94,
+    "status": "ok",
+    "new_state_id": "state_c668e3c9cdaefd9d7f",
+    "new_state_type": "file_context",
+    "timestamp_start": 1780409335.2712724,
+    "timestamp_end": 1780409335.2715838,
+    "metadata": {
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "step_id": "tool_read_source",
+      "args": {
+        "path": "data_cleaner.py",
+        "start_line": 1,
+        "end_line": 19
+      },
+      "latency_ms": 0.3113746643066406,
+      "stdout_stderr_hash": "6a9b34887e60479db51e80f803dea9e95ab9a30dd345c20e8933ada407c5273b",
+      "truncated_output": "1: \"\"\"Data cleaning helpers for pipeline tests.\n2: \n3: These helpers intentionally include a few subtle off-by-one and ordering bugs.\n4: Trace collection uses this module to generate reusable file_context and\n5: edit_diff states. The content is longer than needed for the functions so the\n6: resulting prompt segments are substantial enough to stress cache retention.\n7: \"\"\"\n8: \n9: def dedupe(items):\n10:     return sorted(set(items))\n11: \n12: def tail(items, n):\n13:     return items[len(items)-n:len(items)-1]\n14: \n15: def flatten_once(items):\n16:     return [items]\n17: \n18: def chunk(items, size):\n19:     return [items[i:i+size] for i in range(0, len(items)-size, size)]",
+      "path": "data_cleaner.py",
+      "line_range": "1-19",
+      "version": "32f910f9ab6c1451",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    }
+  },
+  {
+    "state_id": "state_19e1be9e0097f99356",
+    "state_type": "assistant_delta",
+    "owner": "agent_0",
+    "tokens": 27,
+    "semantic_key": "assistant:llm_after_read_c1_wf_002_dedupe_order",
+    "exact_token_hash": "0262d34c3ee64ac265c064a5cb3606c36fc257ff219c29841b46522927bab473",
+    "producer_event_id": "llm_after_read_c1_wf_002_dedupe_order",
+    "metadata": {
+      "phase": "localization",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "0262d34c3ee64ac265c064a5cb3606c36fc257ff219c29841b46522927bab473",
+      "text_preview": "### Step 1: Analyze the `dedupe` Function\n\nThe `dedupe` function is defined in the `data_cleaner.py` file, as shown in the `file_context` state. Let's examine the implementation of",
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks",
+      "semantic_key": "assistant:llm_after_read_c1_wf_002_dedupe_order",
+      "exact_token_hash": "0262d34c3ee64ac265c064a5cb3606c36fc257ff219c29841b46522927bab473"
+    },
+    "type": "state",
+    "semantic_id": "assistant:llm_after_read_c1_wf_002_dedupe_order",
+    "exact_kv_id": "0262d34c3ee64ac265c064a5cb3606c36fc257ff219c29841b46522927bab473"
+  },
+  {
+    "event_id": "llm_after_read_c1_wf_002_dedupe_order",
+    "agent": "agent_0",
+    "turn": 3,
+    "input_state_ids": [
+      "state_e50d205b7b6942ab9e",
+      "state_a1bef3da58c5473a04",
+      "state_300fc9850448331c20",
+      "state_c668e3c9cdaefd9d7f",
+      "state_e6f8dae2553ecec725",
+      "state_020289c3520440abe4"
+    ],
+    "append_tokens": 679,
+    "output_tokens": 48,
+    "new_state_id": "state_19e1be9e0097f99356",
+    "new_state_type": "assistant_delta",
+    "timestamp_start": 1780409335.2722452,
+    "timestamp_end": 1780409338.0251453,
+    "input_segments": [
+      {
+        "state_id": "state_e50d205b7b6942ab9e",
+        "state_type": "system_prefix",
+        "owner": "shared",
+        "tokens": 17,
+        "text_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+        "semantic_key": "system:c1_wf_002_dedupe_order",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "static_prefix",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_a1bef3da58c5473a04",
+        "state_type": "task_prefix",
+        "owner": "shared",
+        "tokens": 19,
+        "text_hash": "d8931c9d79b546f0b06029caf2b562a36de4082ac9e71dd2fdcb9ef2ace2a783",
+        "semantic_key": "task:c1_wf_002_dedupe_order",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "issue",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_300fc9850448331c20",
+        "state_type": "agent_role",
+        "owner": "agent_0",
+        "tokens": 12,
+        "text_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+        "semantic_key": "role:c1_wf_002_dedupe_order:agent_0",
+        "producer_event_id": null,
+        "metadata": {
+          "framework": "local_react_coding_agent",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_c668e3c9cdaefd9d7f",
+        "state_type": "file_context",
+        "owner": "agent_0",
+        "tokens": 94,
+        "text_hash": "a2aba03269bf3dc2aec3c35dcde17af69d53ae92e3d735c52fa725bd8b4895c6",
+        "semantic_key": "file:data_cleaner.py:1-19:32f910f9ab6c1451",
+        "producer_event_id": "tool_62b5c7decb95",
+        "metadata": {
+          "tool": "Read",
+          "status": "ok",
+          "path": "data_cleaner.py",
+          "line_range": "1-19",
+          "version": "32f910f9ab6c1451",
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_e6f8dae2553ecec725",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 38,
+        "text_hash": "874d8748850a34d3a37a307227d070092379ad440391a31e6e873e7c0f4f2bb5",
+        "semantic_key": "assistant:llm_plan_c1_wf_002_dedupe_order",
+        "producer_event_id": "llm_plan_c1_wf_002_dedupe_order",
+        "metadata": {
+          "phase": "planning",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_020289c3520440abe4",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 37,
+        "text_hash": "3235f3461f3c354d628371009444c6fbc1a06142162bafbefc61616887121c92",
+        "semantic_key": "assistant:llm_after_glob_c1_wf_002_dedupe_order",
+        "producer_event_id": "llm_after_glob_c1_wf_002_dedupe_order",
+        "metadata": {
+          "phase": "localization",
+          "tokenizer": "fallback:whitespace"
+        }
+      }
+    ],
+    "phase": "localization",
+    "metadata": {
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "history_mode": "selective_state",
+      "prompt_reconstruction": "explicit_selective_state",
+      "full_history_likely": false,
+      "tokenizer": "fallback:whitespace",
+      "request_id": "064453b5695843d484c407d32d7e36ab",
+      "error": null,
+      "step_id": "llm_after_read",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "llm"
+  },
+  {
+    "state_id": "state_9bf0cdcc8152b7eaec",
+    "state_type": "file_context",
+    "owner": "agent_0",
+    "tokens": 100,
+    "semantic_key": "tool:Grep:684511c5e387d375",
+    "exact_token_hash": "c14b2cf50c69f357f8a073c7340093f59539794cef6ddab961aed8391366da49",
+    "producer_event_id": "tool_b1bd468c1859",
+    "metadata": {
+      "tool": "Grep",
+      "status": "ok",
+      "full_output_path": null,
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "c14b2cf50c69f357f8a073c7340093f59539794cef6ddab961aed8391366da49",
+      "text_preview": "config_parser.py:11:    return value.lower() in ('true', '1')\nconfig_parser.py:14:    return int(value)\nconfig_parser.py:17:    return {**override, **base}\nconfig_parser.py:20:    return value.split(',')\nconfig_parser.py:23:    return data[name]\ndata_cleaner.py:10:    return sorted(set(items))\ndata_cleaner.py:13:    return items[len(items)-n:len(items)-1]\ndata_cleaner.py:16:    return [items]\ndata_cleaner.py:19:    return [items[i:i+size] for i in range(0, len(items)-size, size)]\nmath_utils.py:12:    return",
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks",
+      "semantic_key": "tool:Grep:684511c5e387d375",
+      "exact_token_hash": "c14b2cf50c69f357f8a073c7340093f59539794cef6ddab961aed8391366da49"
+    },
+    "type": "state",
+    "semantic_id": "tool:Grep:684511c5e387d375",
+    "exact_kv_id": "c14b2cf50c69f357f8a073c7340093f59539794cef6ddab961aed8391366da49"
+  },
+  {
+    "type": "tool",
+    "event_id": "tool_b1bd468c1859",
+    "agent": "agent_0",
+    "turn": 3,
+    "tool": "Grep",
+    "latency": 3,
+    "output_tokens": 100,
+    "status": "ok",
+    "new_state_id": "state_9bf0cdcc8152b7eaec",
+    "new_state_type": "file_context",
+    "timestamp_start": 1780409338.026253,
+    "timestamp_end": 1780409338.0299492,
+    "metadata": {
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "step_id": "tool_grep",
+      "args": {
+        "pattern": "return",
+        "include": "*.py"
+      },
+      "latency_ms": 3.6962032318115234,
+      "stdout_stderr_hash": "01b7538088b18459fc94ec4d4ed3276fb477d6ab591238cf62ee2d50895aa7a9",
+      "truncated_output": "config_parser.py:11:    return value.lower() in ('true', '1')\nconfig_parser.py:14:    return int(value)\nconfig_parser.py:17:    return {**override, **base}\nconfig_parser.py:20:    return value.split(',')\nconfig_parser.py:23:    return data[name]\ndata_cleaner.py:10:    return sorted(set(items))\ndata_cleaner.py:13:    return items[len(items)-n:len(items)-1]\ndata_cleaner.py:16:    return [items]\ndata_cleaner.py:19:    return [items[i:i+size] for i in range(0, len(items)-size, size)]\nmath_utils.py:12:    return value\nmath_utils.py:15:    return numerator / denominator\nmath_utils.py:18:    return part / total * 100\nstats.py:11:    return sum(values) / len(values)\nstats.py:16:    return values[mid + 1]\nstats.py:20:    return sum((x - avg) ** 2 for x in values) / (len(values) - 1)\nstats.py:24:    return sorted(counts, key=counts.get)[-1]\ntext_utils.py:11:    return text.lower().replace(' ', '-')\ntext_utils.py:14:    return value.strip().lower()\ntext_utils.py:17:    return len(text.split())\nte",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    }
+  },
+  {
+    "state_id": "state_d519816b9216a75a55",
+    "state_type": "assistant_delta",
+    "owner": "agent_0",
+    "tokens": 38,
+    "semantic_key": "assistant:llm_before_test_c1_wf_002_dedupe_order",
+    "exact_token_hash": "caf3ec5ea4773659cf0605797aa4da79260b12158539c59d9f237e499e466fef",
+    "producer_event_id": "llm_before_test_c1_wf_002_dedupe_order",
+    "metadata": {
+      "phase": "testing",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "caf3ec5ea4773659cf0605797aa4da79260b12158539c59d9f237e499e466fef",
+      "text_preview": "### Predict the Failing Unit Test\n\nTo predict what the failing unit test will show, let's analyze the current implementation of the `dedupe` function and how it fails to preserve the first-seen order.\n\n#### Current Implementation of `",
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks",
+      "semantic_key": "assistant:llm_before_test_c1_wf_002_dedupe_order",
+      "exact_token_hash": "caf3ec5ea4773659cf0605797aa4da79260b12158539c59d9f237e499e466fef"
+    },
+    "type": "state",
+    "semantic_id": "assistant:llm_before_test_c1_wf_002_dedupe_order",
+    "exact_kv_id": "caf3ec5ea4773659cf0605797aa4da79260b12158539c59d9f237e499e466fef"
+  },
+  {
+    "event_id": "llm_before_test_c1_wf_002_dedupe_order",
+    "agent": "agent_0",
+    "turn": 4,
+    "input_state_ids": [
+      "state_e50d205b7b6942ab9e",
+      "state_a1bef3da58c5473a04",
+      "state_300fc9850448331c20",
+      "state_c668e3c9cdaefd9d7f",
+      "state_e6f8dae2553ecec725",
+      "state_020289c3520440abe4",
+      "state_19e1be9e0097f99356"
+    ],
+    "append_tokens": 774,
+    "output_tokens": 48,
+    "new_state_id": "state_d519816b9216a75a55",
+    "new_state_type": "assistant_delta",
+    "timestamp_start": 1780409338.0306828,
+    "timestamp_end": 1780409340.750714,
+    "input_segments": [
+      {
+        "state_id": "state_e50d205b7b6942ab9e",
+        "state_type": "system_prefix",
+        "owner": "shared",
+        "tokens": 17,
+        "text_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+        "semantic_key": "system:c1_wf_002_dedupe_order",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "static_prefix",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_a1bef3da58c5473a04",
+        "state_type": "task_prefix",
+        "owner": "shared",
+        "tokens": 19,
+        "text_hash": "d8931c9d79b546f0b06029caf2b562a36de4082ac9e71dd2fdcb9ef2ace2a783",
+        "semantic_key": "task:c1_wf_002_dedupe_order",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "issue",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_300fc9850448331c20",
+        "state_type": "agent_role",
+        "owner": "agent_0",
+        "tokens": 12,
+        "text_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+        "semantic_key": "role:c1_wf_002_dedupe_order:agent_0",
+        "producer_event_id": null,
+        "metadata": {
+          "framework": "local_react_coding_agent",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_c668e3c9cdaefd9d7f",
+        "state_type": "file_context",
+        "owner": "agent_0",
+        "tokens": 94,
+        "text_hash": "a2aba03269bf3dc2aec3c35dcde17af69d53ae92e3d735c52fa725bd8b4895c6",
+        "semantic_key": "file:data_cleaner.py:1-19:32f910f9ab6c1451",
+        "producer_event_id": "tool_62b5c7decb95",
+        "metadata": {
+          "tool": "Read",
+          "status": "ok",
+          "path": "data_cleaner.py",
+          "line_range": "1-19",
+          "version": "32f910f9ab6c1451",
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_e6f8dae2553ecec725",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 38,
+        "text_hash": "874d8748850a34d3a37a307227d070092379ad440391a31e6e873e7c0f4f2bb5",
+        "semantic_key": "assistant:llm_plan_c1_wf_002_dedupe_order",
+        "producer_event_id": "llm_plan_c1_wf_002_dedupe_order",
+        "metadata": {
+          "phase": "planning",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_020289c3520440abe4",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 37,
+        "text_hash": "3235f3461f3c354d628371009444c6fbc1a06142162bafbefc61616887121c92",
+        "semantic_key": "assistant:llm_after_glob_c1_wf_002_dedupe_order",
+        "producer_event_id": "llm_after_glob_c1_wf_002_dedupe_order",
+        "metadata": {
+          "phase": "localization",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_19e1be9e0097f99356",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 27,
+        "text_hash": "0262d34c3ee64ac265c064a5cb3606c36fc257ff219c29841b46522927bab473",
+        "semantic_key": "assistant:llm_after_read_c1_wf_002_dedupe_order",
+        "producer_event_id": "llm_after_read_c1_wf_002_dedupe_order",
+        "metadata": {
+          "phase": "localization",
+          "tokenizer": "fallback:whitespace"
+        }
+      }
+    ],
+    "phase": "testing",
+    "metadata": {
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "history_mode": "selective_state",
+      "prompt_reconstruction": "explicit_selective_state",
+      "full_history_likely": false,
+      "tokenizer": "fallback:whitespace",
+      "request_id": "ecd2ed1a2e3244409bcdc05e058d1552",
+      "error": null,
+      "step_id": "llm_before_test",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "llm"
+  },
+  {
+    "state_id": "state_d4da5a69f509f118b8",
+    "state_type": "test_failure_summary",
+    "owner": "agent_0",
+    "tokens": 121,
+    "semantic_key": "command:python -m pytest -q:failed",
+    "exact_token_hash": "6c11c751c22341ea79ca801c3a2a2dcddd338554fd93e05831530d4bad499a34",
+    "producer_event_id": "tool_d5843a30ff00",
+    "metadata": {
+      "tool": "Pytest",
+      "status": "failed",
+      "command": "python -m pytest -q",
+      "exit_code": 1,
+      "full_output_path": null,
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "6c11c751c22341ea79ca801c3a2a2dcddd338554fd93e05831530d4bad499a34",
+      "text_preview": "F                                                                        [100%]\n=================================== FAILURES ===================================\n______________________________ test_dedupe_order _______________________________\n\n    def test_dedupe_order():\n>       assert dedupe(['b','a','b']) == ['b','a']\nE       AssertionError: assert ['a', 'b'] == ['b', 'a']\nE         \nE         At index 0 diff: 'a' != 'b'\nE         Use -v to get more diff\n\ntests/test_dedupe_order.py:4: AssertionError\n=====",
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks",
+      "semantic_key": "command:python -m pytest -q:failed",
+      "exact_token_hash": "6c11c751c22341ea79ca801c3a2a2dcddd338554fd93e05831530d4bad499a34"
+    },
+    "type": "state",
+    "semantic_id": "command:python -m pytest -q:failed",
+    "exact_kv_id": "6c11c751c22341ea79ca801c3a2a2dcddd338554fd93e05831530d4bad499a34"
+  },
+  {
+    "type": "tool",
+    "event_id": "tool_d5843a30ff00",
+    "agent": "agent_0",
+    "turn": 4,
+    "tool": "Pytest",
+    "latency": 321,
+    "output_tokens": 121,
+    "status": "failed",
+    "new_state_id": "state_d4da5a69f509f118b8",
+    "new_state_type": "test_failure_summary",
+    "timestamp_start": 1780409340.7519033,
+    "timestamp_end": 1780409341.0737998,
+    "metadata": {
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "step_id": "tool_pytest_fail",
+      "args": {
+        "command": "python -m pytest -q",
+        "timeout": 30
+      },
+      "latency_ms": 321.8965530395508,
+      "stdout_stderr_hash": "5fa51af5d2e2b46906a030cba2be77297c82d3db4fc23043701ddd6abe5e4f58",
+      "truncated_output": "F                                                                        [100%]\n=================================== FAILURES ===================================\n______________________________ test_dedupe_order _______________________________\n\n    def test_dedupe_order():\n>       assert dedupe(['b','a','b']) == ['b','a']\nE       AssertionError: assert ['a', 'b'] == ['b', 'a']\nE         \nE         At index 0 diff: 'a' != 'b'\nE         Use -v to get more diff\n\ntests/test_dedupe_order.py:4: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_dedupe_order.py::test_dedupe_order - AssertionError: assert...\n1 failed in 0.03s\n\nSTDERR:\n/home/duzc/miniconda3/lib/python3.12/site-packages/pytest_asyncio/plugin.py:247: PytestDeprecationWarning: The configuration option \"asyncio_default_fixture_loop_scope\" is unset.\nThe event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio w",
+      "command": "python -m pytest -q",
+      "exit_code": 1,
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    }
+  },
+  {
+    "state_id": "state_364b179f1ea205b38f",
+    "state_type": "assistant_delta",
+    "owner": "agent_0",
+    "tokens": 29,
+    "semantic_key": "assistant:llm_after_failure_c1_wf_002_dedupe_order",
+    "exact_token_hash": "6c8e66de309bb2ee71f0e8c6f58af1b046e7ebf3c28eb208499539246c96d119",
+    "producer_event_id": "llm_after_failure_c1_wf_002_dedupe_order",
+    "metadata": {
+      "phase": "diagnosis",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "6c8e66de309bb2ee71f0e8c6f58af1b046e7ebf3c28eb208499539246c96d119",
+      "text_preview": "### Step 1: Analyze the Failure Summary\n\nFrom the failure summary in the `test_dedupe_order` test, we observe the following:\n- The input to the `dedupe` function is `['b', 'a",
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks",
+      "semantic_key": "assistant:llm_after_failure_c1_wf_002_dedupe_order",
+      "exact_token_hash": "6c8e66de309bb2ee71f0e8c6f58af1b046e7ebf3c28eb208499539246c96d119"
+    },
+    "type": "state",
+    "semantic_id": "assistant:llm_after_failure_c1_wf_002_dedupe_order",
+    "exact_kv_id": "6c8e66de309bb2ee71f0e8c6f58af1b046e7ebf3c28eb208499539246c96d119"
+  },
+  {
+    "event_id": "llm_after_failure_c1_wf_002_dedupe_order",
+    "agent": "agent_0",
+    "turn": 5,
+    "input_state_ids": [
+      "state_e50d205b7b6942ab9e",
+      "state_a1bef3da58c5473a04",
+      "state_300fc9850448331c20",
+      "state_d4da5a69f509f118b8",
+      "state_e6f8dae2553ecec725",
+      "state_020289c3520440abe4",
+      "state_19e1be9e0097f99356",
+      "state_d519816b9216a75a55"
+    ],
+    "append_tokens": 964,
+    "output_tokens": 48,
+    "new_state_id": "state_364b179f1ea205b38f",
+    "new_state_type": "assistant_delta",
+    "timestamp_start": 1780409341.0745447,
+    "timestamp_end": 1780409343.9044554,
+    "input_segments": [
+      {
+        "state_id": "state_e50d205b7b6942ab9e",
+        "state_type": "system_prefix",
+        "owner": "shared",
+        "tokens": 17,
+        "text_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+        "semantic_key": "system:c1_wf_002_dedupe_order",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "static_prefix",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_a1bef3da58c5473a04",
+        "state_type": "task_prefix",
+        "owner": "shared",
+        "tokens": 19,
+        "text_hash": "d8931c9d79b546f0b06029caf2b562a36de4082ac9e71dd2fdcb9ef2ace2a783",
+        "semantic_key": "task:c1_wf_002_dedupe_order",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "issue",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_300fc9850448331c20",
+        "state_type": "agent_role",
+        "owner": "agent_0",
+        "tokens": 12,
+        "text_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+        "semantic_key": "role:c1_wf_002_dedupe_order:agent_0",
+        "producer_event_id": null,
+        "metadata": {
+          "framework": "local_react_coding_agent",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_d4da5a69f509f118b8",
+        "state_type": "test_failure_summary",
+        "owner": "agent_0",
+        "tokens": 121,
+        "text_hash": "6c11c751c22341ea79ca801c3a2a2dcddd338554fd93e05831530d4bad499a34",
+        "semantic_key": "command:python -m pytest -q:failed",
+        "producer_event_id": "tool_d5843a30ff00",
+        "metadata": {
+          "tool": "Pytest",
+          "status": "failed",
+          "command": "python -m pytest -q",
+          "exit_code": 1,
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_e6f8dae2553ecec725",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 38,
+        "text_hash": "874d8748850a34d3a37a307227d070092379ad440391a31e6e873e7c0f4f2bb5",
+        "semantic_key": "assistant:llm_plan_c1_wf_002_dedupe_order",
+        "producer_event_id": "llm_plan_c1_wf_002_dedupe_order",
+        "metadata": {
+          "phase": "planning",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_020289c3520440abe4",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 37,
+        "text_hash": "3235f3461f3c354d628371009444c6fbc1a06142162bafbefc61616887121c92",
+        "semantic_key": "assistant:llm_after_glob_c1_wf_002_dedupe_order",
+        "producer_event_id": "llm_after_glob_c1_wf_002_dedupe_order",
+        "metadata": {
+          "phase": "localization",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_19e1be9e0097f99356",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 27,
+        "text_hash": "0262d34c3ee64ac265c064a5cb3606c36fc257ff219c29841b46522927bab473",
+        "semantic_key": "assistant:llm_after_read_c1_wf_002_dedupe_order",
+        "producer_event_id": "llm_after_read_c1_wf_002_dedupe_order",
+        "metadata": {
+          "phase": "localization",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_d519816b9216a75a55",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 38,
+        "text_hash": "caf3ec5ea4773659cf0605797aa4da79260b12158539c59d9f237e499e466fef",
+        "semantic_key": "assistant:llm_before_test_c1_wf_002_dedupe_order",
+        "producer_event_id": "llm_before_test_c1_wf_002_dedupe_order",
+        "metadata": {
+          "phase": "testing",
+          "tokenizer": "fallback:whitespace"
+        }
+      }
+    ],
+    "phase": "diagnosis",
+    "metadata": {
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "history_mode": "selective_state",
+      "prompt_reconstruction": "explicit_selective_state",
+      "full_history_likely": false,
+      "tokenizer": "fallback:whitespace",
+      "request_id": "17647ca6e4d440f4a053a4dc6aed4425",
+      "error": null,
+      "step_id": "llm_after_failure",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "llm"
+  },
+  {
+    "state_id": "state_7440e72bbc4f27dc93",
+    "state_type": "assistant_delta",
+    "owner": "agent_0",
+    "tokens": 34,
+    "semantic_key": "assistant:llm_before_patch_c1_wf_002_dedupe_order",
+    "exact_token_hash": "5ee69aede3a6e081221a4c1296ea278d201189fe287b800f3d51d14469051a43",
+    "producer_event_id": "llm_before_patch_c1_wf_002_dedupe_order",
+    "metadata": {
+      "phase": "editing",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "5ee69aede3a6e081221a4c1296ea278d201189fe287b800f3d51d14469051a43",
+      "text_preview": "### Step 1: Confirm the Edit Target\n\nThe edit target is the `dedupe` function in the `data_cleaner.py` file. This is confirmed by the bug report and the failure summary, which both reference the `ded",
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks",
+      "semantic_key": "assistant:llm_before_patch_c1_wf_002_dedupe_order",
+      "exact_token_hash": "5ee69aede3a6e081221a4c1296ea278d201189fe287b800f3d51d14469051a43"
+    },
+    "type": "state",
+    "semantic_id": "assistant:llm_before_patch_c1_wf_002_dedupe_order",
+    "exact_kv_id": "5ee69aede3a6e081221a4c1296ea278d201189fe287b800f3d51d14469051a43"
+  },
+  {
+    "event_id": "llm_before_patch_c1_wf_002_dedupe_order",
+    "agent": "agent_0",
+    "turn": 6,
+    "input_state_ids": [
+      "state_e50d205b7b6942ab9e",
+      "state_a1bef3da58c5473a04",
+      "state_300fc9850448331c20",
+      "state_d4da5a69f509f118b8",
+      "state_020289c3520440abe4",
+      "state_19e1be9e0097f99356",
+      "state_d519816b9216a75a55",
+      "state_364b179f1ea205b38f"
+    ],
+    "append_tokens": 971,
+    "output_tokens": 48,
+    "new_state_id": "state_7440e72bbc4f27dc93",
+    "new_state_type": "assistant_delta",
+    "timestamp_start": 1780409343.905675,
+    "timestamp_end": 1780409346.6420503,
+    "input_segments": [
+      {
+        "state_id": "state_e50d205b7b6942ab9e",
+        "state_type": "system_prefix",
+        "owner": "shared",
+        "tokens": 17,
+        "text_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+        "semantic_key": "system:c1_wf_002_dedupe_order",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "static_prefix",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_a1bef3da58c5473a04",
+        "state_type": "task_prefix",
+        "owner": "shared",
+        "tokens": 19,
+        "text_hash": "d8931c9d79b546f0b06029caf2b562a36de4082ac9e71dd2fdcb9ef2ace2a783",
+        "semantic_key": "task:c1_wf_002_dedupe_order",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "issue",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_300fc9850448331c20",
+        "state_type": "agent_role",
+        "owner": "agent_0",
+        "tokens": 12,
+        "text_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+        "semantic_key": "role:c1_wf_002_dedupe_order:agent_0",
+        "producer_event_id": null,
+        "metadata": {
+          "framework": "local_react_coding_agent",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_d4da5a69f509f118b8",
+        "state_type": "test_failure_summary",
+        "owner": "agent_0",
+        "tokens": 121,
+        "text_hash": "6c11c751c22341ea79ca801c3a2a2dcddd338554fd93e05831530d4bad499a34",
+        "semantic_key": "command:python -m pytest -q:failed",
+        "producer_event_id": "tool_d5843a30ff00",
+        "metadata": {
+          "tool": "Pytest",
+          "status": "failed",
+          "command": "python -m pytest -q",
+          "exit_code": 1,
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_020289c3520440abe4",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 37,
+        "text_hash": "3235f3461f3c354d628371009444c6fbc1a06142162bafbefc61616887121c92",
+        "semantic_key": "assistant:llm_after_glob_c1_wf_002_dedupe_order",
+        "producer_event_id": "llm_after_glob_c1_wf_002_dedupe_order",
+        "metadata": {
+          "phase": "localization",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_19e1be9e0097f99356",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 27,
+        "text_hash": "0262d34c3ee64ac265c064a5cb3606c36fc257ff219c29841b46522927bab473",
+        "semantic_key": "assistant:llm_after_read_c1_wf_002_dedupe_order",
+        "producer_event_id": "llm_after_read_c1_wf_002_dedupe_order",
+        "metadata": {
+          "phase": "localization",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_d519816b9216a75a55",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 38,
+        "text_hash": "caf3ec5ea4773659cf0605797aa4da79260b12158539c59d9f237e499e466fef",
+        "semantic_key": "assistant:llm_before_test_c1_wf_002_dedupe_order",
+        "producer_event_id": "llm_before_test_c1_wf_002_dedupe_order",
+        "metadata": {
+          "phase": "testing",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_364b179f1ea205b38f",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 29,
+        "text_hash": "6c8e66de309bb2ee71f0e8c6f58af1b046e7ebf3c28eb208499539246c96d119",
+        "semantic_key": "assistant:llm_after_failure_c1_wf_002_dedupe_order",
+        "producer_event_id": "llm_after_failure_c1_wf_002_dedupe_order",
+        "metadata": {
+          "phase": "diagnosis",
+          "tokenizer": "fallback:whitespace"
+        }
+      }
+    ],
+    "phase": "editing",
+    "metadata": {
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "history_mode": "selective_state",
+      "prompt_reconstruction": "explicit_selective_state",
+      "full_history_likely": false,
+      "tokenizer": "fallback:whitespace",
+      "request_id": "9d15fe9408f94662ac5933758dd7f2fb",
+      "error": null,
+      "step_id": "llm_before_patch",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "llm"
+  },
+  {
+    "state_id": "state_d3966955ee88b80222",
+    "state_type": "edit_diff",
+    "owner": "agent_0",
+    "tokens": 22,
+    "semantic_key": "file:data_cleaner.py:all:workspace",
+    "exact_token_hash": "af7befd4ba42cbb3857988cbfd0bd4be8265ef9c1363a4094cae54d2af34efd3",
+    "producer_event_id": "tool_018755643c42",
+    "metadata": {
+      "tool": "Edit",
+      "status": "ok",
+      "path": "data_cleaner.py",
+      "error_type": null,
+      "full_output_path": null,
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "af7befd4ba42cbb3857988cbfd0bd4be8265ef9c1363a4094cae54d2af34efd3",
+      "text_preview": "--- a/data_cleaner.py\n+++ b/data_cleaner.py\n@@ -7,7 +7,7 @@\n \"\"\"\n \n def dedupe(items):\n-    return sorted(set(items))\n+    return list(dict.fromkeys(items))\n \n def tail(items, n):\n     return items[len(items)-n:len(items)-1]",
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks",
+      "semantic_key": "file:data_cleaner.py:all:workspace",
+      "exact_token_hash": "af7befd4ba42cbb3857988cbfd0bd4be8265ef9c1363a4094cae54d2af34efd3"
+    },
+    "type": "state",
+    "semantic_id": "file:data_cleaner.py:all:workspace",
+    "exact_kv_id": "af7befd4ba42cbb3857988cbfd0bd4be8265ef9c1363a4094cae54d2af34efd3"
+  },
+  {
+    "type": "tool",
+    "event_id": "tool_018755643c42",
+    "agent": "agent_0",
+    "turn": 6,
+    "tool": "Edit",
+    "latency": 0,
+    "output_tokens": 22,
+    "status": "ok",
+    "new_state_id": "state_d3966955ee88b80222",
+    "new_state_type": "edit_diff",
+    "timestamp_start": 1780409346.6430635,
+    "timestamp_end": 1780409346.6437135,
+    "metadata": {
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "step_id": "tool_edit",
+      "args": {
+        "path": "data_cleaner.py",
+        "old_hash": "5491e4f81d3b60e6586d2f4d89750828bdb0d6f671d0671eaa883eacd69a2c60",
+        "new_hash": "a9627927bf795aa0ca7789ee017955846efd51a5938e89c7c67b98afe0a6494f"
+      },
+      "latency_ms": 0.6499290466308594,
+      "stdout_stderr_hash": "fd7b6e2b4c9f359a460fdea77b27940092bfbd64471daead94439c14e2151f0a",
+      "truncated_output": "--- a/data_cleaner.py\n+++ b/data_cleaner.py\n@@ -7,7 +7,7 @@\n \"\"\"\n \n def dedupe(items):\n-    return sorted(set(items))\n+    return list(dict.fromkeys(items))\n \n def tail(items, n):\n     return items[len(items)-n:len(items)-1]",
+      "path": "data_cleaner.py",
+      "error_type": null,
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    }
+  },
+  {
+    "state_id": "state_04f575225ae7d1269d",
+    "state_type": "assistant_delta",
+    "owner": "agent_0",
+    "tokens": 25,
+    "semantic_key": "assistant:llm_after_patch_c1_wf_002_dedupe_order",
+    "exact_token_hash": "9e22c82f1610c3bfa3466d1ca6b1c1e42755c0dc0108b2295e2ed4b8b38f8a4c",
+    "producer_event_id": "llm_after_patch_c1_wf_002_dedupe_order",
+    "metadata": {
+      "phase": "review",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "9e22c82f1610c3bfa3466d1ca6b1c1e42755c0dc0108b2295e2ed4b8b38f8a4c",
+      "text_preview": "### Step 1: Review the Patch Diff\n\nThe patch diff provided is as follows:\n\n```diff\n--- a/data_cleaner.py\n+++ b/data_cleaner.py\n@@ -7,7 +7,7 @@\n \"\"\"\n \n def",
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks",
+      "semantic_key": "assistant:llm_after_patch_c1_wf_002_dedupe_order",
+      "exact_token_hash": "9e22c82f1610c3bfa3466d1ca6b1c1e42755c0dc0108b2295e2ed4b8b38f8a4c"
+    },
+    "type": "state",
+    "semantic_id": "assistant:llm_after_patch_c1_wf_002_dedupe_order",
+    "exact_kv_id": "9e22c82f1610c3bfa3466d1ca6b1c1e42755c0dc0108b2295e2ed4b8b38f8a4c"
+  },
+  {
+    "event_id": "llm_after_patch_c1_wf_002_dedupe_order",
+    "agent": "agent_0",
+    "turn": 7,
+    "input_state_ids": [
+      "state_e50d205b7b6942ab9e",
+      "state_a1bef3da58c5473a04",
+      "state_300fc9850448331c20",
+      "state_d3966955ee88b80222",
+      "state_d4da5a69f509f118b8",
+      "state_d519816b9216a75a55",
+      "state_364b179f1ea205b38f",
+      "state_7440e72bbc4f27dc93"
+    ],
+    "append_tokens": 976,
+    "output_tokens": 48,
+    "new_state_id": "state_04f575225ae7d1269d",
+    "new_state_type": "assistant_delta",
+    "timestamp_start": 1780409346.6443098,
+    "timestamp_end": 1780409349.442022,
+    "input_segments": [
+      {
+        "state_id": "state_e50d205b7b6942ab9e",
+        "state_type": "system_prefix",
+        "owner": "shared",
+        "tokens": 17,
+        "text_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+        "semantic_key": "system:c1_wf_002_dedupe_order",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "static_prefix",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_a1bef3da58c5473a04",
+        "state_type": "task_prefix",
+        "owner": "shared",
+        "tokens": 19,
+        "text_hash": "d8931c9d79b546f0b06029caf2b562a36de4082ac9e71dd2fdcb9ef2ace2a783",
+        "semantic_key": "task:c1_wf_002_dedupe_order",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "issue",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_300fc9850448331c20",
+        "state_type": "agent_role",
+        "owner": "agent_0",
+        "tokens": 12,
+        "text_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+        "semantic_key": "role:c1_wf_002_dedupe_order:agent_0",
+        "producer_event_id": null,
+        "metadata": {
+          "framework": "local_react_coding_agent",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_d3966955ee88b80222",
+        "state_type": "edit_diff",
+        "owner": "agent_0",
+        "tokens": 22,
+        "text_hash": "af7befd4ba42cbb3857988cbfd0bd4be8265ef9c1363a4094cae54d2af34efd3",
+        "semantic_key": "file:data_cleaner.py:all:workspace",
+        "producer_event_id": "tool_018755643c42",
+        "metadata": {
+          "tool": "Edit",
+          "status": "ok",
+          "path": "data_cleaner.py",
+          "error_type": null,
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_d4da5a69f509f118b8",
+        "state_type": "test_failure_summary",
+        "owner": "agent_0",
+        "tokens": 121,
+        "text_hash": "6c11c751c22341ea79ca801c3a2a2dcddd338554fd93e05831530d4bad499a34",
+        "semantic_key": "command:python -m pytest -q:failed",
+        "producer_event_id": "tool_d5843a30ff00",
+        "metadata": {
+          "tool": "Pytest",
+          "status": "failed",
+          "command": "python -m pytest -q",
+          "exit_code": 1,
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_d519816b9216a75a55",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 38,
+        "text_hash": "caf3ec5ea4773659cf0605797aa4da79260b12158539c59d9f237e499e466fef",
+        "semantic_key": "assistant:llm_before_test_c1_wf_002_dedupe_order",
+        "producer_event_id": "llm_before_test_c1_wf_002_dedupe_order",
+        "metadata": {
+          "phase": "testing",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_364b179f1ea205b38f",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 29,
+        "text_hash": "6c8e66de309bb2ee71f0e8c6f58af1b046e7ebf3c28eb208499539246c96d119",
+        "semantic_key": "assistant:llm_after_failure_c1_wf_002_dedupe_order",
+        "producer_event_id": "llm_after_failure_c1_wf_002_dedupe_order",
+        "metadata": {
+          "phase": "diagnosis",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_7440e72bbc4f27dc93",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 34,
+        "text_hash": "5ee69aede3a6e081221a4c1296ea278d201189fe287b800f3d51d14469051a43",
+        "semantic_key": "assistant:llm_before_patch_c1_wf_002_dedupe_order",
+        "producer_event_id": "llm_before_patch_c1_wf_002_dedupe_order",
+        "metadata": {
+          "phase": "editing",
+          "tokenizer": "fallback:whitespace"
+        }
+      }
+    ],
+    "phase": "review",
+    "metadata": {
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "history_mode": "selective_state",
+      "prompt_reconstruction": "explicit_selective_state",
+      "full_history_likely": false,
+      "tokenizer": "fallback:whitespace",
+      "request_id": "8fc68df1983b47a9a544480b2ce241b6",
+      "error": null,
+      "step_id": "llm_after_patch",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "llm"
+  },
+  {
+    "state_id": "state_1a1398af48185070e2",
+    "state_type": "tool_observation",
+    "owner": "agent_0",
+    "tokens": 71,
+    "semantic_key": "command:python -m pytest -q:ok",
+    "exact_token_hash": "29518090073b8294d2da1b07aac05f848314166d8adbea75d112c10f6ac577c0",
+    "producer_event_id": "tool_40324f7a6572",
+    "metadata": {
+      "tool": "Pytest",
+      "status": "ok",
+      "command": "python -m pytest -q",
+      "exit_code": 0,
+      "full_output_path": null,
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "29518090073b8294d2da1b07aac05f848314166d8adbea75d112c10f6ac577c0",
+      "text_preview": ".                                                                        [100%]\n1 passed in 0.01s\n\nSTDERR:\n/home/duzc/miniconda3/lib/python3.12/site-packages/pytest_asyncio/plugin.py:247: PytestDeprecationWarning: The configuration option \"asyncio_default_fixture_loop_scope\" is unset.\nThe event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop ",
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks",
+      "semantic_key": "command:python -m pytest -q:ok",
+      "exact_token_hash": "29518090073b8294d2da1b07aac05f848314166d8adbea75d112c10f6ac577c0"
+    },
+    "type": "state",
+    "semantic_id": "command:python -m pytest -q:ok",
+    "exact_kv_id": "29518090073b8294d2da1b07aac05f848314166d8adbea75d112c10f6ac577c0"
+  },
+  {
+    "type": "tool",
+    "event_id": "tool_40324f7a6572",
+    "agent": "agent_0",
+    "turn": 7,
+    "tool": "Pytest",
+    "latency": 294,
+    "output_tokens": 71,
+    "status": "ok",
+    "new_state_id": "state_1a1398af48185070e2",
+    "new_state_type": "tool_observation",
+    "timestamp_start": 1780409349.4430673,
+    "timestamp_end": 1780409349.7374108,
+    "metadata": {
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "step_id": "tool_pytest_final",
+      "args": {
+        "command": "python -m pytest -q",
+        "timeout": 30
+      },
+      "latency_ms": 294.3434715270996,
+      "stdout_stderr_hash": "f95f1e2625f6ff9b78e3041955482c6abf0ed239353a88a8517af513374f87a7",
+      "truncated_output": ".                                                                        [100%]\n1 passed in 0.01s\n\nSTDERR:\n/home/duzc/miniconda3/lib/python3.12/site-packages/pytest_asyncio/plugin.py:247: PytestDeprecationWarning: The configuration option \"asyncio_default_fixture_loop_scope\" is unset.\nThe event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: \"function\", \"class\", \"module\", \"package\", \"session\"\n\n  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))\n",
+      "command": "python -m pytest -q",
+      "exit_code": 0,
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    }
+  },
+  {
+    "state_id": "state_663d73fcb3c534b2af",
+    "state_type": "assistant_delta",
+    "owner": "agent_0",
+    "tokens": 32,
+    "semantic_key": "assistant:llm_final_c1_wf_002_dedupe_order",
+    "exact_token_hash": "243d05647c2bbf87b0b02ead698fb2a71dc25209f6c1df2ef5e3b745f296869c",
+    "producer_event_id": "llm_final_c1_wf_002_dedupe_order",
+    "metadata": {
+      "phase": "final",
+      "tokenizer": "fallback:whitespace",
+      "text_hash": "243d05647c2bbf87b0b02ead698fb2a71dc25209f6c1df2ef5e3b745f296869c",
+      "text_preview": "### Final Status Summary\n\n#### **Bug Description**\nThe bug report indicates that the `dedupe` function in `data_cleaner.py` is not preserving the first-seen order of elements. Instead, it sorts the deduplicated items alphabet",
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks",
+      "semantic_key": "assistant:llm_final_c1_wf_002_dedupe_order",
+      "exact_token_hash": "243d05647c2bbf87b0b02ead698fb2a71dc25209f6c1df2ef5e3b745f296869c"
+    },
+    "type": "state",
+    "semantic_id": "assistant:llm_final_c1_wf_002_dedupe_order",
+    "exact_kv_id": "243d05647c2bbf87b0b02ead698fb2a71dc25209f6c1df2ef5e3b745f296869c"
+  },
+  {
+    "event_id": "llm_final_c1_wf_002_dedupe_order",
+    "agent": "agent_0",
+    "turn": 8,
+    "input_state_ids": [
+      "state_e50d205b7b6942ab9e",
+      "state_a1bef3da58c5473a04",
+      "state_300fc9850448331c20",
+      "state_c668e3c9cdaefd9d7f",
+      "state_d4da5a69f509f118b8",
+      "state_d3966955ee88b80222",
+      "state_7440e72bbc4f27dc93",
+      "state_04f575225ae7d1269d",
+      "state_1a1398af48185070e2"
+    ],
+    "append_tokens": 1319,
+    "output_tokens": 48,
+    "new_state_id": "state_663d73fcb3c534b2af",
+    "new_state_type": "assistant_delta",
+    "timestamp_start": 1780409349.7381523,
+    "timestamp_end": 1780409352.5885484,
+    "input_segments": [
+      {
+        "state_id": "state_e50d205b7b6942ab9e",
+        "state_type": "system_prefix",
+        "owner": "shared",
+        "tokens": 17,
+        "text_hash": "2b489d356a9d5f18e18fb49c214a0c787387a7459185cf9cfda2da09b5cc1aa2",
+        "semantic_key": "system:c1_wf_002_dedupe_order",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "static_prefix",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_a1bef3da58c5473a04",
+        "state_type": "task_prefix",
+        "owner": "shared",
+        "tokens": 19,
+        "text_hash": "d8931c9d79b546f0b06029caf2b562a36de4082ac9e71dd2fdcb9ef2ace2a783",
+        "semantic_key": "task:c1_wf_002_dedupe_order",
+        "producer_event_id": null,
+        "metadata": {
+          "scope": "issue",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_300fc9850448331c20",
+        "state_type": "agent_role",
+        "owner": "agent_0",
+        "tokens": 12,
+        "text_hash": "5efbd1daa4662f4e05bd133480ef37f6af642e9339e6a25f786a4987b31a236a",
+        "semantic_key": "role:c1_wf_002_dedupe_order:agent_0",
+        "producer_event_id": null,
+        "metadata": {
+          "framework": "local_react_coding_agent",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_c668e3c9cdaefd9d7f",
+        "state_type": "file_context",
+        "owner": "agent_0",
+        "tokens": 94,
+        "text_hash": "a2aba03269bf3dc2aec3c35dcde17af69d53ae92e3d735c52fa725bd8b4895c6",
+        "semantic_key": "file:data_cleaner.py:1-19:32f910f9ab6c1451",
+        "producer_event_id": "tool_62b5c7decb95",
+        "metadata": {
+          "tool": "Read",
+          "status": "ok",
+          "path": "data_cleaner.py",
+          "line_range": "1-19",
+          "version": "32f910f9ab6c1451",
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_d4da5a69f509f118b8",
+        "state_type": "test_failure_summary",
+        "owner": "agent_0",
+        "tokens": 121,
+        "text_hash": "6c11c751c22341ea79ca801c3a2a2dcddd338554fd93e05831530d4bad499a34",
+        "semantic_key": "command:python -m pytest -q:failed",
+        "producer_event_id": "tool_d5843a30ff00",
+        "metadata": {
+          "tool": "Pytest",
+          "status": "failed",
+          "command": "python -m pytest -q",
+          "exit_code": 1,
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_d3966955ee88b80222",
+        "state_type": "edit_diff",
+        "owner": "agent_0",
+        "tokens": 22,
+        "text_hash": "af7befd4ba42cbb3857988cbfd0bd4be8265ef9c1363a4094cae54d2af34efd3",
+        "semantic_key": "file:data_cleaner.py:all:workspace",
+        "producer_event_id": "tool_018755643c42",
+        "metadata": {
+          "tool": "Edit",
+          "status": "ok",
+          "path": "data_cleaner.py",
+          "error_type": null,
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_7440e72bbc4f27dc93",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 34,
+        "text_hash": "5ee69aede3a6e081221a4c1296ea278d201189fe287b800f3d51d14469051a43",
+        "semantic_key": "assistant:llm_before_patch_c1_wf_002_dedupe_order",
+        "producer_event_id": "llm_before_patch_c1_wf_002_dedupe_order",
+        "metadata": {
+          "phase": "editing",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_04f575225ae7d1269d",
+        "state_type": "assistant_delta",
+        "owner": "agent_0",
+        "tokens": 25,
+        "text_hash": "9e22c82f1610c3bfa3466d1ca6b1c1e42755c0dc0108b2295e2ed4b8b38f8a4c",
+        "semantic_key": "assistant:llm_after_patch_c1_wf_002_dedupe_order",
+        "producer_event_id": "llm_after_patch_c1_wf_002_dedupe_order",
+        "metadata": {
+          "phase": "review",
+          "tokenizer": "fallback:whitespace"
+        }
+      },
+      {
+        "state_id": "state_1a1398af48185070e2",
+        "state_type": "tool_observation",
+        "owner": "agent_0",
+        "tokens": 71,
+        "text_hash": "29518090073b8294d2da1b07aac05f848314166d8adbea75d112c10f6ac577c0",
+        "semantic_key": "command:python -m pytest -q:ok",
+        "producer_event_id": "tool_40324f7a6572",
+        "metadata": {
+          "tool": "Pytest",
+          "status": "ok",
+          "command": "python -m pytest -q",
+          "exit_code": 0,
+          "full_output_path": null,
+          "tokenizer": "fallback:whitespace"
+        }
+      }
+    ],
+    "phase": "final",
+    "metadata": {
+      "workflow_id": "c1_wf_002_dedupe_order",
+      "history_mode": "selective_state",
+      "prompt_reconstruction": "explicit_selective_state",
+      "full_history_likely": false,
+      "tokenizer": "fallback:whitespace",
+      "request_id": "6a591829bef84bce9e26670ef1c709f2",
+      "error": null,
+      "step_id": "llm_final",
+      "framework": "local_react_coding_agent",
+      "trace_success": true,
+      "benchmark": "local_debug_tasks"
+    },
+    "type": "llm"
+  }
+]

@@ -1,0 +1,7 @@
+policy,effective_prefill_tokens
+asg-placement-v2-online,331174.0
+asg-prefetch-v2-online,331174.0
+asg-retention-v2-online,331174.0
+asg-retention-v2-oracle,331174.0
+kvflow-like,405774.0
+lru-system,330658.5

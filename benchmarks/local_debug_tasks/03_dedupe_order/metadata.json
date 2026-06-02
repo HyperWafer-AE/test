@@ -1,0 +1,11 @@
+{
+  "task_id": "dedupe_order",
+  "module": "data_cleaner.py",
+  "issue": "dedupe should preserve first-seen order",
+  "expected_command": "python -m pytest -q",
+  "patch": {
+    "path": "data_cleaner.py",
+    "old": "return sorted(set(items))",
+    "new": "return list(dict.fromkeys(items))"
+  }
+}

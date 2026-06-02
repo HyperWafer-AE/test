@@ -1,0 +1,147 @@
+{
+  "framework": "local_react_coding_agent",
+  "history_mode": "selective_state",
+  "num_workflows": 20,
+  "workflows": [
+    {
+      "workflow_id": "wf_000_clamp_bounds",
+      "output": "traces/local_h100/workflows/wf_000_clamp_bounds.json",
+      "success": true,
+      "wall_clock_s": 33.40531539916992,
+      "num_events": 31
+    },
+    {
+      "workflow_id": "wf_001_parse_bool_yes",
+      "output": "traces/local_h100/workflows/wf_001_parse_bool_yes.json",
+      "success": true,
+      "wall_clock_s": 23.294841766357422,
+      "num_events": 31
+    },
+    {
+      "workflow_id": "wf_002_mean_empty",
+      "output": "traces/local_h100/workflows/wf_002_mean_empty.json",
+      "success": true,
+      "wall_clock_s": 23.34566831588745,
+      "num_events": 31
+    },
+    {
+      "workflow_id": "wf_003_dedupe_order",
+      "output": "traces/local_h100/workflows/wf_003_dedupe_order.json",
+      "success": true,
+      "wall_clock_s": 23.140040397644043,
+      "num_events": 31
+    },
+    {
+      "workflow_id": "wf_004_slug_spaces",
+      "output": "traces/local_h100/workflows/wf_004_slug_spaces.json",
+      "success": true,
+      "wall_clock_s": 22.729341745376587,
+      "num_events": 31
+    },
+    {
+      "workflow_id": "wf_005_safe_divide_zero",
+      "output": "traces/local_h100/workflows/wf_005_safe_divide_zero.json",
+      "success": true,
+      "wall_clock_s": 22.92756676673889,
+      "num_events": 31
+    },
+    {
+      "workflow_id": "wf_006_parse_int_blank",
+      "output": "traces/local_h100/workflows/wf_006_parse_int_blank.json",
+      "success": true,
+      "wall_clock_s": 23.10013175010681,
+      "num_events": 31
+    },
+    {
+      "workflow_id": "wf_007_window_tail",
+      "output": "traces/local_h100/workflows/wf_007_window_tail.json",
+      "success": true,
+      "wall_clock_s": 23.009203672409058,
+      "num_events": 31
+    },
+    {
+      "workflow_id": "wf_008_normalize_none",
+      "output": "traces/local_h100/workflows/wf_008_normalize_none.json",
+      "success": true,
+      "wall_clock_s": 23.01628017425537,
+      "num_events": 31
+    },
+    {
+      "workflow_id": "wf_009_median_odd",
+      "output": "traces/local_h100/workflows/wf_009_median_odd.json",
+      "success": true,
+      "wall_clock_s": 23.5411696434021,
+      "num_events": 31
+    },
+    {
+      "workflow_id": "wf_010_merge_config",
+      "output": "traces/local_h100/workflows/wf_010_merge_config.json",
+      "success": true,
+      "wall_clock_s": 23.035114765167236,
+      "num_events": 31
+    },
+    {
+      "workflow_id": "wf_011_count_words_punct",
+      "output": "traces/local_h100/workflows/wf_011_count_words_punct.json",
+      "success": true,
+      "wall_clock_s": 22.647270679473877,
+      "num_events": 31
+    },
+    {
+      "workflow_id": "wf_012_flatten_once",
+      "output": "traces/local_h100/workflows/wf_012_flatten_once.json",
+      "success": true,
+      "wall_clock_s": 22.918776512145996,
+      "num_events": 31
+    },
+    {
+      "workflow_id": "wf_013_variance_single",
+      "output": "traces/local_h100/workflows/wf_013_variance_single.json",
+      "success": true,
+      "wall_clock_s": 22.55601739883423,
+      "num_events": 31
+    },
+    {
+      "workflow_id": "wf_014_env_list_trim",
+      "output": "traces/local_h100/workflows/wf_014_env_list_trim.json",
+      "success": true,
+      "wall_clock_s": 22.585790872573853,
+      "num_events": 31
+    },
+    {
+      "workflow_id": "wf_015_title_case_hyphen",
+      "output": "traces/local_h100/workflows/wf_015_title_case_hyphen.json",
+      "success": true,
+      "wall_clock_s": 22.68848991394043,
+      "num_events": 31
+    },
+    {
+      "workflow_id": "wf_016_chunk_exact",
+      "output": "traces/local_h100/workflows/wf_016_chunk_exact.json",
+      "success": true,
+      "wall_clock_s": 23.095833778381348,
+      "num_events": 31
+    },
+    {
+      "workflow_id": "wf_017_percent_zero",
+      "output": "traces/local_h100/workflows/wf_017_percent_zero.json",
+      "success": true,
+      "wall_clock_s": 23.0071120262146,
+      "num_events": 31
+    },
+    {
+      "workflow_id": "wf_018_mode_tie",
+      "output": "traces/local_h100/workflows/wf_018_mode_tie.json",
+      "success": true,
+      "wall_clock_s": 23.078450679779053,
+      "num_events": 31
+    },
+    {
+      "workflow_id": "wf_019_json_flag",
+      "output": "traces/local_h100/workflows/wf_019_json_flag.json",
+      "success": true,
+      "wall_clock_s": 23.094600677490234,
+      "num_events": 31
+    }
+  ]
+}

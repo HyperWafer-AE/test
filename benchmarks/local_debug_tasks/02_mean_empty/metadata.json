@@ -1,0 +1,11 @@
+{
+  "task_id": "mean_empty",
+  "module": "stats.py",
+  "issue": "mean should return 0 for empty inputs",
+  "expected_command": "python -m pytest -q",
+  "patch": {
+    "path": "stats.py",
+    "old": "return sum(values) / len(values)",
+    "new": "return 0 if not values else sum(values) / len(values)"
+  }
+}

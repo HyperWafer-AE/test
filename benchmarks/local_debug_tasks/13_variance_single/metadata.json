@@ -1,0 +1,11 @@
+{
+  "task_id": "variance_single",
+  "module": "stats.py",
+  "issue": "variance should be 0 for a single item",
+  "expected_command": "python -m pytest -q",
+  "patch": {
+    "path": "stats.py",
+    "old": "return sum((x - avg) ** 2 for x in values) / (len(values) - 1)",
+    "new": "return 0 if len(values) < 2 else sum((x - avg) ** 2 for x in values) / (len(values) - 1)"
+  }
+}

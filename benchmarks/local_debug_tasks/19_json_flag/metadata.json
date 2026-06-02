@@ -1,0 +1,11 @@
+{
+  "task_id": "json_flag",
+  "module": "config_parser.py",
+  "issue": "read_flag should support missing key default",
+  "expected_command": "python -m pytest -q",
+  "patch": {
+    "path": "config_parser.py",
+    "old": "return data[name]",
+    "new": "return data.get(name, default)"
+  }
+}

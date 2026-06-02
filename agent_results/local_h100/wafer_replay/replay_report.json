@@ -1,0 +1,12 @@
+{
+  "policies": [
+    "lru-system",
+    "kvflow-like",
+    "asg-retention-v2-online",
+    "asg-retention-v2-oracle",
+    "asg-placement-v2-online",
+    "asg-prefetch-v2-online"
+  ],
+  "internal_kv_metrics": "not available from SGLang/vLLM traces; replay uses normalized state events and analytical KV bytes",
+  "check_invariants": true
+}

@@ -1,0 +1,11 @@
+{
+  "task_id": "title_case_hyphen",
+  "module": "text_utils.py",
+  "issue": "title_words should treat hyphen as separator",
+  "expected_command": "python -m pytest -q",
+  "patch": {
+    "path": "text_utils.py",
+    "old": "return ' '.join(w.capitalize() for w in text.split())",
+    "new": "return ' '.join(w.capitalize() for w in text.replace('-', ' ').split())"
+  }
+}

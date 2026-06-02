@@ -1,0 +1,11 @@
+{
+  "task_id": "median_odd",
+  "module": "stats.py",
+  "issue": "median should return middle element for odd-length sorted values",
+  "expected_command": "python -m pytest -q",
+  "patch": {
+    "path": "stats.py",
+    "old": "return values[mid + 1]",
+    "new": "return values[mid]"
+  }
+}

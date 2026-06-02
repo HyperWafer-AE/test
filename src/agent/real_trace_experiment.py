@@ -455,6 +455,10 @@ def write_summary_csv(path, results):
         "delayed_reuse_ratio",
         "concurrency",
         "memory_budget",
+        "total_cycles",
+        "p95_llm_step_latency",
+        "p99_llm_step_latency",
+        "throughput_llm_steps_per_cycle",
         "effective_prefill_tokens",
         "effective_prefill_reduction",
         "cache_hit_ratio",
@@ -482,6 +486,8 @@ def write_summary_csv(path, results):
         writer.writeheader()
         for result in results:
             metrics = result["agent_metrics"]
+            total_cycles = int((result.get("timing") or {}).get("total_cycles", 0))
+            num_llm_steps = int(metrics.get("num_llm_steps", 0))
             writer.writerow(
                 {
                     "policy": result["policy"],
@@ -504,6 +510,10 @@ def write_summary_csv(path, results):
                     "delayed_reuse_ratio": result.get("delayed_reuse_ratio", ""),
                     "concurrency": result["concurrency"],
                     "memory_budget": result["memory_budget"],
+                    "total_cycles": total_cycles,
+                    "p95_llm_step_latency": "",
+                    "p99_llm_step_latency": "",
+                    "throughput_llm_steps_per_cycle": num_llm_steps / total_cycles if total_cycles else 0.0,
                     "effective_prefill_tokens": metrics["effective_prefill_tokens"],
                     "effective_prefill_reduction": metrics["effective_prefill_reduction"],
                     "cache_hit_ratio": metrics["cache_hit_ratio"],

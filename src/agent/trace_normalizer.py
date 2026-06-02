@@ -966,10 +966,16 @@ def _annotate_prompt_quality(trace: List[dict], default_reconstruction: str = "e
         if reconstruction is None:
             reconstruction = "explicit" if event.get("input_segments") else default_reconstruction
         metadata["prompt_reconstruction"] = reconstruction
-        exact_prompt_source = reconstruction in {"explicit", "exact_otel_messages"}
+        exact_prompt_source = reconstruction in {
+            "explicit",
+            "explicit_selective_state",
+            "exact_otel_messages",
+        }
+        explicit_full_history = reconstruction == "explicit_full_history" or metadata.get("history_mode") == "full_history"
         metadata["monotonic_context_growth_score"] = growth_score
         metadata["full_history_likely"] = bool(
-            reconstruction == "accumulated_fallback"
+            explicit_full_history
+            or reconstruction == "accumulated_fallback"
             or ((full_history_trace or token_growth_trace) and not exact_prompt_source)
         )
         event["metadata"] = metadata

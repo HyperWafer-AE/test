@@ -1,0 +1,11 @@
+{
+  "task_id": "normalize_none",
+  "module": "text_utils.py",
+  "issue": "normalize should handle None as empty string",
+  "expected_command": "python -m pytest -q",
+  "patch": {
+    "path": "text_utils.py",
+    "old": "return value.strip().lower()",
+    "new": "return '' if value is None else value.strip().lower()"
+  }
+}

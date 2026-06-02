@@ -1,0 +1,11 @@
+{
+  "task_id": "parse_bool_yes",
+  "module": "config_parser.py",
+  "issue": "parse_bool should accept yes/no values",
+  "expected_command": "python -m pytest -q",
+  "patch": {
+    "path": "config_parser.py",
+    "old": "return value.lower() in ('true', '1')",
+    "new": "return value.lower() in ('true', '1', 'yes', 'y', 'on')"
+  }
+}

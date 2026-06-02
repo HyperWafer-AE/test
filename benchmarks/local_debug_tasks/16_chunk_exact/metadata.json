@@ -1,0 +1,11 @@
+{
+  "task_id": "chunk_exact",
+  "module": "data_cleaner.py",
+  "issue": "chunk should include exact final chunk",
+  "expected_command": "python -m pytest -q",
+  "patch": {
+    "path": "data_cleaner.py",
+    "old": "return [items[i:i+size] for i in range(0, len(items)-size, size)]",
+    "new": "return [items[i:i+size] for i in range(0, len(items), size)]"
+  }
+}
