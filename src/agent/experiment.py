@@ -155,6 +155,8 @@ def build_state_manager(policy: str, memory_budget_bytes: int, model: ModelProfi
                     "max_future_access_cap": args.max_future_access_cap,
                     "storage_penalty": args.storage_penalty,
                     "knapsack_max_candidates": args.knapsack_max_candidates,
+                    "current_prompt_bonus": args.asg_current_prompt_bonus,
+                    "recency_bonus": args.asg_recency_bonus,
                 }
             )
         manager = manager_cls(memory_budget_bytes, **kwargs)
@@ -448,6 +450,8 @@ def parse_args(argv=None):
     parser.add_argument("--max-future-access-cap", type=int, default=8)
     parser.add_argument("--storage-penalty", type=float, default=0.0)
     parser.add_argument("--knapsack-max-candidates", type=int, default=2048)
+    parser.add_argument("--asg-current-prompt-bonus", type=float, default=100.0)
+    parser.add_argument("--asg-recency-bonus", type=float, default=1.0)
     parser.add_argument("--prefetch-reuse-threshold", type=float, default=0.6)
     parser.add_argument("--prefetch-next-use-threshold", type=float, default=2.0)
     parser.add_argument("--max-prefetch-bytes", type=int, default=536870912)

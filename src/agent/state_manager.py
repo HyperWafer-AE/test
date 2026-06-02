@@ -2,6 +2,7 @@ import math
 from collections import defaultdict
 from typing import Iterable, Optional
 
+from .cost_model import estimate_future_accesses
 from .reuse_predictor import compute_reuse_score, estimate_next_use_distance
 from .state_node import StateNode
 
@@ -171,6 +172,8 @@ class ASGKnapsackStateManager(BaseStateManager):
         max_future_access_cap: int = 8,
         storage_penalty: float = 0.0,
         knapsack_max_candidates: int = 2048,
+        current_prompt_bonus: float = 100.0,
+        recency_bonus: float = 1.0,
     ):
         super().__init__(memory_budget_bytes, per_node_budget_bytes)
         self.prefill_cycles_per_token = int(prefill_cycles_per_token)
@@ -178,6 +181,8 @@ class ASGKnapsackStateManager(BaseStateManager):
         self.max_future_access_cap = max(1, int(max_future_access_cap))
         self.storage_penalty = float(storage_penalty)
         self.knapsack_max_candidates = max(1, int(knapsack_max_candidates))
+        self.current_prompt_bonus = float(current_prompt_bonus)
+        self.recency_bonus = float(recency_bonus)
 
     def _criticality(self, state: StateNode, phase_score: dict) -> float:
         criticality = 1.0
@@ -215,6 +220,22 @@ class ASGKnapsackStateManager(BaseStateManager):
         state.predicted_future_accesses = float(future_accesses)
         return future_accesses, reuse_probability, expected_saved_cycles
 
+    def _live_prompt_profit(self, state: StateNode, current_step: int) -> float:
+        """Keep online ASG from evicting states in the live prompt.
+
+        Real agent traces often replay an accumulated prompt. The policy is
+        refreshed immediately before the LLM event is costed, so LRU naturally
+        protects just-touched prompt segments. Future-demand scoring still needs
+        that admission credit, then uses its semantic and future terms to break
+        ties better than plain recency.
+        """
+        age_since_access = max(0, int(current_step) - int(state.last_access))
+        hot_bonus = self.current_prompt_bonus if age_since_access == 0 else 0.0
+        recency_bonus = self.recency_bonus / (1.0 + age_since_access)
+        if hot_bonus <= 0.0 and recency_bonus <= 0.0:
+            return 0.0
+        return state.token_len * self.prefill_cycles_per_token * (hot_bonus + recency_bonus)
+
     def _profit(self, state: StateNode, graph, phase_score, current_step, future_index, oracle_future, demand_predictor=None) -> float:
         future_accesses, reuse_probability, predicted_saved_cycles = self._future_terms(
             state,
@@ -225,9 +246,13 @@ class ASGKnapsackStateManager(BaseStateManager):
             oracle_future,
             demand_predictor,
         )
-        if future_accesses <= 0 or state.kv_bytes <= 0:
+        if state.kv_bytes <= 0:
             state.retention_score = 0.0
             return 0.0
+        live_prompt_profit = self._live_prompt_profit(state, current_step)
+        if future_accesses <= 0:
+            state.retention_score = live_prompt_profit
+            return state.retention_score
         recompute_cost = state.token_len * self.prefill_cycles_per_token
         storage_cost = self.storage_penalty * state.kv_bytes / max(1, self.memory_budget_bytes)
         if predicted_saved_cycles is None:
@@ -239,7 +264,7 @@ class ASGKnapsackStateManager(BaseStateManager):
             )
         else:
             expected_saved_cycles = float(predicted_saved_cycles) * self._criticality(state, phase_score)
-        state.retention_score = expected_saved_cycles - storage_cost
+        state.retention_score = expected_saved_cycles + live_prompt_profit - storage_cost
         return state.retention_score
 
     def update(self, graph, phase_score, current_step, future_index=None, oracle_future: bool = False, demand_predictor=None):

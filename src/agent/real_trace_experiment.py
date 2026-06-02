@@ -186,6 +186,8 @@ def make_state_manager(policy: str, memory_budget_bytes: int, model: ModelProfil
         max_future_access_cap=args.max_future_access_cap,
         storage_penalty=args.storage_penalty,
         knapsack_max_candidates=args.knapsack_max_candidates,
+        current_prompt_bonus=args.asg_current_prompt_bonus,
+        recency_bonus=args.asg_recency_bonus,
     )
 
 
@@ -220,8 +222,19 @@ def run_real_policy(policy: str, args, trace, predictor, num_traces: int, regret
     topology_enabled = policy in {"asg-placement-v2-online", "asg-prefetch-v2-online"}
     prefetch_enabled = policy == "asg-prefetch-v2-online"
     oracle_future = policy == "asg-retention-v2-oracle"
+    is_asg_policy = policy.startswith("asg-")
     static_replica = policy != "lru-basic" and not args.disable_static_replica
-    compression = policy != "lru-basic" and not args.disable_observation_compression
+    compression = is_asg_policy and not args.disable_observation_compression
+    compression_threshold = (
+        args.asg_large_observation_token_threshold
+        if is_asg_policy
+        else args.large_observation_token_threshold
+    )
+    compression_ratio = (
+        args.asg_observation_compression_ratio
+        if is_asg_policy
+        else args.observation_compression_ratio
+    )
 
     builder = AgentEventBuilder(
         hardware_platform=hardware,
@@ -239,8 +252,8 @@ def run_real_policy(policy: str, args, trace, predictor, num_traces: int, regret
         max_prefetch_bytes=args.max_prefetch_bytes,
         prefetch_wait_fraction=args.prefetch_wait_fraction,
         enable_observation_compression=compression,
-        large_observation_token_threshold=args.large_observation_token_threshold,
-        observation_compression_ratio=args.observation_compression_ratio,
+        large_observation_token_threshold=compression_threshold,
+        observation_compression_ratio=compression_ratio,
         future_horizon=args.horizon,
         oracle_future=oracle_future,
         comm_cost_model=args.comm_cost_model,
@@ -515,6 +528,8 @@ def parse_args(argv=None):
     parser.add_argument("--max-future-access-cap", type=int, default=8)
     parser.add_argument("--storage-penalty", type=float, default=0.0)
     parser.add_argument("--knapsack-max-candidates", type=int, default=2048)
+    parser.add_argument("--asg-current-prompt-bonus", type=float, default=100.0)
+    parser.add_argument("--asg-recency-bonus", type=float, default=1.0)
     parser.add_argument("--max-prefetch-states", type=int, default=2)
     parser.add_argument("--prefetch-reuse-threshold", type=float, default=0.6)
     parser.add_argument("--prefetch-next-use-threshold", type=float, default=2.0)
@@ -524,6 +539,8 @@ def parse_args(argv=None):
     parser.add_argument("--disable-observation-compression", action="store_true")
     parser.add_argument("--large-observation-token-threshold", type=int, default=2048)
     parser.add_argument("--observation-compression-ratio", type=float, default=0.25)
+    parser.add_argument("--asg-large-observation-token-threshold", type=int, default=512)
+    parser.add_argument("--asg-observation-compression-ratio", type=float, default=0.25)
     parser.add_argument("--n-layers", type=int, default=32)
     parser.add_argument("--hidden-size", type=int, default=4096)
     parser.add_argument("--dtype-bytes", type=int, default=2)

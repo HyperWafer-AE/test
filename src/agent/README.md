@@ -12,7 +12,7 @@ This package adds an agent-level frontend over BusyBarn. It converts synthetic m
 - `asg-prefetch`: ASG retention and placement plus tool-wait KV prefetch.
 - `asg-retention-v2`: Future-Demand-aware knapsack retention that optimizes expected saved prefill cycles.
 - `asg-placement-v2`: v2 retention plus explicit local/remote-read/migrate/replicate action selection.
-- `asg-prefetch-v2`: v2 placement plus windowed prefetch knapsack during tool waits.
+- `asg-prefetch-v2`: v2 placement plus windowed prefetch knapsack during tool waits. v2 retention also includes live-prompt admission credit so online ASG protects states in the current accumulated prompt before using future-demand terms to break ties.
 - `asg-oracle-retention`, `asg-oracle-placement`, `asg-oracle-prefetch`: oracle future-demand upper-bound policies for diagnosis.
 - `asg`: alias for `asg-prefetch-v2`.
 
@@ -57,13 +57,14 @@ python -m src.agent.real_trace_experiment --trace-dir traces/real --trace-format
 - `--disable-prefetch` disables tool-wait prefetch.
 - `--policy-suite {basic,v2,oracle,all}` chooses the policies used by `--run-all-policies`; the default is `v2`.
 - `--future-horizon` and `--oracle-future` enable synthetic-trace future demand for ASG v2/oracle policies.
-- `--knapsack-granularity-mb`, `--max-future-access-cap`, `--storage-penalty`, and `--knapsack-max-candidates` control v2 cost-weighted retention.
+- `--knapsack-granularity-mb`, `--max-future-access-cap`, `--storage-penalty`, `--knapsack-max-candidates`, `--asg-current-prompt-bonus`, and `--asg-recency-bonus` control v2 cost-weighted retention.
 - `--scheduler-seed` seeds BusyBarn's randomized communication scheduling for repeatable agent experiments.
 - `--tool-latency-scale` converts synthetic tool latency units into cycles. The default is `1000000`, so a trace latency of `1000` becomes `1e9` external wait cycles.
 - `--comm-cost-model {heuristic,backend}` selects either the old distance/bandwidth estimate or a backend-calibrated link-time estimate. `backend` is the default.
 - `--effective-bandwidth-bytes-per-cycle` controls the fallback heuristic migration/remote-read cost model.
 - `--prefetch-reuse-threshold`, `--prefetch-next-use-threshold`, `--max-prefetch-bytes`, and `--prefetch-wait-fraction` gate prefetch candidates.
-- `--enable-observation-compression` compresses large tool observations with `--large-observation-token-threshold` and `--observation-compression-ratio`.
+- `--enable-observation-compression` compresses large synthetic tool observations with `--large-observation-token-threshold` and `--observation-compression-ratio`.
+- Real-trace ASG policies enable adaptive observation compression by default; tune it with `--asg-large-observation-token-threshold` and `--asg-observation-compression-ratio`, or disable it with `--disable-observation-compression`.
 
 ## Real Trace Evaluation
 
@@ -77,7 +78,7 @@ Normalized trace events are:
 
 `prompt_segmenter.py` maps system/developer prompts, task statements, roles, assistant deltas, file reads, edits, test failures, raw errors, web results, summaries, and subagent outputs into state types. Exact KV reuse is keyed by `exact_token_hash`; semantic keys are retained for analysis but do not imply KV equality.
 
-`real_trace_experiment.py` runs `nocache`, `lru-basic`, `lru-system`, `kvflow-like`, online ASG v2, and oracle ASG v2. `lru-basic` disables static replicas and observation compression; `lru-system` enables both. The summary includes `oracle_gap`, retained state type distribution, LRU regret preservation, and delayed-reuse subset metadata.
+`real_trace_experiment.py` runs `nocache`, `lru-basic`, `lru-system`, `kvflow-like`, online ASG v2, and oracle ASG v2. `lru-basic` disables static replicas; `lru-system` keeps the stronger static-prefix baseline, while ASG additionally enables adaptive observation compression. The summary includes `oracle_gap`, retained state type distribution, LRU regret preservation, delayed-reuse subset metadata, and compression counters.
 
 ## Metrics
 
