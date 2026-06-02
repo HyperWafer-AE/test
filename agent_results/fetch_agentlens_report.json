@@ -1,12 +1,15 @@
 {
   "source": "agentlens",
   "source_name": "AgentLens / OpenHands trajectories",
-  "output_dir": "traces\\real\\agentlens",
+  "output_dir": "traces\\downloaded\\agentlens",
   "repo": "https://github.com/microsoft/code-agent-state-trajectories/",
   "remote_status": "inaccessible: remote: Repository not found.\nfatal: repository 'https://github.com/microsoft/code-agent-state-trajectories/' not found",
   "download_status": "remote_unavailable",
   "num_files_downloaded": 0,
+  "files_downloaded": 0,
   "local_files": [],
+  "local_sample_files": [],
+  "sample_candidate_class": "unknown",
   "manual_download_required": true,
   "manual_instructions": [
     "Check the repository README for dataset storage or LFS instructions.",

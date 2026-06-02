@@ -1,0 +1,18 @@
+{
+  "source": "swe_gym",
+  "source_name": "SWE-Gym / SWE-agent trajectories",
+  "output_dir": "traces\\downloaded\\swe_gym",
+  "repo": null,
+  "remote_status": "not_applicable",
+  "download_status": "manual_only_source",
+  "num_files_downloaded": 0,
+  "files_downloaded": 0,
+  "local_files": [],
+  "local_sample_files": [],
+  "sample_candidate_class": "unknown",
+  "manual_download_required": true,
+  "manual_instructions": [
+    "Place SWE-Gym or SWE-agent trajectory JSON/JSONL files under traces/real/swe_gym.",
+    "Use --trace-format swe_gym or auto for audit/build_real_trace_set."
+  ]
+}

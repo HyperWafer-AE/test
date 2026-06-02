@@ -6,6 +6,7 @@ from pathlib import Path
 
 from .trace_audit import audit_single_trace, audit_traces
 from .trace_loader import load_trace_file
+from .trace_opportunity_selector import select_traces
 
 
 TRACE_SUFFIXES = (".json", ".jsonl", ".traj.json", ".trajectory.json")
@@ -19,11 +20,31 @@ def build_trace_set(
     max_traces: int = 100,
     audit_output=None,
     manifest_path=None,
+    selection_report=None,
 ) -> dict:
     output_dir = Path(output_dir)
     if output_dir.exists():
         shutil.rmtree(output_dir)
-    output_dir.mkdir(parents=True, exist_ok=True)
+    opportunity_dir = output_dir / "opportunity"
+    control_dir = output_dir / "control"
+    opportunity_dir.mkdir(parents=True, exist_ok=True)
+    control_dir.mkdir(parents=True, exist_ok=True)
+    smoke_dir = Path("traces/real_smoke")
+    if smoke_dir.exists():
+        shutil.rmtree(smoke_dir)
+    smoke_dir.mkdir(parents=True, exist_ok=True)
+
+    selection_dir = Path(selection_report).parent if selection_report else Path("agent_results/trace_selection")
+    selection_result = select_traces(
+        input_dirs,
+        trace_format=trace_format,
+        output_dir=selection_dir,
+        max_traces=max_traces,
+        min_turns=min_turns,
+        delayed_reuse_k=8,
+        memory_budget_gb=0.5,
+    )
+    selection_by_source = _selection_by_source(selection_dir / "all_trace_scores.csv")
 
     candidates = _candidate_files([Path(path) for path in input_dirs], max_files=max_traces)
     loaded_traces = []
@@ -46,8 +67,11 @@ def build_trace_set(
             allow_reconstructed_full_history=False,
             delayed_reuse_k=8,
         )
+        selection_row = selection_by_source.get(str(path)) or {}
         entry = {
             "source_file": str(path),
+            "selection_label": selection_row.get("selection_label", report["quality_label"]),
+            "asg_opportunity_score": selection_row.get("asg_opportunity_score", 0.0),
             "quality_label": report["quality_label"],
             "exclusion_reasons": report["exclusion_reasons"],
             "delayed_reuse_ratio": report["reuse_quality"]["delayed_reuse_ratio"],
@@ -56,11 +80,20 @@ def build_trace_set(
             "prompt_reconstruction_quality": report["prompt_reconstruction_quality"],
             "state_type_distribution": report["state_quality"]["state_type_distribution"],
         }
-        if report["quality_label"] == "high":
-            output_file = output_dir / f"{len(high_quality):04d}_{_safe_stem(path)}.normalized.json"
+        if entry["selection_label"] == "opportunity_rich":
+            output_file = opportunity_dir / f"{len(high_quality):04d}_{_safe_stem(path)}.normalized.json"
             output_file.write_text(json.dumps(trace, indent=2), encoding="utf-8")
             entry["normalized_output_file"] = str(output_file)
             high_quality.append(entry)
+        elif entry["selection_label"] == "matched_control":
+            output_file = control_dir / f"{len(high_quality):04d}_{_safe_stem(path)}.normalized.json"
+            output_file.write_text(json.dumps(trace, indent=2), encoding="utf-8")
+            entry["normalized_output_file"] = str(output_file)
+            high_quality.append(entry)
+        elif entry["selection_label"] == "smoke_only":
+            output_file = smoke_dir / f"{len(manifest):04d}_{_safe_stem(path)}.normalized.json"
+            output_file.write_text(json.dumps(trace, indent=2), encoding="utf-8")
+            entry["smoke_output_file"] = str(output_file)
         manifest.append(entry)
 
     audit = audit_traces(loaded_traces, min_turns=min_turns, allow_reconstructed_full_history=False, delayed_reuse_k=8)
@@ -82,6 +115,7 @@ def build_trace_set(
         missing_report_path = Path("agent_results/high_quality_trace_missing_report.json")
         missing_report_path.parent.mkdir(parents=True, exist_ok=True)
         missing_report = _missing_report(input_dirs, candidates, manifest, failures)
+        missing_report["selection_result"] = selection_result
         missing_report_path.write_text(json.dumps(missing_report, indent=2), encoding="utf-8")
 
     return {
@@ -91,8 +125,18 @@ def build_trace_set(
         "output_dir": str(output_dir),
         "audit_output": str(audit_output) if audit_output else "",
         "manifest": str(manifest_path) if manifest_path else "",
+        "selection_report": str(selection_report) if selection_report else "",
         "missing_report": str(missing_report_path) if missing_report_path else "",
     }
+
+
+def _selection_by_source(scores_path: Path) -> dict:
+    import csv
+
+    if not scores_path.exists():
+        return {}
+    with scores_path.open(newline="", encoding="utf-8") as handle:
+        return {row.get("source_file", ""): row for row in csv.DictReader(handle)}
 
 
 def _candidate_files(input_dirs, max_files: int):
@@ -210,6 +254,7 @@ def parse_args(argv=None):
     parser.add_argument("--max-traces", type=int, default=100)
     parser.add_argument("--audit-output", required=True)
     parser.add_argument("--manifest", required=True)
+    parser.add_argument("--selection-report")
     return parser.parse_args(argv)
 
 
@@ -223,6 +268,7 @@ def main(argv=None):
         max_traces=args.max_traces,
         audit_output=args.audit_output,
         manifest_path=args.manifest,
+        selection_report=args.selection_report,
     )
     print(
         "candidate_files={num_candidate_files} loaded={num_loaded_traces} high_quality={num_high_quality_traces}".format(

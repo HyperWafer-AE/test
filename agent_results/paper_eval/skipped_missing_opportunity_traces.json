@@ -1,0 +1,7 @@
+{
+  "status": "skipped_missing_opportunity_traces",
+  "paper_usable": false,
+  "opportunity_trace_dir": "traces/real_high_quality/opportunity",
+  "control_trace_dir": "traces/real_high_quality/control",
+  "message": "No paper-usable opportunity traces exist; paper evaluation summaries and plots were not generated."
+}

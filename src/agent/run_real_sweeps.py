@@ -1,7 +1,6 @@
 import argparse
 import csv
 import json
-import shutil
 from pathlib import Path
 
 from .real_trace_experiment import (
@@ -110,7 +109,6 @@ def run_sweep(args):
     base_args = build_real_args(args, output_dir / "_base")
     traces = load_traces_from_args(base_args)
     if not traces:
-        _clear_stale_sweep_outputs(output_dir)
         report_path = output_dir / "skipped_missing_high_quality_traces.json"
         report_path.write_text(
             json.dumps(
@@ -126,7 +124,6 @@ def run_sweep(args):
         return [], []
     selected_traces, _ = select_traces_for_replay(base_args, traces, output_dir)
     if not selected_traces:
-        _clear_stale_sweep_outputs(output_dir)
         (output_dir / "skipped_missing_high_quality_traces.json").write_text(
             json.dumps(
                 {
@@ -165,16 +162,6 @@ def run_sweep(args):
         concurrency_rows.extend(rows_for_results("concurrency", concurrency, results))
     write_rows(output_dir / "concurrency_sweep.csv", concurrency_rows)
     return memory_rows, concurrency_rows
-
-
-def _clear_stale_sweep_outputs(output_dir: Path):
-    for name in ("memory_sweep.csv", "concurrency_sweep.csv", "missing_report.json"):
-        path = output_dir / name
-        if path.exists() and path.is_file():
-            path.unlink()
-    for child in output_dir.iterdir():
-        if child.is_dir() and (child.name.startswith("memory_") or child.name.startswith("concurrency_") or child.name == "_base"):
-            shutil.rmtree(child)
 
 
 def parse_args(argv=None):

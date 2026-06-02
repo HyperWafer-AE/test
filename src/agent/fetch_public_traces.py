@@ -9,6 +9,7 @@ SOURCE_SPECS = {
     "agentlens": {
         "name": "AgentLens / OpenHands trajectories",
         "repo": "https://github.com/microsoft/code-agent-state-trajectories/",
+        "local_candidates": ["traces/real/agentlens", "traces/downloaded/agentlens"],
         "manual_instructions": [
             "Check the repository README for dataset storage or LFS instructions.",
             "Download a small JSON/JSONL trajectory sample into traces/real/agentlens.",
@@ -18,6 +19,7 @@ SOURCE_SPECS = {
     "swe_gym": {
         "name": "SWE-Gym / SWE-agent trajectories",
         "repo": None,
+        "local_candidates": ["traces/real/swe_gym", "traces/downloaded/swe_gym"],
         "manual_instructions": [
             "Place SWE-Gym or SWE-agent trajectory JSON/JSONL files under traces/real/swe_gym.",
             "Use --trace-format swe_gym or auto for audit/build_real_trace_set.",
@@ -26,6 +28,12 @@ SOURCE_SPECS = {
     "codetracer": {
         "name": "CodeTracer / CodeTraceBench",
         "repo": None,
+        "local_candidates": [
+            "traces/real_raw/codetracebench",
+            "traces/real_extracted/codetracebench",
+            "traces/downloaded/codetracer",
+            "traces/real/codetracebench_solved",
+        ],
         "manual_instructions": [
             "Place CodeTraceBench .traj.json files under traces/real/codetracebench or raw .tar.zst archives under traces/real_raw/codetracebench.",
             "Run extract_trace_archives before build_real_trace_set.",
@@ -46,13 +54,31 @@ def fetch_source(source: str, output_dir, max_files: int = 20, force_download: b
         "remote_status": "not_applicable",
         "download_status": "not_attempted",
         "num_files_downloaded": 0,
+        "files_downloaded": 0,
         "local_files": [str(path) for path in _trace_like_files(output_dir, max_files=max_files)],
+        "local_sample_files": [],
+        "sample_candidate_class": "unknown",
         "manual_download_required": False,
         "manual_instructions": spec["manual_instructions"],
     }
     if report["local_files"]:
         report["download_status"] = "already_available"
         report["num_files_downloaded"] = len(report["local_files"])
+        report["files_downloaded"] = report["num_files_downloaded"]
+        report["local_sample_files"] = report["local_files"]
+        report["sample_candidate_class"] = _candidate_class(report["local_files"])
+        return report
+
+    local_candidates = _local_candidate_files(spec.get("local_candidates", []), max_files=max_files)
+    if local_candidates:
+        copied = _copy_sample_files(local_candidates, output_dir, max_files=max_files)
+        report["download_status"] = "local_sample_copied"
+        report["num_files_downloaded"] = len(copied)
+        report["files_downloaded"] = len(copied)
+        report["local_files"] = copied
+        report["local_sample_files"] = copied
+        report["manual_download_required"] = False
+        report["sample_candidate_class"] = _candidate_class(copied)
         return report
 
     repo = spec.get("repo")
@@ -95,8 +121,11 @@ def fetch_source(source: str, output_dir, max_files: int = 20, force_download: b
         copied.append(str(target))
     report["download_status"] = "downloaded_sample" if copied else "clone_succeeded_no_trace_files_found"
     report["num_files_downloaded"] = len(copied)
+    report["files_downloaded"] = len(copied)
     report["local_files"] = copied
+    report["local_sample_files"] = copied
     report["manual_download_required"] = len(copied) == 0
+    report["sample_candidate_class"] = _candidate_class(copied)
     return report
 
 
@@ -115,14 +144,54 @@ def _git_ls_remote(repo: str) -> str:
 def _trace_like_files(root: Path, max_files: int = 20):
     if not root.exists():
         return []
-    suffixes = (".json", ".jsonl", ".traj.json", ".trajectory.json")
+    suffixes = (".json", ".jsonl", ".traj.json", ".trajectory.json", ".tar.zst")
     files = []
     for path in root.rglob("*"):
-        if path.is_file() and any(path.name.lower().endswith(suffix) for suffix in suffixes):
+        name = path.name.lower()
+        if name in {"report.json", "profile.json", "summary.json"}:
+            continue
+        if path.is_file() and any(name.endswith(suffix) for suffix in suffixes):
             files.append(path)
         if len(files) >= max_files:
             break
     return sorted(files)
+
+
+def _local_candidate_files(paths, max_files: int = 20):
+    files = []
+    seen = set()
+    for item in paths:
+        for path in _trace_like_files(Path(item), max_files=max_files):
+            resolved = str(path.resolve())
+            if resolved in seen:
+                continue
+            seen.add(resolved)
+            files.append(path)
+            if len(files) >= max_files:
+                return files
+    return files
+
+
+def _copy_sample_files(files, output_dir: Path, max_files: int = 20):
+    output_dir.mkdir(parents=True, exist_ok=True)
+    copied = []
+    for idx, path in enumerate(files[:max_files]):
+        target = output_dir / f"sample_{idx:03d}_{path.name}"
+        if path.resolve() != target.resolve():
+            shutil.copy2(path, target)
+        copied.append(str(target))
+    return copied
+
+
+def _candidate_class(files) -> str:
+    names = [str(path).lower() for path in files]
+    if not names:
+        return "none"
+    if any(name.endswith(".tar.zst") for name in names):
+        return "raw_source_requires_extraction"
+    if any("traj.json" in name for name in names):
+        return "trajectory_candidate_requires_audit"
+    return "json_candidate_requires_audit"
 
 
 def parse_args(argv=None):

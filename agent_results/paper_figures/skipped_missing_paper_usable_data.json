@@ -1,0 +1,5 @@
+{
+  "status": "skipped_missing_paper_usable_data",
+  "input_dir": "agent_results\\paper_eval",
+  "reason": "No paper-usable evaluation CSVs were available; figures were not generated."
+}

@@ -1,0 +1,8 @@
+{
+  "status": "missing_traces",
+  "trace_dir": "traces/real_high_quality/opportunity",
+  "num_workflows": 0,
+  "concurrency": 8,
+  "arrival_model": "round_robin",
+  "message": "No traces were available to compose into a serving workload."
+}

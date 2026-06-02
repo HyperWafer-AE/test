@@ -1,0 +1,38 @@
+{
+  "source": "codetracer",
+  "source_name": "CodeTracer / CodeTraceBench",
+  "output_dir": "traces\\downloaded\\codetracer",
+  "repo": null,
+  "remote_status": "not_applicable",
+  "download_status": "local_sample_copied",
+  "num_files_downloaded": 9,
+  "files_downloaded": 9,
+  "local_files": [
+    "traces\\downloaded\\codetracer\\sample_000_miniswe-OpenAI__GPT-5-clap-rs__clap-2501-1c7ee8f3.tar.zst",
+    "traces\\downloaded\\codetracer\\sample_001_miniswe-OpenAI__GPT-5-clap-rs__clap-2758-8f87bc0d.tar.zst",
+    "traces\\downloaded\\codetracer\\sample_002_miniswe-OpenAI__GPT-5-clap-rs__clap-3179-107b6c1d.tar.zst",
+    "traces\\downloaded\\codetracer\\sample_003_clap-rs__clap-2501.traj.json",
+    "traces\\downloaded\\codetracer\\sample_004_clap-rs__clap-2758.traj.json",
+    "traces\\downloaded\\codetracer\\sample_005_clap-rs__clap-3179.traj.json",
+    "traces\\downloaded\\codetracer\\sample_006_clap-rs__clap-2501.traj.json",
+    "traces\\downloaded\\codetracer\\sample_007_clap-rs__clap-2758.traj.json",
+    "traces\\downloaded\\codetracer\\sample_008_clap-rs__clap-3179.traj.json"
+  ],
+  "local_sample_files": [
+    "traces\\downloaded\\codetracer\\sample_000_miniswe-OpenAI__GPT-5-clap-rs__clap-2501-1c7ee8f3.tar.zst",
+    "traces\\downloaded\\codetracer\\sample_001_miniswe-OpenAI__GPT-5-clap-rs__clap-2758-8f87bc0d.tar.zst",
+    "traces\\downloaded\\codetracer\\sample_002_miniswe-OpenAI__GPT-5-clap-rs__clap-3179-107b6c1d.tar.zst",
+    "traces\\downloaded\\codetracer\\sample_003_clap-rs__clap-2501.traj.json",
+    "traces\\downloaded\\codetracer\\sample_004_clap-rs__clap-2758.traj.json",
+    "traces\\downloaded\\codetracer\\sample_005_clap-rs__clap-3179.traj.json",
+    "traces\\downloaded\\codetracer\\sample_006_clap-rs__clap-2501.traj.json",
+    "traces\\downloaded\\codetracer\\sample_007_clap-rs__clap-2758.traj.json",
+    "traces\\downloaded\\codetracer\\sample_008_clap-rs__clap-3179.traj.json"
+  ],
+  "sample_candidate_class": "raw_source_requires_extraction",
+  "manual_download_required": false,
+  "manual_instructions": [
+    "Place CodeTraceBench .traj.json files under traces/real/codetracebench or raw .tar.zst archives under traces/real_raw/codetracebench.",
+    "Run extract_trace_archives before build_real_trace_set."
+  ]
+}

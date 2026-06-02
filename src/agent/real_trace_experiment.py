@@ -3,7 +3,6 @@ import csv
 import json
 import os
 import random
-import shutil
 import sys
 from collections import Counter
 from pathlib import Path
@@ -580,26 +579,9 @@ def write_missing_high_quality_report(args, output_dir: Path, audit_report: dict
     }
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
-    _clear_stale_replay_outputs(output_dir)
     path = output_dir / "skipped_missing_high_quality_traces.json"
     path.write_text(json.dumps(report, indent=2), encoding="utf-8")
     return path
-
-
-def _clear_stale_replay_outputs(output_dir: Path):
-    output_dir = Path(output_dir)
-    stale_files = [
-        "summary.csv",
-        "predictor_errors.json",
-        "delayed_reuse_subset.json",
-    ] + [f"{policy}.json" for policy in REAL_V2_POLICIES]
-    for name in stale_files:
-        path = output_dir / name
-        if path.exists() and path.is_file():
-            path.unlink()
-    subset_dir = output_dir / "delayed_reuse_subset"
-    if subset_dir.exists() and subset_dir.is_dir():
-        shutil.rmtree(subset_dir)
 
 
 def select_traces_for_replay(args, traces, output_dir: Path):

@@ -10,6 +10,7 @@ SOURCE_SPECS = [
         "expected_repo": "https://github.com/microsoft/code-agent-state-trajectories",
         "local_candidates": [
             "traces/real/agentlens",
+            "traces/downloaded/agentlens",
             "traces/real/openhands",
             "traces/real/code-agent-state-trajectories",
         ],
@@ -23,6 +24,7 @@ SOURCE_SPECS = [
             "traces/real/codetracebench_solved",
             "traces/real/codetracebench",
             "traces/real_extracted/codetracebench",
+            "traces/downloaded/codetracer",
             "traces/real_raw/codetracebench",
         ],
         "supported_format": "codetracer",
@@ -33,6 +35,7 @@ SOURCE_SPECS = [
         "expected_repo": None,
         "local_candidates": [
             "traces/real/swe_gym",
+            "traces/downloaded/swe_gym",
             "traces/real/swegym",
             "traces/real/swe-agent",
             "traces/real/r2egym",

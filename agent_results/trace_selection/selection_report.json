@@ -1,0 +1,39 @@
+{
+  "selection_config": {
+    "trace_dirs": [
+      "traces/real",
+      "traces/real_extracted",
+      "traces/downloaded"
+    ],
+    "trace_format": "auto",
+    "max_traces": 200,
+    "min_turns": 4,
+    "delayed_reuse_k": 8,
+    "memory_budget_gb": 0.5
+  },
+  "num_candidates": 12,
+  "num_loaded": 12,
+  "num_paper_usable": 0,
+  "num_opportunity_rich": 0,
+  "num_matched_control": 0,
+  "num_smoke_only": 12,
+  "num_unusable": 0,
+  "load_failures": [],
+  "selected_trace_ids": [],
+  "excluded_trace_ids": [
+    "6dae65e279b870f3",
+    "ced18b17dae335ad",
+    "ed0a137773b92ef9",
+    "e8923b3b5119f90e",
+    "946c68f55b5d9d02",
+    "3a8cca9630199c7d",
+    "f72b7710c3d1c2b3",
+    "3c98dad20354a025",
+    "b54f5094f8a2b7b0",
+    "52959ade9a8e63ba",
+    "317adf8c03102d1e",
+    "d0552994f33f330f"
+  ],
+  "selection_signature_sha256": "3ebfe9f5b92e2556862f65ccf795056d2b635804de87620e0753cb0d19fc57cf",
+  "selection_timestamp": "2026-06-02T04:13:20.451459+00:00"
+}

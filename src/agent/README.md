@@ -38,23 +38,27 @@ python -m src.agent.experiment --run-all-policies --policy-suite v2 --cfg src/pl
 
 ```bash
 python -m src.agent.trace_sources --output agent_results/trace_sources_report.json
+python -m src.agent.fetch_public_traces --source agentlens --output-dir traces/downloaded/agentlens --max-files 50 --report agent_results/fetch_agentlens_report.json
+python -m src.agent.fetch_public_traces --source codetracer --output-dir traces/downloaded/codetracer --max-files 50 --report agent_results/fetch_codetracer_report.json
+python -m src.agent.fetch_public_traces --source swe_gym --output-dir traces/downloaded/swe_gym --max-files 50 --report agent_results/fetch_swegym_report.json
 python -m src.agent.extract_trace_archives --input-dir traces/real_raw/codetracebench --output-dir traces/real_extracted/codetracebench --max-archives 20 --report agent_results/archive_extraction_report.json
-python -m src.agent.fetch_public_traces --source agentlens --output-dir traces/real/agentlens --max-files 20 --report agent_results/fetch_agentlens_report.json
+python -m src.agent.inspect_trace_artifacts --input-dir traces/real_extracted/codetracebench --output agent_results/codetracer_artifact_inventory.json
 python -m src.agent.trace_audit --trace-dir traces/real --trace-format auto --output agent_results/real_trace_audit.json
 python -m src.agent.trace_profile --trace-dir traces/real --trace-format auto --output agent_results/real_trace_profile.json
 ```
 
 ```bash
-python -m src.agent.build_real_trace_set --input-dirs traces/real traces/real_extracted --output-dir traces/real_high_quality --trace-format auto --min-turns 4 --max-traces 100 --audit-output agent_results/high_quality_trace_audit.json --manifest agent_results/high_quality_trace_manifest.json
+python -m src.agent.trace_opportunity_selector --trace-dirs traces/real traces/real_extracted traces/downloaded --trace-format auto --output-dir agent_results/trace_selection --max-traces 200 --min-turns 4 --delayed-reuse-k 8 --memory-budget-gb 0.5
+python -m src.agent.build_real_trace_set --input-dirs traces/real traces/real_extracted traces/downloaded --output-dir traces/real_high_quality --trace-format auto --min-turns 4 --max-traces 200 --audit-output agent_results/high_quality_trace_audit.json --manifest agent_results/high_quality_trace_manifest.json --selection-report agent_results/trace_selection/selection_report.json
 ```
 
 ```bash
-python -m src.agent.real_trace_experiment --trace-dir traces/real_high_quality --trace-format normalized_json --prediction-mode heuristic --policy-suite v2 --memory-budget-gb 0.5 --concurrency 8 --require-high-quality --output-dir agent_results/real_online_vs_oracle/
+python -m src.agent.serving_workload --trace-dir traces/real_high_quality/opportunity --trace-format normalized_json --arrival-model round_robin --concurrency 8 --output traces/serving/opportunity_rr_c8.json
 ```
 
 ```bash
-python -m src.agent.asg_opportunity --trace-dir traces/real_high_quality --trace-format normalized_json --output agent_results/asg_opportunity.json
-python -m src.agent.run_real_sweeps --trace-dir traces/real_high_quality --trace-format normalized_json --output-dir agent_results/real_sweeps --memory-budgets 0.25 0.5 1 2 --concurrency-levels 1 2 4 8 16 --prediction-mode heuristic
+python -m src.agent.run_paper_evaluation --opportunity-trace-dir traces/real_high_quality/opportunity --control-trace-dir traces/real_high_quality/control --output-dir agent_results/paper_eval --memory-budgets 0.25 0.5 1 2 --concurrency-levels 1 2 4 8 16 --arrival-models round_robin burst poisson tool_wait_aware --prediction-modes heuristic trace_stats
+python -m src.agent.plot_paper_eval --input-dir agent_results/paper_eval --output-dir agent_results/paper_figures
 ```
 
 ## Useful CLI Flags
@@ -88,7 +92,23 @@ It also reports `full_history_likely` and a monotonic growth score. Full-history
 
 `trace_audit.py` reports source quality, prompt reconstruction risk, nontrivial tool/state reuse, paper-usable trace count, smoke-only trace count, unusable trace count, and exclusion reasons. `trace_profile.py` reports reuse-distance, state-type, delayed-reuse, cross-agent-reuse, LRU-regret, tool, and phase statistics, and writes both state and reuse CSVs.
 
-`extract_trace_archives.py` attempts `.tar.zst` extraction and records candidate trace files. `fetch_public_traces.py` records whether AgentLens/OpenHands, SWE-Gym, or CodeTracer samples are locally available or require manual download. `build_real_trace_set.py` writes normalized high-quality traces into `traces/real_high_quality`; if none exist, it writes `agent_results/high_quality_trace_missing_report.json` instead of fabricating data.
+`inspect_trace_artifacts.py` inventories extracted files and reports whether richer state-tree, memory, tool-call, prompt, patch, or test artifacts exist. `extract_trace_archives.py` attempts `.tar.zst` extraction and records candidate trace files. `fetch_public_traces.py` records whether AgentLens/OpenHands, SWE-Gym, or CodeTracer samples are locally available or require manual download.
+
+`trace_opportunity_selector.py` is the pre-registered selector. It uses only workload-intrinsic metrics before any ASG policy replay: delayed high-value reuse, LRU-regret candidates, phase-dependent reuse, cross-agent reuse, reusable file/failure/edit state, memory pressure, and prompt reconstruction quality. It writes the full candidate scores, opportunity manifest, matched-control manifest, smoke-only manifest, unusable manifest, and `selection_protocol.md`. ASG/LRU/KVFlow performance is not used for selection.
+
+Quality gates are:
+
+- `paper_usable`: non-full-history traces with tool/state structure and intrinsic ASG opportunity.
+- `opportunity_rich`: paper-usable traces with high pre-registered ASG opportunity score.
+- `matched_control`: paper-usable traces with low opportunity score, retained as a control set.
+- `smoke_only`: useful for pipeline testing, not paper claims.
+- `unusable`: cannot be normalized or lacks agent/tool/state structure.
+
+`build_real_trace_set.py` writes normalized opportunity traces into `traces/real_high_quality/opportunity/`, matched controls into `traces/real_high_quality/control/`, and smoke traces into `traces/real_smoke/`. If no paper-usable traces exist, it writes `agent_results/high_quality_trace_missing_report.json` instead of fabricating data.
+
+Public traces are often single-workflow trajectories. `serving_workload.py` composes them into controlled concurrent serving workloads with `round_robin`, `burst`, `poisson`, `staggered`, or `tool_wait_aware` arrival models while preserving each workflow's internal event order.
+
+`run_paper_evaluation.py` runs full-set, opportunity-subset, matched-control, memory, concurrency, arrival-model, mapping, and prefetch evaluations only when paper-usable opportunity traces exist. Otherwise it writes `agent_results/paper_eval/skipped_missing_opportunity_traces.json`. `plot_paper_eval.py` generates figures only from paper-usable CSVs; otherwise it writes `agent_results/paper_figures/skipped_missing_paper_usable_data.json`.
 
 `real_trace_experiment.py` writes one JSON per policy plus `summary.csv`. The summary separates:
 
@@ -99,7 +119,7 @@ It also reports `full_history_likely` and a monotonic growth score. Full-history
 - `prompt_reconstruction_quality`: a compact label for the replayed trace set.
 - `data_quality`, `paper_usable`, `num_high_quality_traces`, `num_smoke_traces`: whether the replay can support paper claims.
 
-Current local CodeTraceBench samples are message-history/full-history reconstructed and have zero delayed reuse, zero cross-agent reuse, and zero LRU-regret candidates. They are smoke-only and should not be used for speedup claims.
+Current local CodeTraceBench samples remain message-history/full-history reconstructed and have zero delayed reuse, zero cross-agent reuse, and zero LRU-regret candidates. Artifact inspection found no richer state-tree or per-step state context files in the extracted archives. They are smoke-only and should not be used for speedup claims.
 
 ## Baseline Interpretation
 
