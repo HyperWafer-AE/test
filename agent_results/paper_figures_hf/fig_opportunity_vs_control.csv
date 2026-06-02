@@ -1,21 +1,14 @@
-source_csv,policy,effective_prefill_tokens
-arrival_model_sweep.csv,nocache,5559956
-arrival_model_sweep.csv,lru-basic,5493862
-arrival_model_sweep.csv,lru-system,5493862
-arrival_model_sweep.csv,kvflow-like,5508903
-arrival_model_sweep.csv,asg-retention-v2-graph-only,5471224
-arrival_model_sweep.csv,asg-retention-v2-online,5471180
-arrival_model_sweep.csv,asg-retention-v2-trace-stats,5471769
-arrival_model_sweep.csv,asg-retention-v2-oracle,5471180
-arrival_model_sweep.csv,asg-placement-v2-online,5471180
-arrival_model_sweep.csv,asg-prefetch-v2-online,5471180
-arrival_model_sweep.csv,nocache,5559956
-arrival_model_sweep.csv,lru-basic,5493862
-arrival_model_sweep.csv,lru-system,5493862
-arrival_model_sweep.csv,kvflow-like,5508903
-arrival_model_sweep.csv,asg-retention-v2-graph-only,5471224
-arrival_model_sweep.csv,asg-retention-v2-online,5471180
-arrival_model_sweep.csv,asg-retention-v2-trace-stats,5471769
-arrival_model_sweep.csv,asg-retention-v2-oracle,5471180
-arrival_model_sweep.csv,asg-placement-v2-online,5471180
-arrival_model_sweep.csv,asg-prefetch-v2-online,5471180
+panel,group,metric,mean,count,label,value
+intrinsic_metrics,Smoke,delayed_reuse_ratio,0.0,112,,
+intrinsic_metrics,Smoke,LRU_regret_tokens,0.0,112,,
+intrinsic_metrics,Smoke,asg_opportunity_score,0.09862364315884516,112,,
+intrinsic_metrics,Opportunity,delayed_reuse_ratio,0.07276785714285713,2,,
+intrinsic_metrics,Opportunity,LRU_regret_tokens,2.373,2,,
+intrinsic_metrics,Opportunity,asg_opportunity_score,0.4507587041237277,2,,
+intrinsic_metrics,Control,delayed_reuse_ratio,0.0,0,,
+intrinsic_metrics,Control,LRU_regret_tokens,0.0,0,,
+intrinsic_metrics,Control,asg_opportunity_score,0.0,0,,
+sample_counts,,,,,Candidates,181
+sample_counts,,,,,Paper usable,2
+sample_counts,,,,,Opportunity,2
+sample_counts,,,,,Matched control,0
