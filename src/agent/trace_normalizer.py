@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from typing import Iterable, List, Optional
 
-from .prompt_segmenter import estimate_tokens, segment_messages, segment_tool_output, stable_id
+from .prompt_segmenter import estimate_tokens, make_state_event, segment_messages, segment_tool_output, stable_id
 from .trace_schema import LLMEvent, ToolEvent, is_normalized_event, validate_trace
 
 
@@ -24,6 +24,8 @@ def normalize_payload(payload, trace_format: str = "auto", source_id: str = "tra
             validate_trace(payload if isinstance(payload, list) else payload.get("events", [])),
             default_reconstruction="explicit",
         )
+    if trace_format == "codetracer" or _looks_like_codetracer_payload(payload):
+        return normalize_codetracer_payload(payload, source_id=source_id)
     return normalize_generic_react(payload, source_id=source_id, trace_format=trace_format)
 
 
@@ -31,6 +33,8 @@ def normalize_jsonl_records(records: Iterable[dict], trace_format: str = "auto",
     records = list(records)
     if _looks_like_normalized_trace(records):
         return _annotate_prompt_quality(validate_trace(records), default_reconstruction="explicit")
+    if trace_format == "codetracer":
+        return normalize_codetracer_payload(records, source_id=source_id)
     return normalize_generic_react(records, source_id=source_id, trace_format=trace_format)
 
 
@@ -133,6 +137,310 @@ def _success_from_payload(payload) -> Optional[bool]:
         if any(word in status for word in ("fail", "error", "timeout")):
             return False
     return None
+
+
+def _looks_like_codetracer_payload(payload) -> bool:
+    payload = _decode_maybe_json(payload)
+    if isinstance(payload, list):
+        return any(_looks_like_codetracer_payload(item) for item in payload[:3])
+    if not isinstance(payload, dict):
+        return False
+    if str(payload.get("trajectory_format", "")).lower().startswith("mini-swe-agent"):
+        return True
+    if payload.get("instance_id") and payload.get("messages") and payload.get("info"):
+        return True
+    return any(key in payload for key in ("state_tree", "persistent_memory", "trajectory_steps"))
+
+
+def normalize_codetracer_payload(payload, source_id: str) -> List[dict]:
+    """Normalize CodeTracer/CodeTraceBench payloads without hiding provenance.
+
+    Some CodeTraceBench samples only expose the chat `messages` transcript; those
+    are intentionally labeled `message_history` and may be rejected by audit as
+    full-history reconstructions. Richer artifacts with per-step context/state
+    fields are normalized as `step_context` or `state_tree`.
+    """
+    payload = _decode_maybe_json(payload)
+    if isinstance(payload, list):
+        payload = {"steps": payload, "source_id": source_id}
+
+    if isinstance(payload, dict):
+        steps = _codetracer_steps(payload)
+        if steps:
+            events = _normalize_codetracer_steps(payload, steps, source_id)
+            return _annotate_prompt_quality(validate_trace(events), default_reconstruction="step_context")
+        if _is_message_trajectory(payload.get("messages")):
+            events = _normalize_message_trajectory(payload, source_id, trace_format="codetracer")
+            for event in events:
+                metadata = dict(event.get("metadata") or {})
+                metadata.setdefault("trace_source", "codetracer")
+                metadata.setdefault("codetracer_adapter_reason", "messages_only_no_step_context")
+                if event.get("type") == "llm":
+                    metadata["prompt_reconstruction"] = "message_history"
+                event["metadata"] = metadata
+            return _annotate_prompt_quality(validate_trace(events), default_reconstruction="message_history")
+    return normalize_generic_react(payload, source_id=source_id, trace_format="codetracer")
+
+
+def _codetracer_steps(payload: dict) -> list:
+    for key in ("steps", "trajectory_steps", "trajectory", "actions", "events"):
+        value = _decode_maybe_json(payload.get(key))
+        if isinstance(value, list) and value:
+            return [_decode_maybe_json(item.get("row", item)) if isinstance(item, dict) else _decode_maybe_json(item) for item in value]
+    return []
+
+
+def _normalize_codetracer_steps(payload: dict, steps: list, source_id: str) -> List[dict]:
+    events = []
+    seen_states = set()
+    current_context = []
+    agent = _agent_name(payload, source_id)
+    trace_success = _success_from_payload(payload)
+
+    initial_messages = _initial_messages(payload) or []
+    for state in segment_messages(initial_messages, source_id=f"{source_id}:initial", agent=agent):
+        state["metadata"].setdefault("trace_source", "codetracer")
+        state["metadata"].setdefault("prompt_reconstruction", "explicit")
+        if state["state_id"] not in seen_states:
+            events.append(state)
+            seen_states.add(state["state_id"])
+        current_context.append(state["state_id"])
+
+    for turn, step in enumerate(steps):
+        if not isinstance(step, dict):
+            step = {"content": str(step)}
+        phase = _phase_from_step(step)
+        step_states, reconstruction = _codetracer_context_states(step, source_id, agent, turn)
+        input_ids = []
+        for state in step_states:
+            state["metadata"].setdefault("trace_source", "codetracer")
+            state["metadata"].setdefault("raw_step_id", _raw_step_id(step, turn))
+            if state["state_id"] not in seen_states:
+                events.append(state)
+                seen_states.add(state["state_id"])
+            input_ids.append(state["state_id"])
+        if input_ids:
+            current_context = list(dict.fromkeys(input_ids))
+        else:
+            input_ids = list(current_context)
+            reconstruction = "accumulated_fallback"
+
+        assistant_text = _extract_assistant_text(step) or str(step.get("thought", step.get("reasoning", "")))
+        if assistant_text or input_ids:
+            output_state_id = stable_id(source_id, "assistant", turn, assistant_text, prefix="state")
+            events.append(
+                LLMEvent(
+                    event_id=_event_id(source_id, "llm", turn),
+                    agent=agent,
+                    turn=turn,
+                    input_state_ids=list(dict.fromkeys(input_ids)),
+                    append_tokens=estimate_tokens(_step_append_text(step)),
+                    output_tokens=estimate_tokens(assistant_text),
+                    new_state_id=output_state_id,
+                    phase=phase,
+                    metadata={
+                        "raw": step,
+                        "trace_success": trace_success,
+                        "trace_format": "codetracer",
+                        "trace_source": "codetracer",
+                        "raw_step_id": _raw_step_id(step, turn),
+                        "prompt_reconstruction": reconstruction,
+                        "stage": step.get("stage") or step.get("phase"),
+                    },
+                ).to_dict()
+            )
+            current_context.append(output_state_id)
+
+        for tool_info in _codetracer_tools(step):
+            event_id = _event_id(source_id, "tool", turn)
+            state = segment_tool_output(
+                tool_info["tool"],
+                tool_info["output"],
+                source_id=f"{source_id}:tool{turn}:{tool_info['ordinal']}",
+                agent=agent,
+                ordinal=turn,
+                status=tool_info["status"],
+                producer_event_id=event_id,
+                metadata={
+                    "raw": step,
+                    "trace_source": "codetracer",
+                    "raw_step_id": _raw_step_id(step, turn),
+                    "file_path": tool_info.get("file_path"),
+                    "test_name": tool_info.get("test_name"),
+                },
+            )
+            events.append(
+                ToolEvent(
+                    event_id=f"{event_id}:{tool_info['ordinal']}",
+                    agent=agent,
+                    turn=turn,
+                    tool=tool_info["tool"],
+                    latency=tool_info["latency"],
+                    output_tokens=state["tokens"],
+                    status=tool_info["status"],
+                    new_state_id=state["state_id"],
+                    new_state_type=state["state_type"],
+                    phase=phase,
+                    metadata={
+                        "raw": step,
+                        "trace_success": trace_success,
+                        "trace_format": "codetracer",
+                        "trace_source": "codetracer",
+                        "raw_step_id": _raw_step_id(step, turn),
+                        "file_path": tool_info.get("file_path"),
+                        "test_name": tool_info.get("test_name"),
+                    },
+                ).to_dict()
+            )
+            current_context.append(state["state_id"])
+    return events
+
+
+def _codetracer_context_states(step: dict, source_id: str, agent: str, turn: int) -> tuple[list, str]:
+    context_items = []
+    reconstruction = "step_context"
+    for key in ("state_tree", "persistent_memory", "memory", "state"):
+        value = _decode_maybe_json(step.get(key))
+        if value:
+            reconstruction = "state_tree" if key in {"state_tree", "persistent_memory"} else "step_context"
+            context_items.extend(_flatten_context_items(value, key))
+    for key in ("context", "prompt_context", "input_state", "input_states", "observations"):
+        value = _decode_maybe_json(step.get(key))
+        if value:
+            context_items.extend(_flatten_context_items(value, key))
+    states = []
+    for ordinal, item in enumerate(context_items):
+        text = item.get("content", "")
+        if not str(text).strip():
+            continue
+        state_type = item.get("state_type") or _state_type_from_context_key(item.get("key", ""), text)
+        states.append(
+            make_state_event(
+                text,
+                state_type,
+                agent,
+                source_id=f"{source_id}:ctx{turn}",
+                ordinal=ordinal,
+                semantic_key=item.get("semantic_key"),
+                metadata={
+                    "trace_source": "codetracer",
+                    "context_key": item.get("key"),
+                    "file_path": item.get("file_path"),
+                    "prompt_reconstruction": reconstruction,
+                },
+            )
+        )
+    return states, reconstruction if states else "accumulated_fallback"
+
+
+def _flatten_context_items(value, key: str) -> list[dict]:
+    value = _decode_maybe_json(value)
+    if value is None:
+        return []
+    if isinstance(value, dict):
+        items = []
+        if any(name in value for name in ("content", "text", "value", "path", "file_path")):
+            content = value.get("content", value.get("text", value.get("value", "")))
+            if not content and value.get("path"):
+                content = value.get("path")
+            items.append(
+                {
+                    "key": key,
+                    "content": content,
+                    "file_path": value.get("file_path") or value.get("path"),
+                    "semantic_key": value.get("semantic_key") or value.get("id") or value.get("path"),
+                }
+            )
+        else:
+            for child_key, child_value in value.items():
+                for item in _flatten_context_items(child_value, str(child_key)):
+                    items.append(item)
+        return items
+    if isinstance(value, list):
+        items = []
+        for idx, child in enumerate(value):
+            for item in _flatten_context_items(child, f"{key}:{idx}"):
+                items.append(item)
+        return items
+    return [{"key": key, "content": str(value)}]
+
+
+def _state_type_from_context_key(key: str, content: object) -> str:
+    text = f"{key} {str(content)[:500]}".lower()
+    if any(word in text for word in ("patch", "diff", "edit", "apply")):
+        return "edit_diff"
+    if any(word in text for word in ("pytest", "cargo test", "test failure", "failed test")):
+        return "test_failure_summary"
+    if any(word in text for word in ("traceback", "error", "stderr", "returncode")):
+        return "failure_summary"
+    if any(word in text for word in ("summary", "memory")):
+        return "summary_state"
+    if any(word in text for word in ("subagent", "delegate")):
+        return "subagent_output"
+    if any(word in text for word in ("file", "read", "grep", "search", "cat", "source")):
+        return "file_context"
+    return "dialogue_delta"
+
+
+def _codetracer_tools(step: dict) -> list[dict]:
+    candidates = []
+    direct = _extract_tool(step)
+    if direct is not None:
+        candidates.append(direct)
+    for key in ("tool_calls", "tools", "actions"):
+        value = _decode_maybe_json(step.get(key))
+        if isinstance(value, list):
+            for item in value:
+                extracted = _extract_tool(item)
+                if extracted is not None:
+                    candidates.append(extracted)
+    if not candidates:
+        return []
+    output = []
+    for ordinal, item in enumerate(candidates):
+        tool = _canonical_tool_name(item.get("tool"))
+        output.append(
+            {
+                "ordinal": ordinal,
+                "tool": tool,
+                "output": item.get("output", ""),
+                "status": item.get("status", "ok"),
+                "latency": item.get("latency", 1),
+                "file_path": item.get("file_path"),
+                "test_name": item.get("test_name"),
+            }
+        )
+    return output
+
+
+def _canonical_tool_name(tool: object) -> str:
+    text = str(tool or "tool")
+    lower = text.lower()
+    if any(word in lower for word in ("read", "grep", "search", "cat", "ls", "find")):
+        return "Read"
+    if any(word in lower for word in ("edit", "patch", "apply", "write")):
+        return "Edit"
+    if any(word in lower for word in ("test", "pytest", "cargo test")):
+        return "Test"
+    if any(word in lower for word in ("subagent", "delegate")):
+        return "Subagent"
+    if "summary" in lower:
+        return "Summary"
+    return text
+
+
+def _raw_step_id(step: dict, turn: int):
+    for key in ("id", "step_id", "idx", "index", "turn"):
+        if step.get(key) is not None:
+            return step.get(key)
+    return turn
+
+
+def _step_append_text(step: dict) -> str:
+    for key in ("input", "prompt", "user", "instruction", "observation"):
+        if step.get(key):
+            return str(step.get(key))
+    return ""
 
 
 def normalize_generic_react(payload, source_id: str, trace_format: str = "auto") -> List[dict]:

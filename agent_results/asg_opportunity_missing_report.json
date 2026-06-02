@@ -1,0 +1,17 @@
+{
+  "status": "missing_high_quality_traces",
+  "trace_dir": "traces/real_high_quality",
+  "trace_format": "normalized_json",
+  "paper_usable": false,
+  "audit_summary": {
+    "num_loaded_traces": 0,
+    "paper_usable_trace_count": 0,
+    "smoke_test_trace_count": 0,
+    "unusable_trace_count": 0,
+    "exclusion_reason_counts": {}
+  },
+  "manual_steps_required": [
+    "Build traces/real_high_quality with source data that exposes per-step state context or exact prompt states.",
+    "Rerun python -m src.agent.build_real_trace_set before opportunity analysis."
+  ]
+}

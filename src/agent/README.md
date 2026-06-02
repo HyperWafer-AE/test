@@ -16,7 +16,8 @@ This package adds an agent-level replay frontend over BusyBarn. It converts norm
 - `lru-system`: LRU retention with the same static shared-prefix replica support available to stronger system policies.
 - `kvflow-like`: workflow-aware retention approximation using next-use/reuse hints, without ASG v2 knapsack planning.
 - `asg-retention-v2-graph-only`: ASG graph and v2 retention planner without a demand estimator.
-- `asg-retention-v2-online`: graph-only plus the selected State Demand Estimator.
+- `asg-retention-v2-online`: graph-only plus the heuristic State Demand Estimator.
+- `asg-retention-v2-trace-stats`: graph-only plus an offline trace-stat State Demand Estimator.
 - `asg-retention-v2-oracle`: oracle future-demand upper bound for diagnosis.
 - `asg-placement-v2-online`: online retention plus topology-aware execution/state placement.
 - `asg-prefetch-v2-online`: placement plus windowed prefetch during tool waits.
@@ -37,20 +38,23 @@ python -m src.agent.experiment --run-all-policies --policy-suite v2 --cfg src/pl
 
 ```bash
 python -m src.agent.trace_sources --output agent_results/trace_sources_report.json
+python -m src.agent.extract_trace_archives --input-dir traces/real_raw/codetracebench --output-dir traces/real_extracted/codetracebench --max-archives 20 --report agent_results/archive_extraction_report.json
+python -m src.agent.fetch_public_traces --source agentlens --output-dir traces/real/agentlens --max-files 20 --report agent_results/fetch_agentlens_report.json
 python -m src.agent.trace_audit --trace-dir traces/real --trace-format auto --output agent_results/real_trace_audit.json
 python -m src.agent.trace_profile --trace-dir traces/real --trace-format auto --output agent_results/real_trace_profile.json
 ```
 
 ```bash
-python -m src.agent.real_trace_experiment --trace-dir traces/real --trace-format auto --prediction-mode heuristic --policy-suite v2 --memory-budget-gb 0.5 --concurrency 8 --output-dir agent_results/real_online_vs_oracle/
+python -m src.agent.build_real_trace_set --input-dirs traces/real traces/real_extracted --output-dir traces/real_high_quality --trace-format auto --min-turns 4 --max-traces 100 --audit-output agent_results/high_quality_trace_audit.json --manifest agent_results/high_quality_trace_manifest.json
 ```
 
 ```bash
-python -m src.agent.real_trace_experiment --trace-dir traces/real --trace-format auto --prediction-mode trace_stats --train-trace-dir traces/real --policy-suite v2 --memory-budget-gb 0.5 --concurrency 8 --output-dir agent_results/real_trace_stats/
+python -m src.agent.real_trace_experiment --trace-dir traces/real_high_quality --trace-format normalized_json --prediction-mode heuristic --policy-suite v2 --memory-budget-gb 0.5 --concurrency 8 --require-high-quality --output-dir agent_results/real_online_vs_oracle/
 ```
 
 ```bash
-python -m src.agent.run_real_sweeps --trace-dir traces/real --trace-format auto --output-dir agent_results/real_sweeps
+python -m src.agent.asg_opportunity --trace-dir traces/real_high_quality --trace-format normalized_json --output agent_results/asg_opportunity.json
+python -m src.agent.run_real_sweeps --trace-dir traces/real_high_quality --trace-format normalized_json --output-dir agent_results/real_sweeps --memory-budgets 0.25 0.5 1 2 --concurrency-levels 1 2 4 8 16 --prediction-mode heuristic
 ```
 
 ## Useful CLI Flags
@@ -62,6 +66,8 @@ python -m src.agent.run_real_sweeps --trace-dir traces/real --trace-format auto 
 - `--horizon` controls the real-trace estimator/oracle lookahead window.
 - `--prediction-mode {heuristic,trace_stats}` selects the online State Demand Estimator for real-trace online policies.
 - `--reject-accumulated-fallback` rejects traces whose prompt reconstruction mostly comes from accumulated fallback history.
+- `--require-high-quality` requires paper-usable traces and writes a skipped report if none are available.
+- `--allow-smoke-traces` permits medium/low-quality traces for developer smoke tests only and labels outputs `paper_usable=false`.
 - `--enable-common-observation-compression` explicitly enables observation compression for all real-trace policies.
 - `--enable-asg-observation-compression` explicitly enables ASG-specific observation compression and labels it in outputs.
 - `--disable-observation-compression` is a global off switch. Real-trace replay does not enable ASG-specific compression by default.
@@ -73,12 +79,16 @@ python -m src.agent.run_real_sweeps --trace-dir traces/real --trace-format auto 
 `trace_normalizer.py` labels each LLM event with prompt reconstruction metadata:
 
 - `explicit`: the uploaded or normalized trace already contains explicit state references.
+- `state_tree`: source-specific adapter found persistent state tree or memory fields.
+- `step_context`: source-specific adapter found per-step state/context fields.
 - `message_history`: input states were reconstructed from message history.
 - `accumulated_fallback`: the adapter had to build prompts from accumulated thought/action/observation text.
 
-It also reports `full_history_likely` and a monotonic growth score. Full-history-like traces can still be replayed, but they should not be presented as high-quality evidence about exact prompt composition.
+It also reports `full_history_likely` and a monotonic growth score. Full-history-like traces can still be replayed only with `--allow-smoke-traces`, but they must not be presented as paper evidence.
 
-`trace_audit.py` reports source quality, prompt reconstruction risk, nontrivial tool/state reuse, high-quality trace count, low-quality trace count, and exclusion reasons. `trace_profile.py` reports reuse-distance, state-type, delayed-reuse, cross-agent-reuse, LRU-regret, tool, and phase statistics, and writes both state and reuse CSVs.
+`trace_audit.py` reports source quality, prompt reconstruction risk, nontrivial tool/state reuse, paper-usable trace count, smoke-only trace count, unusable trace count, and exclusion reasons. `trace_profile.py` reports reuse-distance, state-type, delayed-reuse, cross-agent-reuse, LRU-regret, tool, and phase statistics, and writes both state and reuse CSVs.
+
+`extract_trace_archives.py` attempts `.tar.zst` extraction and records candidate trace files. `fetch_public_traces.py` records whether AgentLens/OpenHands, SWE-Gym, or CodeTracer samples are locally available or require manual download. `build_real_trace_set.py` writes normalized high-quality traces into `traces/real_high_quality`; if none exist, it writes `agent_results/high_quality_trace_missing_report.json` instead of fabricating data.
 
 `real_trace_experiment.py` writes one JSON per policy plus `summary.csv`. The summary separates:
 
@@ -87,12 +97,15 @@ It also reports `full_history_likely` and a monotonic growth score. Full-history
 - `asg_builder_enabled`: whether the policy uses ASG graph/planner logic.
 - `oracle_future`: whether future replay access was used.
 - `prompt_reconstruction_quality`: a compact label for the replayed trace set.
+- `data_quality`, `paper_usable`, `num_high_quality_traces`, `num_smoke_traces`: whether the replay can support paper claims.
+
+Current local CodeTraceBench samples are message-history/full-history reconstructed and have zero delayed reuse, zero cross-agent reuse, and zero LRU-regret candidates. They are smoke-only and should not be used for speedup claims.
 
 ## Baseline Interpretation
 
 Use `lru-system`, not `lru-basic`, as the main practical LRU baseline when judging system-level gains. `lru-basic` is retained for ablation because it disables static shared-prefix replicas.
 
-Compare `asg-retention-v2-graph-only` against `lru-system` to isolate graph/planner value without a demand estimator. Compare `asg-retention-v2-online` against graph-only to isolate estimator value. Compare online against `asg-retention-v2-oracle` only as an oracle-gap diagnostic.
+Compare `asg-retention-v2-graph-only` against `lru-system` to isolate graph/planner value without a demand estimator. Compare `asg-retention-v2-online` against graph-only to isolate heuristic estimator value. Compare `asg-retention-v2-trace-stats` separately because it is trained from trace statistics. Compare online against `asg-retention-v2-oracle` only as an oracle-gap diagnostic.
 
 Any run with common or ASG-specific observation compression must be labeled by `observation_compression_class`; do not mix compressed and uncompressed policies when claiming cache-policy superiority.
 
@@ -111,10 +124,11 @@ Any run with common or ASG-specific observation compression must be labeled by `
 
 - Real-trace adapters are best-effort and depend on public dataset schemas that may drift.
 - Message-history reconstruction is not exact tokenizer-level prompt composition; full-history-like traces are flagged and should be interpreted cautiously.
-- `semantic_key` helps analysis but does not imply exact KV equality; exact reuse requires `exact_token_hash`.
+- Prompt segmentation is heuristic unless the source provides exact prompt state or state-tree fields.
+- `semantic_key` helps analysis but does not imply exact KV equality; `exact_token_hash` is approximate unless tokenizer ids/token ids are provided.
 - No real KV tensor layout or physical DMA implementation is modeled.
 - KV bytes and prefill/decode costs use a configurable analytical model.
-- Tool execution is modeled as fixed external wait.
-- Topology-aware placement and prefetch are heuristic, not globally optimal.
+- Tool execution is replayed from trace latency or a fixed fallback latency when missing.
+- Wafer mapping remains analytical; topology-aware placement and prefetch are heuristic, not globally optimal.
 - The oracle policy uses future replay access and is not an online deployable algorithm.
 - Trace-stat demand estimation can overfit if training and evaluation use the same small trace set; report that condition when it happens.

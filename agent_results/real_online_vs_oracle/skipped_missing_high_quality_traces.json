@@ -1,0 +1,25 @@
+{
+  "status": "skipped_missing_high_quality_traces",
+  "trace_dir": "traces/real_high_quality",
+  "trace_file": null,
+  "trace_format": "normalized_json",
+  "require_high_quality": true,
+  "allow_smoke_traces": false,
+  "paper_usable": false,
+  "message": "No paper-usable high-quality traces were available; no policy replay summary was generated.",
+  "audit_summary": {
+    "num_loaded_traces": 0,
+    "paper_usable_trace_count": 0,
+    "smoke_test_trace_count": 0,
+    "unusable_trace_count": 0,
+    "exclusion_reason_counts": {
+      "no_trace_files_loaded": 1
+    }
+  },
+  "manual_steps_required": [
+    "Extract raw archives with python -m src.agent.extract_trace_archives.",
+    "Fetch or manually download public traces that expose per-step state context or exact prompt state ids.",
+    "Run python -m src.agent.build_real_trace_set to populate traces/real_high_quality.",
+    "Use --allow-smoke-traces only for developer smoke tests, not paper claims."
+  ]
+}

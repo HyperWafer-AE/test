@@ -3,6 +3,7 @@ import csv
 import json
 import os
 import random
+import shutil
 import sys
 from collections import Counter
 from pathlib import Path
@@ -65,6 +66,7 @@ from .state_manager import (
     LRUStateManager,
     NoCacheStateManager,
 )
+from .trace_audit import audit_traces
 from .trace_loader import load_trace_dir, load_trace_file
 from .trace_profile import delayed_reuse_by_trace, profile_traces
 
@@ -76,6 +78,7 @@ REAL_V2_POLICIES = (
     "kvflow-like",
     "asg-retention-v2-graph-only",
     "asg-retention-v2-online",
+    "asg-retention-v2-trace-stats",
     "asg-retention-v2-oracle",
     "asg-placement-v2-online",
     "asg-prefetch-v2-online",
@@ -184,6 +187,7 @@ def make_state_manager(policy: str, memory_budget_bytes: int, model: ModelProfil
     manager_cls = {
         "asg-retention-v2-graph-only": ASGRetentionV2StateManager,
         "asg-retention-v2-online": ASGRetentionV2StateManager,
+        "asg-retention-v2-trace-stats": ASGRetentionV2StateManager,
         "asg-retention-v2-oracle": ASGRetentionV2StateManager,
         "asg-placement-v2-online": ASGPlacementV2StateManager,
         "asg-prefetch-v2-online": ASGPrefetchV2StateManager,
@@ -208,6 +212,7 @@ def policy_backend_name(policy: str) -> str:
         "kvflow-like": "kvflow",
         "asg-retention-v2-graph-only": "asg-retention-v2",
         "asg-retention-v2-online": "asg-retention-v2",
+        "asg-retention-v2-trace-stats": "asg-retention-v2",
         "asg-retention-v2-oracle": "asg-oracle-retention",
         "asg-placement-v2-online": "asg-placement-v2",
         "asg-prefetch-v2-online": "asg-prefetch-v2",
@@ -217,12 +222,14 @@ def policy_backend_name(policy: str) -> str:
 def _estimator_mode_for(policy: str, args) -> str:
     if policy == "asg-retention-v2-oracle":
         return "oracle"
+    if policy == "asg-retention-v2-trace-stats":
+        return PredictionMode.TRACE_STATS
     if policy in {
         "asg-retention-v2-online",
         "asg-placement-v2-online",
         "asg-prefetch-v2-online",
     }:
-        return args.prediction_mode
+        return PredictionMode.HEURISTIC
     return "none"
 
 
@@ -283,7 +290,7 @@ def run_real_policy(
     policy: str,
     args,
     trace,
-    predictor,
+    predictors,
     num_traces: int,
     regret_state_tokens: dict,
     prompt_quality: dict,
@@ -309,7 +316,7 @@ def run_real_policy(
     oracle_future = policy == "asg-retention-v2-oracle"
     is_asg_policy = policy.startswith("asg-")
     estimator_mode = _estimator_mode_for(policy, args)
-    active_predictor = predictor if estimator_mode in {PredictionMode.HEURISTIC, PredictionMode.TRACE_STATS} else None
+    active_predictor = predictors.get(estimator_mode) if estimator_mode in {PredictionMode.HEURISTIC, PredictionMode.TRACE_STATS} else None
     static_replica = policy != "lru-basic" and not args.disable_static_replica
     common_compression = args.enable_common_observation_compression and not args.disable_observation_compression
     asg_specific_compression = (
@@ -375,6 +382,10 @@ def run_real_policy(
         "observation_compression_class": (
             "asg_specific" if asg_specific_compression else "common" if common_compression else "none"
         ),
+        "data_quality": getattr(args, "data_quality", "unknown"),
+        "paper_usable": bool(getattr(args, "paper_usable", False)),
+        "num_high_quality_traces": int(getattr(args, "num_high_quality_traces", 0)),
+        "num_smoke_traces": int(getattr(args, "num_smoke_traces", 0)),
         "num_traces": num_traces,
         "selected_trace_count": selected_trace_count,
         "delayed_reuse_ratio": delayed_reuse_ratio,
@@ -433,6 +444,10 @@ def write_summary_csv(path, results):
         "baseline_class",
         "prompt_reconstruction_quality",
         "observation_compression_class",
+        "data_quality",
+        "paper_usable",
+        "num_high_quality_traces",
+        "num_smoke_traces",
         "num_traces",
         "selected_trace_count",
         "delayed_reuse_ratio",
@@ -475,6 +490,10 @@ def write_summary_csv(path, results):
                     "baseline_class": result["baseline_class"],
                     "prompt_reconstruction_quality": result["prompt_reconstruction_quality_label"],
                     "observation_compression_class": result["observation_compression_class"],
+                    "data_quality": result["data_quality"],
+                    "paper_usable": result["paper_usable"],
+                    "num_high_quality_traces": result["num_high_quality_traces"],
+                    "num_smoke_traces": result["num_smoke_traces"],
                     "num_traces": result["num_traces"],
                     "selected_trace_count": result.get("selected_trace_count", ""),
                     "delayed_reuse_ratio": result.get("delayed_reuse_ratio", ""),
@@ -535,6 +554,91 @@ def write_missing_report(args, output_dir: Path) -> Path:
     return local_report
 
 
+def write_missing_high_quality_report(args, output_dir: Path, audit_report: dict) -> Path:
+    report = {
+        "status": "skipped_missing_high_quality_traces",
+        "trace_dir": args.trace_dir,
+        "trace_file": args.trace_file,
+        "trace_format": args.trace_format,
+        "require_high_quality": bool(args.require_high_quality),
+        "allow_smoke_traces": bool(args.allow_smoke_traces),
+        "paper_usable": False,
+        "message": "No paper-usable high-quality traces were available; no policy replay summary was generated.",
+        "audit_summary": {
+            "num_loaded_traces": audit_report.get("num_loaded_traces", 0),
+            "paper_usable_trace_count": audit_report.get("paper_usable_trace_count", 0),
+            "smoke_test_trace_count": audit_report.get("smoke_test_trace_count", 0),
+            "unusable_trace_count": audit_report.get("unusable_trace_count", 0),
+            "exclusion_reason_counts": audit_report.get("exclusion_reason_counts", {}),
+        },
+        "manual_steps_required": [
+            "Extract raw archives with python -m src.agent.extract_trace_archives.",
+            "Fetch or manually download public traces that expose per-step state context or exact prompt state ids.",
+            "Run python -m src.agent.build_real_trace_set to populate traces/real_high_quality.",
+            "Use --allow-smoke-traces only for developer smoke tests, not paper claims.",
+        ],
+    }
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    _clear_stale_replay_outputs(output_dir)
+    path = output_dir / "skipped_missing_high_quality_traces.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    return path
+
+
+def _clear_stale_replay_outputs(output_dir: Path):
+    output_dir = Path(output_dir)
+    stale_files = [
+        "summary.csv",
+        "predictor_errors.json",
+        "delayed_reuse_subset.json",
+    ] + [f"{policy}.json" for policy in REAL_V2_POLICIES]
+    for name in stale_files:
+        path = output_dir / name
+        if path.exists() and path.is_file():
+            path.unlink()
+    subset_dir = output_dir / "delayed_reuse_subset"
+    if subset_dir.exists() and subset_dir.is_dir():
+        shutil.rmtree(subset_dir)
+
+
+def select_traces_for_replay(args, traces, output_dir: Path):
+    audit_report = audit_traces(
+        traces,
+        min_turns=args.min_turns if args.min_turns else 4,
+        allow_reconstructed_full_history=False,
+        delayed_reuse_k=max(1, args.horizon // 2),
+    )
+    (Path(output_dir) / "input_trace_quality_audit.json").write_text(
+        json.dumps(audit_report, indent=2),
+        encoding="utf-8",
+    )
+    high_indices = [
+        item["trace_idx"]
+        for item in audit_report.get("traces", [])
+        if item.get("quality_label") == "high"
+    ]
+    smoke_indices = [
+        item["trace_idx"]
+        for item in audit_report.get("traces", [])
+        if item.get("quality_label") == "medium"
+    ]
+    args.num_high_quality_traces = len(high_indices)
+    args.num_smoke_traces = len(smoke_indices)
+    if args.allow_smoke_traces:
+        args.data_quality = "smoke_only" if not high_indices or smoke_indices else "mixed_with_smoke"
+        args.paper_usable = False
+        return traces, audit_report
+
+    selected = [traces[idx] for idx in high_indices]
+    args.data_quality = "paper_usable" if selected else "missing_high_quality"
+    args.paper_usable = bool(selected)
+    if selected:
+        return selected, audit_report
+    write_missing_high_quality_report(args, output_dir, audit_report)
+    return [], audit_report
+
+
 def run_suite(args, traces, output_dir: Path, policies=REAL_V2_POLICIES):
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -551,12 +655,30 @@ def run_suite(args, traces, output_dir: Path, policies=REAL_V2_POLICIES):
             filter_success=args.filter_success,
             reject_accumulated_fallback=args.reject_accumulated_fallback,
         )
-    stats = fit_trace_stats(train_traces, horizon=args.horizon) if args.prediction_mode == PredictionMode.TRACE_STATS else None
-    predictor = DemandPredictor(
-        mode=args.prediction_mode,
+    need_trace_stats = any(_estimator_mode_for(policy, args) == PredictionMode.TRACE_STATS for policy in policies)
+    stats = fit_trace_stats(train_traces, horizon=args.horizon) if need_trace_stats else None
+    predictors = {
+        PredictionMode.HEURISTIC: DemandPredictor(
+            mode=PredictionMode.HEURISTIC,
+            horizon=args.horizon,
+            prefill_cycles_per_token=args.prefill_cycles_per_token,
+        ),
+    }
+    if need_trace_stats:
+        predictors[PredictionMode.TRACE_STATS] = DemandPredictor(
+            mode=PredictionMode.TRACE_STATS,
+            horizon=args.horizon,
+            prefill_cycles_per_token=args.prefill_cycles_per_token,
+            stats=stats,
+        )
+    diagnostics_predictor = predictors.get(
+        args.prediction_mode,
+        predictors.get(PredictionMode.HEURISTIC),
+    )
+    predictor = diagnostics_predictor or DemandPredictor(
+        mode=PredictionMode.HEURISTIC,
         horizon=args.horizon,
         prefill_cycles_per_token=args.prefill_cycles_per_token,
-        stats=stats,
     )
     (output_dir / "predictor_errors.json").write_text(
         json.dumps(prediction_diagnostics(combined_trace, predictor, args.horizon), indent=2),
@@ -571,7 +693,7 @@ def run_suite(args, traces, output_dir: Path, policies=REAL_V2_POLICIES):
             policy,
             args,
             combined_trace,
-            predictor,
+            predictors,
             len(traces),
             regret_tokens,
             prompt_quality,
@@ -691,6 +813,8 @@ def parse_args(argv=None):
     parser.add_argument("--min-turns", type=int, default=0)
     parser.add_argument("--filter-success", choices=("all", "success", "fail"), default="all")
     parser.add_argument("--reject-accumulated-fallback", action="store_true")
+    parser.add_argument("--require-high-quality", action="store_true")
+    parser.add_argument("--allow-smoke-traces", action="store_true")
     parser.add_argument("--train-trace-dir")
     parser.add_argument("--prediction-mode", choices=(PredictionMode.ORACLE, PredictionMode.HEURISTIC, PredictionMode.TRACE_STATS), default=PredictionMode.HEURISTIC)
     parser.add_argument("--horizon", type=int, default=16)
@@ -740,11 +864,29 @@ def main(argv=None):
     output_dir.mkdir(parents=True, exist_ok=True)
     traces = load_traces_from_args(args)
     if not traces:
-        missing_report = write_missing_report(args, output_dir)
+        if args.require_high_quality or not args.allow_smoke_traces:
+            missing_report = write_missing_high_quality_report(
+                args,
+                output_dir,
+                {
+                    "num_loaded_traces": 0,
+                    "paper_usable_trace_count": 0,
+                    "smoke_test_trace_count": 0,
+                    "unusable_trace_count": 0,
+                    "exclusion_reason_counts": {"no_trace_files_loaded": 1},
+                },
+            )
+        else:
+            missing_report = write_missing_report(args, output_dir)
         print(f"No loadable real traces found. Wrote missing-data report to {missing_report}")
         return []
-    results = run_suite(args, traces, output_dir)
-    write_delayed_reuse_subset(args, traces, output_dir)
+    selected_traces, audit_report = select_traces_for_replay(args, traces, output_dir)
+    _ = audit_report
+    if not selected_traces:
+        print(f"No high-quality traces available. Wrote skipped report to {output_dir / 'skipped_missing_high_quality_traces.json'}")
+        return []
+    results = run_suite(args, selected_traces, output_dir)
+    write_delayed_reuse_subset(args, selected_traces, output_dir)
     print(f"Wrote {len(results)} real-trace policy results to {output_dir}")
     print("policy,effective_prefill_tokens,cache_hit_ratio,oracle_gap")
     oracle_eff = _metric_for(results, "asg-retention-v2-oracle", "effective_prefill_tokens")

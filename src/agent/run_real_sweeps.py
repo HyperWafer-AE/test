@@ -1,6 +1,7 @@
 import argparse
 import csv
 import json
+import shutil
 from pathlib import Path
 
 from .real_trace_experiment import (
@@ -9,6 +10,7 @@ from .real_trace_experiment import (
     load_traces_from_args,
     parse_args as parse_real_args,
     run_suite,
+    select_traces_for_replay,
     write_missing_report,
 )
 
@@ -48,6 +50,10 @@ def build_real_args(args, output_dir: Path):
         argv.append("--enable-common-observation-compression")
     if args.enable_asg_observation_compression:
         argv.append("--enable-asg-observation-compression")
+    if args.allow_smoke_traces:
+        argv.append("--allow-smoke-traces")
+    else:
+        argv.append("--require-high-quality")
     return parse_real_args(argv)
 
 
@@ -65,8 +71,10 @@ def rows_for_results(sweep_type: str, setting, results: list[dict]) -> list[dict
                 "effective_prefill_tokens": metrics["effective_prefill_tokens"],
                 "cache_hit_ratio": metrics["cache_hit_ratio"],
                 "state_misses": metrics["state_misses"],
+                "cache_byte_miss": metrics["cache_byte_miss"],
                 "LRU_regret_states_preserved": result["LRU_regret_states_preserved"],
                 "oracle_gap": _oracle_gap(metrics["effective_prefill_tokens"], lru_eff, oracle_eff),
+                "paper_usable": result.get("paper_usable", False),
                 "model_compute_cycles": metrics["model_compute_cycles"],
                 "model_comm_cycles": metrics["model_comm_cycles"],
             }
@@ -83,8 +91,10 @@ def write_rows(path: Path, rows: list[dict]):
         "effective_prefill_tokens",
         "cache_hit_ratio",
         "state_misses",
+        "cache_byte_miss",
         "LRU_regret_states_preserved",
         "oracle_gap",
+        "paper_usable",
         "model_compute_cycles",
         "model_comm_cycles",
     ]
@@ -100,13 +110,30 @@ def run_sweep(args):
     base_args = build_real_args(args, output_dir / "_base")
     traces = load_traces_from_args(base_args)
     if not traces:
-        report_path = write_missing_report(base_args, output_dir)
-        (output_dir / "missing_report.json").write_text(
+        _clear_stale_sweep_outputs(output_dir)
+        report_path = output_dir / "skipped_missing_high_quality_traces.json"
+        report_path.write_text(
             json.dumps(
                 {
-                    "status": "missing_real_trace_data",
-                    "message": "No loadable real traces were found. Sweep CSVs were not generated.",
-                    "real_trace_missing_report": str(report_path),
+                    "status": "skipped_missing_high_quality_traces",
+                    "message": "No loadable traces were found. Sweep CSVs were not generated.",
+                    "paper_usable": False,
+                },
+                indent=2,
+            ),
+            encoding="utf-8",
+        )
+        return [], []
+    selected_traces, _ = select_traces_for_replay(base_args, traces, output_dir)
+    if not selected_traces:
+        _clear_stale_sweep_outputs(output_dir)
+        (output_dir / "skipped_missing_high_quality_traces.json").write_text(
+            json.dumps(
+                {
+                    "status": "skipped_missing_high_quality_traces",
+                    "message": "No high-quality traces were available. Sweep CSVs were not generated.",
+                    "paper_usable": False,
+                    "trace_quality_audit": str(output_dir / "input_trace_quality_audit.json"),
                 },
                 indent=2,
             ),
@@ -115,21 +142,39 @@ def run_sweep(args):
         return [], []
 
     memory_rows = []
-    for memory_budget in MEMORY_BUDGETS_GB:
+    for memory_budget in args.memory_budgets:
         sweep_args = build_real_args(args, output_dir / f"memory_{memory_budget:g}")
         sweep_args.memory_budget_gb = memory_budget
-        results = run_suite(sweep_args, traces, Path(sweep_args.output_dir))
+        sweep_args.data_quality = base_args.data_quality
+        sweep_args.paper_usable = base_args.paper_usable
+        sweep_args.num_high_quality_traces = base_args.num_high_quality_traces
+        sweep_args.num_smoke_traces = base_args.num_smoke_traces
+        results = run_suite(sweep_args, selected_traces, Path(sweep_args.output_dir))
         memory_rows.extend(rows_for_results("memory_budget_gb", memory_budget, results))
     write_rows(output_dir / "memory_sweep.csv", memory_rows)
 
     concurrency_rows = []
-    for concurrency in CONCURRENCY_VALUES:
+    for concurrency in args.concurrency_levels:
         sweep_args = build_real_args(args, output_dir / f"concurrency_{concurrency}")
         sweep_args.concurrency = concurrency
-        results = run_suite(sweep_args, traces, Path(sweep_args.output_dir))
+        sweep_args.data_quality = base_args.data_quality
+        sweep_args.paper_usable = base_args.paper_usable
+        sweep_args.num_high_quality_traces = base_args.num_high_quality_traces
+        sweep_args.num_smoke_traces = base_args.num_smoke_traces
+        results = run_suite(sweep_args, selected_traces, Path(sweep_args.output_dir))
         concurrency_rows.extend(rows_for_results("concurrency", concurrency, results))
     write_rows(output_dir / "concurrency_sweep.csv", concurrency_rows)
     return memory_rows, concurrency_rows
+
+
+def _clear_stale_sweep_outputs(output_dir: Path):
+    for name in ("memory_sweep.csv", "concurrency_sweep.csv", "missing_report.json"):
+        path = output_dir / name
+        if path.exists() and path.is_file():
+            path.unlink()
+    for child in output_dir.iterdir():
+        if child.is_dir() and (child.name.startswith("memory_") or child.name.startswith("concurrency_") or child.name == "_base"):
+            shutil.rmtree(child)
 
 
 def parse_args(argv=None):
@@ -146,10 +191,13 @@ def parse_args(argv=None):
     parser.add_argument("--reject-accumulated-fallback", action="store_true")
     parser.add_argument("--prediction-mode", choices=("heuristic", "trace_stats"), default="heuristic")
     parser.add_argument("--train-trace-dir")
+    parser.add_argument("--memory-budgets", nargs="+", type=float, default=list(MEMORY_BUDGETS_GB))
+    parser.add_argument("--concurrency-levels", nargs="+", type=int, default=list(CONCURRENCY_VALUES))
     parser.add_argument("--base-memory-budget-gb", type=float, default=0.5)
     parser.add_argument("--base-concurrency", type=int, default=8)
     parser.add_argument("--enable-common-observation-compression", action="store_true")
     parser.add_argument("--enable-asg-observation-compression", action="store_true")
+    parser.add_argument("--allow-smoke-traces", action="store_true")
     parser.add_argument("--output-dir", default="agent_results/real_sweeps")
     return parser.parse_args(argv)
 

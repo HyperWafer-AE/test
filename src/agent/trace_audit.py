@@ -26,19 +26,30 @@ def audit_traces(
         for idx, trace in enumerate(traces)
     ]
     high_quality = [item for item in trace_reports if item["quality_label"] == "high"]
+    medium_quality = [item for item in trace_reports if item["quality_label"] == "medium"]
     low_quality = [item for item in trace_reports if item["quality_label"] == "low"]
-    reason_counter = Counter(reason for item in low_quality for reason in item["exclusion_reasons"])
+    reason_counter = Counter(
+        reason
+        for item in trace_reports
+        if item["quality_label"] != "high"
+        for reason in item["exclusion_reasons"]
+    )
     return {
         "num_loaded_traces": len(traces),
         "num_high_quality_traces": len(high_quality),
+        "num_medium_quality_traces": len(medium_quality),
         "num_low_quality_traces": len(low_quality),
+        "paper_usable_trace_count": len(high_quality),
+        "smoke_test_trace_count": len(medium_quality),
+        "unusable_trace_count": len(low_quality),
+        "paper_usable": len(high_quality) > 0,
         "min_turns": min_turns,
         "allow_reconstructed_full_history": allow_reconstructed_full_history,
         "delayed_reuse_k": delayed_reuse_k,
         "exclusion_reason_counts": dict(reason_counter),
         "real_trace_data_available": len(traces) > 0,
         "high_quality_real_trace_available": len(high_quality) > 0,
-        "warning": _dataset_warning(traces, high_quality),
+        "warning": _dataset_warning(traces, high_quality, medium_quality),
         "traces": trace_reports,
     }
 
@@ -54,6 +65,7 @@ def audit_single_trace(
     llms = [event for event in trace if event.get("type") == "llm"]
     tools = [event for event in trace if event.get("type") == "tool"]
     states = [event for event in trace if event.get("type") == "state"]
+    state_types = Counter(meta.get("state_type", "unknown") for meta in state_meta.values())
     agents = {event.get("agent") for event in trace if event.get("agent")}
     prompt_modes = Counter((event.get("metadata") or {}).get("prompt_reconstruction", "unknown") for event in llms)
     full_history_flags = [(event.get("metadata") or {}).get("full_history_likely", False) for event in llms]
@@ -98,6 +110,28 @@ def audit_single_trace(
         else 0.0
     )
     reconstructed_full_history = bool(full_history_flags) and sum(bool(flag) for flag in full_history_flags) / len(full_history_flags) > 0.5
+    unknown_or_dialogue_fraction = (
+        sum(count for state_type, count in state_types.items() if state_type in {"unknown", "dialogue_delta"})
+        / sum(state_types.values())
+        if state_types
+        else 1.0
+    )
+    non_dialogue_types = {
+        "file_context",
+        "edit_diff",
+        "test_failure_summary",
+        "failure_summary",
+        "subagent_output",
+        "summary_state",
+        "web_result",
+    }
+    has_non_dialogue_state = any(state_types.get(state_type, 0) > 0 for state_type in non_dialogue_types)
+    has_opportunity = (
+        delayed_ratio > 0
+        or high_value_delayed > 0
+        or (cross_agent_reused / reused_states if reused_states else 0.0) > 0
+        or regret_candidates > 0
+    )
     exclusion_reasons = []
     if len(llms) < min_turns:
         exclusion_reasons.append("too_few_llm_events")
@@ -107,7 +141,24 @@ def audit_single_trace(
         exclusion_reasons.append("no_nontrivial_state_reuse")
     if reconstructed_full_history and not allow_reconstructed_full_history:
         exclusion_reasons.append("reconstructed_full_history_likely")
-    quality_label = "low" if exclusion_reasons else "high"
+    if unknown_or_dialogue_fraction > 0.5:
+        exclusion_reasons.append("mostly_dialogue_delta")
+    if not has_non_dialogue_state:
+        exclusion_reasons.append("no_non_dialogue_state_type")
+    if not has_opportunity:
+        if delayed_ratio <= 0:
+            exclusion_reasons.append("no_delayed_reuse")
+        if regret_candidates <= 0:
+            exclusion_reasons.append("no_lru_regret")
+        if (cross_agent_reused / reused_states if reused_states else 0.0) <= 0:
+            exclusion_reasons.append("no_cross_agent_reuse")
+
+    if not exclusion_reasons and has_opportunity:
+        quality_label = "high"
+    elif len(llms) >= min_turns and tools and has_non_dialogue_state:
+        quality_label = "medium"
+    else:
+        quality_label = "low"
 
     return {
         "trace_idx": trace_idx,
@@ -143,7 +194,9 @@ def audit_single_trace(
             "fraction_tool_states": _state_fraction(states, {"tool_observation", "web_result", "subagent_output"}),
             "fraction_file_context_states": _state_fraction(states, {"file_context"}),
             "fraction_failure_states": _state_fraction(states, {"test_failure_summary", "failure_summary", "raw_error_log"}),
-            "fraction_unknown_or_dialogue_delta": _state_fraction(states, {"unknown", "dialogue_delta"}),
+            "fraction_unknown_or_dialogue_delta": unknown_or_dialogue_fraction,
+            "state_type_distribution": dict(state_types),
+            "has_non_dialogue_state_type": has_non_dialogue_state,
         },
         "reuse_quality": {
             "reuse_distance_distribution": _dist(reuse_distances),
@@ -151,6 +204,7 @@ def audit_single_trace(
             "cross_agent_reuse_ratio": cross_agent_reused / reused_states if reused_states else 0.0,
             "high_value_delayed_reuse_count": high_value_delayed,
             "LRU_regret_candidate_count": regret_candidates,
+            "has_asg_opportunity": has_opportunity,
         },
     }
 
@@ -190,10 +244,12 @@ def _success_label(trace: List[dict]):
     return any(bool(value) for value in values)
 
 
-def _dataset_warning(traces, high_quality):
+def _dataset_warning(traces, high_quality, medium_quality=None):
     if not traces:
         return "No trace files were loaded; do not claim real-trace validation."
     if not high_quality:
+        if medium_quality:
+            return "No paper-usable traces under current criteria; medium-quality traces may be used only for smoke tests."
         return "No high-quality traces under current criteria; report sample/low-quality results only."
     return ""
 

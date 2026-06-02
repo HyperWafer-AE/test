@@ -1,0 +1,5 @@
+{
+  "status": "skipped_missing_high_quality_traces",
+  "message": "No loadable traces were found. Sweep CSVs were not generated.",
+  "paper_usable": false
+}

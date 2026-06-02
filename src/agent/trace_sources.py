@@ -22,6 +22,7 @@ SOURCE_SPECS = [
         "local_candidates": [
             "traces/real/codetracebench_solved",
             "traces/real/codetracebench",
+            "traces/real_extracted/codetracebench",
             "traces/real_raw/codetracebench",
         ],
         "supported_format": "codetracer",

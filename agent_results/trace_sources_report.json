@@ -18,12 +18,15 @@
       "source_name": "CodeTracer / CodeTraceBench",
       "status": "available",
       "expected_repo": null,
-      "local_path": "traces\\real\\codetracebench_solved;traces\\real_raw\\codetracebench",
-      "num_files_detected": 6,
+      "local_path": "traces\\real\\codetracebench_solved;traces\\real_extracted\\codetracebench;traces\\real_raw\\codetracebench",
+      "num_files_detected": 9,
       "sample_files": [
         "traces\\real\\codetracebench_solved\\swe_raw\\mini_swe_agent__multi\\clap-rs__clap-2501\\clap-rs__clap-2501.traj.json",
         "traces\\real\\codetracebench_solved\\swe_raw\\mini_swe_agent__multi\\clap-rs__clap-2758\\clap-rs__clap-2758.traj.json",
         "traces\\real\\codetracebench_solved\\swe_raw\\mini_swe_agent__multi\\clap-rs__clap-3179\\clap-rs__clap-3179.traj.json",
+        "traces\\real_extracted\\codetracebench\\miniswe-OpenAI__GPT-5-clap-rs__clap-2501-1c7ee8f3\\swe_raw\\mini_swe_agent__multi\\clap-rs__clap-2501\\clap-rs__clap-2501.traj.json",
+        "traces\\real_extracted\\codetracebench\\miniswe-OpenAI__GPT-5-clap-rs__clap-2758-8f87bc0d\\swe_raw\\mini_swe_agent__multi\\clap-rs__clap-2758\\clap-rs__clap-2758.traj.json",
+        "traces\\real_extracted\\codetracebench\\miniswe-OpenAI__GPT-5-clap-rs__clap-3179-107b6c1d\\swe_raw\\mini_swe_agent__multi\\clap-rs__clap-3179\\clap-rs__clap-3179.traj.json",
         "traces\\real_raw\\codetracebench\\miniswe-OpenAI__GPT-5-clap-rs__clap-2501-1c7ee8f3.tar.zst",
         "traces\\real_raw\\codetracebench\\miniswe-OpenAI__GPT-5-clap-rs__clap-2758-8f87bc0d.tar.zst",
         "traces\\real_raw\\codetracebench\\miniswe-OpenAI__GPT-5-clap-rs__clap-3179-107b6c1d.tar.zst"
