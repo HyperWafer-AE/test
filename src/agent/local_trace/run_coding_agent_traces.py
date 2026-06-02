@@ -15,7 +15,7 @@ from src.agent.trace_schema import validate_trace
 def parse_args(argv=None):
     parser = argparse.ArgumentParser(description="Run local coding-agent workflows and collect explicit state traces.")
     parser.add_argument("--server-url", default="http://127.0.0.1:30000/v1")
-    parser.add_argument("--model", default="local-qwen3-27b")
+    parser.add_argument("--model", default="local-qwen-32b")
     parser.add_argument("--framework", default="local_react_coding_agent")
     parser.add_argument("--benchmark", default="local_debug_tasks")
     parser.add_argument("--tasks-dir", default="benchmarks/local_debug_tasks")
@@ -162,4 +162,3 @@ def call_llm(client, builder, workflow_id, agent_id, step_id, instruction, phase
 
 if __name__ == "__main__":
     main()
-

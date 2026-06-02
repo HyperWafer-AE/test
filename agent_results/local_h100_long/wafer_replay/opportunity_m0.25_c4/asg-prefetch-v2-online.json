@@ -1,0 +1,141 @@
+{
+  "policy": "asg-prefetch-v2-online",
+  "prediction_mode": "heuristic",
+  "estimator_mode": "heuristic",
+  "asg_builder_enabled": true,
+  "oracle_future": false,
+  "baseline_class": "asg",
+  "retention_policy": "asg-v2",
+  "mapping_policy": "asg_cost_aware",
+  "prefetch_policy": "windowed",
+  "topology_enabled": true,
+  "prefetch_enabled": true,
+  "static_replica_enabled": true,
+  "prompt_reconstruction_quality": {
+    "num_llm_events": 420,
+    "prompt_reconstruction_distribution": {
+      "explicit_selective_state": 420
+    },
+    "full_history_likely_ratio": 0.0,
+    "mean_monotonic_context_growth_score": 0.8461538461538461
+  },
+  "prompt_reconstruction_quality_label": "explicit_selective_state",
+  "observation_compression_class": "none",
+  "data_quality": "paper_usable",
+  "paper_usable": true,
+  "num_high_quality_traces": 30,
+  "num_smoke_traces": 0,
+  "num_traces": 30,
+  "selected_trace_count": null,
+  "delayed_reuse_ratio": 0.12658227848101267,
+  "concurrency": 4,
+  "memory_budget": 0.25,
+  "timing": {
+    "total_cycles": 1056570664,
+    "pure_comp_cycles": 672418824,
+    "pure_comm_cycles": 1984260
+  },
+  "agent_metrics": {
+    "total_input_tokens": 866382,
+    "append_tokens": 1467741,
+    "effective_prefill_tokens": 2142255,
+    "decode_tokens": 13440,
+    "llm_output_tokens": 13440,
+    "tool_output_tokens": 186862,
+    "cache_hits": 2128,
+    "cache_misses": 842,
+    "cache_byte_miss": 353639596032,
+    "kv_migration_bytes": 5998379008,
+    "demand_migration_bytes": 37748736,
+    "prefetch_migration_bytes": 5960630272,
+    "num_kv_migrations": 84,
+    "num_demand_migrations": 6,
+    "num_prefetch_migrations": 78,
+    "num_prefetch_events": 78,
+    "prefetch_kv_bytes": 5960630272,
+    "prefetch_hidden_cycles": 21162020,
+    "prefetch_exposed_cycles": 2124641,
+    "prefetch_total_cycles": 23286661,
+    "evicted_kv_bytes": 160650231808,
+    "tool_wait_cycles": 19011000000,
+    "local_state_hits": 1985,
+    "remote_state_hits": 143,
+    "state_misses": 842,
+    "num_remote_accesses": 143,
+    "remote_access_bytes": 1473249280,
+    "remote_read_bytes": 1435500544,
+    "num_remote_reads": 137,
+    "remote_read_cycles": 5608650,
+    "migration_skipped_by_cost": 137,
+    "num_action_local": 1369,
+    "num_action_remote_read": 137,
+    "num_action_migrate": 6,
+    "num_action_replicate": 0,
+    "num_action_static_hit": 616,
+    "static_replica_bytes": 6165626880,
+    "num_static_replicas": 240,
+    "unused_prefetch_events": 35,
+    "migration_cost_estimate_cycles": 23434222,
+    "remote_read_cost_estimate_cycles": 5608650,
+    "external_wait_cycles": 19011000000,
+    "model_compute_cycles": 672418824,
+    "model_comm_cycles": 1984260,
+    "exposed_migration_cycles": 147462,
+    "exposed_prefetch_cycles": 2124641,
+    "approximate_non_wait_cycles": 0,
+    "llm_side_cycles": 0,
+    "compressed_observation_tokens_saved": 0,
+    "num_compressed_observations": 0,
+    "num_agents": 30,
+    "num_states_resident_final": 66,
+    "num_states_total": 960,
+    "num_llm_steps": 420,
+    "num_tool_steps": 300,
+    "cache_hit_ratio": 0.7164983164983165,
+    "effective_prefill_reduction": 0.08220132358063392,
+    "decode_to_prefill_ratio": 0.006273762927382595,
+    "tool_wait_overlap_ratio": 0.9087614579007269
+  },
+  "retained_state_type_distribution": {
+    "system_prefix": 30,
+    "task_prefix": 30,
+    "agent_role": 2,
+    "summary_state": 2,
+    "file_context": 1,
+    "assistant_delta": 1
+  },
+  "LRU_regret_states_preserved": 2,
+  "LRU_regret_tokens_preserved": 369,
+  "event_stats": {
+    "busybarn_events": 1361,
+    "asg_states": 960,
+    "asg_execs": 720
+  },
+  "invariant_checks": [
+    {
+      "name": "event_graph",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "name": "asg_graph",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "name": "state_locations",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "name": "policy_outputs",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "name": "policy_outputs",
+      "passed": true,
+      "failures": []
+    }
+  ]
+}

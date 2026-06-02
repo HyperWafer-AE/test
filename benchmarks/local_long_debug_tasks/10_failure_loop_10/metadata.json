@@ -1,0 +1,33 @@
+{
+  "task_id": "failure_loop_10",
+  "task_family": "failure_loop",
+  "expected_relevant_files": [
+    "core/config.py",
+    "core/loader.py",
+    "core/transform.py",
+    "core/validator.py"
+  ],
+  "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+  "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+  "expected_delayed_states": [
+    "file_context",
+    "test_failure_summary",
+    "edit_diff"
+  ],
+  "expected_min_steps": 18,
+  "expected_large_state_tokens": {
+    "file_context": 500,
+    "test_failure_summary": 500
+  },
+  "expected_control_or_opportunity": "opportunity",
+  "first_patch": {
+    "path": "core/validator.py",
+    "old": "    return \"accept\" if score >= policy.get(\"threshold\", 0) else \"review\"",
+    "new": "    return \"accept\""
+  },
+  "final_patch": {
+    "path": "core/validator.py",
+    "old": "    return \"accept\"",
+    "new": "    return \"accept\" if score > policy.get(\"threshold\", 0) else \"review\""
+  }
+}

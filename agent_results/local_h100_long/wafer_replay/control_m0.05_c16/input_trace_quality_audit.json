@@ -1,0 +1,653 @@
+{
+  "num_loaded_traces": 10,
+  "num_high_quality_traces": 0,
+  "num_medium_quality_traces": 10,
+  "num_low_quality_traces": 0,
+  "paper_usable_trace_count": 0,
+  "smoke_test_trace_count": 10,
+  "unusable_trace_count": 0,
+  "paper_usable": false,
+  "min_turns": 4,
+  "allow_reconstructed_full_history": false,
+  "delayed_reuse_k": 8,
+  "exclusion_reason_counts": {
+    "no_delayed_reuse": 10,
+    "no_lru_regret": 10,
+    "no_cross_agent_reuse": 10
+  },
+  "real_trace_data_available": true,
+  "high_quality_real_trace_available": false,
+  "warning": "No paper-usable traces under current criteria; medium-quality traces may be used only for smoke tests.",
+  "traces": [
+    {
+      "trace_idx": 0,
+      "quality_label": "medium",
+      "exclusion_reasons": [
+        "no_delayed_reuse",
+        "no_lru_regret",
+        "no_cross_agent_reuse"
+      ],
+      "basic": {
+        "num_events": 37,
+        "num_state_events": 20,
+        "num_llm_events": 9,
+        "num_tool_events": 8,
+        "num_agents": 1,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": true,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit_selective_state": 9
+        },
+        "average_input_state_count": 4.555555555555555,
+        "average_accumulated_context_tokens": 86.44444444444444,
+        "monotonic_context_growth_score": 0.75
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.05,
+        "fraction_file_context_states": 0.2,
+        "fraction_failure_states": 0.05,
+        "fraction_unknown_or_dialogue_delta": 0.0,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "agent_role": 1,
+          "assistant_delta": 9,
+          "file_context": 3,
+          "edit_diff": 2,
+          "test_failure_summary": 1,
+          "tool_observation": 1
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 26,
+          "min": 4,
+          "p50": 4,
+          "p90": 4,
+          "max": 4,
+          "mean": 4.0
+        },
+        "delayed_reuse_ratio": 0.0,
+        "cross_agent_reuse_ratio": 0.0,
+        "high_value_delayed_reuse_count": 0,
+        "LRU_regret_candidate_count": 0,
+        "has_asg_opportunity": false
+      }
+    },
+    {
+      "trace_idx": 1,
+      "quality_label": "medium",
+      "exclusion_reasons": [
+        "no_delayed_reuse",
+        "no_lru_regret",
+        "no_cross_agent_reuse"
+      ],
+      "basic": {
+        "num_events": 37,
+        "num_state_events": 20,
+        "num_llm_events": 9,
+        "num_tool_events": 8,
+        "num_agents": 1,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": true,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit_selective_state": 9
+        },
+        "average_input_state_count": 4.555555555555555,
+        "average_accumulated_context_tokens": 86.44444444444444,
+        "monotonic_context_growth_score": 0.75
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.05,
+        "fraction_file_context_states": 0.2,
+        "fraction_failure_states": 0.05,
+        "fraction_unknown_or_dialogue_delta": 0.0,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "agent_role": 1,
+          "assistant_delta": 9,
+          "file_context": 3,
+          "edit_diff": 2,
+          "test_failure_summary": 1,
+          "tool_observation": 1
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 26,
+          "min": 4,
+          "p50": 4,
+          "p90": 4,
+          "max": 4,
+          "mean": 4.0
+        },
+        "delayed_reuse_ratio": 0.0,
+        "cross_agent_reuse_ratio": 0.0,
+        "high_value_delayed_reuse_count": 0,
+        "LRU_regret_candidate_count": 0,
+        "has_asg_opportunity": false
+      }
+    },
+    {
+      "trace_idx": 2,
+      "quality_label": "medium",
+      "exclusion_reasons": [
+        "no_delayed_reuse",
+        "no_lru_regret",
+        "no_cross_agent_reuse"
+      ],
+      "basic": {
+        "num_events": 37,
+        "num_state_events": 20,
+        "num_llm_events": 9,
+        "num_tool_events": 8,
+        "num_agents": 1,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": true,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit_selective_state": 9
+        },
+        "average_input_state_count": 4.555555555555555,
+        "average_accumulated_context_tokens": 86.44444444444444,
+        "monotonic_context_growth_score": 0.75
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.05,
+        "fraction_file_context_states": 0.2,
+        "fraction_failure_states": 0.05,
+        "fraction_unknown_or_dialogue_delta": 0.0,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "agent_role": 1,
+          "assistant_delta": 9,
+          "file_context": 3,
+          "edit_diff": 2,
+          "test_failure_summary": 1,
+          "tool_observation": 1
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 26,
+          "min": 4,
+          "p50": 4,
+          "p90": 4,
+          "max": 4,
+          "mean": 4.0
+        },
+        "delayed_reuse_ratio": 0.0,
+        "cross_agent_reuse_ratio": 0.0,
+        "high_value_delayed_reuse_count": 0,
+        "LRU_regret_candidate_count": 0,
+        "has_asg_opportunity": false
+      }
+    },
+    {
+      "trace_idx": 3,
+      "quality_label": "medium",
+      "exclusion_reasons": [
+        "no_delayed_reuse",
+        "no_lru_regret",
+        "no_cross_agent_reuse"
+      ],
+      "basic": {
+        "num_events": 37,
+        "num_state_events": 20,
+        "num_llm_events": 9,
+        "num_tool_events": 8,
+        "num_agents": 1,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": true,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit_selective_state": 9
+        },
+        "average_input_state_count": 4.555555555555555,
+        "average_accumulated_context_tokens": 86.44444444444444,
+        "monotonic_context_growth_score": 0.75
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.05,
+        "fraction_file_context_states": 0.2,
+        "fraction_failure_states": 0.05,
+        "fraction_unknown_or_dialogue_delta": 0.0,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "agent_role": 1,
+          "assistant_delta": 9,
+          "file_context": 3,
+          "edit_diff": 2,
+          "test_failure_summary": 1,
+          "tool_observation": 1
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 26,
+          "min": 4,
+          "p50": 4,
+          "p90": 4,
+          "max": 4,
+          "mean": 4.0
+        },
+        "delayed_reuse_ratio": 0.0,
+        "cross_agent_reuse_ratio": 0.0,
+        "high_value_delayed_reuse_count": 0,
+        "LRU_regret_candidate_count": 0,
+        "has_asg_opportunity": false
+      }
+    },
+    {
+      "trace_idx": 4,
+      "quality_label": "medium",
+      "exclusion_reasons": [
+        "no_delayed_reuse",
+        "no_lru_regret",
+        "no_cross_agent_reuse"
+      ],
+      "basic": {
+        "num_events": 37,
+        "num_state_events": 20,
+        "num_llm_events": 9,
+        "num_tool_events": 8,
+        "num_agents": 1,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": true,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit_selective_state": 9
+        },
+        "average_input_state_count": 4.555555555555555,
+        "average_accumulated_context_tokens": 86.44444444444444,
+        "monotonic_context_growth_score": 0.75
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.05,
+        "fraction_file_context_states": 0.2,
+        "fraction_failure_states": 0.05,
+        "fraction_unknown_or_dialogue_delta": 0.0,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "agent_role": 1,
+          "assistant_delta": 9,
+          "file_context": 3,
+          "edit_diff": 2,
+          "test_failure_summary": 1,
+          "tool_observation": 1
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 26,
+          "min": 4,
+          "p50": 4,
+          "p90": 4,
+          "max": 4,
+          "mean": 4.0
+        },
+        "delayed_reuse_ratio": 0.0,
+        "cross_agent_reuse_ratio": 0.0,
+        "high_value_delayed_reuse_count": 0,
+        "LRU_regret_candidate_count": 0,
+        "has_asg_opportunity": false
+      }
+    },
+    {
+      "trace_idx": 5,
+      "quality_label": "medium",
+      "exclusion_reasons": [
+        "no_delayed_reuse",
+        "no_lru_regret",
+        "no_cross_agent_reuse"
+      ],
+      "basic": {
+        "num_events": 37,
+        "num_state_events": 20,
+        "num_llm_events": 9,
+        "num_tool_events": 8,
+        "num_agents": 1,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": true,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit_selective_state": 9
+        },
+        "average_input_state_count": 4.555555555555555,
+        "average_accumulated_context_tokens": 86.44444444444444,
+        "monotonic_context_growth_score": 0.75
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.05,
+        "fraction_file_context_states": 0.2,
+        "fraction_failure_states": 0.05,
+        "fraction_unknown_or_dialogue_delta": 0.0,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "agent_role": 1,
+          "assistant_delta": 9,
+          "file_context": 3,
+          "edit_diff": 2,
+          "test_failure_summary": 1,
+          "tool_observation": 1
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 26,
+          "min": 4,
+          "p50": 4,
+          "p90": 4,
+          "max": 4,
+          "mean": 4.0
+        },
+        "delayed_reuse_ratio": 0.0,
+        "cross_agent_reuse_ratio": 0.0,
+        "high_value_delayed_reuse_count": 0,
+        "LRU_regret_candidate_count": 0,
+        "has_asg_opportunity": false
+      }
+    },
+    {
+      "trace_idx": 6,
+      "quality_label": "medium",
+      "exclusion_reasons": [
+        "no_delayed_reuse",
+        "no_lru_regret",
+        "no_cross_agent_reuse"
+      ],
+      "basic": {
+        "num_events": 37,
+        "num_state_events": 20,
+        "num_llm_events": 9,
+        "num_tool_events": 8,
+        "num_agents": 1,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": true,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit_selective_state": 9
+        },
+        "average_input_state_count": 4.555555555555555,
+        "average_accumulated_context_tokens": 86.44444444444444,
+        "monotonic_context_growth_score": 0.75
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.05,
+        "fraction_file_context_states": 0.2,
+        "fraction_failure_states": 0.05,
+        "fraction_unknown_or_dialogue_delta": 0.0,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "agent_role": 1,
+          "assistant_delta": 9,
+          "file_context": 3,
+          "edit_diff": 2,
+          "test_failure_summary": 1,
+          "tool_observation": 1
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 26,
+          "min": 4,
+          "p50": 4,
+          "p90": 4,
+          "max": 4,
+          "mean": 4.0
+        },
+        "delayed_reuse_ratio": 0.0,
+        "cross_agent_reuse_ratio": 0.0,
+        "high_value_delayed_reuse_count": 0,
+        "LRU_regret_candidate_count": 0,
+        "has_asg_opportunity": false
+      }
+    },
+    {
+      "trace_idx": 7,
+      "quality_label": "medium",
+      "exclusion_reasons": [
+        "no_delayed_reuse",
+        "no_lru_regret",
+        "no_cross_agent_reuse"
+      ],
+      "basic": {
+        "num_events": 37,
+        "num_state_events": 20,
+        "num_llm_events": 9,
+        "num_tool_events": 8,
+        "num_agents": 1,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": true,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit_selective_state": 9
+        },
+        "average_input_state_count": 4.555555555555555,
+        "average_accumulated_context_tokens": 86.44444444444444,
+        "monotonic_context_growth_score": 0.75
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.05,
+        "fraction_file_context_states": 0.2,
+        "fraction_failure_states": 0.05,
+        "fraction_unknown_or_dialogue_delta": 0.0,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "agent_role": 1,
+          "assistant_delta": 9,
+          "file_context": 3,
+          "edit_diff": 2,
+          "test_failure_summary": 1,
+          "tool_observation": 1
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 26,
+          "min": 4,
+          "p50": 4,
+          "p90": 4,
+          "max": 4,
+          "mean": 4.0
+        },
+        "delayed_reuse_ratio": 0.0,
+        "cross_agent_reuse_ratio": 0.0,
+        "high_value_delayed_reuse_count": 0,
+        "LRU_regret_candidate_count": 0,
+        "has_asg_opportunity": false
+      }
+    },
+    {
+      "trace_idx": 8,
+      "quality_label": "medium",
+      "exclusion_reasons": [
+        "no_delayed_reuse",
+        "no_lru_regret",
+        "no_cross_agent_reuse"
+      ],
+      "basic": {
+        "num_events": 37,
+        "num_state_events": 20,
+        "num_llm_events": 9,
+        "num_tool_events": 8,
+        "num_agents": 1,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": true,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit_selective_state": 9
+        },
+        "average_input_state_count": 4.555555555555555,
+        "average_accumulated_context_tokens": 86.44444444444444,
+        "monotonic_context_growth_score": 0.75
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.05,
+        "fraction_file_context_states": 0.2,
+        "fraction_failure_states": 0.05,
+        "fraction_unknown_or_dialogue_delta": 0.0,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "agent_role": 1,
+          "assistant_delta": 9,
+          "file_context": 3,
+          "edit_diff": 2,
+          "test_failure_summary": 1,
+          "tool_observation": 1
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 26,
+          "min": 4,
+          "p50": 4,
+          "p90": 4,
+          "max": 4,
+          "mean": 4.0
+        },
+        "delayed_reuse_ratio": 0.0,
+        "cross_agent_reuse_ratio": 0.0,
+        "high_value_delayed_reuse_count": 0,
+        "LRU_regret_candidate_count": 0,
+        "has_asg_opportunity": false
+      }
+    },
+    {
+      "trace_idx": 9,
+      "quality_label": "medium",
+      "exclusion_reasons": [
+        "no_delayed_reuse",
+        "no_lru_regret",
+        "no_cross_agent_reuse"
+      ],
+      "basic": {
+        "num_events": 37,
+        "num_state_events": 20,
+        "num_llm_events": 9,
+        "num_tool_events": 8,
+        "num_agents": 1,
+        "success": true
+      },
+      "prompt_reconstruction_quality": {
+        "has_explicit_input_state_ids": true,
+        "has_explicit_prompt_segments": true,
+        "reconstructed_from_messages": false,
+        "reconstructed_full_history_likely": false,
+        "prompt_reconstruction_distribution": {
+          "explicit_selective_state": 9
+        },
+        "average_input_state_count": 4.555555555555555,
+        "average_accumulated_context_tokens": 86.44444444444444,
+        "monotonic_context_growth_score": 0.75
+      },
+      "state_quality": {
+        "fraction_states_with_exact_token_hash": 1.0,
+        "fraction_states_with_semantic_key": 1.0,
+        "fraction_tool_states": 0.05,
+        "fraction_file_context_states": 0.2,
+        "fraction_failure_states": 0.05,
+        "fraction_unknown_or_dialogue_delta": 0.0,
+        "state_type_distribution": {
+          "system_prefix": 1,
+          "task_prefix": 1,
+          "agent_role": 1,
+          "assistant_delta": 9,
+          "file_context": 3,
+          "edit_diff": 2,
+          "test_failure_summary": 1,
+          "tool_observation": 1
+        },
+        "has_non_dialogue_state_type": true
+      },
+      "reuse_quality": {
+        "reuse_distance_distribution": {
+          "count": 26,
+          "min": 4,
+          "p50": 4,
+          "p90": 4,
+          "max": 4,
+          "mean": 4.0
+        },
+        "delayed_reuse_ratio": 0.0,
+        "cross_agent_reuse_ratio": 0.0,
+        "high_value_delayed_reuse_count": 0,
+        "LRU_regret_candidate_count": 0,
+        "has_asg_opportunity": false
+      }
+    }
+  ]
+}

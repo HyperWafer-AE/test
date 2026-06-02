@@ -1,0 +1,23 @@
+{
+  "task_id": "recency_control_37",
+  "task_family": "recency_control",
+  "expected_relevant_files": [
+    "quick_math.py"
+  ],
+  "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+  "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+  "expected_delayed_states": [],
+  "expected_min_steps": 10,
+  "expected_large_state_tokens": {},
+  "expected_control_or_opportunity": "control",
+  "first_patch": {
+    "path": "quick_math.py",
+    "old": "    return value",
+    "new": "    return max(lower, value)"
+  },
+  "final_patch": {
+    "path": "quick_math.py",
+    "old": "    return max(lower, value)",
+    "new": "    return max(lower, min(upper, value))"
+  }
+}

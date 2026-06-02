@@ -1,0 +1,138 @@
+{
+  "policy": "asg-prefetch-v2-online",
+  "prediction_mode": "heuristic",
+  "estimator_mode": "heuristic",
+  "asg_builder_enabled": true,
+  "oracle_future": false,
+  "baseline_class": "asg",
+  "retention_policy": "asg-v2",
+  "mapping_policy": "asg_cost_aware",
+  "prefetch_policy": "windowed",
+  "topology_enabled": true,
+  "prefetch_enabled": true,
+  "static_replica_enabled": true,
+  "prompt_reconstruction_quality": {
+    "num_llm_events": 90,
+    "prompt_reconstruction_distribution": {
+      "explicit_selective_state": 90
+    },
+    "full_history_likely_ratio": 0.0,
+    "mean_monotonic_context_growth_score": 0.75
+  },
+  "prompt_reconstruction_quality_label": "explicit_selective_state",
+  "observation_compression_class": "none",
+  "data_quality": "smoke_only",
+  "paper_usable": false,
+  "num_high_quality_traces": 0,
+  "num_smoke_traces": 10,
+  "num_traces": 10,
+  "selected_trace_count": null,
+  "delayed_reuse_ratio": 0.0,
+  "concurrency": 2,
+  "memory_budget": 0.02,
+  "timing": {
+    "total_cycles": 666417105,
+    "pure_comp_cycles": 28633291,
+    "pure_comm_cycles": 362505
+  },
+  "agent_metrics": {
+    "total_input_tokens": 7259,
+    "append_tokens": 36919,
+    "effective_prefill_tokens": 40129,
+    "decode_tokens": 2880,
+    "llm_output_tokens": 2880,
+    "tool_output_tokens": 2460,
+    "cache_hits": 270,
+    "cache_misses": 140,
+    "cache_byte_miss": 1682964480,
+    "kv_migration_bytes": 73924608,
+    "demand_migration_bytes": 18874368,
+    "prefetch_migration_bytes": 55050240,
+    "num_kv_migrations": 8,
+    "num_demand_migrations": 3,
+    "num_prefetch_migrations": 5,
+    "num_prefetch_events": 5,
+    "prefetch_kv_bytes": 55050240,
+    "prefetch_hidden_cycles": 215045,
+    "prefetch_exposed_cycles": 0,
+    "prefetch_total_cycles": 215045,
+    "evicted_kv_bytes": 3751280640,
+    "tool_wait_cycles": 6285000000,
+    "local_state_hits": 229,
+    "remote_state_hits": 41,
+    "state_misses": 140,
+    "num_remote_accesses": 41,
+    "remote_access_bytes": 430964736,
+    "remote_read_bytes": 412090368,
+    "num_remote_reads": 38,
+    "remote_read_cycles": 1609766,
+    "migration_skipped_by_cost": 38,
+    "num_action_local": 103,
+    "num_action_remote_read": 38,
+    "num_action_migrate": 3,
+    "num_action_replicate": 0,
+    "num_action_static_hit": 126,
+    "static_replica_bytes": 566231040,
+    "num_static_replicas": 80,
+    "unused_prefetch_events": 5,
+    "migration_cost_estimate_cycles": 288776,
+    "remote_read_cost_estimate_cycles": 1609766,
+    "external_wait_cycles": 6285000000,
+    "model_compute_cycles": 28633291,
+    "model_comm_cycles": 362505,
+    "exposed_migration_cycles": 73731,
+    "exposed_prefetch_cycles": 0,
+    "approximate_non_wait_cycles": 0,
+    "llm_side_cycles": 0,
+    "compressed_observation_tokens_saved": 0,
+    "num_compressed_observations": 0,
+    "num_agents": 10,
+    "num_states_resident_final": 21,
+    "num_states_total": 190,
+    "num_llm_steps": 90,
+    "num_tool_steps": 80,
+    "cache_hit_ratio": 0.6585365853658537,
+    "effective_prefill_reduction": 0.09165195346099864,
+    "decode_to_prefill_ratio": 0.07176854643773829,
+    "tool_wait_overlap_ratio": 1.0
+  },
+  "retained_state_type_distribution": {
+    "system_prefix": 10,
+    "task_prefix": 10,
+    "assistant_delta": 1
+  },
+  "LRU_regret_states_preserved": 0,
+  "LRU_regret_tokens_preserved": 0,
+  "event_stats": {
+    "busybarn_events": 306,
+    "asg_states": 190,
+    "asg_execs": 170
+  },
+  "invariant_checks": [
+    {
+      "name": "event_graph",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "name": "asg_graph",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "name": "state_locations",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "name": "policy_outputs",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "name": "policy_outputs",
+      "passed": true,
+      "failures": []
+    }
+  ]
+}

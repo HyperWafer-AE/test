@@ -140,16 +140,22 @@ class PromptStateBuilder:
         state_id = f"state_{hashlib.sha1(f'{self.workflow_id}\\0{state_type}\\0{semantic_key}\\0{text_hash}'.encode()).hexdigest()[:18]}"
         if state_id in self.states:
             return self.states[state_id]
+        token_count = self.count_tokens(text)
+        state_metadata = {**(metadata or {}), "tokenizer": self.tokenizer_name}
+        state_metadata.setdefault("prompt_tokens", token_count)
+        state_metadata.setdefault("raw_tokens", token_count)
+        raw_tokens = int(state_metadata.get("raw_tokens") or token_count)
+        state_metadata.setdefault("compression_ratio", token_count / raw_tokens if raw_tokens else 1.0)
         state = PromptState(
             state_id=state_id,
             state_type=state_type,
             owner=owner,
             text=text,
-            tokens=self.count_tokens(text),
+            tokens=token_count,
             text_hash=text_hash,
             semantic_key=semantic_key,
             producer_event_id=producer_event_id,
-            metadata={**(metadata or {}), "tokenizer": self.tokenizer_name},
+            metadata=state_metadata,
             created_turn=self.turn,
         )
         self.states[state_id] = state
@@ -195,24 +201,32 @@ class PromptStateBuilder:
         metadata: Optional[dict] = None,
     ) -> List[PromptState]:
         state_type = state_type or infer_state_type(tool, output, status)
+        raw_tokens = int((metadata or {}).get("raw_tokens") or self.count_tokens(output))
         states = [
             self.create_state(
                 state_type,
                 output,
                 semantic_key=semantic_key_for_tool(tool, output, metadata or {}, status),
                 producer_event_id=producer_event_id,
-                metadata={"tool": tool, "status": status, **(metadata or {})},
+                metadata={"tool": tool, "status": status, "raw_tokens": raw_tokens, **(metadata or {})},
             )
         ]
         if self.count_tokens(output) > 512:
             summary = summarize_text(output)
+            summary_tokens = self.count_tokens(summary)
             states.append(
                 self.create_state(
                     "summary_state",
                     summary,
                     semantic_key=f"summary:{states[0].state_id}",
                     producer_event_id=producer_event_id,
-                    metadata={"source_state_id": states[0].state_id, "tool": tool},
+                    metadata={
+                        "source_state_id": states[0].state_id,
+                        "tool": tool,
+                        "raw_tokens": raw_tokens,
+                        "prompt_tokens": summary_tokens,
+                        "compression_ratio": summary_tokens / raw_tokens if raw_tokens else 1.0,
+                    },
                 )
             )
         return states
@@ -375,4 +389,3 @@ def write_json(path: Path, payload: object):
 
 def new_event_id(prefix: str) -> str:
     return f"{prefix}_{uuid.uuid4().hex[:12]}_{int(time.time() * 1000)}"
-

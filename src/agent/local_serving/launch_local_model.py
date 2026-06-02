@@ -10,20 +10,23 @@ from pathlib import Path
 from urllib import request as urlrequest
 
 
-DEFAULT_SGLANG_MODEL = "/data2/model_zoo/Qwen/Qwen3.6-27B"
+DEFAULT_LOCAL_MODEL = "/data1/dg123_data/Qwen-32B"
+DEFAULT_SERVED_MODEL = "local-qwen-32b"
 
 
 def parse_args(argv=None):
     parser = argparse.ArgumentParser(description="Launch a local OpenAI-compatible H100 model server.")
     parser.add_argument("--backend", choices=("sglang", "vllm"), default="sglang")
-    parser.add_argument("--model-path", default=DEFAULT_SGLANG_MODEL)
-    parser.add_argument("--served-model-name", default="local-qwen3-27b")
+    parser.add_argument("--model-path", default=DEFAULT_LOCAL_MODEL)
+    parser.add_argument("--served-model-name", default=DEFAULT_SERVED_MODEL)
+    parser.add_argument("--fallback-model-path", default=None, help="Optional explicit fallback model path. Never used unless this flag is set.")
     parser.add_argument("--tp", type=int, default=2)
     parser.add_argument("--host", default=None)
     parser.add_argument("--port", type=int, default=None)
     parser.add_argument("--reasoning-parser")
-    parser.add_argument("--log-dir", default="agent_results/local_h100/server_logs")
-    parser.add_argument("--status-output", default="agent_results/local_h100/server_status.json")
+    parser.add_argument("--log-dir", default="agent_results/local_h100_long/server_logs")
+    parser.add_argument("--status-output", default="agent_results/local_h100_long/server_status.json")
+    parser.add_argument("--failure-output", default="agent_results/local_h100_long/server_failure_report.json")
     parser.add_argument("--python", default=None, help="Python executable for SGLang. Defaults to .venv-sglang/bin/python if present.")
     parser.add_argument("--gpu-memory-utilization", type=float, default=0.90)
     parser.add_argument("--enable-prefix-caching", action="store_true")
@@ -66,17 +69,31 @@ def main(argv=None):
             status.update({"pid": proc.pid, "log_path": str(log_path), "command": cmd, "status": "fallback_starting"})
             write_status(status_path, status)
             ok, health = wait_for_health(args_no_reasoning, proc, timeout=args.timeout)
+        if not ok and args.fallback_model_path:
+            status["fallback_reason"] = "health_check_failed_with_primary_model"
+            status["primary_model_path"] = args.model_path
+            terminate(proc.pid)
+            args_fallback = argparse.Namespace(**vars(args))
+            args_fallback.model_path = args.fallback_model_path
+            cmd, env = build_command(args_fallback, root)
+            proc, log_path = launch(cmd, env, log_dir, f"{args.backend}_explicit_model_fallback")
+            status.update({"pid": proc.pid, "log_path": str(log_path), "command": cmd, "model_path": args_fallback.model_path, "status": "fallback_model_starting"})
+            write_status(status_path, status)
+            ok, health = wait_for_health(args_fallback, proc, timeout=args.timeout)
         status["health_check"] = health
         status["status"] = "running" if ok else "failed"
         if proc.poll() is not None:
             status["returncode"] = proc.returncode
             status["status"] = "failed"
         write_status(status_path, status)
+        if status["status"] != "running":
+            write_failure_report(Path(args.failure_output), status)
         print(f"{status['status']} pid={status.get('pid')} status={status_path}")
         return status
     except Exception as exc:
         status.update({"status": "failed", "error": {"type": type(exc).__name__, "message": str(exc)}})
         write_status(status_path, status)
+        write_failure_report(Path(args.failure_output), status)
         print(json.dumps(status, indent=2))
         return status
 
@@ -260,6 +277,24 @@ def terminate(pid: int):
 def write_status(path: Path, status: dict):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(status, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
+def write_failure_report(path: Path, status: dict):
+    report = {
+        "status": "server_launch_failed",
+        "model_path": status.get("model_path"),
+        "served_model_name": status.get("served_model_name"),
+        "backend": status.get("backend"),
+        "command": status.get("command"),
+        "environment": status.get("environment"),
+        "gpu_info": status.get("gpu_info"),
+        "health_check": status.get("health_check"),
+        "error": status.get("error"),
+        "log_path": status.get("log_path"),
+        "message": "Primary model failed to launch; no implicit fallback model was used.",
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
 
 
 if __name__ == "__main__":

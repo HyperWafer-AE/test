@@ -1,0 +1,12 @@
+Wrote 10 real-trace policy results to agent_results/local_h100_long/wafer_replay/m0.25_c2
+policy,effective_prefill_tokens,cache_hit_ratio,oracle_gap
+nocache,4818392,0.0,7.160259646592139
+lru-basic,4476744,0.6710654936461388,1.0
+lru-system,4476744,0.6710654936461388,1.0
+kvflow-like,4718312,0.43238840013033564,5.355715831229715
+asg-retention-v2-graph-only,4421284,0.7196155099380905,0.0
+asg-retention-v2-online,4421284,0.7196155099380905,0.0
+asg-retention-v2-trace-stats,4421451,0.7254806125773867,0.0030111792282726288
+asg-retention-v2-oracle,4421284,0.7196155099380905,0.0
+asg-placement-v2-online,4421284,0.7196155099380905,0.0
+asg-prefetch-v2-online,4421284,0.7196155099380905,0.0

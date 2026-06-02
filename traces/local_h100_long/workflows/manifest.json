@@ -1,0 +1,367 @@
+{
+  "framework": "long_horizon_coding_agent",
+  "history_mode": "selective_state",
+  "num_workflows": 40,
+  "workflows": [
+    {
+      "workflow_id": "long_wf_000_multi_file_bug_00",
+      "output": "traces/local_h100_long/workflows/long_wf_000_multi_file_bug_00.json",
+      "success": true,
+      "wall_clock_s": 38.25311017036438,
+      "num_events": 56,
+      "task_family": "multi_file_bug",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_001_multi_file_bug_01",
+      "output": "traces/local_h100_long/workflows/long_wf_001_multi_file_bug_01.json",
+      "success": true,
+      "wall_clock_s": 36.92709708213806,
+      "num_events": 56,
+      "task_family": "multi_file_bug",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_002_multi_file_bug_02",
+      "output": "traces/local_h100_long/workflows/long_wf_002_multi_file_bug_02.json",
+      "success": true,
+      "wall_clock_s": 37.28602051734924,
+      "num_events": 56,
+      "task_family": "multi_file_bug",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_003_multi_file_bug_03",
+      "output": "traces/local_h100_long/workflows/long_wf_003_multi_file_bug_03.json",
+      "success": true,
+      "wall_clock_s": 35.87434673309326,
+      "num_events": 56,
+      "task_family": "multi_file_bug",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_004_multi_file_bug_04",
+      "output": "traces/local_h100_long/workflows/long_wf_004_multi_file_bug_04.json",
+      "success": true,
+      "wall_clock_s": 36.46354818344116,
+      "num_events": 56,
+      "task_family": "multi_file_bug",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_005_multi_file_bug_05",
+      "output": "traces/local_h100_long/workflows/long_wf_005_multi_file_bug_05.json",
+      "success": true,
+      "wall_clock_s": 37.038002729415894,
+      "num_events": 56,
+      "task_family": "multi_file_bug",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_006_multi_file_bug_06",
+      "output": "traces/local_h100_long/workflows/long_wf_006_multi_file_bug_06.json",
+      "success": true,
+      "wall_clock_s": 36.41269016265869,
+      "num_events": 56,
+      "task_family": "multi_file_bug",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_007_multi_file_bug_07",
+      "output": "traces/local_h100_long/workflows/long_wf_007_multi_file_bug_07.json",
+      "success": true,
+      "wall_clock_s": 36.54863667488098,
+      "num_events": 56,
+      "task_family": "multi_file_bug",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_008_multi_file_bug_08",
+      "output": "traces/local_h100_long/workflows/long_wf_008_multi_file_bug_08.json",
+      "success": true,
+      "wall_clock_s": 36.49468445777893,
+      "num_events": 56,
+      "task_family": "multi_file_bug",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_009_multi_file_bug_09",
+      "output": "traces/local_h100_long/workflows/long_wf_009_multi_file_bug_09.json",
+      "success": true,
+      "wall_clock_s": 36.72818470001221,
+      "num_events": 56,
+      "task_family": "multi_file_bug",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_010_failure_loop_10",
+      "output": "traces/local_h100_long/workflows/long_wf_010_failure_loop_10.json",
+      "success": true,
+      "wall_clock_s": 36.56752800941467,
+      "num_events": 56,
+      "task_family": "failure_loop",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_011_failure_loop_11",
+      "output": "traces/local_h100_long/workflows/long_wf_011_failure_loop_11.json",
+      "success": true,
+      "wall_clock_s": 37.424142360687256,
+      "num_events": 56,
+      "task_family": "failure_loop",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_012_failure_loop_12",
+      "output": "traces/local_h100_long/workflows/long_wf_012_failure_loop_12.json",
+      "success": true,
+      "wall_clock_s": 36.70242261886597,
+      "num_events": 56,
+      "task_family": "failure_loop",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_013_failure_loop_13",
+      "output": "traces/local_h100_long/workflows/long_wf_013_failure_loop_13.json",
+      "success": true,
+      "wall_clock_s": 36.64326500892639,
+      "num_events": 56,
+      "task_family": "failure_loop",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_014_failure_loop_14",
+      "output": "traces/local_h100_long/workflows/long_wf_014_failure_loop_14.json",
+      "success": true,
+      "wall_clock_s": 36.578566789627075,
+      "num_events": 56,
+      "task_family": "failure_loop",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_015_failure_loop_15",
+      "output": "traces/local_h100_long/workflows/long_wf_015_failure_loop_15.json",
+      "success": true,
+      "wall_clock_s": 36.53142070770264,
+      "num_events": 56,
+      "task_family": "failure_loop",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_016_failure_loop_16",
+      "output": "traces/local_h100_long/workflows/long_wf_016_failure_loop_16.json",
+      "success": true,
+      "wall_clock_s": 36.51876378059387,
+      "num_events": 56,
+      "task_family": "failure_loop",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_017_failure_loop_17",
+      "output": "traces/local_h100_long/workflows/long_wf_017_failure_loop_17.json",
+      "success": true,
+      "wall_clock_s": 36.30215573310852,
+      "num_events": 56,
+      "task_family": "failure_loop",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_018_large_context_bug_18",
+      "output": "traces/local_h100_long/workflows/long_wf_018_large_context_bug_18.json",
+      "success": true,
+      "wall_clock_s": 37.19901204109192,
+      "num_events": 56,
+      "task_family": "large_context_bug",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_019_large_context_bug_19",
+      "output": "traces/local_h100_long/workflows/long_wf_019_large_context_bug_19.json",
+      "success": true,
+      "wall_clock_s": 36.28228783607483,
+      "num_events": 56,
+      "task_family": "large_context_bug",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_020_large_context_bug_20",
+      "output": "traces/local_h100_long/workflows/long_wf_020_large_context_bug_20.json",
+      "success": true,
+      "wall_clock_s": 35.947277784347534,
+      "num_events": 56,
+      "task_family": "large_context_bug",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_021_large_context_bug_21",
+      "output": "traces/local_h100_long/workflows/long_wf_021_large_context_bug_21.json",
+      "success": true,
+      "wall_clock_s": 36.51785349845886,
+      "num_events": 56,
+      "task_family": "large_context_bug",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_022_large_context_bug_22",
+      "output": "traces/local_h100_long/workflows/long_wf_022_large_context_bug_22.json",
+      "success": true,
+      "wall_clock_s": 36.109365463256836,
+      "num_events": 56,
+      "task_family": "large_context_bug",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_023_large_context_bug_23",
+      "output": "traces/local_h100_long/workflows/long_wf_023_large_context_bug_23.json",
+      "success": true,
+      "wall_clock_s": 36.9266300201416,
+      "num_events": 56,
+      "task_family": "large_context_bug",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_024_large_context_bug_24",
+      "output": "traces/local_h100_long/workflows/long_wf_024_large_context_bug_24.json",
+      "success": true,
+      "wall_clock_s": 36.39716386795044,
+      "num_events": 56,
+      "task_family": "large_context_bug",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_025_config_or_data_pipeline_bug_25",
+      "output": "traces/local_h100_long/workflows/long_wf_025_config_or_data_pipeline_bug_25.json",
+      "success": true,
+      "wall_clock_s": 36.91101837158203,
+      "num_events": 56,
+      "task_family": "config_or_data_pipeline_bug",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_026_config_or_data_pipeline_bug_26",
+      "output": "traces/local_h100_long/workflows/long_wf_026_config_or_data_pipeline_bug_26.json",
+      "success": true,
+      "wall_clock_s": 36.411033153533936,
+      "num_events": 56,
+      "task_family": "config_or_data_pipeline_bug",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_027_config_or_data_pipeline_bug_27",
+      "output": "traces/local_h100_long/workflows/long_wf_027_config_or_data_pipeline_bug_27.json",
+      "success": true,
+      "wall_clock_s": 36.784955978393555,
+      "num_events": 56,
+      "task_family": "config_or_data_pipeline_bug",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_028_config_or_data_pipeline_bug_28",
+      "output": "traces/local_h100_long/workflows/long_wf_028_config_or_data_pipeline_bug_28.json",
+      "success": true,
+      "wall_clock_s": 36.449084758758545,
+      "num_events": 56,
+      "task_family": "config_or_data_pipeline_bug",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_029_config_or_data_pipeline_bug_29",
+      "output": "traces/local_h100_long/workflows/long_wf_029_config_or_data_pipeline_bug_29.json",
+      "success": true,
+      "wall_clock_s": 36.41466522216797,
+      "num_events": 56,
+      "task_family": "config_or_data_pipeline_bug",
+      "expected_control_or_opportunity": "opportunity"
+    },
+    {
+      "workflow_id": "long_wf_030_recency_control_30",
+      "output": "traces/local_h100_long/workflows/long_wf_030_recency_control_30.json",
+      "success": true,
+      "wall_clock_s": 16.763640880584717,
+      "num_events": 37,
+      "task_family": "recency_control",
+      "expected_control_or_opportunity": "control"
+    },
+    {
+      "workflow_id": "long_wf_031_recency_control_31",
+      "output": "traces/local_h100_long/workflows/long_wf_031_recency_control_31.json",
+      "success": true,
+      "wall_clock_s": 17.159355640411377,
+      "num_events": 37,
+      "task_family": "recency_control",
+      "expected_control_or_opportunity": "control"
+    },
+    {
+      "workflow_id": "long_wf_032_recency_control_32",
+      "output": "traces/local_h100_long/workflows/long_wf_032_recency_control_32.json",
+      "success": true,
+      "wall_clock_s": 17.40051579475403,
+      "num_events": 37,
+      "task_family": "recency_control",
+      "expected_control_or_opportunity": "control"
+    },
+    {
+      "workflow_id": "long_wf_033_recency_control_33",
+      "output": "traces/local_h100_long/workflows/long_wf_033_recency_control_33.json",
+      "success": true,
+      "wall_clock_s": 17.365126132965088,
+      "num_events": 37,
+      "task_family": "recency_control",
+      "expected_control_or_opportunity": "control"
+    },
+    {
+      "workflow_id": "long_wf_034_recency_control_34",
+      "output": "traces/local_h100_long/workflows/long_wf_034_recency_control_34.json",
+      "success": true,
+      "wall_clock_s": 17.577698230743408,
+      "num_events": 37,
+      "task_family": "recency_control",
+      "expected_control_or_opportunity": "control"
+    },
+    {
+      "workflow_id": "long_wf_035_recency_control_35",
+      "output": "traces/local_h100_long/workflows/long_wf_035_recency_control_35.json",
+      "success": true,
+      "wall_clock_s": 17.40319275856018,
+      "num_events": 37,
+      "task_family": "recency_control",
+      "expected_control_or_opportunity": "control"
+    },
+    {
+      "workflow_id": "long_wf_036_recency_control_36",
+      "output": "traces/local_h100_long/workflows/long_wf_036_recency_control_36.json",
+      "success": true,
+      "wall_clock_s": 16.89771294593811,
+      "num_events": 37,
+      "task_family": "recency_control",
+      "expected_control_or_opportunity": "control"
+    },
+    {
+      "workflow_id": "long_wf_037_recency_control_37",
+      "output": "traces/local_h100_long/workflows/long_wf_037_recency_control_37.json",
+      "success": true,
+      "wall_clock_s": 17.301149606704712,
+      "num_events": 37,
+      "task_family": "recency_control",
+      "expected_control_or_opportunity": "control"
+    },
+    {
+      "workflow_id": "long_wf_038_recency_control_38",
+      "output": "traces/local_h100_long/workflows/long_wf_038_recency_control_38.json",
+      "success": true,
+      "wall_clock_s": 16.966474533081055,
+      "num_events": 37,
+      "task_family": "recency_control",
+      "expected_control_or_opportunity": "control"
+    },
+    {
+      "workflow_id": "long_wf_039_recency_control_39",
+      "output": "traces/local_h100_long/workflows/long_wf_039_recency_control_39.json",
+      "success": true,
+      "wall_clock_s": 17.148274898529053,
+      "num_events": 37,
+      "task_family": "recency_control",
+      "expected_control_or_opportunity": "control"
+    }
+  ]
+}

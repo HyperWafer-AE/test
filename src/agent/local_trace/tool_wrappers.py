@@ -2,6 +2,7 @@ import difflib
 import glob as globlib
 import hashlib
 import json
+import os
 import subprocess
 import time
 import uuid
@@ -89,6 +90,7 @@ class ToolLogger:
                 fromfile=f"a/{rel}",
                 tofile=f"b/{rel}",
                 lineterm="",
+                n=12,
             )
         )
         return self._finish(
@@ -104,9 +106,12 @@ class ToolLogger:
 
     def bash(self, command: str, cwd: Path, step_id: str, timeout: int = 30, tool_name: str = "Bash"):
         start = time.time()
+        env = dict(os.environ)
+        env.setdefault("PYTHONDONTWRITEBYTECODE", "1")
         proc = subprocess.run(
             command,
             cwd=str(cwd),
+            env=env,
             shell=True,
             text=True,
             stdout=subprocess.PIPE,
@@ -135,17 +140,25 @@ class ToolLogger:
         event_id = f"tool_{uuid.uuid4().hex[:12]}"
         output_path = None
         stored_output = output
+        raw_tokens = self.builder.count_tokens(output)
         if len(output) > 12000:
             output_path = self.artifact_dir / f"{event_id}.txt"
             output_path.write_text(output, encoding="utf-8", errors="ignore")
             stored_output = output[:6000] + "\n...[truncated]...\n" + output[-3000:]
+        prompt_tokens = self.builder.count_tokens(stored_output)
         states = self.builder.register_tool_output(
             tool,
             stored_output,
             status=status,
             state_type=state_type,
             producer_event_id=event_id,
-            metadata={**metadata, "full_output_path": str(output_path) if output_path else None},
+            metadata={
+                **metadata,
+                "full_output_path": str(output_path) if output_path else None,
+                "raw_tokens": raw_tokens,
+                "prompt_tokens": prompt_tokens,
+                "compression_ratio": prompt_tokens / raw_tokens if raw_tokens else 1.0,
+            },
         )
         state = states[0]
         event = {
@@ -168,6 +181,10 @@ class ToolLogger:
                 "latency_ms": (end - start) * 1000,
                 "stdout_stderr_hash": sha(output),
                 "truncated_output": stored_output[:1000],
+                "raw_tokens": raw_tokens,
+                "prompt_tokens": prompt_tokens,
+                "compression_ratio": prompt_tokens / raw_tokens if raw_tokens else 1.0,
+                "full_output_path": str(output_path) if output_path else None,
                 **metadata,
             },
         }
@@ -189,4 +206,3 @@ def file_hash(path: Path) -> str:
         return sha(path.read_text(encoding="utf-8", errors="replace"))[:16]
     except Exception:
         return "unknown"
-

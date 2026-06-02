@@ -27,17 +27,48 @@ def main(argv=None):
     if out.exists() and not args.reuse_existing:
         shutil.rmtree(out)
     out.mkdir(parents=True, exist_ok=True)
-    all_rows = []
+    all_rows = run_grid(args, Path(args.trace_dir), out, args.policies)
+    write_csv(out / "main_summary.csv", all_rows)
+    write_csv(out / "full_summary.csv", all_rows)
+    write_csv(out / "memory_sweep.csv", [row for row in all_rows if str(row.get("concurrency")) == str(args.concurrency_levels[0])])
+    write_csv(out / "concurrency_sweep.csv", [row for row in all_rows if str(row.get("memory_budget")) == str(args.memory_budgets[0])])
+    selection_root = out.parent / "trace_selection"
+    subset_outputs = {}
+    for subset_name in ("opportunity", "control"):
+        subset_dir = selection_root / f"{subset_name}_traces"
+        if subset_dir.exists():
+            subset_rows = run_grid(args, subset_dir, out, args.policies, prefix=subset_name, allow_smoke=(subset_name == "control"))
+            write_csv(out / f"{subset_name}_summary.csv", subset_rows)
+            subset_outputs[subset_name] = len(subset_rows)
+        else:
+            write_csv(out / f"{subset_name}_summary.csv", [])
+            subset_outputs[subset_name] = 0
+    write_csv(out / "mapping_ablation.csv", [row for row in all_rows if row.get("policy") in {"lru-system", "asg-retention-v2-online", "asg-placement-v2-online"}])
+    write_csv(out / "prefetch_ablation.csv", [row for row in all_rows if row.get("policy") in {"asg-retention-v2-online", "asg-prefetch-v2-online"}])
+    report = {
+        "policies": args.policies,
+        "internal_kv_metrics": "not available from SGLang/vLLM traces; replay uses normalized state events and analytical KV bytes",
+        "check_invariants": bool(args.check_invariants),
+        "subset_outputs": subset_outputs,
+        "control_subset_mode": "allow_smoke_traces_negative_control",
+    }
+    (out / "replay_report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(f"wrote replay summaries to {out}")
+
+
+def run_grid(args, trace_dir: Path, out: Path, policies: list, prefix: str = "", allow_smoke: bool = False):
+    rows = []
     for mem in args.memory_budgets:
         for conc in args.concurrency_levels:
-            run_dir = out / f"m{mem}_c{conc}"
+            run_name = f"m{mem}_c{conc}" if not prefix else f"{prefix}_m{mem}_c{conc}"
+            run_dir = out / run_name
             if not args.reuse_existing or not (run_dir / "summary.csv").exists():
                 cmd = [
                     sys.executable,
                     "-m",
                     "src.agent.real_trace_experiment",
                     "--trace-dir",
-                    args.trace_dir,
+                    str(trace_dir),
                     "--trace-format",
                     "normalized_json",
                     "--output-dir",
@@ -55,20 +86,13 @@ def main(argv=None):
                 ]
                 if args.check_invariants:
                     cmd.append("--check-invariants")
+                if allow_smoke:
+                    cmd.append("--allow-smoke-traces")
                 result = subprocess.run(cmd, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
                 run_dir.mkdir(parents=True, exist_ok=True)
                 (run_dir / "runner.log").write_text(result.stdout, encoding="utf-8")
-            all_rows.extend(collect_run_rows(run_dir, args.policies, mem, conc))
-    write_csv(out / "main_summary.csv", all_rows)
-    write_csv(out / "memory_sweep.csv", [row for row in all_rows if str(row.get("concurrency")) == str(args.concurrency_levels[0])])
-    write_csv(out / "concurrency_sweep.csv", [row for row in all_rows if str(row.get("memory_budget")) == str(args.memory_budgets[0])])
-    report = {
-        "policies": args.policies,
-        "internal_kv_metrics": "not available from SGLang/vLLM traces; replay uses normalized state events and analytical KV bytes",
-        "check_invariants": bool(args.check_invariants),
-    }
-    (out / "replay_report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
-    print(f"wrote replay summaries to {out}")
+            rows.extend(collect_run_rows(run_dir, policies, mem, conc))
+    return rows
 
 
 def collect_run_rows(run_dir: Path, policies: list, mem: float, conc: int) -> list:

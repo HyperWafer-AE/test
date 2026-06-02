@@ -1,0 +1,218 @@
+{
+  "median_delayed_reuse_ratio": 0.12658227848101267,
+  "selected_trace_count": 0,
+  "total_trace_count": 30,
+  "rows": [
+    {
+      "trace_idx": 0,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5750,
+      "LRU_regret_candidate_count": 6
+    },
+    {
+      "trace_idx": 1,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5750,
+      "LRU_regret_candidate_count": 6
+    },
+    {
+      "trace_idx": 2,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5750,
+      "LRU_regret_candidate_count": 6
+    },
+    {
+      "trace_idx": 3,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5750,
+      "LRU_regret_candidate_count": 6
+    },
+    {
+      "trace_idx": 4,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5750,
+      "LRU_regret_candidate_count": 6
+    },
+    {
+      "trace_idx": 5,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5750,
+      "LRU_regret_candidate_count": 6
+    },
+    {
+      "trace_idx": 6,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5750,
+      "LRU_regret_candidate_count": 6
+    },
+    {
+      "trace_idx": 7,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5750,
+      "LRU_regret_candidate_count": 6
+    },
+    {
+      "trace_idx": 8,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5750,
+      "LRU_regret_candidate_count": 6
+    },
+    {
+      "trace_idx": 9,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5750,
+      "LRU_regret_candidate_count": 6
+    },
+    {
+      "trace_idx": 10,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5750,
+      "LRU_regret_candidate_count": 6
+    },
+    {
+      "trace_idx": 11,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5750,
+      "LRU_regret_candidate_count": 6
+    },
+    {
+      "trace_idx": 12,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5750,
+      "LRU_regret_candidate_count": 6
+    },
+    {
+      "trace_idx": 13,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5750,
+      "LRU_regret_candidate_count": 6
+    },
+    {
+      "trace_idx": 14,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5750,
+      "LRU_regret_candidate_count": 6
+    },
+    {
+      "trace_idx": 15,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5750,
+      "LRU_regret_candidate_count": 6
+    },
+    {
+      "trace_idx": 16,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5750,
+      "LRU_regret_candidate_count": 6
+    },
+    {
+      "trace_idx": 17,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5750,
+      "LRU_regret_candidate_count": 6
+    },
+    {
+      "trace_idx": 18,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5750,
+      "LRU_regret_candidate_count": 6
+    },
+    {
+      "trace_idx": 19,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5750,
+      "LRU_regret_candidate_count": 6
+    },
+    {
+      "trace_idx": 20,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5750,
+      "LRU_regret_candidate_count": 6
+    },
+    {
+      "trace_idx": 21,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5750,
+      "LRU_regret_candidate_count": 6
+    },
+    {
+      "trace_idx": 22,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5812,
+      "LRU_regret_candidate_count": 6
+    },
+    {
+      "trace_idx": 23,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5812,
+      "LRU_regret_candidate_count": 6
+    },
+    {
+      "trace_idx": 24,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5812,
+      "LRU_regret_candidate_count": 6
+    },
+    {
+      "trace_idx": 25,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5812,
+      "LRU_regret_candidate_count": 6
+    },
+    {
+      "trace_idx": 26,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5812,
+      "LRU_regret_candidate_count": 6
+    },
+    {
+      "trace_idx": 27,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5812,
+      "LRU_regret_candidate_count": 6
+    },
+    {
+      "trace_idx": 28,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5812,
+      "LRU_regret_candidate_count": 6
+    },
+    {
+      "trace_idx": 29,
+      "delayed_reuse_ratio": 0.12658227848101267,
+      "num_reuses": 79,
+      "high_value_delayed_reuse_tokens": 5812,
+      "LRU_regret_candidate_count": 6
+    }
+  ],
+  "warning": "No trace exceeded the median delayed-reuse ratio; subset replay was skipped."
+}

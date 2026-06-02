@@ -1,0 +1,139 @@
+{
+  "policy": "asg-retention-v2-oracle",
+  "prediction_mode": "oracle",
+  "estimator_mode": "oracle",
+  "asg_builder_enabled": true,
+  "oracle_future": true,
+  "baseline_class": "oracle",
+  "retention_policy": "asg-v2",
+  "mapping_policy": "none",
+  "prefetch_policy": "none",
+  "topology_enabled": false,
+  "prefetch_enabled": false,
+  "static_replica_enabled": true,
+  "prompt_reconstruction_quality": {
+    "num_llm_events": 868,
+    "prompt_reconstruction_distribution": {
+      "explicit_selective_state": 868
+    },
+    "full_history_likely_ratio": 0.0,
+    "mean_monotonic_context_growth_score": 0.8461538461538461
+  },
+  "prompt_reconstruction_quality_label": "explicit_selective_state",
+  "observation_compression_class": "none",
+  "data_quality": "paper_usable",
+  "paper_usable": true,
+  "num_high_quality_traces": 62,
+  "num_smoke_traces": 10,
+  "num_traces": 62,
+  "selected_trace_count": null,
+  "delayed_reuse_ratio": 0.12658227848101267,
+  "concurrency": 4,
+  "memory_budget": 0.1,
+  "timing": {
+    "total_cycles": 1573297000,
+    "pure_comp_cycles": 1366500000,
+    "pure_comm_cycles": 0
+  },
+  "agent_metrics": {
+    "total_input_tokens": 1784995,
+    "append_tokens": 3033397,
+    "effective_prefill_tokens": 4640907,
+    "decode_tokens": 27776,
+    "llm_output_tokens": 27776,
+    "tool_output_tokens": 384789,
+    "cache_hits": 2894,
+    "cache_misses": 3244,
+    "cache_byte_miss": 842798202880,
+    "kv_migration_bytes": 0,
+    "demand_migration_bytes": 0,
+    "prefetch_migration_bytes": 0,
+    "num_kv_migrations": 0,
+    "num_demand_migrations": 0,
+    "num_prefetch_migrations": 0,
+    "num_prefetch_events": 0,
+    "prefetch_kv_bytes": 0,
+    "prefetch_hidden_cycles": 0,
+    "prefetch_exposed_cycles": 0,
+    "prefetch_total_cycles": 0,
+    "evicted_kv_bytes": 89175621632,
+    "tool_wait_cycles": 39921000000,
+    "local_state_hits": 2503,
+    "remote_state_hits": 391,
+    "state_misses": 3244,
+    "num_remote_accesses": 391,
+    "remote_access_bytes": 3202351104,
+    "remote_read_bytes": 0,
+    "num_remote_reads": 0,
+    "remote_read_cycles": 0,
+    "migration_skipped_by_cost": 0,
+    "num_action_local": 0,
+    "num_action_remote_read": 0,
+    "num_action_migrate": 0,
+    "num_action_replicate": 0,
+    "num_action_static_hit": 0,
+    "static_replica_bytes": 12742295552,
+    "num_static_replicas": 496,
+    "unused_prefetch_events": 0,
+    "migration_cost_estimate_cycles": 0,
+    "remote_read_cost_estimate_cycles": 0,
+    "external_wait_cycles": 39921000000,
+    "model_compute_cycles": 1366500000,
+    "model_comm_cycles": 0,
+    "exposed_migration_cycles": 0,
+    "exposed_prefetch_cycles": 0,
+    "approximate_non_wait_cycles": 0,
+    "llm_side_cycles": 0,
+    "compressed_observation_tokens_saved": 0,
+    "num_compressed_observations": 0,
+    "num_agents": 62,
+    "num_states_resident_final": 126,
+    "num_states_total": 1984,
+    "num_llm_steps": 868,
+    "num_tool_steps": 620,
+    "cache_hit_ratio": 0.4714890843923102,
+    "effective_prefill_reduction": 0.036834902598211205,
+    "decode_to_prefill_ratio": 0.005985036976608236,
+    "tool_wait_overlap_ratio": 0.0
+  },
+  "retained_state_type_distribution": {
+    "system_prefix": 62,
+    "task_prefix": 62,
+    "summary_state": 1,
+    "assistant_delta": 1
+  },
+  "LRU_regret_states_preserved": 1,
+  "LRU_regret_tokens_preserved": 159,
+  "event_stats": {
+    "busybarn_events": 2356,
+    "asg_states": 1984,
+    "asg_execs": 1488
+  },
+  "invariant_checks": [
+    {
+      "name": "event_graph",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "name": "asg_graph",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "name": "state_locations",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "name": "policy_outputs",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "name": "policy_outputs",
+      "passed": true,
+      "failures": []
+    }
+  ]
+}

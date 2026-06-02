@@ -1,0 +1,32 @@
+{
+  "task_id": "multi_file_bug_06",
+  "task_family": "multi_file_bug",
+  "expected_relevant_files": [
+    "core/config.py",
+    "core/loader.py",
+    "core/transform.py"
+  ],
+  "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+  "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+  "expected_delayed_states": [
+    "file_context",
+    "test_failure_summary",
+    "edit_diff"
+  ],
+  "expected_min_steps": 18,
+  "expected_large_state_tokens": {
+    "file_context": 500,
+    "test_failure_summary": 500
+  },
+  "expected_control_or_opportunity": "opportunity",
+  "first_patch": {
+    "path": "core/transform.py",
+    "old": "    return base  # BUG: multiplier from config is ignored",
+    "new": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it"
+  },
+  "final_patch": {
+    "path": "core/transform.py",
+    "old": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it",
+    "new": "    return base * policy.get(\"multiplier\", 1)"
+  }
+}

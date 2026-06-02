@@ -15,7 +15,7 @@ from src.agent.local_trace.run_coding_agent_traces import load_tasks, run_workfl
 def parse_args(argv=None):
     parser = argparse.ArgumentParser(description="Run concurrent local coding-agent workflows against one model server.")
     parser.add_argument("--server-url", default="http://127.0.0.1:30000/v1")
-    parser.add_argument("--model", default="local-qwen3-27b")
+    parser.add_argument("--model", default="local-qwen-32b")
     parser.add_argument("--benchmark", default="local_debug_tasks")
     parser.add_argument("--tasks-dir", default="benchmarks/local_debug_tasks")
     parser.add_argument("--output-dir", default="traces/local_h100/concurrent")

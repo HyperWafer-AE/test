@@ -1,0 +1,1254 @@
+{
+  "tasks": [
+    {
+      "task_id": "multi_file_bug_00",
+      "path": "benchmarks/local_long_debug_tasks/00_multi_file_bug_00",
+      "task_family": "multi_file_bug",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/transform.py",
+        "old": "    return base  # BUG: multiplier from config is ignored",
+        "new": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it"
+      },
+      "final_patch": {
+        "path": "core/transform.py",
+        "old": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it",
+        "new": "    return base * policy.get(\"multiplier\", 1)"
+      }
+    },
+    {
+      "task_id": "multi_file_bug_01",
+      "path": "benchmarks/local_long_debug_tasks/01_multi_file_bug_01",
+      "task_family": "multi_file_bug",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/transform.py",
+        "old": "    return base  # BUG: multiplier from config is ignored",
+        "new": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it"
+      },
+      "final_patch": {
+        "path": "core/transform.py",
+        "old": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it",
+        "new": "    return base * policy.get(\"multiplier\", 1)"
+      }
+    },
+    {
+      "task_id": "multi_file_bug_02",
+      "path": "benchmarks/local_long_debug_tasks/02_multi_file_bug_02",
+      "task_family": "multi_file_bug",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/transform.py",
+        "old": "    return base  # BUG: multiplier from config is ignored",
+        "new": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it"
+      },
+      "final_patch": {
+        "path": "core/transform.py",
+        "old": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it",
+        "new": "    return base * policy.get(\"multiplier\", 1)"
+      }
+    },
+    {
+      "task_id": "multi_file_bug_03",
+      "path": "benchmarks/local_long_debug_tasks/03_multi_file_bug_03",
+      "task_family": "multi_file_bug",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/transform.py",
+        "old": "    return base  # BUG: multiplier from config is ignored",
+        "new": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it"
+      },
+      "final_patch": {
+        "path": "core/transform.py",
+        "old": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it",
+        "new": "    return base * policy.get(\"multiplier\", 1)"
+      }
+    },
+    {
+      "task_id": "multi_file_bug_04",
+      "path": "benchmarks/local_long_debug_tasks/04_multi_file_bug_04",
+      "task_family": "multi_file_bug",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/transform.py",
+        "old": "    return base  # BUG: multiplier from config is ignored",
+        "new": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it"
+      },
+      "final_patch": {
+        "path": "core/transform.py",
+        "old": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it",
+        "new": "    return base * policy.get(\"multiplier\", 1)"
+      }
+    },
+    {
+      "task_id": "multi_file_bug_05",
+      "path": "benchmarks/local_long_debug_tasks/05_multi_file_bug_05",
+      "task_family": "multi_file_bug",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/transform.py",
+        "old": "    return base  # BUG: multiplier from config is ignored",
+        "new": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it"
+      },
+      "final_patch": {
+        "path": "core/transform.py",
+        "old": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it",
+        "new": "    return base * policy.get(\"multiplier\", 1)"
+      }
+    },
+    {
+      "task_id": "multi_file_bug_06",
+      "path": "benchmarks/local_long_debug_tasks/06_multi_file_bug_06",
+      "task_family": "multi_file_bug",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/transform.py",
+        "old": "    return base  # BUG: multiplier from config is ignored",
+        "new": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it"
+      },
+      "final_patch": {
+        "path": "core/transform.py",
+        "old": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it",
+        "new": "    return base * policy.get(\"multiplier\", 1)"
+      }
+    },
+    {
+      "task_id": "multi_file_bug_07",
+      "path": "benchmarks/local_long_debug_tasks/07_multi_file_bug_07",
+      "task_family": "multi_file_bug",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/transform.py",
+        "old": "    return base  # BUG: multiplier from config is ignored",
+        "new": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it"
+      },
+      "final_patch": {
+        "path": "core/transform.py",
+        "old": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it",
+        "new": "    return base * policy.get(\"multiplier\", 1)"
+      }
+    },
+    {
+      "task_id": "multi_file_bug_08",
+      "path": "benchmarks/local_long_debug_tasks/08_multi_file_bug_08",
+      "task_family": "multi_file_bug",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/transform.py",
+        "old": "    return base  # BUG: multiplier from config is ignored",
+        "new": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it"
+      },
+      "final_patch": {
+        "path": "core/transform.py",
+        "old": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it",
+        "new": "    return base * policy.get(\"multiplier\", 1)"
+      }
+    },
+    {
+      "task_id": "multi_file_bug_09",
+      "path": "benchmarks/local_long_debug_tasks/09_multi_file_bug_09",
+      "task_family": "multi_file_bug",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/transform.py",
+        "old": "    return base  # BUG: multiplier from config is ignored",
+        "new": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it"
+      },
+      "final_patch": {
+        "path": "core/transform.py",
+        "old": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it",
+        "new": "    return base * policy.get(\"multiplier\", 1)"
+      }
+    },
+    {
+      "task_id": "failure_loop_10",
+      "path": "benchmarks/local_long_debug_tasks/10_failure_loop_10",
+      "task_family": "failure_loop",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py",
+        "core/validator.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/validator.py",
+        "old": "    return \"accept\" if score >= policy.get(\"threshold\", 0) else \"review\"",
+        "new": "    return \"accept\""
+      },
+      "final_patch": {
+        "path": "core/validator.py",
+        "old": "    return \"accept\"",
+        "new": "    return \"accept\" if score > policy.get(\"threshold\", 0) else \"review\""
+      }
+    },
+    {
+      "task_id": "failure_loop_11",
+      "path": "benchmarks/local_long_debug_tasks/11_failure_loop_11",
+      "task_family": "failure_loop",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py",
+        "core/validator.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/validator.py",
+        "old": "    return \"accept\" if score >= policy.get(\"threshold\", 0) else \"review\"",
+        "new": "    return \"accept\""
+      },
+      "final_patch": {
+        "path": "core/validator.py",
+        "old": "    return \"accept\"",
+        "new": "    return \"accept\" if score > policy.get(\"threshold\", 0) else \"review\""
+      }
+    },
+    {
+      "task_id": "failure_loop_12",
+      "path": "benchmarks/local_long_debug_tasks/12_failure_loop_12",
+      "task_family": "failure_loop",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py",
+        "core/validator.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/validator.py",
+        "old": "    return \"accept\" if score >= policy.get(\"threshold\", 0) else \"review\"",
+        "new": "    return \"accept\""
+      },
+      "final_patch": {
+        "path": "core/validator.py",
+        "old": "    return \"accept\"",
+        "new": "    return \"accept\" if score > policy.get(\"threshold\", 0) else \"review\""
+      }
+    },
+    {
+      "task_id": "failure_loop_13",
+      "path": "benchmarks/local_long_debug_tasks/13_failure_loop_13",
+      "task_family": "failure_loop",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py",
+        "core/validator.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/validator.py",
+        "old": "    return \"accept\" if score >= policy.get(\"threshold\", 0) else \"review\"",
+        "new": "    return \"accept\""
+      },
+      "final_patch": {
+        "path": "core/validator.py",
+        "old": "    return \"accept\"",
+        "new": "    return \"accept\" if score > policy.get(\"threshold\", 0) else \"review\""
+      }
+    },
+    {
+      "task_id": "failure_loop_14",
+      "path": "benchmarks/local_long_debug_tasks/14_failure_loop_14",
+      "task_family": "failure_loop",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py",
+        "core/validator.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/validator.py",
+        "old": "    return \"accept\" if score >= policy.get(\"threshold\", 0) else \"review\"",
+        "new": "    return \"accept\""
+      },
+      "final_patch": {
+        "path": "core/validator.py",
+        "old": "    return \"accept\"",
+        "new": "    return \"accept\" if score > policy.get(\"threshold\", 0) else \"review\""
+      }
+    },
+    {
+      "task_id": "failure_loop_15",
+      "path": "benchmarks/local_long_debug_tasks/15_failure_loop_15",
+      "task_family": "failure_loop",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py",
+        "core/validator.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/validator.py",
+        "old": "    return \"accept\" if score >= policy.get(\"threshold\", 0) else \"review\"",
+        "new": "    return \"accept\""
+      },
+      "final_patch": {
+        "path": "core/validator.py",
+        "old": "    return \"accept\"",
+        "new": "    return \"accept\" if score > policy.get(\"threshold\", 0) else \"review\""
+      }
+    },
+    {
+      "task_id": "failure_loop_16",
+      "path": "benchmarks/local_long_debug_tasks/16_failure_loop_16",
+      "task_family": "failure_loop",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py",
+        "core/validator.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/validator.py",
+        "old": "    return \"accept\" if score >= policy.get(\"threshold\", 0) else \"review\"",
+        "new": "    return \"accept\""
+      },
+      "final_patch": {
+        "path": "core/validator.py",
+        "old": "    return \"accept\"",
+        "new": "    return \"accept\" if score > policy.get(\"threshold\", 0) else \"review\""
+      }
+    },
+    {
+      "task_id": "failure_loop_17",
+      "path": "benchmarks/local_long_debug_tasks/17_failure_loop_17",
+      "task_family": "failure_loop",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py",
+        "core/validator.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/validator.py",
+        "old": "    return \"accept\" if score >= policy.get(\"threshold\", 0) else \"review\"",
+        "new": "    return \"accept\""
+      },
+      "final_patch": {
+        "path": "core/validator.py",
+        "old": "    return \"accept\"",
+        "new": "    return \"accept\" if score > policy.get(\"threshold\", 0) else \"review\""
+      }
+    },
+    {
+      "task_id": "large_context_bug_18",
+      "path": "benchmarks/local_long_debug_tasks/18_large_context_bug_18",
+      "task_family": "large_context_bug",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py",
+        "core/reporting.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/transform.py",
+        "old": "    return base  # BUG: multiplier from config is ignored",
+        "new": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it"
+      },
+      "final_patch": {
+        "path": "core/transform.py",
+        "old": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it",
+        "new": "    return base * policy.get(\"multiplier\", 1)"
+      }
+    },
+    {
+      "task_id": "large_context_bug_19",
+      "path": "benchmarks/local_long_debug_tasks/19_large_context_bug_19",
+      "task_family": "large_context_bug",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py",
+        "core/reporting.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/transform.py",
+        "old": "    return base  # BUG: multiplier from config is ignored",
+        "new": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it"
+      },
+      "final_patch": {
+        "path": "core/transform.py",
+        "old": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it",
+        "new": "    return base * policy.get(\"multiplier\", 1)"
+      }
+    },
+    {
+      "task_id": "large_context_bug_20",
+      "path": "benchmarks/local_long_debug_tasks/20_large_context_bug_20",
+      "task_family": "large_context_bug",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py",
+        "core/reporting.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/transform.py",
+        "old": "    return base  # BUG: multiplier from config is ignored",
+        "new": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it"
+      },
+      "final_patch": {
+        "path": "core/transform.py",
+        "old": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it",
+        "new": "    return base * policy.get(\"multiplier\", 1)"
+      }
+    },
+    {
+      "task_id": "large_context_bug_21",
+      "path": "benchmarks/local_long_debug_tasks/21_large_context_bug_21",
+      "task_family": "large_context_bug",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py",
+        "core/reporting.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/transform.py",
+        "old": "    return base  # BUG: multiplier from config is ignored",
+        "new": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it"
+      },
+      "final_patch": {
+        "path": "core/transform.py",
+        "old": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it",
+        "new": "    return base * policy.get(\"multiplier\", 1)"
+      }
+    },
+    {
+      "task_id": "large_context_bug_22",
+      "path": "benchmarks/local_long_debug_tasks/22_large_context_bug_22",
+      "task_family": "large_context_bug",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py",
+        "core/reporting.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/transform.py",
+        "old": "    return base  # BUG: multiplier from config is ignored",
+        "new": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it"
+      },
+      "final_patch": {
+        "path": "core/transform.py",
+        "old": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it",
+        "new": "    return base * policy.get(\"multiplier\", 1)"
+      }
+    },
+    {
+      "task_id": "large_context_bug_23",
+      "path": "benchmarks/local_long_debug_tasks/23_large_context_bug_23",
+      "task_family": "large_context_bug",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py",
+        "core/reporting.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/transform.py",
+        "old": "    return base  # BUG: multiplier from config is ignored",
+        "new": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it"
+      },
+      "final_patch": {
+        "path": "core/transform.py",
+        "old": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it",
+        "new": "    return base * policy.get(\"multiplier\", 1)"
+      }
+    },
+    {
+      "task_id": "large_context_bug_24",
+      "path": "benchmarks/local_long_debug_tasks/24_large_context_bug_24",
+      "task_family": "large_context_bug",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py",
+        "core/reporting.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/transform.py",
+        "old": "    return base  # BUG: multiplier from config is ignored",
+        "new": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it"
+      },
+      "final_patch": {
+        "path": "core/transform.py",
+        "old": "    return base + policy.get(\"multiplier\", 1)  # BUG: adds multiplier instead of applying it",
+        "new": "    return base * policy.get(\"multiplier\", 1)"
+      }
+    },
+    {
+      "task_id": "config_or_data_pipeline_bug_25",
+      "path": "benchmarks/local_long_debug_tasks/25_config_or_data_pipeline_bug_25",
+      "task_family": "config_or_data_pipeline_bug",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py",
+        "core/validator.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/config.py",
+        "old": "    return {\"threshold\": 10, \"multiplier\": 1, \"offset\": DEFAULT_OFFSET, \"allow_negative\": True}",
+        "new": "    return {\"threshold\": 17, \"multiplier\": 1, \"offset\": 4, \"allow_negative\": False}"
+      },
+      "final_patch": {
+        "path": "core/config.py",
+        "old": "    return {\"threshold\": 17, \"multiplier\": 1, \"offset\": 4, \"allow_negative\": False}",
+        "new": "    return {\"threshold\": 17, \"multiplier\": 3, \"offset\": 4, \"allow_negative\": False}"
+      }
+    },
+    {
+      "task_id": "config_or_data_pipeline_bug_26",
+      "path": "benchmarks/local_long_debug_tasks/26_config_or_data_pipeline_bug_26",
+      "task_family": "config_or_data_pipeline_bug",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py",
+        "core/validator.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/config.py",
+        "old": "    return {\"threshold\": 10, \"multiplier\": 1, \"offset\": DEFAULT_OFFSET, \"allow_negative\": True}",
+        "new": "    return {\"threshold\": 18, \"multiplier\": 1, \"offset\": 5, \"allow_negative\": False}"
+      },
+      "final_patch": {
+        "path": "core/config.py",
+        "old": "    return {\"threshold\": 18, \"multiplier\": 1, \"offset\": 5, \"allow_negative\": False}",
+        "new": "    return {\"threshold\": 18, \"multiplier\": 2, \"offset\": 5, \"allow_negative\": False}"
+      }
+    },
+    {
+      "task_id": "config_or_data_pipeline_bug_27",
+      "path": "benchmarks/local_long_debug_tasks/27_config_or_data_pipeline_bug_27",
+      "task_family": "config_or_data_pipeline_bug",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py",
+        "core/validator.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/config.py",
+        "old": "    return {\"threshold\": 10, \"multiplier\": 1, \"offset\": DEFAULT_OFFSET, \"allow_negative\": True}",
+        "new": "    return {\"threshold\": 16, \"multiplier\": 1, \"offset\": 6, \"allow_negative\": False}"
+      },
+      "final_patch": {
+        "path": "core/config.py",
+        "old": "    return {\"threshold\": 16, \"multiplier\": 1, \"offset\": 6, \"allow_negative\": False}",
+        "new": "    return {\"threshold\": 16, \"multiplier\": 3, \"offset\": 6, \"allow_negative\": False}"
+      }
+    },
+    {
+      "task_id": "config_or_data_pipeline_bug_28",
+      "path": "benchmarks/local_long_debug_tasks/28_config_or_data_pipeline_bug_28",
+      "task_family": "config_or_data_pipeline_bug",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py",
+        "core/validator.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/config.py",
+        "old": "    return {\"threshold\": 10, \"multiplier\": 1, \"offset\": DEFAULT_OFFSET, \"allow_negative\": True}",
+        "new": "    return {\"threshold\": 17, \"multiplier\": 1, \"offset\": 3, \"allow_negative\": False}"
+      },
+      "final_patch": {
+        "path": "core/config.py",
+        "old": "    return {\"threshold\": 17, \"multiplier\": 1, \"offset\": 3, \"allow_negative\": False}",
+        "new": "    return {\"threshold\": 17, \"multiplier\": 2, \"offset\": 3, \"allow_negative\": False}"
+      }
+    },
+    {
+      "task_id": "config_or_data_pipeline_bug_29",
+      "path": "benchmarks/local_long_debug_tasks/29_config_or_data_pipeline_bug_29",
+      "task_family": "config_or_data_pipeline_bug",
+      "expected_relevant_files": [
+        "core/config.py",
+        "core/loader.py",
+        "core/transform.py",
+        "core/validator.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [
+        "file_context",
+        "test_failure_summary",
+        "edit_diff"
+      ],
+      "expected_min_steps": 18,
+      "expected_large_state_tokens": {
+        "file_context": 500,
+        "test_failure_summary": 500
+      },
+      "expected_control_or_opportunity": "opportunity",
+      "first_patch": {
+        "path": "core/config.py",
+        "old": "    return {\"threshold\": 10, \"multiplier\": 1, \"offset\": DEFAULT_OFFSET, \"allow_negative\": True}",
+        "new": "    return {\"threshold\": 18, \"multiplier\": 1, \"offset\": 4, \"allow_negative\": False}"
+      },
+      "final_patch": {
+        "path": "core/config.py",
+        "old": "    return {\"threshold\": 18, \"multiplier\": 1, \"offset\": 4, \"allow_negative\": False}",
+        "new": "    return {\"threshold\": 18, \"multiplier\": 3, \"offset\": 4, \"allow_negative\": False}"
+      }
+    },
+    {
+      "task_id": "recency_control_30",
+      "path": "benchmarks/local_long_debug_tasks/30_recency_control_30",
+      "task_family": "recency_control",
+      "expected_relevant_files": [
+        "quick_math.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [],
+      "expected_min_steps": 10,
+      "expected_large_state_tokens": {},
+      "expected_control_or_opportunity": "control",
+      "first_patch": {
+        "path": "quick_math.py",
+        "old": "    return value",
+        "new": "    return max(lower, value)"
+      },
+      "final_patch": {
+        "path": "quick_math.py",
+        "old": "    return max(lower, value)",
+        "new": "    return max(lower, min(upper, value))"
+      }
+    },
+    {
+      "task_id": "recency_control_31",
+      "path": "benchmarks/local_long_debug_tasks/31_recency_control_31",
+      "task_family": "recency_control",
+      "expected_relevant_files": [
+        "quick_math.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [],
+      "expected_min_steps": 10,
+      "expected_large_state_tokens": {},
+      "expected_control_or_opportunity": "control",
+      "first_patch": {
+        "path": "quick_math.py",
+        "old": "    return value",
+        "new": "    return max(lower, value)"
+      },
+      "final_patch": {
+        "path": "quick_math.py",
+        "old": "    return max(lower, value)",
+        "new": "    return max(lower, min(upper, value))"
+      }
+    },
+    {
+      "task_id": "recency_control_32",
+      "path": "benchmarks/local_long_debug_tasks/32_recency_control_32",
+      "task_family": "recency_control",
+      "expected_relevant_files": [
+        "quick_math.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [],
+      "expected_min_steps": 10,
+      "expected_large_state_tokens": {},
+      "expected_control_or_opportunity": "control",
+      "first_patch": {
+        "path": "quick_math.py",
+        "old": "    return value",
+        "new": "    return max(lower, value)"
+      },
+      "final_patch": {
+        "path": "quick_math.py",
+        "old": "    return max(lower, value)",
+        "new": "    return max(lower, min(upper, value))"
+      }
+    },
+    {
+      "task_id": "recency_control_33",
+      "path": "benchmarks/local_long_debug_tasks/33_recency_control_33",
+      "task_family": "recency_control",
+      "expected_relevant_files": [
+        "quick_math.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [],
+      "expected_min_steps": 10,
+      "expected_large_state_tokens": {},
+      "expected_control_or_opportunity": "control",
+      "first_patch": {
+        "path": "quick_math.py",
+        "old": "    return value",
+        "new": "    return max(lower, value)"
+      },
+      "final_patch": {
+        "path": "quick_math.py",
+        "old": "    return max(lower, value)",
+        "new": "    return max(lower, min(upper, value))"
+      }
+    },
+    {
+      "task_id": "recency_control_34",
+      "path": "benchmarks/local_long_debug_tasks/34_recency_control_34",
+      "task_family": "recency_control",
+      "expected_relevant_files": [
+        "quick_math.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [],
+      "expected_min_steps": 10,
+      "expected_large_state_tokens": {},
+      "expected_control_or_opportunity": "control",
+      "first_patch": {
+        "path": "quick_math.py",
+        "old": "    return value",
+        "new": "    return max(lower, value)"
+      },
+      "final_patch": {
+        "path": "quick_math.py",
+        "old": "    return max(lower, value)",
+        "new": "    return max(lower, min(upper, value))"
+      }
+    },
+    {
+      "task_id": "recency_control_35",
+      "path": "benchmarks/local_long_debug_tasks/35_recency_control_35",
+      "task_family": "recency_control",
+      "expected_relevant_files": [
+        "quick_math.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [],
+      "expected_min_steps": 10,
+      "expected_large_state_tokens": {},
+      "expected_control_or_opportunity": "control",
+      "first_patch": {
+        "path": "quick_math.py",
+        "old": "    return value",
+        "new": "    return max(lower, value)"
+      },
+      "final_patch": {
+        "path": "quick_math.py",
+        "old": "    return max(lower, value)",
+        "new": "    return max(lower, min(upper, value))"
+      }
+    },
+    {
+      "task_id": "recency_control_36",
+      "path": "benchmarks/local_long_debug_tasks/36_recency_control_36",
+      "task_family": "recency_control",
+      "expected_relevant_files": [
+        "quick_math.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [],
+      "expected_min_steps": 10,
+      "expected_large_state_tokens": {},
+      "expected_control_or_opportunity": "control",
+      "first_patch": {
+        "path": "quick_math.py",
+        "old": "    return value",
+        "new": "    return max(lower, value)"
+      },
+      "final_patch": {
+        "path": "quick_math.py",
+        "old": "    return max(lower, value)",
+        "new": "    return max(lower, min(upper, value))"
+      }
+    },
+    {
+      "task_id": "recency_control_37",
+      "path": "benchmarks/local_long_debug_tasks/37_recency_control_37",
+      "task_family": "recency_control",
+      "expected_relevant_files": [
+        "quick_math.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [],
+      "expected_min_steps": 10,
+      "expected_large_state_tokens": {},
+      "expected_control_or_opportunity": "control",
+      "first_patch": {
+        "path": "quick_math.py",
+        "old": "    return value",
+        "new": "    return max(lower, value)"
+      },
+      "final_patch": {
+        "path": "quick_math.py",
+        "old": "    return max(lower, value)",
+        "new": "    return max(lower, min(upper, value))"
+      }
+    },
+    {
+      "task_id": "recency_control_38",
+      "path": "benchmarks/local_long_debug_tasks/38_recency_control_38",
+      "task_family": "recency_control",
+      "expected_relevant_files": [
+        "quick_math.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [],
+      "expected_min_steps": 10,
+      "expected_large_state_tokens": {},
+      "expected_control_or_opportunity": "control",
+      "first_patch": {
+        "path": "quick_math.py",
+        "old": "    return value",
+        "new": "    return max(lower, value)"
+      },
+      "final_patch": {
+        "path": "quick_math.py",
+        "old": "    return max(lower, value)",
+        "new": "    return max(lower, min(upper, value))"
+      }
+    },
+    {
+      "task_id": "recency_control_39",
+      "path": "benchmarks/local_long_debug_tasks/39_recency_control_39",
+      "task_family": "recency_control",
+      "expected_relevant_files": [
+        "quick_math.py"
+      ],
+      "expected_test_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_command": "PYTHONDONTWRITEBYTECODE=1 python -m pytest -q",
+      "expected_delayed_states": [],
+      "expected_min_steps": 10,
+      "expected_large_state_tokens": {},
+      "expected_control_or_opportunity": "control",
+      "first_patch": {
+        "path": "quick_math.py",
+        "old": "    return value",
+        "new": "    return max(lower, value)"
+      },
+      "final_patch": {
+        "path": "quick_math.py",
+        "old": "    return max(lower, value)",
+        "new": "    return max(lower, min(upper, value))"
+      }
+    }
+  ]
+}
