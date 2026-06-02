@@ -41,6 +41,10 @@ python -m src.agent.trace_sources --output agent_results/trace_sources_report.js
 python -m src.agent.fetch_public_traces --source agentlens --output-dir traces/downloaded/agentlens --max-files 50 --report agent_results/fetch_agentlens_report.json
 python -m src.agent.fetch_public_traces --source codetracer --output-dir traces/downloaded/codetracer --max-files 50 --report agent_results/fetch_codetracer_report.json
 python -m src.agent.fetch_public_traces --source swe_gym --output-dir traces/downloaded/swe_gym --max-files 50 --report agent_results/fetch_swegym_report.json
+python -m src.agent.fetch_hf_traces --source exgentic_otel --output-dir traces/downloaded/hf/exgentic_otel --report agent_results/fetch_hf_exgentic_report.json --max-files 2 --max-parquet-rows 40
+python -m src.agent.fetch_hf_traces --source pagarsky_agent_trace --output-dir traces/downloaded/hf/pagarsky_agent_trace --report agent_results/fetch_hf_pagarsky_report.json --max-files 5 --max-parquet-rows 40
+python -m src.agent.fetch_hf_traces --source itbench_trajectories --output-dir traces/downloaded/hf/itbench_trajectories --report agent_results/fetch_hf_itbench_report.json --max-files 30
+python -m src.agent.fetch_hf_traces --source codetracebench_hf --output-dir traces/downloaded/hf/codetracebench_hf --report agent_results/fetch_hf_codetracebench_report.json --max-files 40
 python -m src.agent.extract_trace_archives --input-dir traces/real_raw/codetracebench --output-dir traces/real_extracted/codetracebench --max-archives 20 --report agent_results/archive_extraction_report.json
 python -m src.agent.inspect_trace_artifacts --input-dir traces/real_extracted/codetracebench --output agent_results/codetracer_artifact_inventory.json
 python -m src.agent.trace_audit --trace-dir traces/real --trace-format auto --output agent_results/real_trace_audit.json
@@ -78,21 +82,22 @@ python -m src.agent.plot_paper_eval --input-dir agent_results/paper_eval --outpu
 
 ## Real Trace Evaluation
 
-`trace_loader.py` accepts normalized JSON/JSONL and best-effort public trajectory adapters for SWE-Gym, CodeTraceBench/CodeTracer, AgentLens/OpenHands, and generic ReAct JSONL. Source-specific adapters preserve raw payloads in metadata and fall back to message/tool/observation detection when public schemas are incomplete or drift.
+`trace_loader.py` accepts normalized JSON/JSONL and best-effort public trajectory adapters for SWE-Gym, CodeTraceBench/CodeTracer, AgentLens/OpenHands, OpenTelemetry span traces, and generic ReAct JSONL. Source-specific adapters preserve raw payloads in metadata and fall back to message/tool/observation detection when public schemas are incomplete or drift.
 
 `trace_normalizer.py` labels each LLM event with prompt reconstruction metadata:
 
 - `explicit`: the uploaded or normalized trace already contains explicit state references.
 - `state_tree`: source-specific adapter found persistent state tree or memory fields.
 - `step_context`: source-specific adapter found per-step state/context fields.
+- `exact_otel_messages`: OpenTelemetry spans expose exact `gen_ai.input.messages` and `gen_ai.output.messages`.
 - `message_history`: input states were reconstructed from message history.
 - `accumulated_fallback`: the adapter had to build prompts from accumulated thought/action/observation text.
 
-It also reports `full_history_likely` and a monotonic growth score. Full-history-like traces can still be replayed only with `--allow-smoke-traces`, but they must not be presented as paper evidence.
+It also reports `full_history_likely` and a monotonic growth score. Lossy full-history-like traces can still be replayed only with `--allow-smoke-traces`, but they must not be presented as paper evidence. Exact OpenTelemetry prompt snapshots are treated as real prompt evidence, not reconstructed history.
 
 `trace_audit.py` reports source quality, prompt reconstruction risk, nontrivial tool/state reuse, paper-usable trace count, smoke-only trace count, unusable trace count, and exclusion reasons. `trace_profile.py` reports reuse-distance, state-type, delayed-reuse, cross-agent-reuse, LRU-regret, tool, and phase statistics, and writes both state and reuse CSVs.
 
-`inspect_trace_artifacts.py` inventories extracted files and reports whether richer state-tree, memory, tool-call, prompt, patch, or test artifacts exist. `extract_trace_archives.py` attempts `.tar.zst` extraction and records candidate trace files. `fetch_public_traces.py` records whether AgentLens/OpenHands, SWE-Gym, or CodeTracer samples are locally available or require manual download.
+`inspect_trace_artifacts.py` inventories extracted files and reports whether richer state-tree, memory, tool-call, prompt, patch, or test artifacts exist. `extract_trace_archives.py` attempts `.tar.zst` extraction and records candidate trace files. `fetch_public_traces.py` records whether AgentLens/OpenHands, SWE-Gym, or CodeTracer samples are locally available or require manual download. `fetch_hf_traces.py` fetches public Hugging Face trace datasets through a mirror endpoint when possible and converts Parquet rows into one JSON trace per row.
 
 `trace_opportunity_selector.py` is the pre-registered selector. It uses only workload-intrinsic metrics before any ASG policy replay: delayed high-value reuse, LRU-regret candidates, phase-dependent reuse, cross-agent reuse, reusable file/failure/edit state, memory pressure, and prompt reconstruction quality. It writes the full candidate scores, opportunity manifest, matched-control manifest, smoke-only manifest, unusable manifest, and `selection_protocol.md`. ASG/LRU/KVFlow performance is not used for selection.
 
@@ -120,6 +125,8 @@ Public traces are often single-workflow trajectories. `serving_workload.py` comp
 - `data_quality`, `paper_usable`, `num_high_quality_traces`, `num_smoke_traces`: whether the replay can support paper claims.
 
 Current local CodeTraceBench samples remain message-history/full-history reconstructed and have zero delayed reuse, zero cross-agent reuse, and zero LRU-regret candidates. Artifact inspection found no richer state-tree or per-step state context files in the extracted archives. They are smoke-only and should not be used for speedup claims.
+
+Current Hugging Face sample run (`agent_results/trace_selection_hf/selection_report.json`) loaded 181 traces from Exgentic, AgentTrace, ITBench, and CodeTraceBench-HF samples. The selector found 2 paper-usable opportunity traces and 0 matched-control traces. On those two opportunity traces, `asg-retention-v2-online` reduces effective prefill by about 0.41% versus `lru-system` at 0.5GB and 8-way serving, and by about 0.57% under the tightest 0.05GB stress setting. This is a valid end-to-end real-trace run, but it is not evidence that ASG is far beyond LRU; more opportunity-rich/control traces or a stronger retention objective are required before making that claim.
 
 ## Baseline Interpretation
 

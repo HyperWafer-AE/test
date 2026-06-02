@@ -3,6 +3,7 @@ typing_extensions
 networkx
 matplotlib
 tqdm
+pyarrow
 PyYAML
 setuptools
 wheel

@@ -11,11 +11,30 @@ SOURCE_SPECS = [
         "local_candidates": [
             "traces/real/agentlens",
             "traces/downloaded/agentlens",
+            "traces/downloaded/hf/exgentic_otel",
             "traces/real/openhands",
             "traces/real/code-agent-state-trajectories",
         ],
-        "supported_format": "agentlens",
-        "notes": "Adapter expects OpenHands/AgentLens JSON or JSONL trajectories with actions, observations, and success metadata.",
+        "supported_format": "agentlens / otel_spans",
+        "notes": "Adapter expects OpenHands/AgentLens JSON or JSONL trajectories, or Hugging Face OpenTelemetry span traces converted from Exgentic parquet.",
+    },
+    {
+        "source_name": "AgentTrace / tool-use trajectories",
+        "expected_repo": "https://huggingface.co/datasets/pagarsky/agent-trace",
+        "local_candidates": [
+            "traces/downloaded/hf/pagarsky_agent_trace",
+        ],
+        "supported_format": "generic_react_jsonl",
+        "notes": "Adapter supports AgentTrace JSONL/parquet samples downloaded from Hugging Face.",
+    },
+    {
+        "source_name": "ITBench SRE trajectories",
+        "expected_repo": "https://huggingface.co/datasets/ibm-research/ITBench-Trajectories",
+        "local_candidates": [
+            "traces/downloaded/hf/itbench_trajectories",
+        ],
+        "supported_format": "generic_react_jsonl",
+        "notes": "Adapter supports ITBench ReAct session.jsonl trajectories downloaded from Hugging Face.",
     },
     {
         "source_name": "CodeTracer / CodeTraceBench",
@@ -25,6 +44,7 @@ SOURCE_SPECS = [
             "traces/real/codetracebench",
             "traces/real_extracted/codetracebench",
             "traces/downloaded/codetracer",
+            "traces/downloaded/hf/codetracebench_hf",
             "traces/real_raw/codetracebench",
         ],
         "supported_format": "codetracer",

@@ -12,6 +12,7 @@ SUPPORTED_TRACE_FORMATS = {
     "swe_gym",
     "codetracer",
     "agentlens",
+    "otel_spans",
     "generic_react_jsonl",
 }
 
@@ -105,6 +106,8 @@ def detect_trace_format(path: Path, trace_format: str = "auto") -> str:
         return "codetracer"
     if "agentlens" in name or "openhands" in name:
         return "agentlens"
+    if "exgentic" in name or "otel" in name or "opentelemetry" in name:
+        return "otel_spans"
     if path.suffix.lower() == ".jsonl":
         first = _first_jsonl(path)
         if isinstance(first, dict) and first.get("type") in {"state", "llm", "tool"}:
@@ -126,6 +129,8 @@ def _detect_payload_format(payload) -> str:
         return "codetracer"
     if "agentlens" in text or "openhands" in text:
         return "agentlens"
+    if "gen_ai.input.messages" in text or "span_id" in text or "opentelemetry" in text:
+        return "otel_spans"
     return "generic_react_jsonl"
 
 
@@ -186,5 +191,6 @@ def expected_source_format_notes() -> dict:
         "swe_gym": "JSON/JSONL trajectory records with messages/steps, actions, observations, status, and optional instance_id.",
         "codetracer": "CodeTraceBench-style JSON/JSONL records with step trajectory, tool/action fields, observations, and stage labels if present.",
         "agentlens": "OpenHands/AgentLens JSON/JSONL records with actions, observations, tool names, and success metadata.",
+        "otel_spans": "OpenTelemetry-style agent traces with spans, gen_ai.input.messages, gen_ai.output.messages, token usage, and optional tool messages.",
         "generic_react_jsonl": "One JSON object per step, or a JSON object/list containing messages plus tool/action/observation fields.",
     }

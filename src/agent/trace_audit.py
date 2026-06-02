@@ -123,6 +123,7 @@ def audit_single_trace(
         "failure_summary",
         "subagent_output",
         "summary_state",
+        "tool_observation",
         "web_result",
     }
     has_non_dialogue_state = any(state_types.get(state_type, 0) > 0 for state_type in non_dialogue_types)

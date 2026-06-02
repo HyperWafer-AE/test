@@ -7,3 +7,10 @@ __pycache__/
 .ruff_cache/
 
 output/
+
+# Downloaded/public trace data can be very large; keep local copies out of git.
+traces/downloaded/hf/
+traces/downloaded/hf_probe/
+traces/real_high_quality/
+traces/real_smoke/
+traces/serving/hf_*.json

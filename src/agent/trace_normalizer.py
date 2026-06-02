@@ -24,6 +24,8 @@ def normalize_payload(payload, trace_format: str = "auto", source_id: str = "tra
             validate_trace(payload if isinstance(payload, list) else payload.get("events", [])),
             default_reconstruction="explicit",
         )
+    if trace_format == "otel_spans" or _looks_like_otel_spans_payload(payload):
+        return normalize_otel_spans_payload(payload, source_id=source_id)
     if trace_format == "codetracer" or _looks_like_codetracer_payload(payload):
         return normalize_codetracer_payload(payload, source_id=source_id)
     return normalize_generic_react(payload, source_id=source_id, trace_format=trace_format)
@@ -33,6 +35,9 @@ def normalize_jsonl_records(records: Iterable[dict], trace_format: str = "auto",
     records = list(records)
     if _looks_like_normalized_trace(records):
         return _annotate_prompt_quality(validate_trace(records), default_reconstruction="explicit")
+    if trace_format == "otel_spans" or (len(records) == 1 and _looks_like_otel_spans_payload(records[0])):
+        payload = records[0] if len(records) == 1 else {"spans": records}
+        return normalize_otel_spans_payload(payload, source_id=source_id)
     if trace_format == "codetracer":
         return normalize_codetracer_payload(records, source_id=source_id)
     return normalize_generic_react(records, source_id=source_id, trace_format=trace_format)
@@ -150,6 +155,275 @@ def _looks_like_codetracer_payload(payload) -> bool:
     if payload.get("instance_id") and payload.get("messages") and payload.get("info"):
         return True
     return any(key in payload for key in ("state_tree", "persistent_memory", "trajectory_steps"))
+
+
+def _looks_like_otel_spans_payload(payload) -> bool:
+    payload = _decode_maybe_json(payload)
+    if isinstance(payload, dict) and isinstance(payload.get("spans"), list):
+        return True
+    if isinstance(payload, list) and payload:
+        return all(isinstance(item, dict) and ("span_id" in item or "attributes" in item) for item in payload[:3])
+    if not isinstance(payload, dict):
+        return False
+    text = json.dumps(payload, ensure_ascii=True).lower()[:4000]
+    return "gen_ai.input.messages" in text or "gen_ai.output.messages" in text
+
+
+def normalize_otel_spans_payload(payload, source_id: str) -> List[dict]:
+    payload = _decode_maybe_json(payload)
+    if isinstance(payload, list):
+        payload = {"spans": payload}
+    if not isinstance(payload, dict):
+        return normalize_generic_react(payload, source_id=source_id, trace_format="otel_spans")
+
+    spans = _otel_spans(payload)
+    agent = _agent_name(payload, source_id)
+    trace_success = _otel_trace_success(payload, spans)
+    model_id = _otel_model_id(payload, spans)
+    events = []
+    seen_states = set()
+    seen_tool_states = set()
+    turn = 0
+
+    for span in spans:
+        attrs = span.get("attributes") or {}
+        input_messages = _otel_messages(attrs.get("gen_ai.input.messages"))
+        output_messages = _otel_messages(attrs.get("gen_ai.output.messages"))
+        input_ids = []
+
+        for msg_idx, message in enumerate(input_messages):
+            normalized_message = _otel_normalized_message(message)
+            content = normalized_message.get("content", "")
+            if not str(content).strip():
+                continue
+            if _otel_is_tool_response(message):
+                tool_name = _otel_tool_name(message)
+                status = "failed" if _looks_failed(content) else "ok"
+                tool_state = segment_tool_output(
+                    tool_name,
+                    content,
+                    source_id=f"{source_id}:oteltool",
+                    agent=agent,
+                    ordinal=msg_idx,
+                    status=status,
+                    producer_event_id=_event_id(source_id, "tool", len(seen_tool_states)),
+                    metadata={
+                        "raw": message,
+                        "trace_format": "otel_spans",
+                        "trace_source": "huggingface_otel",
+                        "span_id": span.get("span_id"),
+                        "tool_call_id": _otel_tool_call_id(message),
+                    },
+                )
+                if tool_state["state_id"] not in seen_tool_states:
+                    events.append(
+                        ToolEvent(
+                            event_id=_event_id(source_id, "tool", len(seen_tool_states)),
+                            agent=agent,
+                            turn=turn,
+                            tool=tool_name,
+                            latency=_otel_span_latency(span),
+                            output_tokens=tool_state["tokens"],
+                            status=status,
+                            new_state_id=tool_state["state_id"],
+                            new_state_type=tool_state["state_type"],
+                            phase=_phase_from_text(content),
+                            metadata={
+                                "raw": message,
+                                "trace_success": trace_success,
+                                "trace_format": "otel_spans",
+                                "trace_source": "huggingface_otel",
+                                "span_id": span.get("span_id"),
+                                "tool_call_id": _otel_tool_call_id(message),
+                            },
+                        ).to_dict()
+                    )
+                    seen_tool_states.add(tool_state["state_id"])
+                input_ids.append(tool_state["state_id"])
+                continue
+
+            states = segment_messages(
+                [normalized_message],
+                source_id=f"{source_id}:otelmsg",
+                agent=agent,
+                model_id=model_id,
+                tokenizer_id="otel",
+            )
+            for state in states:
+                metadata = dict(state.get("metadata") or {})
+                metadata.setdefault("trace_format", "otel_spans")
+                metadata.setdefault("trace_source", "huggingface_otel")
+                metadata.setdefault("span_id", span.get("span_id"))
+                state["metadata"] = metadata
+                if state["state_id"] not in seen_states:
+                    events.append(state)
+                    seen_states.add(state["state_id"])
+                input_ids.append(state["state_id"])
+
+        assistant_text = "\n".join(
+            text for text in (_otel_message_content(message) for message in output_messages) if str(text).strip()
+        )
+        output_state_id = stable_id(source_id, "assistant", turn, assistant_text, span.get("span_id"), prefix="state")
+        events.append(
+            LLMEvent(
+                event_id=_event_id(source_id, "llm", turn),
+                agent=agent,
+                turn=turn,
+                input_state_ids=list(dict.fromkeys(input_ids)),
+                append_tokens=_otel_int(attrs.get("gen_ai.usage.input_tokens"), estimate_tokens(input_messages[-1] if input_messages else "")),
+                output_tokens=_otel_int(attrs.get("gen_ai.usage.output_tokens"), estimate_tokens(assistant_text)),
+                new_state_id=output_state_id,
+                phase=_phase_from_text(assistant_text),
+                metadata={
+                    "raw": span,
+                    "trace_success": trace_success,
+                    "trace_format": "otel_spans",
+                    "trace_source": "huggingface_otel",
+                    "span_id": span.get("span_id"),
+                    "trace_id": span.get("trace_id"),
+                    "session_id": payload.get("session_id") or span.get("session_id"),
+                    "benchmark": payload.get("benchmark") or span.get("benchmark"),
+                    "harness": payload.get("harness") or span.get("harness"),
+                    "prompt_reconstruction": "exact_otel_messages",
+                },
+            ).to_dict()
+        )
+        turn += 1
+
+    return _annotate_prompt_quality(validate_trace(events), default_reconstruction="exact_otel_messages")
+
+
+def _otel_spans(payload: dict) -> list:
+    spans = _decode_maybe_json(payload.get("spans")) or []
+    if not isinstance(spans, list):
+        return []
+    llm_spans = [
+        _decode_maybe_json(span)
+        for span in spans
+        if isinstance(_decode_maybe_json(span), dict)
+        and (
+            str(_decode_maybe_json(span).get("type", "")).lower() == "llm_call"
+            or "gen_ai.input.messages" in (_decode_maybe_json(span).get("attributes") or {})
+        )
+    ]
+    return sorted(llm_spans, key=lambda span: str(span.get("start_time", "")))
+
+
+def _otel_messages(value) -> list:
+    value = _decode_maybe_json(value)
+    if isinstance(value, list):
+        return [item if isinstance(item, dict) else {"role": "user", "content": str(item)} for item in value]
+    if isinstance(value, dict):
+        return [value]
+    if value is None:
+        return []
+    return [{"role": "user", "content": str(value)}]
+
+
+def _otel_normalized_message(message: dict) -> dict:
+    role = str(message.get("role") or message.get("type") or "user")
+    return {"role": role, "content": _otel_message_content(message), **message}
+
+
+def _otel_message_content(message: dict) -> str:
+    if not isinstance(message, dict):
+        return str(message)
+    if message.get("content") is not None:
+        return str(message.get("content"))
+    parts = _decode_maybe_json(message.get("parts"))
+    if not isinstance(parts, list):
+        return ""
+    chunks = []
+    for part in parts:
+        if not isinstance(part, dict):
+            chunks.append(str(part))
+            continue
+        part_type = str(part.get("type", "")).lower()
+        if part.get("content") is not None:
+            chunks.append(str(part.get("content")))
+        elif part.get("result") is not None:
+            chunks.append(str(part.get("result")))
+        elif part_type in {"tool_call", "function_call"}:
+            chunks.append(
+                json.dumps(
+                    {
+                        "tool_call": part.get("name") or part.get("tool"),
+                        "arguments": part.get("arguments"),
+                    },
+                    ensure_ascii=True,
+                    sort_keys=True,
+                )
+            )
+    return "\n".join(chunk for chunk in chunks if str(chunk).strip())
+
+
+def _otel_is_tool_response(message: dict) -> bool:
+    role = str(message.get("role", "")).lower()
+    if role in {"tool", "observation", "function"}:
+        return True
+    parts = _decode_maybe_json(message.get("parts"))
+    return isinstance(parts, list) and any(
+        isinstance(part, dict) and str(part.get("type", "")).lower() in {"tool_call_response", "tool_result", "function_response"}
+        for part in parts
+    )
+
+
+def _otel_tool_name(message: dict) -> str:
+    if message.get("name") or message.get("tool"):
+        return str(message.get("name") or message.get("tool"))
+    parts = _decode_maybe_json(message.get("parts"))
+    if isinstance(parts, list):
+        for part in parts:
+            if isinstance(part, dict) and (part.get("name") or part.get("tool")):
+                return str(part.get("name") or part.get("tool"))
+    return "tool_response"
+
+
+def _otel_tool_call_id(message: dict):
+    if message.get("tool_call_id") or message.get("id"):
+        return message.get("tool_call_id") or message.get("id")
+    parts = _decode_maybe_json(message.get("parts"))
+    if isinstance(parts, list):
+        for part in parts:
+            if isinstance(part, dict) and part.get("id"):
+                return part.get("id")
+    return None
+
+
+def _otel_model_id(payload: dict, spans: list) -> str:
+    models = payload.get("models")
+    if isinstance(models, list) and models:
+        return str(models[0])
+    for span in spans:
+        attrs = span.get("attributes") or {}
+        if attrs.get("gen_ai.request.model"):
+            return str(attrs["gen_ai.request.model"])
+    return "unknown"
+
+
+def _otel_trace_success(payload: dict, spans: list):
+    direct = _success_from_payload(payload)
+    if direct is not None:
+        return direct
+    status_codes = []
+    for span in spans:
+        status = span.get("status") or {}
+        if isinstance(status, dict) and status.get("code") is not None:
+            status_codes.append(status.get("code"))
+    if not status_codes:
+        return None
+    return all(int(code) in {0, 1} for code in status_codes)
+
+
+def _otel_int(value, default: int) -> int:
+    try:
+        return int(value)
+    except Exception:
+        return int(default)
+
+
+def _otel_span_latency(span: dict) -> int:
+    return 1
 
 
 def normalize_codetracer_payload(payload, source_id: str) -> List[dict]:
@@ -692,9 +966,11 @@ def _annotate_prompt_quality(trace: List[dict], default_reconstruction: str = "e
         if reconstruction is None:
             reconstruction = "explicit" if event.get("input_segments") else default_reconstruction
         metadata["prompt_reconstruction"] = reconstruction
+        exact_prompt_source = reconstruction in {"explicit", "exact_otel_messages"}
         metadata["monotonic_context_growth_score"] = growth_score
         metadata["full_history_likely"] = bool(
-            reconstruction == "accumulated_fallback" or full_history_trace or token_growth_trace
+            reconstruction == "accumulated_fallback"
+            or ((full_history_trace or token_growth_trace) and not exact_prompt_source)
         )
         event["metadata"] = metadata
     return trace

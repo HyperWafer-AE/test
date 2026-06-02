@@ -1,0 +1,23 @@
+{
+  "status": "generated",
+  "figures": [
+    "agent_results\\paper_figures_hf\\fig_workload_characterization.pdf",
+    "agent_results\\paper_figures_hf\\fig_workload_characterization.svg",
+    "agent_results\\paper_figures_hf\\fig_workload_characterization.png",
+    "agent_results\\paper_figures_hf\\fig_concurrency_memory_sweep.pdf",
+    "agent_results\\paper_figures_hf\\fig_concurrency_memory_sweep.svg",
+    "agent_results\\paper_figures_hf\\fig_concurrency_memory_sweep.png",
+    "agent_results\\paper_figures_hf\\fig_online_vs_oracle_gap.pdf",
+    "agent_results\\paper_figures_hf\\fig_online_vs_oracle_gap.svg",
+    "agent_results\\paper_figures_hf\\fig_online_vs_oracle_gap.png",
+    "agent_results\\paper_figures_hf\\fig_opportunity_vs_control.pdf",
+    "agent_results\\paper_figures_hf\\fig_opportunity_vs_control.svg",
+    "agent_results\\paper_figures_hf\\fig_opportunity_vs_control.png",
+    "agent_results\\paper_figures_hf\\fig_mapping_ablation.pdf",
+    "agent_results\\paper_figures_hf\\fig_mapping_ablation.svg",
+    "agent_results\\paper_figures_hf\\fig_mapping_ablation.png",
+    "agent_results\\paper_figures_hf\\fig_prefetch_ablation.pdf",
+    "agent_results\\paper_figures_hf\\fig_prefetch_ablation.svg",
+    "agent_results\\paper_figures_hf\\fig_prefetch_ablation.png"
+  ]
+}

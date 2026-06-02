@@ -1,0 +1,292 @@
+{
+  "source": "codetracebench_hf",
+  "repo_id": "NJU-LINK/CodeTraceBench",
+  "trace_format": "codetracer",
+  "output_dir": "traces\\downloaded\\hf\\codetracebench_hf",
+  "api_endpoint": "https://huggingface.co",
+  "mirror_endpoint": "https://hf-mirror.com",
+  "patterns": [
+    "swe_raw/*/*/*.traj.json"
+  ],
+  "num_remote_files": 20447,
+  "num_selected_files": 40,
+  "downloaded_files": [
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/alibaba__fastjson2-2559/alibaba__fastjson2-2559.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\alibaba__fastjson2-2559\\alibaba__fastjson2-2559.traj.json",
+      "status": "downloaded",
+      "bytes": 143497
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/alibaba__fastjson2-2775/alibaba__fastjson2-2775.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\alibaba__fastjson2-2775\\alibaba__fastjson2-2775.traj.json",
+      "status": "downloaded",
+      "bytes": 107212
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/catchorg__Catch2-1608/catchorg__Catch2-1608.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\catchorg__Catch2-1608\\catchorg__Catch2-1608.traj.json",
+      "status": "downloaded",
+      "bytes": 121596
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/clap-rs__clap-2501/clap-rs__clap-2501.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\clap-rs__clap-2501\\clap-rs__clap-2501.traj.json",
+      "status": "downloaded",
+      "bytes": 219534
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/clap-rs__clap-2534/clap-rs__clap-2534.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\clap-rs__clap-2534\\clap-rs__clap-2534.traj.json",
+      "status": "downloaded",
+      "bytes": 166232
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/clap-rs__clap-2758/clap-rs__clap-2758.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\clap-rs__clap-2758\\clap-rs__clap-2758.traj.json",
+      "status": "downloaded",
+      "bytes": 315311
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/clap-rs__clap-2895/clap-rs__clap-2895.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\clap-rs__clap-2895\\clap-rs__clap-2895.traj.json",
+      "status": "downloaded",
+      "bytes": 183585
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/clap-rs__clap-3420/clap-rs__clap-3420.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\clap-rs__clap-3420\\clap-rs__clap-3420.traj.json",
+      "status": "downloaded",
+      "bytes": 124936
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/clap-rs__clap-3421/clap-rs__clap-3421.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\clap-rs__clap-3421\\clap-rs__clap-3421.traj.json",
+      "status": "downloaded",
+      "bytes": 332806
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/clap-rs__clap-3684/clap-rs__clap-3684.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\clap-rs__clap-3684\\clap-rs__clap-3684.traj.json",
+      "status": "downloaded",
+      "bytes": 102689
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/clap-rs__clap-3975/clap-rs__clap-3975.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\clap-rs__clap-3975\\clap-rs__clap-3975.traj.json",
+      "status": "downloaded",
+      "bytes": 400620
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/clap-rs__clap-4248/clap-rs__clap-4248.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\clap-rs__clap-4248\\clap-rs__clap-4248.traj.json",
+      "status": "downloaded",
+      "bytes": 267057
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/cli__cli-5019/cli__cli-5019.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\cli__cli-5019\\cli__cli-5019.traj.json",
+      "status": "downloaded",
+      "bytes": 100239
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/cli__cli-6706/cli__cli-6706.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\cli__cli-6706\\cli__cli-6706.traj.json",
+      "status": "downloaded",
+      "bytes": 126285
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/darkreader__darkreader-7241/darkreader__darkreader-7241.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\darkreader__darkreader-7241\\darkreader__darkreader-7241.traj.json",
+      "status": "downloaded",
+      "bytes": 94333
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/facebook__zstd-1105/facebook__zstd-1105.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\facebook__zstd-1105\\facebook__zstd-1105.traj.json",
+      "status": "downloaded",
+      "bytes": 142744
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/facebook__zstd-1390/facebook__zstd-1390.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\facebook__zstd-1390\\facebook__zstd-1390.traj.json",
+      "status": "downloaded",
+      "bytes": 105643
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/facebook__zstd-1532/facebook__zstd-1532.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\facebook__zstd-1532\\facebook__zstd-1532.traj.json",
+      "status": "downloaded",
+      "bytes": 90390
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/facebook__zstd-1733/facebook__zstd-1733.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\facebook__zstd-1733\\facebook__zstd-1733.traj.json",
+      "status": "downloaded",
+      "bytes": 297459
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/facebook__zstd-2094/facebook__zstd-2094.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\facebook__zstd-2094\\facebook__zstd-2094.traj.json",
+      "status": "downloaded",
+      "bytes": 256287
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/fasterxml__jackson-core-1016/fasterxml__jackson-core-1016.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\fasterxml__jackson-core-1016\\fasterxml__jackson-core-1016.traj.json",
+      "status": "downloaded",
+      "bytes": 148475
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/fasterxml__jackson-core-183/fasterxml__jackson-core-183.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\fasterxml__jackson-core-183\\fasterxml__jackson-core-183.traj.json",
+      "status": "downloaded",
+      "bytes": 98413
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/fasterxml__jackson-databind-3701/fasterxml__jackson-databind-3701.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\fasterxml__jackson-databind-3701\\fasterxml__jackson-databind-3701.traj.json",
+      "status": "downloaded",
+      "bytes": 129134
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/fasterxml__jackson-databind-4050/fasterxml__jackson-databind-4050.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\fasterxml__jackson-databind-4050\\fasterxml__jackson-databind-4050.traj.json",
+      "status": "downloaded",
+      "bytes": 105054
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/fasterxml__jackson-databind-4469/fasterxml__jackson-databind-4469.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\fasterxml__jackson-databind-4469\\fasterxml__jackson-databind-4469.traj.json",
+      "status": "downloaded",
+      "bytes": 136073
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/fasterxml__jackson-databind-4641/fasterxml__jackson-databind-4641.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\fasterxml__jackson-databind-4641\\fasterxml__jackson-databind-4641.traj.json",
+      "status": "downloaded",
+      "bytes": 188405
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/fmtlib__fmt-1663/fmtlib__fmt-1663.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\fmtlib__fmt-1663\\fmtlib__fmt-1663.traj.json",
+      "status": "downloaded",
+      "bytes": 176147
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/fmtlib__fmt-2394/fmtlib__fmt-2394.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\fmtlib__fmt-2394\\fmtlib__fmt-2394.traj.json",
+      "status": "downloaded",
+      "bytes": 110232
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/fmtlib__fmt-4286/fmtlib__fmt-4286.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\fmtlib__fmt-4286\\fmtlib__fmt-4286.traj.json",
+      "status": "downloaded",
+      "bytes": 164576
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/iamkun__dayjs-1319/iamkun__dayjs-1319.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\iamkun__dayjs-1319\\iamkun__dayjs-1319.traj.json",
+      "status": "downloaded",
+      "bytes": 88611
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/iamkun__dayjs-1414/iamkun__dayjs-1414.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\iamkun__dayjs-1414\\iamkun__dayjs-1414.traj.json",
+      "status": "downloaded",
+      "bytes": 116168
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/iamkun__dayjs-1611/iamkun__dayjs-1611.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\iamkun__dayjs-1611\\iamkun__dayjs-1611.traj.json",
+      "status": "downloaded",
+      "bytes": 96205
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/iamkun__dayjs-1725/iamkun__dayjs-1725.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\iamkun__dayjs-1725\\iamkun__dayjs-1725.traj.json",
+      "status": "downloaded",
+      "bytes": 110558
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/jqlang__jq-1793/jqlang__jq-1793.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\jqlang__jq-1793\\jqlang__jq-1793.traj.json",
+      "status": "downloaded",
+      "bytes": 79224
+    }
+  ],
+  "converted_trace_files": [],
+  "failed_files": [
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/clap-rs__clap-2529/clap-rs__clap-2529.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\clap-rs__clap-2529\\clap-rs__clap-2529.traj.json",
+      "error": "URLError: <urlopen error [Errno 2] No such file or directory>"
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/clap-rs__clap-3179/clap-rs__clap-3179.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\clap-rs__clap-3179\\clap-rs__clap-3179.traj.json",
+      "error": "URLError: <urlopen error [Errno 2] No such file or directory>"
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/clap-rs__clap-4474/clap-rs__clap-4474.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\clap-rs__clap-4474\\clap-rs__clap-4474.traj.json",
+      "error": "URLError: <urlopen error [Errno 2] No such file or directory>"
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/facebook__zstd-637/facebook__zstd-637.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\facebook__zstd-637\\facebook__zstd-637.traj.json",
+      "error": "URLError: <urlopen error [Errno 2] No such file or directory>"
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/fasterxml__jackson-dataformat-xml-638/fasterxml__jackson-dataformat-xml-638.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\fasterxml__jackson-dataformat-xml-638\\fasterxml__jackson-dataformat-xml-638.traj.json",
+      "error": "URLError: <urlopen error [Errno 2] No such file or directory>"
+    },
+    {
+      "remote_file": "swe_raw/mini_swe_agent__multi/jqlang__jq-2654/jqlang__jq-2654.traj.json",
+      "local_file": "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\jqlang__jq-2654\\jqlang__jq-2654.traj.json",
+      "error": "URLError: <urlopen error [Errno 2] No such file or directory>"
+    }
+  ],
+  "notes": "CodeTraceBench trajectory JSON files from Hugging Face. Full archives are intentionally excluded by default.",
+  "num_downloaded_files": 34,
+  "num_failed_files": 6,
+  "num_converted_trace_files": 0,
+  "trace_like_files": [
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\alibaba__fastjson2-2559\\alibaba__fastjson2-2559.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\alibaba__fastjson2-2775\\alibaba__fastjson2-2775.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\catchorg__Catch2-1608\\catchorg__Catch2-1608.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\clap-rs__clap-2501\\clap-rs__clap-2501.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\clap-rs__clap-2534\\clap-rs__clap-2534.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\clap-rs__clap-2758\\clap-rs__clap-2758.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\clap-rs__clap-2895\\clap-rs__clap-2895.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\clap-rs__clap-3420\\clap-rs__clap-3420.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\clap-rs__clap-3421\\clap-rs__clap-3421.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\clap-rs__clap-3684\\clap-rs__clap-3684.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\clap-rs__clap-3975\\clap-rs__clap-3975.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\clap-rs__clap-4248\\clap-rs__clap-4248.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\cli__cli-5019\\cli__cli-5019.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\cli__cli-6706\\cli__cli-6706.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\darkreader__darkreader-7241\\darkreader__darkreader-7241.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\facebook__zstd-1105\\facebook__zstd-1105.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\facebook__zstd-1390\\facebook__zstd-1390.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\facebook__zstd-1532\\facebook__zstd-1532.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\facebook__zstd-1733\\facebook__zstd-1733.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\facebook__zstd-2094\\facebook__zstd-2094.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\fasterxml__jackson-core-1016\\fasterxml__jackson-core-1016.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\fasterxml__jackson-core-183\\fasterxml__jackson-core-183.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\fasterxml__jackson-databind-3701\\fasterxml__jackson-databind-3701.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\fasterxml__jackson-databind-4050\\fasterxml__jackson-databind-4050.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\fasterxml__jackson-databind-4469\\fasterxml__jackson-databind-4469.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\fasterxml__jackson-databind-4641\\fasterxml__jackson-databind-4641.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\fmtlib__fmt-1663\\fmtlib__fmt-1663.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\fmtlib__fmt-2394\\fmtlib__fmt-2394.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\fmtlib__fmt-4286\\fmtlib__fmt-4286.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\iamkun__dayjs-1319\\iamkun__dayjs-1319.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\iamkun__dayjs-1414\\iamkun__dayjs-1414.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\iamkun__dayjs-1611\\iamkun__dayjs-1611.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\iamkun__dayjs-1725\\iamkun__dayjs-1725.traj.json",
+    "traces\\downloaded\\hf\\codetracebench_hf\\swe_raw\\mini_swe_agent__multi\\jqlang__jq-1793\\jqlang__jq-1793.traj.json"
+  ]
+}

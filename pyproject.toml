@@ -12,6 +12,7 @@ dependencies = [
     "networkx>=3.2.1",
     "numpy>=2.0.2",
     "pylint>=3.3.9",
+    "pyarrow>=21.0.0",
     "pytest>=8.4.2",
     "pytest-cov>=7.1.0",
     "pyyaml>=6.0.3",
