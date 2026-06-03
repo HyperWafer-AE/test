@@ -65,5 +65,11 @@ class PlacementPlan:
     state_locations: Dict[int, List[Node]]
     agent_decode_nodes: Dict[int, Node]
     krds: List[KRD]
-    replica_bytes: int = 0
-
+    resident_bytes: int = 0
+    unique_state_bytes: int = 0
+    extra_replica_bytes: int = 0
+    region_used_bytes: Dict[int, int] = field(default_factory=dict)
+    capacity_violations: int = 0
+    max_region_used_bytes: int = 0
+    avg_region_used_bytes: float = 0.0
+    sram_capacity_bytes: int = 0

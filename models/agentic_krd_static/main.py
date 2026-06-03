@@ -63,8 +63,10 @@ def parse_args():
     parser.add_argument("--block-elems", type=int, default=65536)
     parser.add_argument("--region-size", type=int, default=8)
     parser.add_argument("--krd-mode", choices=["workflow", "affinity"], default="workflow")
+    parser.add_argument("--max-private-blocks-per-krd", type=int, default=None)
     parser.add_argument("--dijkstra-routing", action="store_true")
     parser.add_argument("--gain-threshold", type=float, default=0.0)
+    parser.add_argument("--pressure-penalty-scale", type=float, default=1.0)
     parser.add_argument("--seed", type=int, default=123)
     parser.add_argument("--out", default=os.path.join(file_path, "results", "metrics.json"))
     parser.add_argument("--csv", default=None)
@@ -86,17 +88,33 @@ def write_outputs(metrics, out_path, csv_path=None):
         "pure_comm_cycles",
         "total_hop_bytes",
         "communication_distances",
+        "kv_distance",
         "kv_hop_bytes",
         "kv_comm_bytes",
         "kv_comm_events",
         "total_comm_events",
         "max_link_load",
         "avg_link_load",
-        "replica_bytes",
+        "resident_bytes",
+        "unique_state_bytes",
+        "extra_replica_bytes",
+        "capacity_violations",
+        "max_region_used_bytes",
+        "avg_region_used_bytes",
+        "sram_capacity_bytes",
         "num_krds",
         "num_agents",
         "num_states",
         "krd_mode",
+        "num_workflows",
+        "agents_per_workflow",
+        "repo_blocks",
+        "issue_blocks",
+        "private_blocks",
+        "block_elems",
+        "region_size",
+        "gain_threshold",
+        "pressure_penalty_scale",
     ]
     exists = os.path.exists(csv_path)
     with open(csv_path, "a", newline="", encoding="utf-8") as handle:
@@ -124,7 +142,12 @@ def run(args):
         seed=args.seed,
     )
     states = materialize_kv_tensors(data_dict, states)
-    krds = build_krds(agents, states, mode=args.krd_mode)
+    krds = build_krds(
+        agents,
+        states,
+        mode=args.krd_mode,
+        max_private_blocks_per_krd=args.max_private_blocks_per_krd,
+    )
     plan = place_states(
         agents=agents,
         states=states,
@@ -134,6 +157,7 @@ def run(args):
         dijkstra=args.dijkstra_routing,
         gain_threshold=args.gain_threshold,
         region_size=args.region_size,
+        pressure_penalty_scale=args.pressure_penalty_scale,
     )
     apply_placement(data_dict, states, plan)
     agents = attach_plan_to_agents(agents, plan)
@@ -150,7 +174,7 @@ def run(args):
         gamma=100,
     )
 
-    metrics = collect_kv_metrics(event_dict, data_dict, states, comm_loads)
+    metrics = collect_kv_metrics(event_dict, data_dict, states, comm_loads, plan)
     sim_hw = deepcopy(hardware_platform)
     sim_events = deepcopy(event_dict)
     total_cycles, pure_comp_cycles, pure_comm_cycles = event_driver(sim_events, sim_hw)
@@ -163,13 +187,27 @@ def run(args):
             "pure_comm_cycles": float(pure_comm_cycles),
             "total_hop_bytes": int(hops),
             "communication_distances": float(comm_dist),
-            "replica_bytes": int(plan.replica_bytes),
+            "resident_bytes": int(plan.resident_bytes),
+            "unique_state_bytes": int(plan.unique_state_bytes),
+            "extra_replica_bytes": int(plan.extra_replica_bytes),
+            "capacity_violations": int(plan.capacity_violations),
+            "max_region_used_bytes": int(plan.max_region_used_bytes),
+            "avg_region_used_bytes": float(plan.avg_region_used_bytes),
+            "sram_capacity_bytes": int(plan.sram_capacity_bytes),
             "num_krds": int(len(plan.krds)),
             "num_agents": int(len(agents)),
             "num_states": int(len(states)),
             "krd_mode": args.krd_mode,
             "dijkstra_routing": bool(args.dijkstra_routing),
             "gain_threshold": float(args.gain_threshold),
+            "pressure_penalty_scale": float(args.pressure_penalty_scale),
+            "num_workflows": int(args.num_workflows),
+            "agents_per_workflow": int(args.agents_per_workflow),
+            "repo_blocks": int(args.repo_blocks),
+            "issue_blocks": int(args.issue_blocks),
+            "private_blocks": int(args.private_blocks),
+            "block_elems": int(args.block_elems),
+            "region_size": int(args.region_size),
         }
     )
     write_outputs(metrics, args.out, args.csv)
@@ -179,4 +217,3 @@ def run(args):
 
 if __name__ == "__main__":
     run(parse_args())
-

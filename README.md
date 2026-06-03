@@ -5,26 +5,36 @@ Reproduce all experimental figures for the ISCA 2026 paper:
 
 ---
 
-## Agent-on-Wafer Extension
+## WaferAgent Stage-1 Static KRD Placement
 
-This checkout also contains an Agent-on-Wafer prototype under `src/agent/`.
-It reuses BusyBarn as an event-level wafer backend for agent trace replay:
-ASG construction, persistent-state planning, wafer mapping, BusyBarn event
-compilation, backend smoke tests, real-trace evaluation, and artifact status
-reporting are documented in `src/agent/README.md`.
+This checkout also contains a Stage-1 WaferAgent prototype under `src/agent/`
+and `models/agentic_krd_static/`. It keeps the current BusyBarn analytical
+backend intact: KV states are represented as `tensor_notation` splits, static
+replicas are written into `generated_split_location`, BusyBarn `build_event()`
+selects the nearest replica, and `event_driver()` runs with its existing timing
+semantics.
 
-Useful validation commands:
+Stage-1 intentionally does not implement a full agent runtime, online dispatch,
+slack-aware migration, full MHA decode, or vLLM/SGLang integration. It uses a
+KV-read `lookup` microbenchmark to compare static policies.
+
+Useful validation commands from the repository root:
 
 ```bash
-python -m compileall src
-python -m src.agent.backend_smoke --cfg src/platform/cfgs/wamis_hd_distributed.cfg --topology wamis --output agent_results/backend_smoke.json
-python -m src.agent.artifact_status --output agent_results/artifact_status.json
+python -m compileall src models/agentic_krd_static tests
+pytest tests/test_agent_krd.py
+cd models/agentic_krd_static
+bash run.sh
+python sweep.py --quick
 ```
 
-The extension does not claim BusyBarn's original operator-level LLM partition
-pipeline for agent prefill/decode. LLM compute is represented as analytical
-fixed-duration BusyBarn events, while KV movement uses BusyBarn communication,
-routing, and link scheduling.
+The default run writes:
+
+- `models/agentic_krd_static/results/central.json`
+- `models/agentic_krd_static/results/full_replication.json`
+- `models/agentic_krd_static/results/krd_selective.json`
+- `models/agentic_krd_static/results/summary.csv`
+- `models/agentic_krd_static/results/sweep_summary.csv`
 
 ---
 

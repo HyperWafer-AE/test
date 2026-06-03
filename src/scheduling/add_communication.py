@@ -125,7 +125,6 @@ def build_event(
                     event_dict[communication_tag].is_kv_comm = (source_data_tag[0] == 2)
                     data_dict[source_data_tag].used_splitted_tag_dict[source_data_split].add(communication_tag)
                     data_dict[source_data_tag].used_splitted_tag_dict[source_data_split].remove(beha_tag)
-                    communication_distances += hardware_platform.node_to_node_distance_function_dict[source_position][target_position](event_dict[communication_tag].comm_bytes)
                     event = event_dict[communication_tag]
                     # Route via Dijkstra (BALD) or XY
                     if dijkstra_routing:

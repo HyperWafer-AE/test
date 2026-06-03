@@ -56,14 +56,14 @@ def _trace(block_elems=1024):
     )
 
 
-def _run_policy(policy):
+def _run_policy(policy, gain_threshold=0.0, krd_mode="workflow"):
     hardware_platform = _hardware()
     data_dict = {}
     beha_dict = {}
     event_dict = {}
     agents, states = _trace()
     states = materialize_kv_tensors(data_dict, states)
-    krds = build_krds(agents, states, mode="workflow")
+    krds = build_krds(agents, states, mode=krd_mode)
     plan = place_states(
         agents,
         states,
@@ -71,6 +71,7 @@ def _run_policy(policy):
         hardware_platform,
         policy=policy,
         dijkstra=True,
+        gain_threshold=gain_threshold,
         region_size=8,
     )
     apply_placement(data_dict, states, plan)
@@ -82,7 +83,7 @@ def _run_policy(policy):
         event_dict,
         dijkstra_routing=True,
     )
-    metrics = collect_kv_metrics(event_dict, data_dict, states, comm_loads)
+    metrics = collect_kv_metrics(event_dict, data_dict, states, comm_loads, plan)
     total_cycles, pure_comp_cycles, pure_comm_cycles = event_driver(deepcopy(event_dict), deepcopy(hardware_platform))
     metrics.update(
         {
@@ -92,7 +93,13 @@ def _run_policy(policy):
             "pure_comm_cycles": pure_comm_cycles,
             "total_hop_bytes": hops,
             "communication_distances": comm_dist,
-            "replica_bytes": plan.replica_bytes,
+            "resident_bytes": plan.resident_bytes,
+            "unique_state_bytes": plan.unique_state_bytes,
+            "extra_replica_bytes": plan.extra_replica_bytes,
+            "capacity_violations": plan.capacity_violations,
+            "max_region_used_bytes": plan.max_region_used_bytes,
+            "avg_region_used_bytes": plan.avg_region_used_bytes,
+            "sram_capacity_bytes": plan.sram_capacity_bytes,
             "num_krds": len(plan.krds),
         }
     )
@@ -138,13 +145,46 @@ def test_event_build_completes():
 def test_replication_improves_or_matches_hop_bytes():
     central, _data_dict, _states, _plan = _run_policy("central")
     full, _data_dict, _states, _plan = _run_policy("full_replication")
+    selective, _data_dict, _states, _plan = _run_policy("krd_selective")
     assert full["kv_hop_bytes"] <= central["kv_hop_bytes"]
+    assert selective["kv_hop_bytes"] <= central["kv_hop_bytes"]
 
 
-def test_selective_replication_is_bounded():
+def test_resident_bytes_ordering():
+    central, _data_dict, _states, _plan = _run_policy("central")
     full, _data_dict, _states, _plan = _run_policy("full_replication")
     selective, _data_dict, _states, _plan = _run_policy("krd_selective")
-    assert selective["replica_bytes"] <= full["replica_bytes"]
+    assert central["resident_bytes"] == central["unique_state_bytes"]
+    assert central["extra_replica_bytes"] == 0
+    assert full["extra_replica_bytes"] > 0
+    assert central["resident_bytes"] <= selective["resident_bytes"] <= full["resident_bytes"]
+
+
+def test_high_gain_threshold_degenerates_to_central_residency():
+    central, _data_dict, _states, central_plan = _run_policy("central")
+    selective, _data_dict, _states, selective_plan = _run_policy("krd_selective", gain_threshold=1e30)
+    assert selective["resident_bytes"] == central["resident_bytes"]
+    assert selective["extra_replica_bytes"] == 0
+    assert selective_plan.state_locations == central_plan.state_locations
+
+
+def test_communication_distance_not_double_counted():
+    metrics, _data_dict, _states, _plan = _run_policy("central")
+    assert abs(metrics["communication_distances"] - metrics["kv_distance"]) < 1e-9
+
+
+def test_no_default_capacity_violations():
+    for policy in ["central", "full_replication", "krd_selective"]:
+        metrics, _data_dict, _states, _plan = _run_policy(policy)
+        assert metrics["capacity_violations"] == 0
+        assert metrics["max_region_used_bytes"] <= metrics["sram_capacity_bytes"] * 8
+
+
+def test_affinity_mode_prefers_same_workflow():
+    agents, states = _trace()
+    krds = build_krds(agents, states, mode="affinity", max_agents_per_krd=3)
+    assert len(krds) == 2
+    assert all(len(krd.workflow_ids) == 1 for krd in krds)
 
 
 if __name__ == "__main__":
@@ -152,6 +192,9 @@ if __name__ == "__main__":
     test_placement_non_empty()
     test_event_build_completes()
     test_replication_improves_or_matches_hop_bytes()
-    test_selective_replication_is_bounded()
+    test_resident_bytes_ordering()
+    test_high_gain_threshold_degenerates_to_central_residency()
+    test_communication_distance_not_double_counted()
+    test_no_default_capacity_violations()
+    test_affinity_mode_prefers_same_workflow()
     print("agent KRD smoke tests passed")
-

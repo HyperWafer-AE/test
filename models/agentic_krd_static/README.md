@@ -15,14 +15,40 @@ Policies:
   the owner agent decode node.
 - `full_replication`: shared KV states are replicated at every KRD anchor.
 - `krd_selective`: shared KV states start at the global medoid and add KRD
-  replicas only when the static replication-gain estimate is positive.
+  replicas only when the static replication-gain estimate is positive after a
+  simple per-region SRAM pressure penalty.
 
-Run:
+Validation:
 
 ```bash
+cd ../..
+python -m compileall src models/agentic_krd_static tests
+pytest tests/test_agent_krd.py
+```
+
+Run the default three-policy experiment:
+
+```bash
+cd models/agentic_krd_static
 bash run.sh
 ```
 
-Expected outputs are `results/central.json`, `results/full_replication.json`,
-`results/krd_selective.json`, and `results/summary.csv`.
+Run a quick deterministic sweep:
 
+```bash
+python sweep.py --quick
+```
+
+Expected outputs are `results/central.json`, `results/full_replication.json`,
+`results/krd_selective.json`, `results/summary.csv`, and
+`results/sweep_summary.csv`.
+
+Key metrics:
+
+- `resident_bytes`: physical KV bytes resident across all placements.
+- `unique_state_bytes`: one-copy footprint of all KV states.
+- `extra_replica_bytes`: `resident_bytes - unique_state_bytes`.
+- `capacity_violations`: number of KRD regions whose resident bytes exceed
+  `len(region) * sram_capacity_bytes`.
+- `kv_hop_bytes` and `communication_distances`: BusyBarn routing metrics from
+  the existing `build_event()` backend.
