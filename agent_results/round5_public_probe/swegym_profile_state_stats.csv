@@ -1,2 +1,0 @@
-trace_idx,state_id,state_type,tokens,access_count,first_access,last_access,cross_agent
-0,state_3590b474abf90add,task_prefix,16,1,1,1,False

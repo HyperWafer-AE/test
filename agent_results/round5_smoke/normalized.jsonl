@@ -1,8 +1,0 @@
-﻿{"type":"state","state_id":"system","state_type":"system_prefix","owner":"shared","tokens":64,"metadata":{"source":"smoke"}}
-{"type":"state","state_id":"task","state_type":"task_prefix","owner":"shared","tokens":128,"metadata":{"source":"smoke"}}
-{"type":"state","state_id":"agent_0_role","state_type":"agent_role","owner":"agent_0","tokens":32,"metadata":{"source":"smoke"}}
-{"type":"state","state_id":"file_a_v1","state_type":"file_context","owner":"agent_0","tokens":400,"semantic_key":"file:src/a.py:1-80:v1","exact_token_hash":"hash_file_a_v1"}
-{"type":"llm","event_id":"llm_0","agent":"agent_0","turn":0,"input_state_ids":["system","task","agent_0_role","file_a_v1"],"append_tokens":32,"output_tokens":64,"new_state_id":"assistant_0","new_state_type":"assistant_delta","phase":"explore"}
-{"type":"tool","event_id":"tool_0","agent":"agent_0","turn":0,"tool":"Bash","latency":10,"output_tokens":300,"status":"failed","new_state_id":"test_fail_0","new_state_type":"test_failure_summary","phase":"verify"}
-{"type":"llm","event_id":"llm_1","agent":"agent_0","turn":1,"input_state_ids":["system","task","agent_0_role","file_a_v1","assistant_0","test_fail_0"],"append_tokens":24,"output_tokens":48,"new_state_id":"assistant_1","new_state_type":"assistant_delta","phase":"verify"}
-{"type":"llm","event_id":"llm_2","agent":"agent_0","turn":2,"input_state_ids":["system","task","agent_0_role","file_a_v1","assistant_1","test_fail_0"],"append_tokens":20,"output_tokens":40,"new_state_id":"assistant_2","new_state_type":"assistant_delta","phase":"execute"}

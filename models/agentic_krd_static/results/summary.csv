@@ -1,0 +1,4 @@
+policy,total_cycles,pure_comp_cycles,pure_comm_cycles,total_hop_bytes,communication_distances,kv_hop_bytes,kv_comm_bytes,kv_comm_events,total_comm_events,max_link_load,avg_link_load,replica_bytes,num_krds,num_agents,num_states,krd_mode
+central,22453.0,0.0,17541.0,49545216,37800.0,49545216,9175040,70,70,21504.0,6673.6551724137935,6291456,2,6,12,workflow
+full_replication,7694.0,512.0,4366.0,7340032,57456.0,7340032,7340032,56,56,7168.0,7168.0,9437184,2,6,12,workflow
+krd_selective,7694.0,512.0,4366.0,7340032,57456.0,7340032,7340032,56,56,7168.0,7168.0,8126464,2,6,12,workflow

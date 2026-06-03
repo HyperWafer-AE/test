@@ -1,7 +1,0 @@
-policy,remote_read_bytes,demand_migration_bytes,prefetch_migration_bytes
-asg-placement-v2-online,411657306112.0,1371537408.0,0.0
-asg-prefetch-v2-online,344182489088.0,648019968.0,265057468416.0
-asg-retention-v2-online,0.0,0.0,0.0
-asg-retention-v2-oracle,0.0,0.0,0.0
-kvflow-like,0.0,0.0,0.0
-lru-system,0.0,0.0,0.0

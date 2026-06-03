@@ -1,4 +1,0 @@
-policy,remote_read_bytes,demand_migration_bytes,prefetch_migration_bytes,prefetch_exposed_cycles
-asg-placement-v2-online,3252137492.48,43033559.04,0.0,0.0
-asg-prefetch-v2-online,4456091484.16,30198988.8,7028646871.04,3388593.88
-asg-retention-v2-online,0.0,0.0,0.0,0.0

@@ -1,0 +1,22 @@
+{
+  "avg_link_load": 6673.6551724137935,
+  "communication_distances": 37800.0,
+  "dijkstra_routing": true,
+  "gain_threshold": 0.0,
+  "krd_mode": "workflow",
+  "kv_comm_bytes": 9175040,
+  "kv_comm_events": 70,
+  "kv_distance": 18900.0,
+  "kv_hop_bytes": 49545216,
+  "max_link_load": 21504.0,
+  "num_agents": 6,
+  "num_krds": 2,
+  "num_states": 12,
+  "policy": "central",
+  "pure_comm_cycles": 17541.0,
+  "pure_comp_cycles": 0.0,
+  "replica_bytes": 6291456,
+  "total_comm_events": 70,
+  "total_cycles": 22453.0,
+  "total_hop_bytes": 49545216
+}

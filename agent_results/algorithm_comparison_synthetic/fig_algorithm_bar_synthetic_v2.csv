@@ -1,9 +1,0 @@
-policy,label,color_key,effective_prefill_tokens,normalized_effective_prefill_vs_lru,reduction_vs_lru_percent,LRU_regret_tokens_preserved,evidence_class,can_support_real_paper_claims,remote_read_gb,prefetch_migration_gb,model_comm_cycles,prefetch_hidden_cycles,prefetch_exposed_cycles
-nocache,No cache,light_gray,3665280,1.141791937477571,-14.179193747757088,0,synthetic,False,,,,,
-lru-system,LRU,gray,3210112,1.0,0.0,1024,synthetic,False,,,,,
-kvflow-like,KVFlow,orange,3249024,1.012121695442402,-1.212169544240201,1024,synthetic,False,,,,,
-asg-retention-v2-graph-only,ASG retention,blue,2398080,0.7470393556361896,25.296064436381037,33280,synthetic,False,,,,,
-asg-retention-v2-oracle,Oracle,green,2398080,0.7470393556361896,25.296064436381037,33280,synthetic,False,,,,,
-asg-retention-v2-graph-only,ASG retention,blue,,,,,,,0.0,0.0,0,0,0
-asg-placement-v2-online,ASG place,purple,,,,,,,179.85175552,0.0,17360071,0,0
-asg-prefetch-v2-online,ASG prefetch,red,,,,,,,179.85175552,24.696061952,49339794,25690132,70778934

@@ -1,2 +1,2 @@
-"""Agent-on-Wafer MVP frontend for BusyBarn."""
+"""WaferAgent static KRD placement prototype."""
 

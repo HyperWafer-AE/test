@@ -1,5 +1,0 @@
-- fig_local_trace_workload_characterization: state-token, reuse-distance, and delayed-reuse/LRU-regret workload structure.
-- fig_local_concurrency_gpu_serving: local GPU serving latency and workflow wall-clock behavior as concurrency changes.
-- fig_local_wafer_replay_policy: Agent-on-Wafer replay comparison across LRU, KVFlow-like, ASG online, and ASG oracle policies.
-- fig_local_memory_concurrency_sweep: replay sensitivity to memory budget and workflow concurrency.
-- fig_local_mapping_prefetch: remote read, demand migration, and prefetch movement diagnostics.

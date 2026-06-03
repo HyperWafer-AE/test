@@ -120,6 +120,9 @@ def build_event(
                         target_location=target_position,
                         comm_bytes=int(np.prod([end - start + 1 for (start, end) in source_data_split])*type_bytes[data_dict[source_data_tag].data_type])
                     )
+                    event_dict[communication_tag].source_data_tag = source_data_tag
+                    event_dict[communication_tag].source_data_split = source_data_split
+                    event_dict[communication_tag].is_kv_comm = (source_data_tag[0] == 2)
                     data_dict[source_data_tag].used_splitted_tag_dict[source_data_split].add(communication_tag)
                     data_dict[source_data_tag].used_splitted_tag_dict[source_data_split].remove(beha_tag)
                     communication_distances += hardware_platform.node_to_node_distance_function_dict[source_position][target_position](event_dict[communication_tag].comm_bytes)

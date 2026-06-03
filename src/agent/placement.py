@@ -1,184 +1,164 @@
-import math
-from typing import Iterable, List, Optional, Tuple
+from typing import Dict, Iterable, List
+
+from .topology import bfs_region, choose_spread_anchors, compute_nodes, dist, weighted_medoid
+from .types import AgentSpec, KRD, KVStateSpec, PlacementPlan, Policy
 
 
-def available_compute_locations(hardware_platform, device_type: str = "tensorcore") -> List[Tuple]:
-    modules = getattr(hardware_platform, "modules_dict", {}).get(device_type, {})
-    return sorted(modules.keys())
+SHARED_KINDS = {"global", "workflow_shared"}
+PRIVATE_KINDS = {"private_hot", "private_warm", "private_cold"}
 
 
-def node_of_module(module_loc: Tuple) -> Tuple:
-    return tuple(module_loc[:-1])
+def unique_nodes(nodes: Iterable):
+    seen = set()
+    out = []
+    for node in nodes:
+        if node not in seen:
+            seen.add(node)
+            out.append(node)
+    return out
 
 
-def _coord_distance(coord_a, coord_b) -> float:
-    return float(sum(abs(x - y) for x, y in zip(coord_a, coord_b)))
+def _place_decode_nodes(krds: List[KRD], hardware_platform, region_size: int) -> tuple[Dict[int, tuple], List[KRD]]:
+    allowed = compute_nodes(hardware_platform)
+    if not allowed:
+        raise ValueError("hardware platform has no compute nodes")
+    anchors = choose_spread_anchors(hardware_platform, len(krds), allowed)
+    allowed_set = set(allowed)
 
-
-def node_distance(hardware_platform, a, b) -> float:
-    a = tuple(a)
-    b = tuple(b)
-    if a == b:
-        return 0.0
-
-    distance_dict = getattr(hardware_platform, "node_to_node_distance_dict", None)
-    if distance_dict and a in distance_dict and b in distance_dict[a]:
-        return float(distance_dict[a][b])
-
-    ch_hop = getattr(hardware_platform, "ch_to_ch_hop_dict", None)
-    if ch_hop and a and b and a[0] in ch_hop and b[0] in ch_hop[a[0]]:
-        return float(ch_hop[a[0]][b[0]])
-
-    coord_dict = getattr(hardware_platform, "nodes_coordinate_dict", None)
-    if coord_dict and a in coord_dict and b in coord_dict:
-        return _coord_distance(coord_dict[a], coord_dict[b])
-
-    return float("inf")
-
-
-def _finite_distance(hardware_platform, a, b, fallback: float = 1_000_000.0) -> float:
-    distance = node_distance(hardware_platform, a, b)
-    if math.isinf(distance):
-        return fallback
-    return distance
-
-
-def assign_agent_homes(
-    agent_ids,
-    hardware_platform,
-    device_type: str = "tensorcore",
-    spread: str = "round_robin",
-) -> dict:
-    locations = available_compute_locations(hardware_platform, device_type)
-    if not locations:
-        raise ValueError(f"No compute modules available for device_type={device_type}")
-    sorted_agents = sorted(agent_ids)
-    if spread == "compact":
-        return {agent_id: locations[min(idx, len(locations) - 1)] for idx, agent_id in enumerate(sorted_agents)}
-    if spread != "round_robin":
-        raise ValueError(f"Unsupported agent placement spread: {spread}")
-    return {agent_id: locations[idx % len(locations)] for idx, agent_id in enumerate(sorted_agents)}
-
-
-def choose_shared_anchor(hardware_platform) -> Tuple:
-    coord_dict = getattr(hardware_platform, "nodes_coordinate_dict", None)
-    if coord_dict:
-        coords = list(coord_dict.values())
-        dims = len(coords[0])
-        center = tuple(sum(coord[d] for coord in coords) / len(coords) for d in range(dims))
-        return min(
-            coord_dict,
-            key=lambda node: (
-                sum(abs(coord_dict[node][d] - center[d]) for d in range(dims)),
-                node,
-            ),
+    agent_decode_nodes: Dict[int, tuple] = {}
+    placed_krds: List[KRD] = []
+    for idx, krd in enumerate(krds):
+        anchor = anchors[idx % len(anchors)]
+        region = bfs_region(hardware_platform, anchor, region_size, allowed_set)
+        if not region:
+            region = [anchor]
+        for local_idx, agent_id in enumerate(sorted(krd.agent_ids)):
+            agent_decode_nodes[agent_id] = region[local_idx % len(region)]
+        placed_krds.append(
+            KRD(
+                krd_id=krd.krd_id,
+                agent_ids=list(krd.agent_ids),
+                workflow_ids=list(krd.workflow_ids),
+                regions=region,
+                anchor=anchor,
+            )
         )
-    locations = available_compute_locations(hardware_platform)
-    if not locations:
-        raise ValueError("Cannot choose shared anchor without compute locations")
-    return node_of_module(locations[0])
+    return agent_decode_nodes, placed_krds
 
 
-def choose_exec_location(
-    input_states: Iterable,
+def replication_gain(
+    state: KVStateSpec,
+    krd: KRD,
+    agents_in_krd: List[AgentSpec],
+    old_locations: List[tuple],
+    new_location: tuple,
+    agent_decode_nodes: Dict[int, tuple],
     hardware_platform,
-    agent_home: Optional[Tuple] = None,
-    affinity_states: Optional[Iterable] = None,
-    module_load: Optional[dict] = None,
-    device_type: str = "tensorcore",
-    locality_weight: float = 1.0,
-    home_weight: float = 0.25,
-    affinity_weight: float = 0.5,
-    load_weight: float = 0.1,
-) -> Tuple:
-    candidates = available_compute_locations(hardware_platform, device_type)
-    if not candidates:
-        raise ValueError(f"No compute modules available for device_type={device_type}")
+    dijkstra: bool = True,
+) -> float:
+    saved = 0.0
+    for agent in agents_in_krd:
+        if state.state_id not in agent.required_state_ids:
+            continue
+        consumer = agent_decode_nodes[agent.agent_id]
+        old_d = min(dist(hardware_platform, consumer, old, dijkstra) for old in old_locations)
+        new_d = dist(hardware_platform, consumer, new_location, dijkstra)
+        saved += agent.expected_decode_tokens * state.total_bytes * max(0.0, old_d - new_d)
+    copy_cost = state.total_bytes * min(dist(hardware_platform, old, new_location, dijkstra) for old in old_locations)
+    pressure_penalty = 0.0
+    return saved - copy_cost - pressure_penalty
 
-    module_load = module_load or {}
-    affinity_states = list(affinity_states or [])
-    agent_home_node = node_of_module(agent_home) if agent_home is not None else None
-    best_loc = candidates[0]
-    best_cost = float("inf")
 
-    for module_loc in candidates:
-        module_node = node_of_module(module_loc)
-        locality_cost = 0.0
-        for state in input_states:
-            if state.resident and state.loc is not None:
-                locality_cost += state.kv_bytes * _finite_distance(hardware_platform, module_node, state.loc)
+def _placement_bytes(states: List[KVStateSpec], state_locations: Dict[int, List[tuple]]) -> int:
+    states_by_id = {state.state_id: state for state in states}
+    return int(sum(states_by_id[state_id].total_bytes * len(locs) for state_id, locs in state_locations.items()))
 
-        home_cost = 0.0
-        if agent_home_node is not None:
-            home_cost = _finite_distance(hardware_platform, module_node, agent_home_node)
 
-        affinity_cost = 0.0
-        for item in affinity_states:
-            if isinstance(item, tuple):
-                state, weight = item
+def place_states(
+    agents: List[AgentSpec],
+    states: List[KVStateSpec],
+    krds: List[KRD],
+    hardware_platform,
+    policy: Policy,
+    dijkstra: bool = True,
+    gain_threshold: float = 0.0,
+    region_size: int = 8,
+) -> PlacementPlan:
+    if policy not in {"central", "full_replication", "krd_selective"}:
+        raise ValueError(f"unknown placement policy: {policy}")
+
+    agent_decode_nodes, placed_krds = _place_decode_nodes(krds, hardware_platform, region_size)
+    agents_by_id = {agent.agent_id: agent for agent in agents}
+    allowed = compute_nodes(hardware_platform)
+    consumers = [agent_decode_nodes[agent.agent_id] for agent in agents]
+    weights = [max(1, agent.expected_decode_tokens) for agent in agents]
+    global_medoid = weighted_medoid(hardware_platform, allowed, consumers, weights, dijkstra=dijkstra)
+
+    state_locations: Dict[int, List[tuple]] = {}
+    for state in states:
+        if state.kind in PRIVATE_KINDS and state.owner_agent_id is not None:
+            state_locations[state.state_id] = [agent_decode_nodes[state.owner_agent_id]]
+        elif state.kind in SHARED_KINDS:
+            if policy == "central":
+                state_locations[state.state_id] = [global_medoid]
+            elif policy == "full_replication":
+                state_locations[state.state_id] = unique_nodes(
+                    [krd.anchor for krd in placed_krds if krd.anchor is not None]
+                )
             else:
-                state, weight = item, 1.0
-            if getattr(state, "loc", None) is not None:
-                affinity_cost += float(weight) * _finite_distance(hardware_platform, module_node, state.loc)
+                locations = [global_medoid]
+                for krd in placed_krds:
+                    agents_in_krd = [agents_by_id[agent_id] for agent_id in krd.agent_ids]
+                    consumers_in_krd = [
+                        agent_decode_nodes[agent.agent_id]
+                        for agent in agents_in_krd
+                        if state.state_id in agent.required_state_ids
+                    ]
+                    if not consumers_in_krd:
+                        continue
+                    krd_weights = [
+                        agent.expected_decode_tokens
+                        for agent in agents_in_krd
+                        if state.state_id in agent.required_state_ids
+                    ]
+                    new_location = weighted_medoid(
+                        hardware_platform,
+                        krd.regions or [krd.anchor],
+                        consumers_in_krd,
+                        krd_weights,
+                        dijkstra=dijkstra,
+                    )
+                    gain = replication_gain(
+                        state=state,
+                        krd=krd,
+                        agents_in_krd=agents_in_krd,
+                        old_locations=locations,
+                        new_location=new_location,
+                        agent_decode_nodes=agent_decode_nodes,
+                        hardware_platform=hardware_platform,
+                        dijkstra=dijkstra,
+                    )
+                    if gain > gain_threshold:
+                        locations.append(new_location)
+                state_locations[state.state_id] = unique_nodes(locations)
+        else:
+            raise ValueError(f"cannot place state {state.state_id} with kind {state.kind}")
 
-        cost = (
-            locality_weight * locality_cost
-            + home_weight * home_cost
-            + affinity_weight * affinity_cost
-            + load_weight * module_load.get(module_loc, 0)
-        )
-        if cost < best_cost or (cost == best_cost and module_loc < best_loc):
-            best_cost = cost
-            best_loc = module_loc
-    return best_loc
+    replica_bytes = _placement_bytes(states, state_locations)
+    return PlacementPlan(
+        policy=policy,
+        state_locations=state_locations,
+        agent_decode_nodes=agent_decode_nodes,
+        krds=placed_krds,
+        replica_bytes=replica_bytes,
+    )
 
 
-def _nearest_node_with_capacity(
-    preferred_node,
-    hardware_platform,
-    state,
-    per_node_used: Optional[dict],
-    per_node_budget: Optional[int],
-) -> Tuple:
-    preferred_node = tuple(preferred_node)
-    if per_node_budget is None or per_node_used is None:
-        return preferred_node
-    if per_node_used.get(preferred_node, 0) + state.kv_bytes <= per_node_budget:
-        return preferred_node
+def apply_placement(data_dict: Dict, states: List[KVStateSpec], plan: PlacementPlan) -> None:
+    for state in states:
+        tensor = data_dict[state.data_tag]
+        locs = plan.state_locations[state.state_id]
+        assert locs, f"state {state.state_id} has no placement"
+        for split in tensor.generated_splitted_tag_dict:
+            tensor.generated_split_location[split] = list(locs)
 
-    nodes = sorted(getattr(hardware_platform, "nodes_set", []))
-    for node in sorted(
-        nodes,
-        key=lambda candidate: (
-            _finite_distance(hardware_platform, preferred_node, candidate),
-            candidate,
-        ),
-    ):
-        if per_node_used.get(node, 0) + state.kv_bytes <= per_node_budget:
-            return tuple(node)
-    return preferred_node
-
-
-def choose_state_location(
-    state,
-    predicted_exec_loc,
-    hardware_platform,
-    agent_home: Optional[Tuple] = None,
-    shared_anchor: Optional[Tuple] = None,
-    per_node_used: Optional[dict] = None,
-    per_node_budget: Optional[int] = None,
-) -> Tuple:
-    if state.state_type in {"system_prefix", "task_prefix", "shared_prefix"}:
-        preferred = shared_anchor if shared_anchor is not None else choose_shared_anchor(hardware_platform)
-    elif state.state_type == "agent_role" and agent_home is not None:
-        preferred = node_of_module(agent_home)
-    elif predicted_exec_loc is not None:
-        preferred = node_of_module(predicted_exec_loc)
-    elif agent_home is not None:
-        preferred = node_of_module(agent_home)
-    else:
-        locations = available_compute_locations(hardware_platform)
-        if not locations:
-            raise ValueError("Cannot place state without compute locations")
-        preferred = node_of_module(locations[0])
-    return _nearest_node_with_capacity(preferred, hardware_platform, state, per_node_used, per_node_budget)
